@@ -1,0 +1,444 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   render.c                                         .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
+/*   Updated: 2019/12/23 07:18:23 by pduhard-    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
+#include "rtv1.h"
+/*
+int		ray_intersect(t_3vecf orig, t_3vecf dir, float *dist, t_sphere *sphere)
+{
+	float t0, t1;
+	t_3vecf	l;
+	float tca;
+	float	radius_2;
+	float d2;
+	float thc;
+
+	radius_2 = sphere->radius * sphere->radius;
+	l = sub_3vecf(sphere->origin, orig);
+	tca	= dot_product_3vecf(l, dir);
+	if (tca < 0)
+		return (0);
+	d2 = dot_product_3vecf(l, l) - tca * tca;
+	if (d2 > radius_2)
+		return (0);
+	thc = sqrtf(radius_2 - d2);
+	t0 = tca - thc; 
+	t1 = tca + thc; 
+	//printf("t0 %f t1 %f\n", t0, t1);
+	if (t0 > t1)
+	{
+		float tmp;
+		tmp = t1;
+		t1 = t0;
+		t0 = tmp;
+	}
+	if (t0 < 0)
+	{ 
+		t0 = t1; // if t0 is negative, let's use t1 instead
+		if (t0 < 0)
+			return (0); // both t0 and t1 are negative 
+	} 
+	*dist = t0; 
+	//printf("intersect");
+	return (1);
+}
+*/
+
+int		ray_intersect(t_3vecf orig, t_3vecf dir, float *dist, t_sphere *sphere)
+{
+	float t0, t1;
+	t_3vecf	l;
+	float tca;
+	float	radius_2;
+	float d2;
+	float thc;
+
+	radius_2 = sphere->radius * sphere->radius;
+	l = sub_3vecf(sphere->origin, orig);
+//	float	proj = dot_product_3vecf(l, dir);
+	tca	= dot_product_3vecf(l, dir);
+	if (tca < 0)
+		return (0);
+	d2 = dot_product_3vecf(l, l) - tca * tca;
+	if (d2 > radius_2)
+		return (0);
+	thc = sqrtf(radius_2 - d2);
+	t0 = tca - thc;
+	t1 = tca + thc;
+	//printf("t0 %f t1 %f\n", t0, t1);
+	if (t0 > t1)
+	{
+		float tmp;
+		tmp = t1;
+		t1 = t0;
+		t0 = tmp;
+	}
+	if (t0 < 0)
+	{ 
+		t0 = t1; // if t0 is negative, let's use t1 instead
+		if (t0 < 0)
+			return (0); // both t0 and t1 are negative 
+	} 
+	*dist = t0; 
+	//printf("intersect");
+	return (1);
+}
+
+t_obj	*ray_trace(t_3vecf orig, t_3vecf dir, t_obj *objects, float *dist)// obj number ..
+{
+	float	min_dist = 340000000000.f;
+	t_obj	*closer;
+
+	closer = NULL;
+	while (objects)
+	{
+		*dist = 340000000000.f;
+		if (ray_intersect(orig, dir, dist, (t_sphere *)objects->obj_param))
+		{
+			if (*dist < min_dist)
+			{
+				closer = objects;
+				min_dist = *dist;
+			}
+		}
+		objects = objects->next;
+	}
+	*dist = min_dist;
+	return (closer);
+}
+
+void	get_surface_data(t_3vecf phit, t_3vecf *nhit, t_2vecf *tex, t_sphere *sphere)
+{
+	*nhit = sub_3vecf(phit, assign_3vecf(sphere->x, sphere->y, sphere->z));
+	normalize_3vecf(nhit);
+	tex->val[0] = (1 + atan2(nhit->val[2], nhit->val[0]) / M_PI) * 0.5;
+	tex->val[1] = acosf(nhit->val[1]) / M_PI;
+}
+
+t_3vecf reflect(t_3vecf dir, t_3vecf normal)
+{
+	t_3vecf	vec;
+	float	dot_p;
+
+	dot_p = dot_product_3vecf(dir, normal);
+	vec.val[0] = dir.val[0] - 2 * dot_p * normal.val[0];
+	vec.val[1] = dir.val[1] - 2 * dot_p * normal.val[1];
+	vec.val[2] = dir.val[2] - 2 * dot_p * normal.val[2];
+	return (vec);
+} 
+
+void	print_mat(float mat[4][4])
+{
+	printf("%+f %+f %+f %+f\n%+f %+f %+f %+f\n%+f %+f %+f %+f\n%+f %+f %+f %+f\n", mat[0][0], mat[0][1], mat[0][2], mat[0][3], mat[1][0], mat[1][1], mat[1][2], mat[1][3], mat[2][0], mat[2][1], mat[2][2], mat[2][3], mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+}
+
+void	print_vec(float vec[3])
+{
+	printf("x: %f\ny: %f\nz: %f\n", vec[0], vec[1], vec[2]);
+}
+
+int		cast_ray(t_3vecf orig, t_3vecf dir, t_data *data)// obj number ..
+{
+	int		hit_color = 0xcccccc;
+	//t_3vecf	hit_color_vec;
+	t_obj	*hit_object;
+	float	dist;
+	t_obj	*objects;
+	t_light	*lights;
+
+	objects = data->objs;
+	lights = data->lights;
+
+	if ((hit_object = ray_trace(orig, dir, data->objs, &dist)))
+	{
+	//	return (0xffffff);
+		t_3vecf		hit_point;
+		t_3vecf		normal; // normal 
+		//t_2vecf		st; // st coordinates 
+		t_sphere	*param;
+		t_3vecf		light_amt;
+		t_3vecf		specular_color;
+		t_3vecf		shadow_point_orig;
+		//int	i = 0;
+		//	https://www.scratchapixel.com/code.php?id=32&origin=/lessons/3d-basic-rendering/phong-shader-BRDF // try this insteed
+		light_amt = assign_3vecf(0, 0, 0);
+		specular_color = assign_3vecf(0, 0, 0); 
+		param = (t_sphere *)objects->obj_param;
+		hit_point.val[0] = orig.val[0] + dir.val[0] * dist;
+		hit_point.val[1] = orig.val[1] + dir.val[1] * dist;
+		hit_point.val[2] = orig.val[2] + dir.val[2] * dist;
+		//hitObject->getSurfaceProperties(hitPoint, dir, index, uv, N, st);
+		normal = sub_3vecf(hit_point, param->origin);//assign_3vecf(param->x, param->y, param->z));
+		normalize_3vecf(&normal);
+
+		if (dot_product_3vecf(dir, normal) < 0)
+		{
+			shadow_point_orig.val[0] = hit_point.val[0] + normal.val[0] * 0.00001f;
+			shadow_point_orig.val[1] = hit_point.val[1] + normal.val[1] * 0.00001f;
+			shadow_point_orig.val[2] = hit_point.val[2] + normal.val[2] * 0.00001f;
+		}
+		else
+		{
+			shadow_point_orig.val[0] = hit_point.val[0] - normal.val[0] * 0.00001f;
+			shadow_point_orig.val[1] = hit_point.val[1] - normal.val[1] * 0.00001f;
+			shadow_point_orig.val[2] = hit_point.val[2] - normal.val[2] * 0.00001f;
+		}
+		t_3vecf	specular, diffuse;
+		specular = assign_3vecf(0, 0, 0); 
+		diffuse = assign_3vecf(0, 0, 0); 
+	//	printf("%f %f\n", facingratio, fresneleffect);
+		while (lights)
+		{
+	//		mult_dir_matrix(lights->origin, lights->l_to_world, &(lights->dir));
+	//		mult_dir_matrix(lights->position, lights->l_to_world, &(lights->dir));
+	//		lights->dir = sub_3vecf(lights->origin, hit_point);
+			lights->dir = sub_3vecf(lights->origin, hit_point);
+			
+			normalize_3vecf(&(lights->dir));
+			t_3vecf light_dir;
+			t_3vecf light_intensity;
+
+			float	l_dist;
+			light_dir = assign_3vecf(lights->dir.val[0], lights->dir.val[1], lights->dir.val[2]);
+			l_dist = sqrtf(light_dir.val[0] * light_dir.val[0] + light_dir.val[1] * light_dir.val[1] + light_dir.val[2] * light_dir.val[2]);
+			//light_dir = sub_3vecf(lights->position, hit_point);
+			light_intensity = assign_3vecf(lights->color.val[0] * lights->intensity.val[0], lights->color.val[1] * lights->intensity.val[1], lights->color.val[2] * lights->intensity.val[2]);
+//			light_intensity = assign_3vecf(1, 1, 1);
+			//illuminate(hit_point, &light_dir, &light_intensity, &l_dist);
+
+			float	ldot_n = dot_product_3vecf(light_dir, normal);
+			
+			
+	//		float	facingratio = -1.f * dot_product_3vecf(light_dir, normal);
+	//		float	fresneleffect = 0.1 + pow(1.f - facingratio, 3.f) * 0.9;
+/*
+			t_3vecf	m_light_dir = assign_3vecf(-light_dir.val[0], -light_dir.val[1], -light_dir.val[2]);
+			t_3vecf	m_light_orig;
+			m_light_orig.val[0] = hit_point.val[0] + normal.val[0] * 0.00001;
+			m_light_orig.val[1] = hit_point.val[1] + normal.val[1] * 0.00001;
+			m_light_orig.val[2] = hit_point.val[2] + normal.val[2] * 0.00001;
+		//	
+		*/
+			float	shadow_n_dist = 34000000000;
+			t_obj	*hit_shadow = ray_trace(shadow_point_orig, light_dir, data->objs, &shadow_n_dist); 
+			if (shadow_n_dist * shadow_n_dist >= dot_product_3vecf(light_dir, light_dir))
+				hit_shadow = NULL;
+
+			if (hit_shadow == NULL)
+			{
+				light_amt.val[0] += lights->intensity.val[0] * ldot_n;
+				light_amt.val[1] += lights->intensity.val[1] * ldot_n;
+				light_amt.val[2] += lights->intensity.val[2] * ldot_n;
+			}
+			t_3vecf	m_light_dir = assign_3vecf(-light_dir.val[0], -light_dir.val[1], -light_dir.val[2]);
+			t_3vecf rflct = reflect(m_light_dir, normal);
+			float	d_pd_r_dir = -dot_product_3vecf(rflct, dir);
+			if (d_pd_r_dir > 0.f)
+			{
+				specular.val[0] += light_intensity.val[0] * powf(d_pd_r_dir, 25.0);// * (1 - fresneleffect);
+				specular.val[1] += light_intensity.val[1] * powf(d_pd_r_dir, 25.0);// * (1 - fresneleffect);
+				specular.val[2] += light_intensity.val[2] * powf(d_pd_r_dir, 25.0);// * (1 - fresneleffect);
+			}
+	//		t_obj	*hit_shadow = ray_trace(hit_point, m_light_dir, data->objs, &l_dist); 
+		/*	if (!hit_obj_l)
+			{
+				float	d_pd_m_l_dir = dot_product_3vecf(normal, m_light_dir);
+				if (d_pd_m_l_dir > 0.f)
+				{
+					diffuse.val[0] += 0.18 * light_intensity.val[0] * (1 - fresneleffect);
+					diffuse.val[1] += 0.18 * light_intensity.val[1] * (1 - fresneleffect);
+					diffuse.val[2] += 0.18 * light_intensity.val[2] * (1 - fresneleffect);
+
+				}
+				t_3vecf rflct = reflect(light_dir, normal); 
+				float	d_pd_r_m_l_dir = dot_product_3vecf(rflct, m_light_dir);
+				if (d_pd_r_m_l_dir > 0.f)
+				{
+					specular.val[0] += light_intensity.val[0] * powf(d_pd_r_m_l_dir, 10.0) * (1 - fresneleffect);
+					specular.val[1] += light_intensity.val[1] * powf(d_pd_r_m_l_dir, 10.0) * (1 - fresneleffect);
+					specular.val[2] += light_intensity.val[2] * powf(d_pd_r_m_l_dir, 10.0) * (1 - fresneleffect);
+				}
+				
+	*/		/*	float d = dot_product_3vecf(normal, light_dir);
+				diffuse.val[0] += 0.18 * lights->color.val[0] * (1 - fresneleffect) * d;
+				diffuse.val[1] += 0.18 * lights->color.val[1] * (1 - fresneleffect) * d;
+				diffuse.val[2] += 0.18 * lights->color.val[2] * (1 - fresneleffect) * d;
+*/
+				//specular += light_intensity * std::pow(std::max(0.f, R.dotProduct(-dir)), isect.hitObject->n);
+			lights = lights->next;
+			}
+
+		//t_vec3f	hit_color_vec;
+	
+		//hit_color = 0;
+		//diffuse * 0.8 + specular * 0.2;
+		//print_vec(diffuse.val);
+	//	print_vec(specular.val);
+		
+		float clr_tmp = (light_amt.val[0] * 0.8 * 0.2 + specular.val[0] * 0.2) * hit_object->color.val[0] * 255;
+		hit_color = 0;
+		if (clr_tmp > 255)
+			clr_tmp = 255;
+		else if (clr_tmp < 0)
+			clr_tmp = 0;
+		hit_color |= (int)clr_tmp << 16;
+		clr_tmp = (light_amt.val[1] * 0.2 * 0.8 +specular.val[1] * 0.2) * hit_object->color.val[1] * 255;//(float)((hit_object->color >> 8) & 0xff);
+		if (clr_tmp > 255)
+			clr_tmp = 255;
+		else if (clr_tmp < 0)
+			clr_tmp = 0;
+
+		hit_color |= (int)clr_tmp << 8;
+		clr_tmp = (light_amt.val[2] * 0.2 * 0.8 +specular.val[2] * 0.2) * hit_object->color.val[2] * 255;// (float)(hit_object->color & 0xff);
+		if (clr_tmp > 255)
+			clr_tmp = 255;
+		else if (clr_tmp < 0)
+			clr_tmp = 0;
+		hit_color |= (int)clr_tmp;
+		}
+		/*	while (i < 1) // light nbr
+			{
+			t_3vecf light_dir = sub_3vecf(lights->position, hit_point);
+			float light_distance_2 = dot_product_3vecf(light_dir, light_dir); 
+			normalize_3vecf(&light_dir); 
+			float l_dot_norm = dot_product_3vecf(light_dir, normal);
+			if (l_dot_norm < 0)
+			l_dot_norm = 0.f;
+			t_obj *shadow_hit_object = NULL; 
+			float t_near_shadow = 2147483647.f;
+			if (!(shadow_hit_object = ray_trace(shadow_point_orig, light_dir, objects, &t_near_shadow)) && t_near_shadow * t_near_shadow < light_distance_2)
+			{
+			light_amt.val[0] += lights->intensity.val[0] * l_dot_norm;
+			light_amt.val[1] += lights->intensity.val[1] * l_dot_norm;
+			light_amt.val[2] += lights->intensity.val[2] * l_dot_norm;
+			}
+			t_3vecf	m_light_dir = assign_3vecf(-light_dir.val[0], -light_dir.val[1], -light_dir.val[2]);
+			t_3vecf	reflection_direction = reflect(m_light_dir, normal);
+			float	m_dot_p = -dot_product_3vecf(reflection_direction, dir);
+			if (m_dot_p < 0)
+			m_dot_p = 0.f;
+			float	m_dot_p_exp = powf(m_dot_p,25);
+			specular_color.val[0] += m_dot_p_exp  * lights->intensity.val[0] / 2; 
+			specular_color.val[1] += m_dot_p_exp  * lights->intensity.val[1] / 2; 
+			specular_color.val[2] += m_dot_p_exp  * lights->intensity.val[2] / 2; 
+			i++;
+			}
+			*/
+		/*hit_color_vec.val[0] = light_amt.val[0] * 0.6 * 0.8 + specular_color.val[0] * 0.2;
+		hit_color_vec.val[1] = light_amt.val[1] * 0.7 * 0.8 + specular_color.val[1] * 0.2;
+		hit_color_vec.val[2] = light_amt.val[2] * 0.8 * 0.8 + specular_color.val[2] * 0.2;
+		if (hit_color_vec.val[0] >= 0.1f || hit_color_vec.val[1]>= 0.1f || hit_color_vec.val[2]>= 0.1f)
+			printf("%f %f %f\n", hit_color_vec.val[0],hit_color_vec.val[1], hit_color_vec.val[2]);
+		float clr_tmp = hit_color_vec.val[0] * (float)((hit_object->color >> 16) & 0xff);
+		hit_color = 0;
+		hit_color |= (int)clr_tmp << 16;
+		clr_tmp = hit_color_vec.val[1] * (float)((hit_object->color >> 8) & 0xff);
+		hit_color |= (int)clr_tmp << 8;
+		clr_tmp = hit_color_vec.val[2] * (float)(hit_object->color & 0xff);
+		hit_color |= (int)clr_tmp;
+		*///return (((hit_color_vec.val[0] * (float)((hit_object->color >> 16) & 0xff)) << 16) | (((int)hit_color_vec.val[1] * ((hit_object->color >> 8) & 0xff)) << 16) | (((int)hit_color_vec.val[2] * (hit_object->color & 0xff))));
+		/*	t_3vecf	phit;
+			t_3vecf	nhit;
+			t2vecf	tex;
+
+			phit.val[0] = orig.val[0] + dir.val[0] * *dist;
+			phit.val[1] = orig.val[1] + dir.val[1] * *dist;
+			phit.val[2] = orig.val[2] + dir.val[2] * *dist;
+			get_surface_data(phit, &nhit, &tex, (t_sphere *)objects->obj_param);
+			float scale = 4;
+			float pattern = (fmodf(tex.x * scale, 1) > 0.5) ^ (fmodf(tex.y * scale, 1) > 0.5);
+			hitColor = std::max(0.f, dot_product_3vecf(nhit, -dir) * mix(hitObject->color, hitObject->color * 0.8, pattern);
+			*/
+
+	//	Vec3f Phit = orig + dir * t; 
+	//	Vec3f Nhit; 
+	//	Vec2f tex; 
+
+	//	hitObject->getSurfaceData(Phit, Nhit, tex);
+	return (hit_color);
+}
+
+int		anti_aliasing(int i, int j, float img_aspect_ratio, float scale, t_3vecf orig, t_data *data)
+{
+	float	x[16];
+	float	y[16];
+	t_3vecf	dir;
+	int		colors_pix[16];
+	int		ind = 0;
+
+	while (ind < 16)
+	{
+		x[ind] = (2.0 * ((float)i + (float)(ind % 2) + 0.5) / (float)(WIN_WIDTH * 4) - 1) * img_aspect_ratio * scale;
+		y[ind] = (1.0 - 2.0 * ((float)j + (float)(ind / 2) + 0.5) / (float)(WIN_HEIGHT * 4)) * scale;
+		
+		//x = (2.0 * ((float)i + 0.5) / (float)WIN_WIDTH - 1) * img_aspect_ratio * scale;
+		//y = (1.0 - 2.0 * ((float)j + 0.5) / (float)WIN_HEIGHT) * scale;
+		mult_dir_matrix(assign_3vecf(x[ind], y[ind], -1), data->camera_to_world, &dir);
+		normalize_3vecf(&dir);
+		colors_pix[ind++] = cast_ray(orig, dir, data);
+	}
+	int	r = 0;
+	int	g = 0;
+	int	b = 0;
+	ind = 0;
+	while (ind < 16)
+	{
+		r += ((colors_pix[ind] >> 16) & 0xff);
+		g += ((colors_pix[ind] >> 8) & 0xff);
+		b += (colors_pix[ind] & 0xff);
+		ind++;
+	}
+	r /= 16;
+	g /= 16;
+	b /= 16;
+	return ((r << 16) | (g << 8) | b);
+}
+
+void	render(t_data *data)
+{
+	float	scale;
+	float	img_aspect_ratio;
+	t_3vecf	orig;
+	int		i;
+	int		j;
+
+	i = 0;
+	print_mat(data->camera_to_world.val);
+	scale = tan(degree_to_radian(data->fov * 0.5));
+	img_aspect_ratio = (float)WIN_WIDTH / (float)WIN_HEIGHT;
+	mult_vec_matrix(assign_3vecf(0, 0, 0), data->camera_to_world, &orig);
+	printf("scale : %f\nimg_aspect_ratio : %f\norig vec:\n", scale, img_aspect_ratio);
+	print_vec(orig.val);
+	while (i < WIN_HEIGHT * 4)
+	{
+		j = 0;
+		while (j < WIN_WIDTH * 4)
+		{
+			data->mlx->img_str[(i / 4) * WIN_WIDTH + (j / 4)] = anti_aliasing(i, j, img_aspect_ratio, scale, orig, data);
+		/*	float	x, y;
+			t_3vecf	dir;
+
+			x = (2.0 * ((float)i + 0.5) / (float)WIN_WIDTH - 1) * img_aspect_ratio * scale;
+			y = (1.0 - 2.0 * ((float)j + 0.5) / (float)WIN_HEIGHT) * scale;
+			mult_dir_matrix(assign_3vecf(x, y, -1), data->camera_to_world, &dir);
+			printf("%f %f\n", x, y);
+			//printf("dir then normalized dir\n");
+			//	print_vec(dir.val);
+			normalize_3vecf(&dir);
+			//	print_vec(dir.val);
+			
+			data->mlx->img_str[i * WIN_WIDTH + j] = cast_ray(orig, dir, data);
+		*/	j += 4;
+		}
+		i += 4;
+	}
+}

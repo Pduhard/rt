@@ -1,0 +1,209 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   rt.h                                             .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
+/*   Updated: 2020/01/16 04:30:09 by pduhard-    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
+#ifndef RT_H
+# define RT_H
+
+# include "../libft/libft.h"
+# include "../minilibx_macos/mlx.h"
+# include <math.h>
+# include <pthread.h>
+# include <fcntl.h>
+# include <float.h>
+# include <time.h>
+# define WIN_WIDTH	600
+# define WIN_HEIGHT	600
+# define NB_THREADS	8
+# define MAX_ANTI_AL	4
+# define MAX_ANTI_AL2	16
+
+/* CST MACROS */
+# define _M_PI_180	0.01745329251
+
+/* HOOKS MACRO */
+# define A_KEY	1
+# define D_KEY	(1 << 1)
+# define W_KEY	(1 << 2)
+# define S_KEY	(1 << 3)
+# define F_KEY	(1 << 4)
+# define G_KEY	(1 << 5)
+
+# define ARR_LEFT_KEY	(1 << 6)
+# define ARR_RIGHT_KEY	(1 << 7)
+# define ARR_DOWN_KEY	(1 << 8)
+# define ARR_UP_KEY		(1 << 9)
+
+# define SPACE_KEY	(1 << 10)
+# define SHIFT_KEY	(1 << 11)
+
+typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
+typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
+
+typedef struct	s_mlx
+{
+	void		*mlx_ptr;
+	void		*win_ptr;
+	void		*img_ptr;
+	int			*img_str;
+	int			bpp;
+	int			s_l;
+	int			endian;
+}				t_mlx;
+
+typedef struct	s_44matf
+{
+	double		val[4][4];
+}				t_44matf;
+
+typedef struct	s_33matf
+{
+	double		val[3][3];
+}				t_33matf;
+
+typedef struct	s_3vecf
+{
+	double		val[3];
+}				t_3vecf;
+
+typedef struct	s_2vecf
+{
+	double		val[2];
+}				t_2vecf;
+
+typedef struct	s_sphere
+{
+	t_3vecf		origin;
+	double		radius;
+}				t_sphere;
+
+typedef struct	s_plane
+{
+	t_3vecf		origin;
+	t_3vecf		normal;
+}				t_plane;
+
+typedef struct	s_cone
+{
+	t_3vecf		center;
+	t_3vecf		tip;
+	double		radius;
+	//t_3vecf		origin;
+//	t_3vecf		normal;
+}				t_cone;
+
+typedef struct	s_cylinder
+{
+	t_3vecf		center;
+	t_3vecf		tip;
+	double		radius;
+}				t_cylinder;
+
+typedef struct	s_obj
+{
+	e_obj_type	obj_type;
+	void		*obj_param;
+	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
+	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
+	t_3vecf		color;
+	double		reflection;
+//	int			color;
+	struct s_obj	*next;
+}				t_obj;
+
+typedef struct	s_light
+{
+	e_light_type	light_type;
+	t_3vecf		intensity;
+	t_3vecf		position;
+	t_3vecf		origin;
+	t_3vecf		color;
+	t_44matf	l_to_world;
+	t_3vecf		dir;
+	struct s_light	*next;
+}				t_light;
+
+typedef struct	s_cam
+{
+	double		fov;
+	t_44matf	camera_to_world;
+	t_3vecf		origin;
+	t_3vecf		rotation;
+}				t_cam;
+
+typedef struct	s_data
+{
+	t_mlx		*mlx;
+	t_cam		*camera;
+	t_obj		*objs;
+	t_light		*lights;
+	double		fov;
+	t_44matf	camera_to_world;
+	char		*scene_name;
+	int			hooks;
+	t_33matf	rot_mat[3];
+	double		mouse_x;
+	double		mouse_y;
+	int			fps;
+	clock_t		delta_time;
+	int			anti_al;
+}				t_data;
+
+typedef struct	s_thread
+{
+	t_data		*data;
+	int			start;
+	int			end;
+}				t_thread;
+
+t_data	*init_data(char *file_name);
+void	init_camera_to_world_matrix(double mat[4][4]);
+void	init_light_to_world_matrix(double mat[4][4]);
+t_33matf	init_rotation_matrix_x(double theta);
+t_33matf	init_rotation_matrix_y(double theta);
+t_33matf	init_rotation_matrix_z(double theta);
+t_33matf	init_rotation_matrix_vec(t_3vecf ,double);
+
+void	render(t_data *data);
+
+int		parse_rt_conf(char *file_name, t_data *data);
+int		parse_3vecf(char *line, int i, t_3vecf *vec);
+int		parse_double(char *line, int i, double *val);
+
+int		parse_sphere(char *line, t_data *data);
+int		parse_plane(char *line, t_data *data);
+int		parse_cone(char *line, t_data *data);
+int		parse_cylinder(char *line, t_data *data);
+
+t_3vecf	assign_3vecf(double x, double y, double z);
+void	normalize_3vecf(t_3vecf *vec);
+double	get_length_3vecf(t_3vecf vec);
+t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b);
+t_3vecf	product_3vecf(t_3vecf a, t_3vecf b);
+double	dot_product_3vecf(t_3vecf a, t_3vecf b);
+
+t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
+t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
+void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
+void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
+
+double	degree_to_radian(double degree);
+
+int		key_press(int keycode, void *param);
+int		key_release(int keycode, void *param);
+int		moov_hook(int x, int y, void *param);
+int		print_loop_image(void *param);
+
+
+t_3vecf get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone);
+
+#endif
