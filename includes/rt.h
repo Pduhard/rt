@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 04:30:09 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/19 18:19:15 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,6 +48,7 @@
 
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
+typedef	enum	{TEXT_UNI, TEXT_GRID} e_text_type;
 
 typedef struct	s_mlx
 {
@@ -108,14 +109,26 @@ typedef struct	s_cylinder
 	double		radius;
 }				t_cylinder;
 
+typedef struct	s_text
+{
+	e_text_type	text_type;
+	t_3vecf		color_1;
+	t_3vecf		color_2;
+	t_3vecf		color_3;
+}				t_text;
+
 typedef struct	s_obj
 {
 	e_obj_type	obj_type;
 	void		*obj_param;
 	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
+	t_3vecf		(*get_text_color)(double, double, double, struct s_obj *);
+	t_2vecf		(*get_text_coordinate)(t_3vecf, struct s_obj *);
 	t_3vecf		color;
+	t_text		text;
 	double		reflection;
+	double		refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
 //	int			color;
 	struct s_obj	*next;
 }				t_obj;
@@ -178,6 +191,7 @@ void	render(t_data *data);
 int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
 int		parse_double(char *line, int i, double *val);
+int		parse_texture(char *line, int i, t_obj *obj);
 
 int		parse_sphere(char *line, t_data *data);
 int		parse_plane(char *line, t_data *data);
@@ -204,6 +218,5 @@ int		moov_hook(int x, int y, void *param);
 int		print_loop_image(void *param);
 
 
-t_3vecf get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone);
 
 #endif

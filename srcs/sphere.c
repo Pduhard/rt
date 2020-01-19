@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:41:59 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/17 23:51:45 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,31 +66,39 @@ int		parse_sphere(char *line, t_data *data)
 		++i;
 	if (line[i] != '(' || (i = parse_3vecf(line, i, &sphere_param->origin)) == -1)
 	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)\n");
+		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
 		return (0);
 	}
 	while (ft_isspace(line[i]))
 		++i;
 	if (line[i] != '(' || (i = parse_double(line, i, &sphere_param->radius)) == -1)
 	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)\n");
+		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
 		return (0);
 	}
 	while (ft_isspace(line[i]))
 		++i;
 	if (line[i] != '(' || (i = parse_3vecf(line, i, &sphere->color)) == -1)
 	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)\n");
+		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
 		return (0);
 	}
 	while (ft_isspace(line[i]))
 		++i;
 	if (line[i] != '(' || (i = parse_double(line, i, &sphere->reflection)) == -1)
 	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)\n");
+		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
 		return (0);
 	}
-	printf("sphere : %f %f %f && %f && %f %f %f\n", sphere_param->origin.val[0], sphere_param->origin.val[1], sphere_param->origin.val[2], sphere_param->radius, sphere->color.val[0], sphere->color.val[1], sphere->color.val[2]);
+	while (ft_isspace(line[i]))
+		++i;
+	if (line[i] != '(' || (i = parse_double(line, i, &sphere->refraction)) == -1)
+	{
+		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+		return (0);
+	}
+
+	//printf("sphere : %f %f %f && %f && %f %f %f\n", sphere_param->origin.val[0], sphere_param->origin.val[1], sphere_param->origin.val[2], sphere_param->radius, sphere->color.val[0], sphere->color.val[1], sphere->color.val[2]);
 	sphere->obj_param = sphere_param;
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->ray_intersect = &ray_intersect_sphere;

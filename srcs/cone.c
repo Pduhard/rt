@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 02:27:24 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/18 00:52:12 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -146,6 +146,14 @@ int		parse_cone(char *line, t_data *data)
 		ft_printf("Syntax error: cone syntax: cone(center)(tip)(radius)(reflection)\n");
 		return (0);
 	}
+	while (ft_isspace(line[i]))
+		++i;
+	if (line[i] != '(' || (i = parse_double(line, i, &cone->refraction)) == -1)
+	{
+		ft_printf("Syntax error: cone syntax: cone(center)(tip)(radius)(reflection)\n");
+		return (0);
+	}
+
 	//printf("cone : %f %f %f && %f %f %f && %f %f %f\n", cone_param->origin.val[0], cone_param->origin.val[1], cone_param->origin.val[2], cone_param->normal.val[0], cone_param->normal.val[1], cone_param->normal.val[2] , cone->color.val[0], cone->color.val[1], cone->color.val[2]);
 	cone->obj_param = cone_param;
 	cone->obj_type = OBJ_CONE;

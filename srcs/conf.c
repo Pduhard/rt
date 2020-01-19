@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/23 01:19:51 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:11:38 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/17 23:49:30 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -295,6 +295,7 @@ int		parse_rt_line(char *line, t_data *data)
 		ft_printf("Unrecognized element: \n%s\n", line);
 		return (0);
 	}
+	data->objs->refraction = 0; // to delete..
 	//printf("%s\n", line);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 02:28:07 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/18 00:52:32 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -151,6 +151,14 @@ int			parse_cylinder(char *line, t_data *data)
 		ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
 		return (0);
 	}
+	while (ft_isspace(line[i]))
+		++i;
+	if (line[i] != '(' || (i = parse_double(line, i, &cylinder->refraction)) == -1)
+	{
+		ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
+		return (0);
+	}
+
 	cylinder->obj_param = cylinder_param;
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
