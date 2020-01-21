@@ -6,13 +6,48 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/18 00:52:12 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/21 09:14:15 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 // http://www.illusioncatalyst.com/notes_files/mathematics/line_cone_intersection.php
+
+t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone)
+{
+	t_2vecf	text_coord;
+	t_3vecf	cp;
+	t_3vecf	cone_axis[3];
+	t_cone	*param;
+
+	param = (t_cone *)cone->obj_param;
+	cp = sub_3vecf(inter_point, param->center);
+	cone_axis[1] = sub_3vecf(param->tip, param->center);
+	normalize_3vecf(&(cone_axis[1]));
+	if (cone_axis[1].val[0] != 0)
+	{
+		cone_axis[0] = assign_3vecf(0, 1, 1);
+		cone_axis[0].val[0] = (-cone_axis[1].val[1] - cone_axis[1].val[2]) / cone_axis[1].val[0];
+	}
+	else if (cone_axis[1].val[1] != 0)
+	{
+		cone_axis[0] = assign_3vecf(1, 0, 1);
+		cone_axis[0].val[1] = (-cone_axis[1].val[0] - cone_axis[1].val[2]) / cone_axis[1].val[1];
+	}
+	else if (cone_axis[1].val[2] != 0)
+	{
+		cone_axis[0] = assign_3vecf(1, 1, 0);
+		cone_axis[0].val[2] = (-cone_axis[1].val[0] - cone_axis[1].val[1]) / cone_axis[1].val[2];
+	}
+	normalize_3vecf(&(cone_axis[0]));
+	cone_axis[2] = product_3vecf(cone_axis[0], cone_axis[1]);
+	text_coord.val[1] = dot_product_3vecf(cone_axis[1], cp) * M_PI / 2;
+	text_coord.val[0] = atan2(dot_product_3vecf(cone_axis[0], cp), dot_product_3vecf(cone_axis[2], cp)) * M_PI / 2;
+	return (text_coord);
+	(void)normal_inter;
+}
+
 t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone)
 {
 	double	intersect;
@@ -37,8 +72,8 @@ t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone)
 		return (assign_3vecf(-tmp.val[0], -tmp.val[1], -tmp.val[2]));
 	else
 		return (tmp);
-		//return (assign_3vecf(-tmp.val[0], -tmp.val[1], -tmp.val[2]));
-		//return (tmp);
+	//return (assign_3vecf(-tmp.val[0], -tmp.val[1], -tmp.val[2]));
+	//return (tmp);
 	(void)inter_point;
 }
 
@@ -54,10 +89,10 @@ int	ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, dou
 	int		check = 0;
 	t_cone	*cone_param;
 
-/*	(void)dist;
-	(void)min_dist;
-	(void)max_dist;
-*/	cone_param = (t_cone *)cone->obj_param;
+	/*	(void)dist;
+		(void)min_dist;
+		(void)max_dist;
+		*/	cone_param = (t_cone *)cone->obj_param;
 	h = sub_3vecf(cone_param->center, cone_param->tip);
 	norm_h = h;
 	normalize_3vecf(&norm_h);
@@ -134,7 +169,7 @@ int		parse_cone(char *line, t_data *data)
 	}
 	while (ft_isspace(line[i]))
 		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &cone->color)) == -1)
+	if (line[i] != '(' || (i = parse_texture(line, i, cone)) == -1)
 	{
 		ft_printf("Syntax error: cone syntax: cone(center)(tip)(radius)(reflection)\n");
 		return (0);
@@ -159,6 +194,7 @@ int		parse_cone(char *line, t_data *data)
 	cone->obj_type = OBJ_CONE;
 	cone->ray_intersect = &ray_intersect_cone;
 	cone->get_normal_inter = &get_normal_intersect_cone;
+	cone->get_text_coordinate = &get_text_coordinate_cone;
 	if (data->objs)
 	{
 		cone->next = data->objs;

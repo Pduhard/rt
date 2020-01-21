@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/19 19:37:57 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/21 03:15:27 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -250,10 +250,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	normal_inter.val[2] /= normal_length;
 */	
 	t_3vecf	obj_color;
-	if (closest_obj->obj_type == OBJ_PLANE) // TO DO FOR ALL OBJECT TYPE
-		obj_color = closest_obj->get_text_color(inter_point.val[0], inter_point.val[1], inter_point.val[2], closest_obj);
-	else
-		obj_color = closest_obj->color;
+	obj_color = closest_obj->get_text_color(inter_point, normal_inter, closest_obj);
 	light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
 	lighted_color.val[0] = obj_color.val[0] * light_fact;
 	lighted_color.val[1] = obj_color.val[1] * light_fact;

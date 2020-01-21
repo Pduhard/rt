@@ -6,13 +6,49 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/18 00:52:32 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/21 03:08:40 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 // http://www.illusioncatalyst.com/notes_files/mathematics/line_cylinder_intersection.php
+
+t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder)
+{
+	t_2vecf	text_coord;
+	t_3vecf	cp;
+	t_3vecf	cyl_axis[3];
+	t_cylinder	*param;
+	
+	param = (t_cylinder *)cylinder->obj_param;
+	cp = sub_3vecf(inter_point, param->center);
+	cyl_axis[1] = sub_3vecf(param->tip, param->center);
+	normalize_3vecf(&(cyl_axis[1]));
+	if (cyl_axis[1].val[0] != 0)
+	{
+		cyl_axis[0] = assign_3vecf(0, 1, 1);
+		cyl_axis[0].val[0] = (-cyl_axis[1].val[1] - cyl_axis[1].val[2]) / cyl_axis[1].val[0];
+	}
+	else if (cyl_axis[1].val[1] != 0)
+	{
+		cyl_axis[0] = assign_3vecf(1, 0, 1);
+		cyl_axis[0].val[1] = (-cyl_axis[1].val[0] - cyl_axis[1].val[2]) / cyl_axis[1].val[1];
+	}
+	else if (cyl_axis[1].val[2] != 0)
+	{
+		cyl_axis[0] = assign_3vecf(1, 1, 0);
+		cyl_axis[0].val[2] = (-cyl_axis[1].val[0] - cyl_axis[1].val[1]) / cyl_axis[1].val[2];
+	}
+	normalize_3vecf(&(cyl_axis[0]));
+	cyl_axis[2] = product_3vecf(cyl_axis[0], cyl_axis[1]);
+	text_coord.val[1] = dot_product_3vecf(cyl_axis[1], cp) * M_PI / 2;
+	text_coord.val[0] = atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp)) * M_PI / 2;
+//	inter_point.val[2], inter_point.val[0]);
+	//text_coord.val[1] = inter_point.val[1] * M_PI;
+	return (text_coord);
+	(void)normal_inter;
+}
 
 t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder)
 {
@@ -139,7 +175,7 @@ int			parse_cylinder(char *line, t_data *data)
 	}
 	while (ft_isspace(line[i]))
 		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &cylinder->color)) == -1)
+	if (line[i] != '(' || (i = parse_texture(line, i, cylinder)) == -1)
 	{
 		ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
 		return (0);
@@ -163,6 +199,7 @@ int			parse_cylinder(char *line, t_data *data)
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
 	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
+	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
 	if (data->objs)
 		cylinder->next = data->objs;
 	else

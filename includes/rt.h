@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/19 18:19:15 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/21 09:13:50 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,6 +29,7 @@
 
 /* CST MACROS */
 # define _M_PI_180	0.01745329251
+# define _SQRT_2	1.41421356237
 
 /* HOOKS MACRO */
 # define A_KEY	1
@@ -48,7 +49,7 @@
 
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
-typedef	enum	{TEXT_UNI, TEXT_GRID} e_text_type;
+typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN} e_text_type;
 
 typedef struct	s_mlx
 {
@@ -123,8 +124,8 @@ typedef struct	s_obj
 	void		*obj_param;
 	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
-	t_3vecf		(*get_text_color)(double, double, double, struct s_obj *);
-	t_2vecf		(*get_text_coordinate)(t_3vecf, struct s_obj *);
+	t_3vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
+	t_2vecf		(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
 	t_3vecf		color;
 	t_text		text;
 	double		reflection;
@@ -199,11 +200,13 @@ int		parse_cone(char *line, t_data *data);
 int		parse_cylinder(char *line, t_data *data);
 
 t_3vecf	assign_3vecf(double x, double y, double z);
+t_2vecf	assign_2vecf(double x, double y);
 void	normalize_3vecf(t_3vecf *vec);
 double	get_length_3vecf(t_3vecf vec);
 t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b);
 t_3vecf	product_3vecf(t_3vecf a, t_3vecf b);
 double	dot_product_3vecf(t_3vecf a, t_3vecf b);
+double	dot_product_2vecf(t_2vecf a, t_2vecf b);
 
 t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
 t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
@@ -216,7 +219,5 @@ int		key_press(int keycode, void *param);
 int		key_release(int keycode, void *param);
 int		moov_hook(int x, int y, void *param);
 int		print_loop_image(void *param);
-
-
 
 #endif

@@ -6,12 +6,24 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/17 23:51:45 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/20 21:23:10 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere)
+{
+	t_2vecf	text_coord;
+
+	text_coord.val[0] = (atan2(normal_inter.val[0], normal_inter.val[2]) / (2 * M_PI) + 0.5) * 8;
+	text_coord.val[1] = (normal_inter.val[1] * 0.5 + 0.5) * 8;
+//	printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
+	return (text_coord);
+	(void)inter_point;
+	(void)sphere;
+}
 
 t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere)
 {
@@ -78,7 +90,7 @@ int		parse_sphere(char *line, t_data *data)
 	}
 	while (ft_isspace(line[i]))
 		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &sphere->color)) == -1)
+	if (line[i] != '(' || (i = parse_texture(line, i, sphere)) == -1)
 	{
 		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
 		return (0);
@@ -103,6 +115,7 @@ int		parse_sphere(char *line, t_data *data)
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->ray_intersect = &ray_intersect_sphere;
 	sphere->get_normal_inter = &get_normal_intersect_sphere;
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 	if (data->objs)
 	{
 		sphere->next = data->objs;

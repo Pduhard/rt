@@ -6,14 +6,14 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/19 19:36:06 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/20 21:07:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_obj *plane)
+t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane)
 {
 	t_2vecf	text_coord;
 	t_3vecf	u_axis;
@@ -22,20 +22,20 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_obj *plane)
 	t_3vecf	origin_inter;
 
 	param = (t_plane *)plane->obj_param;
-	if (param->normal.val[0] != 0)
+	if (normal_inter.val[0] != 0)
 	{
 		u_axis = assign_3vecf(0, 1, 1);
-		u_axis.val[0] = (-param->normal.val[1] - param->normal.val[2]) / param->normal.val[0];
+		u_axis.val[0] = (-normal_inter.val[1] - normal_inter.val[2]) / normal_inter.val[0];
 	}
-	else if (param->normal.val[1] != 0)
+	else if (normal_inter.val[1] != 0)
 	{
 		u_axis = assign_3vecf(1, 0, 1);
-		u_axis.val[1] = (-param->normal.val[0] - param->normal.val[2]) / param->normal.val[1];
+		u_axis.val[1] = (-normal_inter.val[0] - normal_inter.val[2]) / normal_inter.val[1];
 	}
-	else if (param->normal.val[2] != 0)
+	else if (normal_inter.val[2] != 0)
 	{
 		u_axis = assign_3vecf(1, 1, 0);
-		u_axis.val[2] = (-param->normal.val[0] - param->normal.val[1]) / param->normal.val[2];	
+		u_axis.val[2] = (-normal_inter.val[0] - normal_inter.val[1]) / normal_inter.val[2];
 	}
 	else
 	{
@@ -43,7 +43,7 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_obj *plane)
 		exit(0);
 	}
 	normalize_3vecf(&u_axis);
-	v_axis = product_3vecf(u_axis, param->normal);
+	v_axis = product_3vecf(u_axis, normal_inter);
 	origin_inter = sub_3vecf(inter_point, param->origin);
 //	printf("%f %f %f , %f %f %f, %f %f %f\n", param->normal.val[0], param->normal.val[1], param->normal.val[2], u_axis.val[0], u_axis.val[1], u_axis.val[2], v_axis.val[0], v_axis.val[1], v_axis.val[2]);
 	text_coord.val[0] = dot_product_3vecf(origin_inter, u_axis);

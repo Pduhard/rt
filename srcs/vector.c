@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 23:02:40 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:13:26 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/21 08:35:27 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,6 +16,11 @@
 double	dot_product_3vecf(t_3vecf a, t_3vecf b)
 {
 	return (a.val[0] * b.val[0] + a.val[1] * b.val[1] + a.val[2] * b.val[2]);
+}
+
+double	dot_product_2vecf(t_2vecf a, t_2vecf b)
+{
+	return (a.val[0] * b.val[0] + a.val[1] * b.val[1]);
 }
 
 double	get_length_3vecf(t_3vecf vec)
@@ -51,6 +56,15 @@ t_3vecf	assign_3vecf(double x, double y, double z)
 	vec.val[0] = x;
 	vec.val[1] = y;
 	vec.val[2] = z;
+	return (vec);
+}
+
+t_2vecf	assign_2vecf(double x, double y)
+{
+	t_2vecf	vec;
+
+	vec.val[0] = x;
+	vec.val[1] = y;
 	return (vec);
 }
 
