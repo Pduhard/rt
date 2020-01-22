@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/20 21:23:10 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/22 02:38:36 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,9 +17,9 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_
 {
 	t_2vecf	text_coord;
 
-	text_coord.val[0] = (atan2(normal_inter.val[0], normal_inter.val[2]) / (2 * M_PI) + 0.5) * 8;
+	text_coord.val[0] = fmod((atan2(normal_inter.val[0], normal_inter.val[2]) / (2 * M_PI) + 0.5), 1) * 8;
 	text_coord.val[1] = (normal_inter.val[1] * 0.5 + 0.5) * 8;
-//	printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
+	//printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
 	return (text_coord);
 	(void)inter_point;
 	(void)sphere;

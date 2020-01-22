@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 21:07:09 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:12:34 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/22 01:42:24 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,8 +38,6 @@ int		main(int argc, char **argv)
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 			data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
 	mlx_loop(data->mlx->mlx_ptr);
-	ft_printf("i%s", argv[0]);
-
 	(void)argc;
 	return (0);
 }

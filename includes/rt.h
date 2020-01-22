@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/21 09:13:50 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/22 07:03:33 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,7 +49,7 @@
 
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
-typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN} e_text_type;
+typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD} e_text_type;
 
 typedef struct	s_mlx
 {
@@ -99,8 +99,8 @@ typedef struct	s_cone
 	t_3vecf		center;
 	t_3vecf		tip;
 	double		radius;
-	//t_3vecf		origin;
-//	t_3vecf		normal;
+	//t_3vecf	origin;
+	//t_3vecf	normal;
 }				t_cone;
 
 typedef struct	s_cylinder
@@ -212,6 +212,10 @@ t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
 t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
 void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
+
+double	compute_perlin_factor(t_3vecf inter_point);
+
+double	linear_interpolate(double a, double b, double val);
 
 double	degree_to_radian(double degree);
 

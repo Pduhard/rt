@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/19 18:05:01 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/22 05:25:34 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -36,6 +36,7 @@ SRC			=	main.c			\
 				angles_utils.c	\
 				conf.c			\
 				texture.c		\
+				perlin.c		\
 				sphere.c		\
 				plane.c			\
 				cone.c			\
