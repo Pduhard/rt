@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/20 21:07:43 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/23 08:08:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -39,8 +39,8 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_o
 	}
 	else
 	{
-		ft_printf("plane normal == [0, 0, 0] => exit\n");
-		exit(0);
+	//	ft_printf("plane normal == [0, 0, 0] => exit\n");
+	//	exit(0);
 	}
 	normalize_3vecf(&u_axis);
 	v_axis = product_3vecf(u_axis, normal_inter);

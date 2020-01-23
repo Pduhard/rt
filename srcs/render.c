@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/22 07:29:34 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/23 17:35:18 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -195,7 +195,7 @@ double	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_dir
 			//	printf("wefwef\n");
 				norm_dot_ldir = dot_product_3vecf(normal_inter, light_dir);
 				if (norm_dot_ldir > 0)
-					light_fact += lights->intensity.val[0] * transp_fact * norm_dot_ldir / (get_length_3vecf(normal_inter) * get_length_3vecf(light_dir));
+					light_fact += lights->intensity.val[0] * transp_fact * norm_dot_ldir /  get_length_3vecf(light_dir);
 				spec_vec = reflect_ray(light_dir, normal_inter);
 			/*	spec_vec.val[0] = 2 * normal_inter.val[0] * norm_dot_ldir - light_dir.val[0];
 				spec_vec.val[1] = 2 * normal_inter.val[1] * norm_dot_ldir - light_dir.val[1];
@@ -244,6 +244,49 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	normalize_3vecf(&normal_inter);
 	if (dot_product_3vecf(normal_inter, dir) > 0)
 		normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
+
+	double	bump_factor = 0.03;
+	t_3vecf	normal_inter_save = normal_inter;
+
+	normal_inter.val[0] += inter_point.val[0];
+	normal_inter.val[1] = 50 * normal_inter.val[1] + 100 * inter_point.val[1];
+	normal_inter.val[2] += inter_point.val[2];
+
+	double	bump_x = compute_perlin_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
+		-compute_perlin_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
+	double	bump_y = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
+		-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
+	double	bump_z = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
+		-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
+
+/*	double	bump_x = compute_wood_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
+		-compute_wood_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
+	double	bump_y = compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
+		-compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
+	double	bump_z = compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
+		-compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
+
+	double	bump_x = compute_marble_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]), normal_inter_save, closest_obj)
+		-compute_marble_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]), normal_inter_save, closest_obj);
+	double	bump_y = compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]), normal_inter_save, closest_obj)
+		-compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]), normal_inter, closest_obj);
+	double	bump_z = compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor), normal_inter, closest_obj)
+		-compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor), normal_inter, closest_obj);
+
+*/
+	normal_inter.val[0] = normal_inter_save.val[0] + bump_x;
+	normal_inter.val[1] = normal_inter_save.val[1] + bump_y;
+	normal_inter.val[2] = normal_inter_save.val[2] + bump_z;
+
+	if (closest_obj->obj_type != OBJ_PLANE)
+ 
+	{
+		normal_inter.val[0] = normal_inter_save.val[0];
+		normal_inter.val[1] = normal_inter_save.val[1];
+		normal_inter.val[2] = normal_inter_save.val[2];
+	}
+
+
 /*	normal_length = get_length_3vecf(normal_inter);
 	normal_inter.val[0] /= normal_length;
 	normal_inter.val[1] /= normal_length;
@@ -298,9 +341,9 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
 		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;*/
 
-		refl_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refl_color.val[0] * closest_obj->reflection;
-		refl_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refl_color.val[1] * closest_obj->reflection;
-		refl_color.val[2] = lighted_color.val[2] * (1 - closest_obj->reflection) + refl_color.val[2] * closest_obj->reflection;
+//		refr_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refr_color.val[0] * closest_obj->reflection;
+//		refr_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refr_color.val[1] * closest_obj->reflection;
+//		refr_color.val[2] = lighted_color.val[2] * (1 - closest_obj->reflection) + refr_color.val[2] * closest_obj->reflection;
 		/*	-------- */
 		
 		lighted_color.val[0] = refr_color.val[0] * (1 - fresnel_ratio) + refl_color.val[0] * fresnel_ratio;

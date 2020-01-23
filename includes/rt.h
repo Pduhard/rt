@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/22 07:03:33 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/23 18:14:55 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,8 +21,8 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
-# define WIN_WIDTH	600
-# define WIN_HEIGHT	600
+# define WIN_WIDTH	800
+# define WIN_HEIGHT	800
 # define NB_THREADS	8
 # define MAX_ANTI_AL	4
 # define MAX_ANTI_AL2	16
@@ -214,6 +214,8 @@ void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 
 double	compute_perlin_factor(t_3vecf inter_point);
+double	compute_wood_factor(t_3vecf inter_point);
+double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 double	linear_interpolate(double a, double b, double val);
 

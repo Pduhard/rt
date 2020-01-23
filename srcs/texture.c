@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/22 08:44:08 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/23 11:39:31 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,16 +34,38 @@ t_3vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter;
 }
 
-t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+double	compute_wood_factor(t_3vecf inter_point)
 {
-	t_2vecf	text_coord;
 	double	perlin_f;
 	double	wood_f;
-	t_3vecf	color;
+
+	perlin_f = compute_perlin_factor(inter_point);
+	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
+
+	return (wood_f);
+}
+
+double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+{
+	double	perlin_f;
+	double	marble_f;
+	t_2vecf	text_coord;
 
 	perlin_f = compute_perlin_factor(inter_point);
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
+	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
+//	perlin_f = compute_perlin_factor(inter_point);
+//	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
+
+	return (marble_f);
+}
+
+t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+{
+	double	wood_f;
+	t_3vecf	color;
+
+	wood_f = compute_wood_factor(inter_point);
 //	color.val[0] = obj->text.color_1.val[0] * (1 - marble_f) + obj->text.color_2.val[0] * marble_f;
 //	color.val[1] = obj->text.color_1.val[1] * (1 - marble_f) + obj->text.color_2.val[1] * marble_f;
 //	color.val[2] = obj->text.color_1.val[2] * (1 - marble_f) + obj->text.color_2.val[2] * marble_f;
@@ -65,7 +87,7 @@ t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	//perlin_f = compute_perlin_factor(inter_point);
 	perlin_f = compute_perlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5));
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	marble_f = (1. + sin((text_coord.val[1] + perlin_f) * 3.)) / 2.;
+	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 //	color.val[0] = obj->text.color_1.val[0] * (1 - marble_f) + obj->text.color_2.val[0] * marble_f;
