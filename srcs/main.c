@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 21:07:09 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/22 01:42:24 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/24 20:24:19 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,14 @@ int		main(int argc, char **argv)
 {
 	t_data	*data;
 
+//	SDL_Surface *image = SDL_LoadBMP("bleu_outremer.bmp");
+//	image = SDL_ConvertSurfaceFormat(image, SDL_PIXELFORMAT_RGB888, 0);
+//	SDL_LockSurface(image);
+//	unsigned int	*pixels = (unsigned int *)image->pixels;
+//	for (int i = 0 ; i < 1000; ++i)
+//	{
+//		printf("%u %u %u\n", pixels[i] >> 16 & 0xff, pixels[i] >> 8 & 0xff, pixels[i] & 0xff);
+//	}
 	//check error
 	if (argc != 2)
 	{

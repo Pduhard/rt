@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/24 09:16:11 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/24 18:50:46 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,6 +16,7 @@
 
 # include "../libft/libft.h"
 # include "../minilibx_macos/mlx.h"
+# include "../sdl/SDL.h"
 # include <math.h>
 # include <pthread.h>
 # include <fcntl.h>

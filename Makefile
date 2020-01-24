@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/22 05:25:34 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/24 18:19:27 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -17,7 +17,7 @@ NAME		=	rt
 
 CC			=	gcc
 FLAGS		=	-Wall -Werror -Wextra -O3
-FRAMEWORK	=	-framework OpenGL -framework AppKit
+FRAMEWORK	=	-framework OpenGL -framework AppKit -F ./sdl_framework -framework SDL2
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
 INCLUDES	=	rt.h	\
@@ -86,6 +86,10 @@ $(MLXS):
 
 	@make -C $(MLX_PATH)
 
+$(PNGS):
+
+	@make -C $(PNG_PATH)
+
 $(BIN_PATH)%.o: $(SRC_PATH)%.c $(INCS)
 
 	@mkdir -p $(BIN_PATH) || true
@@ -104,8 +108,7 @@ fclean: clean
 	@rm -rf $(LIB_PATH)/libft.a
 	@echo "\n${R}[REMOVING "libmlx.a"]"
 	@rm -rf $(MLX_PATH)/libmlx.a
-	@echo "\n${R}[REMOVING \"$(NAME)\"]\n"
+	@echo "\n${R}[REMOVING "libpng.a"]\n"
 	@rm -f $(NAME)
 
 re: fclean all
-
