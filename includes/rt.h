@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/24 18:50:46 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/25 20:45:24 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,6 +27,13 @@
 # define NB_THREADS	8
 # define MAX_ANTI_AL	4
 # define MAX_ANTI_AL2	16
+
+/* TMP MACRO  */
+# define SCALE_X	1
+# define SCALE_Y	1
+
+# define OFFSET_X	0.4
+# define OFFSET_Y	0
 
 /* CST MACROS */
 # define _M_PI_180	0.01745329251
@@ -50,7 +57,7 @@
 
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
-typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD} e_text_type;
+typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
 
 typedef struct	s_mlx
 {
@@ -111,12 +118,24 @@ typedef struct	s_cylinder
 	double		radius;
 }				t_cylinder;
 
-typedef struct	s_text
+typedef struct	s_text_img
 {
-	e_text_type	text_type;
+	int				width;
+	int				height;
+	unsigned int	*pixels;
+}				t_text_img;
+
+typedef struct	s_text_proc
+{
 	t_3vecf		color_1;
 	t_3vecf		color_2;
 	t_3vecf		color_3;
+}				t_text_proc;
+
+typedef struct	s_text
+{
+	e_text_type	text_type;
+	void		*text_param;
 }				t_text;
 
 typedef struct	s_obj
@@ -127,7 +146,6 @@ typedef struct	s_obj
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
 	t_3vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
 	t_2vecf		(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
-	t_3vecf		color;
 	t_text		text;
 	double		reflection;
 	double		refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
@@ -157,6 +175,7 @@ typedef struct	s_cam
 
 typedef struct	s_data
 {
+	double			f;
 	t_mlx		*mlx;
 	t_cam		*camera;
 	t_obj		*objs;

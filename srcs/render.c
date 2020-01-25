@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/24 10:19:11 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/25 20:58:45 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,10 +27,14 @@ t_3vecf	window_to_view(int x, int y)
 {
 	t_3vecf	vec;
 
-	vec.val[0] = (double)x / (double)WIN_WIDTH;
-	vec.val[1] = (double)y / (double)WIN_HEIGHT;
-	vec.val[2] = 1;
-	return (vec);
+		vec.val[0] = (float)x / (float)WIN_WIDTH;
+			vec.val[1] = (float)y / (float)WIN_HEIGHT;
+				if (WIN_WIDTH > WIN_HEIGHT)
+							vec.val[0] *= (float)WIN_WIDTH / (float)WIN_HEIGHT;
+					else if (WIN_HEIGHT > WIN_WIDTH)
+								vec.val[1] *= (float)WIN_HEIGHT / (float)WIN_WIDTH;
+						vec.val[2] = 1;
+							return (vec);
 }
 
 t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs)
@@ -268,22 +272,23 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	normalize_3vecf(&normal_inter);
 	if (dot_product_3vecf(normal_inter, dir) > 0)
 		normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
-
-	double	bump_factor = 0.03;
-	t_3vecf	normal_inter_save = normal_inter;
-
-	normal_inter.val[0] += inter_point.val[0];
-	normal_inter.val[1] = 50 * normal_inter.val[1] + 100 * inter_point.val[1];
-	normal_inter.val[2] += inter_point.val[2];
-
-	double	bump_x = compute_perlin_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
-		-compute_perlin_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
-	double	bump_y = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
-		-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
-	double	bump_z = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
-		-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
-
-/*	double	bump_x = compute_wood_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
+	if (closest_obj->obj_type == OBJ_PLANE)
+	{
+		double	bump_factor = 0.03;
+		t_3vecf	normal_inter_save = normal_inter;
+	
+		normal_inter.val[0] += inter_point.val[0] + data->f;
+		normal_inter.val[1] = 50 * normal_inter.val[1] + data->f + 100 * inter_point.val[1] + data->f ;
+		normal_inter.val[2] += inter_point.val[2] + data->f;
+	
+		double	bump_x = compute_perlin_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
+			-compute_perlin_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
+		double	bump_y = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
+			-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
+		double	bump_z = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
+			-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
+	
+	/*	double	bump_x = compute_wood_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
 		-compute_wood_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
 	double	bump_y = compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
 		-compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
@@ -298,18 +303,18 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		-compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor), normal_inter, closest_obj);
 
 */
-	normal_inter.val[0] = normal_inter_save.val[0] + bump_x;
-	normal_inter.val[1] = normal_inter_save.val[1] + bump_y;
-	normal_inter.val[2] = normal_inter_save.val[2] + bump_z;
-
-	if (closest_obj->obj_type != OBJ_PLANE)
- 
+		normal_inter.val[0] = normal_inter_save.val[0] + bump_x;
+		normal_inter.val[1] = normal_inter_save.val[1] + bump_y;
+		normal_inter.val[2] = normal_inter_save.val[2] + bump_z;
+	}
+//	if (closest_obj->obj_type != OBJ_PLANE)
+/*	else
 	{
 		normal_inter.val[0] = normal_inter_save.val[0];
 		normal_inter.val[1] = normal_inter_save.val[1];
 		normal_inter.val[2] = normal_inter_save.val[2];
 	}
-
+*/
 
 /*	normal_length = get_length_3vecf(normal_inter);
 	normal_inter.val[0] /= normal_length;

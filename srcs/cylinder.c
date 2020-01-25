@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/21 03:08:40 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/25 18:15:50 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,7 +44,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, 
 	cyl_axis[2] = product_3vecf(cyl_axis[0], cyl_axis[1]);
 	text_coord.val[1] = dot_product_3vecf(cyl_axis[1], cp) * M_PI / 2;
 	text_coord.val[0] = atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp)) * M_PI / 2;
-//	inter_point.val[2], inter_point.val[0]);
+	//	inter_point.val[2], inter_point.val[0]);
 	//text_coord.val[1] = inter_point.val[1] * M_PI;
 	return (text_coord);
 	(void)normal_inter;
