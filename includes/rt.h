@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 20:45:24 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 21:43:06 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,7 @@
 # include "../libft/libft.h"
 # include "../minilibx_macos/mlx.h"
 # include "../sdl/SDL.h"
+# include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
 # include <math.h>
 # include <pthread.h>
 # include <fcntl.h>
@@ -35,10 +36,19 @@
 # define OFFSET_X	0.4
 # define OFFSET_Y	0
 
+# define CEL_SHADING	1
+
 /* CST MACROS */
 # define _M_PI_180	0.01745329251
 # define _SQRT_2	1.41421356237
 
+# define CEL_BOUND_1	0.05
+# define CEL_BOUND_2	0.15
+# define CEL_BOUND_3	0.3
+# define CEL_BOUND_4	0.60
+# define CEL_BOUND_6	0.90
+
+# define CEL_BOUNDARY	0.2
 /* HOOKS MACRO */
 # define A_KEY	1
 # define D_KEY	(1 << 1)
@@ -130,12 +140,17 @@ typedef struct	s_text_proc
 	t_3vecf		color_1;
 	t_3vecf		color_2;
 	t_3vecf		color_3;
+
+	t_3vecf		color[3];
+	t_3vecf		transp;
 }				t_text_proc;
 
 typedef struct	s_text
 {
 	e_text_type	text_type;
 	void		*text_param;
+	t_2vecf		scale;
+	t_2vecf		offset;
 }				t_text;
 
 typedef struct	s_obj

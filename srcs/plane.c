@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 13:32:25 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 15:41:05 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,8 +46,8 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_o
 	v_axis = product_3vecf(u_axis, normal_inter);
 	origin_inter = sub_3vecf(inter_point, param->origin);
 //	printf("%f %f %f , %f %f %f, %f %f %f\n", param->normal.val[0], param->normal.val[1], param->normal.val[2], u_axis.val[0], u_axis.val[1], u_axis.val[2], v_axis.val[0], v_axis.val[1], v_axis.val[2]);
-	text_coord.val[0] = dot_product_3vecf(origin_inter, u_axis);
-	text_coord.val[1] = dot_product_3vecf(origin_inter, v_axis);
+	text_coord.val[0] = dot_product_3vecf(origin_inter, u_axis) / 2;
+	text_coord.val[1] = -dot_product_3vecf(origin_inter, v_axis) / 2;
 	return (text_coord);
 }
 

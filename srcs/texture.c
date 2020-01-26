@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 20:55:47 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 18:13:47 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -118,20 +118,32 @@ t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	t_text_img	*text;
 	int		row;
 	int		col;
-	int		offset_row;
-	int		offset_col;
+//	int		offset_row;
+//	int		offset_col;
 	int		pixel_addr;
 
 	text = (t_text_img *)obj->text.text_param;
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 	text_coord.val[1] *= SCALE_X;
 	text_coord.val[0] *= SCALE_Y;
-	row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
-	col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
-	offset_row = OFFSET_Y * (double)(text->height);
-	offset_col = (1. - OFFSET_X) * (double)(text->width);
-	pixel_addr = (row + offset_row) * text->width + col + offset_col - 1;
-	pixel_addr %= (text->height * text->width);
+	if (text_coord.val[1] < 0)
+		col = (int)((1 - ((-text_coord.val[1] - (int)-text_coord.val[1]))) * (double)(text->width));
+	else
+		col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
+	if (text_coord.val[0] < 0)
+		row = (int)((1 - (-text_coord.val[0] - (int)-text_coord.val[0])) * (double)(text->height));
+	else
+		row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
+//	row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
+//	col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
+	row += OFFSET_Y * (double)(text->height);
+	col += (1. - OFFSET_X) * (double)(text->width);
+
+	row %= text->height;
+	col %= text->width;
+	pixel_addr = row * text->width + col;
+	//pixel_addr = (((row + offset_row - 1) * text->width) % text->height) + ((col + offset_col) % text->width);
+//	pixel_addr = pixel_addr % (text->height * text->width);
 	color.val[0] = (double)(text->pixels[pixel_addr] >> 16 & 0xff) / 255.;
 	color.val[1] = (double)(text->pixels[pixel_addr] >> 8 & 0xff) / 255.;
 	color.val[2] = (double)(text->pixels[pixel_addr] & 0xff) / 255.;
@@ -214,7 +226,7 @@ void	*parse_image(char *line, int *index)
 //	printf("%s %d\n", image_name, name_len);
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
-	if (!(image_bmp = SDL_LoadBMP(image_name)))
+	if (!(image_bmp = IMG_Load(image_name)))
 		return (NULL);
 	if (!(image = SDL_ConvertSurfaceFormat(image_bmp, SDL_PIXELFORMAT_RGB888, 0)))
 		return (NULL);

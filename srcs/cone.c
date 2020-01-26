@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/21 09:14:15 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 17:00:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,10 +40,21 @@ t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_ob
 		cone_axis[0] = assign_3vecf(1, 1, 0);
 		cone_axis[0].val[2] = (-cone_axis[1].val[0] - cone_axis[1].val[1]) / cone_axis[1].val[2];
 	}
+/*	t_3vecf	ch = sub_3vecf(param->tip, param->center);
+	double	length_ch = get_length_3vecf(ch);
+	double	step_inter_proj = dot_product_3vecf(ch, cp) / length_ch / length_ch;
+	t_3vecf	inter_proj = assign_3vecf(	param->center.val[0] + ch.val[0] * step_inter_proj,
+								param->center.val[1] + ch.val[1] * step_inter_proj,
+								param->center.val[2] + ch.val[2] * step_inter_proj);
+	double	scale = get_length_3vecf(sub_3vecf(inter_point, inter_proj));
+	(void)scale;
+	t_3vecf tp = sub_3vecf(inter_point, param->tip);
+	double	a = get_length_3vecf(tp);
+	double	r = sqrtf(a * a - step_inter_proj * step_inter_proj);*/
 	normalize_3vecf(&(cone_axis[0]));
 	cone_axis[2] = product_3vecf(cone_axis[0], cone_axis[1]);
-	text_coord.val[1] = dot_product_3vecf(cone_axis[1], cp) * M_PI / 2;
-	text_coord.val[0] = atan2(dot_product_3vecf(cone_axis[0], cp), dot_product_3vecf(cone_axis[2], cp)) * M_PI / 2;
+	text_coord.val[0] = -dot_product_3vecf(cone_axis[1], cp) / (M_PI * 2);
+	text_coord.val[1] = atan2(dot_product_3vecf(cone_axis[0], cp), dot_product_3vecf(cone_axis[2], cp)) / (M_PI * 2);
 	return (text_coord);
 	(void)normal_inter;
 }

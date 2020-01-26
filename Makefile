@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/25 17:23:43 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/26 21:41:16 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -17,7 +17,7 @@ NAME		=	rt
 
 CC			=	gcc
 FLAGS		=	-Wall -Werror -Wextra -O3 -march=native -flto -ffast-math
-FRAMEWORK	=	-framework OpenGL -framework AppKit -F ./sdl_framework -framework SDL2
+FRAMEWORK	=	-framework OpenGL -framework AppKit -framework SDL2 -F ./frameworks  -I./frameworks/sdl_image_framework/Headers/ -framework SDL2_image -rpath ./frameworks
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
 INCLUDES	=	rt.h	\

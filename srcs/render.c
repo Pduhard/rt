@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 20:58:45 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 21:58:52 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -143,6 +143,22 @@ double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refractio
 	return ((rs * rs + rp * rp) / 2);
 }
 
+void	cel_shade(double *val)
+{
+	if (*val < CEL_BOUND_1)
+		*val = 0.;
+	else if (*val < CEL_BOUND_2)
+		*val = CEL_BOUND_1;
+	else if (*val < CEL_BOUND_3)
+		*val = CEL_BOUND_2;
+	else if (*val < CEL_BOUND_4)
+		*val = CEL_BOUND_3;
+	else if (*val < CEL_BOUND_6)
+		*val = CEL_BOUND_4;
+	else
+		*val = CEL_BOUND_6;
+}
+
 t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_dir, t_light *lights, t_obj *objs)
 {
 	t_3vecf	light_fact;
@@ -224,7 +240,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 				spec_vec.val[1] = 2 * normal_inter.val[1] * norm_dot_ldir - light_dir.val[1];
 				spec_vec.val[2] = 2 * normal_inter.val[2] * norm_dot_ldir - light_dir.val[2];
 			*/	ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
-				if (ref_dot_idir > 0)
+				if (ref_dot_idir > 0)// && !CEL_SHADING)
 				{
 					light_fact.val[0] += lights->intensity.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
 					light_fact.val[1] += lights->intensity.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
@@ -234,6 +250,12 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			}
 		}
 		lights = lights->next;
+	}
+	if (CEL_SHADING)
+	{
+		cel_shade(&(light_fact.val[0]));
+		cel_shade(&(light_fact.val[1]));
+		cel_shade(&(light_fact.val[2]));
 	}
 	return (light_fact);
 }
@@ -272,9 +294,10 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	normalize_3vecf(&normal_inter);
 	if (dot_product_3vecf(normal_inter, dir) > 0)
 		normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
+	if (0)
 	if (closest_obj->obj_type == OBJ_PLANE)
 	{
-		double	bump_factor = 0.03;
+		double	bump_factor = 0.2;
 		t_3vecf	normal_inter_save = normal_inter;
 	
 		normal_inter.val[0] += inter_point.val[0] + data->f;
@@ -327,8 +350,13 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];
-
-	if (closest_obj->refraction < 1 && closest_obj->reflection > 0) // reflection
+	if (CEL_SHADING && is_on_cell_boundary(origin, inter_point, normal_inter, closest_obj))
+	{
+		lighted_color.val[0] = 0;
+		lighted_color.val[1] = 0;
+		lighted_color.val[2] = 0;
+	}
+	else if (closest_obj->refraction < 1 && closest_obj->reflection > 0) // reflection
 	{
 	/*	light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
 		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;

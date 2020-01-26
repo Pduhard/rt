@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 18:15:50 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/26 16:27:02 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,8 +42,12 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, 
 	}
 	normalize_3vecf(&(cyl_axis[0]));
 	cyl_axis[2] = product_3vecf(cyl_axis[0], cyl_axis[1]);
-	text_coord.val[1] = dot_product_3vecf(cyl_axis[1], cp) * M_PI / 2;
-	text_coord.val[0] = atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp)) * M_PI / 2;
+	text_coord.val[0] = (1 - dot_product_3vecf(cyl_axis[1], cp)) / ((2 * M_PI) * param->radius);
+//	if (dot_product_3vecf(cyl_axis[0], cp) < 0 && dot_product_3vecf(cyl_axis[2], cp) < 0)
+	text_coord.val[1] = (atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp))) / (2 * M_PI);
+//	else
+//		text_coord.val[1] = 1 - (1 - atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp))) / (2 * M_PI);
+//	printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
 	//	inter_point.val[2], inter_point.val[0]);
 	//text_coord.val[1] = inter_point.val[1] * M_PI;
 	return (text_coord);
@@ -70,9 +74,8 @@ t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder)
 //	hp = sub_3vecf(inter_point, cylinder_param->tip);
 	cp = sub_3vecf(inter_point, cylinder_param->center);
 	ch = sub_3vecf(cylinder_param->tip, cylinder_param->center);
-	double inter_proj_dist = dot_product_3vecf(ch, cp) / get_length_3vecf(ch);
 	length_ch = get_length_3vecf(ch);
-	step_inter_proj = inter_proj_dist / length_ch;
+	step_inter_proj = dot_product_3vecf(ch, cp) / (length_ch * length_ch);
 	inter_proj = assign_3vecf(	cylinder_param->center.val[0] + ch.val[0] * step_inter_proj,
 								cylinder_param->center.val[1] + ch.val[1] * step_inter_proj,
 								cylinder_param->center.val[2] + ch.val[2] * step_inter_proj);
