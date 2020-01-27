@@ -6,14 +6,14 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 18:47:58 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 21:53:10 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static t_mlx	*init_mlx(void)
+static t_mlx	*init_mlx(t_data *data)
 {
 	t_mlx	*mlx;
 
@@ -21,9 +21,9 @@ static t_mlx	*init_mlx(void)
 		return (NULL);
 	mlx->mlx_ptr = mlx_init();
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr,
-			WIN_WIDTH, WIN_HEIGHT, "rtv1");
+			data->size.val[0], data->size.val[1], data->scene_name);
 	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr,
-			WIN_WIDTH, WIN_HEIGHT);
+			data->size.val[0], data->size.val[1]);
 	mlx->img_str = (int *)mlx_get_data_addr(mlx->img_ptr,
 			&(mlx->bpp), &(mlx->s_l), &(mlx->endian));
 	return (mlx);
@@ -40,10 +40,10 @@ t_data	*init_data(char *file_name)
 	ft_bzero(data, sizeof(t_data));
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
-	printf("%p %p %p\n", data->lights, data->objs, data->camera);
-	printf("%f %f %f\n", ((t_cylinder*)data->objs->obj_param)->center.val[0], ((t_cylinder*)data->objs->obj_param)->center.val[1], ((t_cylinder*)data->objs->obj_param)->center.val[2]);
-	printf("%f %f \n", data->lights->param.val[2], data->lights->color.val[2]);
-	if (!(data->mlx = init_mlx()))
+//	printf("%p %p %p\n", data->lights, data->objs, data->camera);
+//	printf("%f %f %f\n", ((t_cylinder*)data->objs->obj_param)->center.val[0], ((t_cylinder*)data->objs->obj_param)->center.val[1], ((t_cylinder*)data->objs->obj_param)->center.val[2]);
+//	printf("%f %f \n", data->lights->param.val[2], data->lights->color.val[2]);
+	if (!(data->mlx = init_mlx(data)))
 	{
 		free(data->objs);
 		free(data);

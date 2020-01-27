@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 18:51:54 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 22:51:22 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -470,16 +470,16 @@ int		clip_color(double color)
 		return ((int)color);
 }
 
-void	ray_put_pixel(int i, int j, int *img, t_3vecf color)
+void	ray_put_pixel(int i, int j, int *img, t_3vecf color, t_data *data)
 {
 	int		rgb_color;
 
-	i = WIN_WIDTH / 2 + i;
-	j = WIN_HEIGHT / 2 + j;
+	i = (int)data->size.val[0] / 2 + i;
+	j = (int)data->size.val[1] / 2 + j;
 	rgb_color = (clip_color(color.val[0] * 255) << 16);
 	rgb_color |= (clip_color(color.val[1] * 255) << 8);
 	rgb_color |= clip_color(color.val[2] * 255);
-	img[j * WIN_WIDTH + i] = rgb_color;
+	img[j * (int)data->size.val[0] + i] = rgb_color;
 }
 
 void	init_threads(t_thread threads[NB_THREADS], t_data *data)
@@ -488,8 +488,8 @@ void	init_threads(t_thread threads[NB_THREADS], t_data *data)
 
 	while (++index < NB_THREADS)
 	{
-		threads[index].start = -WIN_WIDTH / 2 + WIN_WIDTH * index / NB_THREADS;
-		threads[index].end = -WIN_WIDTH / 2 + WIN_WIDTH * (index + 1) / NB_THREADS;
+		threads[index].start = (int)-data->size.val[0] / 2 + (int)data->size.val[0] * index / NB_THREADS;
+		threads[index].end = (int)-data->size.val[0] / 2 + (int)data->size.val[0] * (index + 1) / NB_THREADS;
 		threads[index].data = data;
 	}
 }
@@ -508,14 +508,14 @@ void	*render_thread(void *param)
 	orig = data->camera->origin;
 	while (i < thread->end)
 	{
-		j = -WIN_HEIGHT / 2;
-		while (j < WIN_HEIGHT / 2)
+		j = -data->size.val[1] / 2;
+		while (j < data->size.val[1] / 2)
 		{
 			if (!ANTI_AL)
 			{
-				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, WIN_WIDTH, WIN_HEIGHT), data->rot_mat[1]), data->rot_mat[0]);
+				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
 				color = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
-				ray_put_pixel(i, j, data->mlx->img_str, color);
+				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
 			/*else
 			{
