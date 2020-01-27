@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 20:07:51 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 15:18:48 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -186,7 +186,9 @@ int		print_loop_image(void *param)
 {
 	t_data *data;
 	data = (t_data *)param;
+	Uint32	frame_start;
 
+	frame_start = SDL_GetTicks();
 //	data->f += 0.01;
 //	printf("%x\n", data->hooks);
 //	loop_manage_speed(data);
@@ -195,10 +197,10 @@ int		print_loop_image(void *param)
 //	loop_manage_rot_matrix(data);
 //	clock_t	start;
 //	clock_t	end;
-	mlx_destroy_image(data->mlx->mlx_ptr, data->mlx->img_ptr);
-	data->mlx->img_ptr = mlx_new_image(data->mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	data->mlx->img_str = (int *)mlx_get_data_addr(data->mlx->img_ptr,
-			&(data->mlx->bpp), &(data->mlx->s_l), &(data->mlx->endian));
+	mlx_clear_window(data->mlx->mlx_ptr, data->mlx->win_ptr);
+//	data->mlx->img_ptr = mlx_new_image(data->mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+//	data->mlx->img_str = (int *)mlx_get_data_addr(data->mlx->img_ptr,
+//			&(data->mlx->bpp), &(data->mlx->s_l), &(data->mlx->endian));
 //	display_points(data->pix_map, data->map, data);
 //	link_pixels(data->pix_map, data);
 	//write(1, "lol\n", 4);
@@ -207,15 +209,15 @@ int		print_loop_image(void *param)
 //	end = clock();
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
-//	data->delta_time += (end - start);
+//	printf("%d %d, %d\n", frame_start, SDL_GetTicks(), (SDL_GetTicks() - frame_start));
+	data->delta_time += (SDL_GetTicks() - frame_start);
 	//printf("%lu \n", data->delta_time);
-//	data->fps++;
-/*	if (((double)data->delta_time / (double)CLOCKS_PER_SEC) > 1.0)
+	data->fps++;
+	if (data->delta_time >= 1000)
 	{
-		printf("camera x, %f y %f z %f\n", data->camera->origin.val[0], data->camera->origin.val[1], data->camera->origin.val[2]);
-		printf("fps: %d\n", data->fps);
+		ft_printf("camera position : x %f y %f z %f\nfps: %d\n", data->camera->origin.val[0], data->camera->origin.val[1], data->camera->origin.val[2], data->fps);
 		data->fps = 0;
-		data->delta_time -= (double)CLOCKS_PER_SEC;
+		data->delta_time = 0;
 	}
-*/	return (1);
+	return (1);
 }

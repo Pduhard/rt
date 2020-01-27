@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 21:43:06 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 17:39:32 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,14 +29,17 @@
 # define MAX_ANTI_AL	4
 # define MAX_ANTI_AL2	16
 
+# define MAX_VIEW		500
+
 /* TMP MACRO  */
-# define SCALE_X	1
-# define SCALE_Y	1
+# define SCALE_X	0.1
+# define SCALE_Y	0.1
 
 # define OFFSET_X	0.4
 # define OFFSET_Y	0
 
-# define CEL_SHADING	1
+# define CEL_SHADING	0
+# define ANTI_AL		0
 
 /* CST MACROS */
 # define _M_PI_180	0.01745329251
@@ -48,7 +51,7 @@
 # define CEL_BOUND_4	0.60
 # define CEL_BOUND_6	0.90
 
-# define CEL_BOUNDARY	0.2
+# define CEL_BOUNDARY	0.04
 /* HOOKS MACRO */
 # define A_KEY	1
 # define D_KEY	(1 << 1)
@@ -202,7 +205,7 @@ typedef struct	s_data
 	t_33matf	rot_mat[3];
 	double		mouse_x;
 	double		mouse_y;
-	int			fps;
+	Uint32		fps;
 	clock_t		delta_time;
 	int			anti_al;
 }				t_data;

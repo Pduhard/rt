@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:52:29 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:12:09 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 13:37:29 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,7 +45,6 @@ int		key_press(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	printf("keycode : %d\n", keycode);
 	if (keycode == 0) //
 		data->hooks |= A_KEY;
 		//data->cam.origin[0] -= 0.2;

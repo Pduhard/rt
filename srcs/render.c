@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 21:58:52 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 17:38:14 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,18 +23,18 @@ void	print_vec(double vec[3])
 	printf("x: %f\ny: %f\nz: %f\n", vec[0], vec[1], vec[2]);
 }
 
-t_3vecf	window_to_view(int x, int y)
+t_3vecf	window_to_view(double x, double y, double win_w, double win_h)
 {
 	t_3vecf	vec;
-
-		vec.val[0] = (float)x / (float)WIN_WIDTH;
-			vec.val[1] = (float)y / (float)WIN_HEIGHT;
-				if (WIN_WIDTH > WIN_HEIGHT)
-							vec.val[0] *= (float)WIN_WIDTH / (float)WIN_HEIGHT;
-					else if (WIN_HEIGHT > WIN_WIDTH)
-								vec.val[1] *= (float)WIN_HEIGHT / (float)WIN_WIDTH;
-						vec.val[2] = 1;
-							return (vec);
+	
+	vec.val[0] = x / win_w;
+	vec.val[1] = y / win_h;
+	if (win_w > win_h)
+		vec.val[0] *= win_w / win_h;
+	else if (win_h > win_w)
+		vec.val[1] *= win_h / win_w;
+	vec.val[2] = 1;
+	return (vec);
 }
 
 t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs)
@@ -42,7 +42,7 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	t_obj	*closest_obj;
 
 	closest_obj = NULL;
-	*closest_dist = FLT_MAX;
+	*closest_dist = MAX_VIEW;
 	while (objs)
 	{
 		//objs->ray_interset() could be smart
@@ -191,7 +191,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			else if (lights->light_type == LIGHT_DIRECTIONAL)
 			{
 				light_dir = assign_3vecf(-lights->origin.val[0], -lights->origin.val[1], -lights->origin.val[2]);
-				light_len = FLT_MAX;
+				light_len = MAX_VIEW;
 			}
 			//get_length_3vecf(light_dir);
 			normalize_3vecf(&light_dir);// same
@@ -258,6 +258,23 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 		cel_shade(&(light_fact.val[2]));
 	}
 	return (light_fact);
+}
+
+int		is_on_cell_boundary(t_3vecf origin, t_3vecf inter_point, t_3vecf normal_inter, t_obj *closest_obj)
+{
+	t_3vecf	new_dir;
+	t_3vecf	new_inter_point;
+	double	dist;
+
+	new_inter_point.val[0] = inter_point.val[0] + normal_inter.val[0] * CEL_BOUNDARY;
+	new_inter_point.val[1] = inter_point.val[1] + normal_inter.val[1] * CEL_BOUNDARY;
+	new_inter_point.val[2] = inter_point.val[2] + normal_inter.val[2] * CEL_BOUNDARY;
+	new_dir = sub_3vecf(new_inter_point, origin);
+	normalize_3vecf(&new_dir);
+	dist = MAX_VIEW;
+	if (closest_obj->ray_intersect(origin, new_dir, closest_obj, &dist, 2 * CEL_BOUNDARY, MAX_VIEW))
+		return (0);
+	return (1);
 }
 
 t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t_data *data, int depth)
@@ -350,7 +367,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];
-	if (CEL_SHADING && is_on_cell_boundary(origin, inter_point, normal_inter, closest_obj))
+	if (CEL_SHADING && is_on_cell_boundary(orig, inter_point, normal_inter, closest_obj))
 	{
 		lighted_color.val[0] = 0;
 		lighted_color.val[1] = 0;
@@ -367,7 +384,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 			return (lighted_color);
 		t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 		normalize_3vecf(&refl_ray);
-		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, FLT_MAX, data, depth - 1);
+		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
 	
 		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refl_color.val[0] * closest_obj->reflection;
 		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refl_color.val[1] * closest_obj->reflection;
@@ -386,11 +403,11 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		{
 			t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
 			normalize_3vecf(&refr_ray);
-			refr_color = ray_trace(inter_point, refr_ray, 0.01, FLT_MAX, data, depth - 1);
+			refr_color = ray_trace(inter_point, refr_ray, 0.01, MAX_VIEW, data, depth - 1);
 		}
 		t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 		normalize_3vecf(&refl_ray);
-		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, FLT_MAX, data, depth - 1);
+		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
 
 		/*	not sure */	
 /*		light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
@@ -422,11 +439,11 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 //		{
 			//t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
 			//normalize_3vecf(&refr_ray);
-			refr_color = ray_trace(inter_point, dir, 0.01, FLT_MAX, data, depth - 1);
+			refr_color = ray_trace(inter_point, dir, 0.01, MAX_VIEW, data, depth - 1);
 //		}
 	//	t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 	//	normalize_3vecf(&refl_ray);
-	//	t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, FLT_MAX, data, depth - 1);
+	//	t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
 		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->refraction) + refr_color.val[0] * closest_obj->refraction;
 		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->refraction) + refr_color.val[1] * closest_obj->refraction;
 		lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->refraction) + refr_color.val[2] * closest_obj->refraction;
@@ -494,18 +511,35 @@ void	*render_thread(void *param)
 		j = -WIN_HEIGHT / 2;
 		while (j < WIN_HEIGHT / 2)
 		{
-			
-			dir = /*mult_3vecf_33matf(*/mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j), data->rot_mat[1]), data->rot_mat[0])/*, data->rot_mat[2])*/;
-			//dir = window_to_view(i, j);
-			/*dir = mult_3vecf_33matf(window_to_view(i, j), data->rot_mat[1]);
-			dir_t = mult_3vecf_33matf(window_to_view(i, j), data->rot_mat[0]);
-			dir.val[0] = (dir.val[0] + dir_t.val[0]) / 2;
-			dir.val[1] = (dir.val[1] + dir_t.val[1]) / 2;
-			dir.val[2] = (dir.val[2] + dir_t.val[2]) / 2;
-			*///dir = mult_3vecf_33matf(window_to_view(i, j), mult_33matf_33matf(data->rot_mat[1], data->rot_mat[0]));
-			color = ray_trace(orig, dir, 0.01, FLT_MAX, data, 6);
-		//	color = (i + WIN_WIDTH / 2 ) * 256 + j + WIN_HEIGHT / 2;
-			ray_put_pixel(i, j, data->mlx->img_str, color);
+			if (!ANTI_AL)
+			{
+				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, WIN_WIDTH, WIN_HEIGHT), data->rot_mat[1]), data->rot_mat[0]);
+				color = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
+				ray_put_pixel(i, j, data->mlx->img_str, color);
+			}
+			else
+			{
+				t_3vecf	clr;
+				int		anti_all_iter;
+				int		offset;
+
+				offset = 0;
+				anti_all_iter = ANTI_AL * ANTI_AL;
+				color = assign_3vecf(0, 0, 0);
+				while (offset < anti_all_iter)
+				{
+					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * ANTI_AL + offset / ANTI_AL, j * ANTI_AL + offset % ANTI_AL, WIN_WIDTH * ANTI_AL, WIN_HEIGHT * ANTI_AL), data->rot_mat[1]), data->rot_mat[0]);
+					clr = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
+					color.val[0] += clr.val[0];
+					color.val[1] += clr.val[1];
+					color.val[2] += clr.val[2];
+					offset++;
+				}
+				color.val[0] /= (double)anti_all_iter;
+				color.val[1] /= (double)anti_all_iter;
+				color.val[2] /= (double)anti_all_iter;
+				ray_put_pixel(i, j, data->mlx->img_str, color);
+			}
 			++j;
 		}
 		++i;
@@ -537,7 +571,7 @@ void	render(t_data *data)
 	i = 0;
 	while (i < NB_THREADS)
 	{
-		ret = pthread_create(&(threads[i]), NULL, render_thread, (void *)(&(threads_param[i])));
+		ret = pthread_create(&(threads[i]), NULL, render_thread, (void *)&(threads_param[i]));
 		if (ret)
 			exit(EXIT_FAILURE);
 		++i;
