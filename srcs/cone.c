@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   cone.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 17:00:43 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:14:08 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -148,7 +148,7 @@ int	ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, dou
 	return (0);
 }
 
-int		parse_cone(char *line, t_data *data)
+/*int		parse_cone(char *line, t_data *data)
 {
 	int			i;
 	t_obj		*cone;
@@ -214,4 +214,4 @@ int		parse_cone(char *line, t_data *data)
 		cone->next = NULL;
 	data->objs = cone;
 	return (1);
-}
+}*/

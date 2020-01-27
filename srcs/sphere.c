@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   sphere.c                                         .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 15:03:22 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:14:52 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -65,7 +65,7 @@ int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist,
 	return (check);
 }
 
-int		parse_sphere(char *line, t_data *data)
+/*int		parse_sphere(char *line, t_data *data)
 {
 	int			i;
 	t_obj		*sphere;
@@ -124,4 +124,4 @@ int		parse_sphere(char *line, t_data *data)
 		sphere->next = NULL;
 	data->objs = sphere;
 	return (1);
-}
+}*/

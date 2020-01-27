@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   texture.c                                        .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 18:13:47 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:22:43 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,7 +18,7 @@ t_3vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	t_text_proc	*text;
 
 	text = (t_text_proc *)obj->text.text_param;
-	return (text->color_1);
+	return (text->color[0]);
 	(void)inter_point; // warning
 	(void)normal_inter; // warning
 }
@@ -31,12 +31,12 @@ t_3vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	text = (t_text_proc *)obj->text.text_param;
 
 /*	if (perlin_f > 0.8)
-		return (assign_3vecf(obj->text.color_1.val[0] * perlin_f, obj->text.color_1.val[1] * perlin_f, obj->text.color_1.val[2] * perlin_f));
+		return (assign_3vecf(obj->text.color[0].val[0] * perlin_f, obj->text.color[0].val[1] * perlin_f, obj->text.color[0].val[2] * perlin_f));
 	else if (perlin_f > 0.5)
-		return (assign_3vecf(obj->text.color_2.val[0] * perlin_f, obj->text.color_2.val[1] * perlin_f, obj->text.color_2.val[2] * perlin_f));
+		return (assign_3vecf(obj->text.color[1].val[0] * perlin_f, obj->text.color[1].val[1] * perlin_f, obj->text.color[1].val[2] * perlin_f));
 	else
 		return (assign_3vecf(obj->text.color_3.val[0] * perlin_f, obj->text.color_3.val[1] * perlin_f, obj->text.color_3.val[2] * perlin_f));
-*/	return (assign_3vecf(text->color_1.val[0] * perlin_f, text->color_1.val[1] * perlin_f, text->color_1.val[2] * perlin_f));
+*/	return (assign_3vecf(text->color[0].val[0] * perlin_f, text->color[0].val[1] * perlin_f, text->color[0].val[2] * perlin_f));
 	(void)normal_inter;
 }
 
@@ -74,13 +74,13 @@ t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 
 	text = (t_text_proc *)obj->text.text_param;
 	wood_f = compute_wood_factor(inter_point);
-//	color.val[0] = obj->text.color_1.val[0] * (1 - marble_f) + obj->text.color_2.val[0] * marble_f;
-//	color.val[1] = obj->text.color_1.val[1] * (1 - marble_f) + obj->text.color_2.val[1] * marble_f;
-//	color.val[2] = obj->text.color_1.val[2] * (1 - marble_f) + obj->text.color_2.val[2] * marble_f;
+//	color.val[0] = obj->text.color[0].val[0] * (1 - marble_f) + obj->text.color[1].val[0] * marble_f;
+//	color.val[1] = obj->text.color[0].val[1] * (1 - marble_f) + obj->text.color[1].val[1] * marble_f;
+//	color.val[2] = obj->text.color[0].val[2] * (1 - marble_f) + obj->text.color[1].val[2] * marble_f;
 
-	color.val[0] = linear_interpolate(text->color_1.val[0], text->color_2.val[0], wood_f);
-	color.val[1] = linear_interpolate(text->color_1.val[1], text->color_2.val[1], wood_f);
-	color.val[2] = linear_interpolate(text->color_1.val[2], text->color_2.val[2], wood_f);
+	color.val[0] = linear_interpolate(text->color[0].val[0], text->color[1].val[0], wood_f);
+	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], wood_f);
+	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], wood_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -100,13 +100,13 @@ t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-//	color.val[0] = obj->text.color_1.val[0] * (1 - marble_f) + obj->text.color_2.val[0] * marble_f;
-//	color.val[1] = obj->text.color_1.val[1] * (1 - marble_f) + obj->text.color_2.val[1] * marble_f;
-//	color.val[2] = obj->text.color_1.val[2] * (1 - marble_f) + obj->text.color_2.val[2] * marble_f;
+//	color.val[0] = obj->text.color[0].val[0] * (1 - marble_f) + obj->text.color[1].val[0] * marble_f;
+//	color.val[1] = obj->text.color[0].val[1] * (1 - marble_f) + obj->text.color[1].val[1] * marble_f;
+//	color.val[2] = obj->text.color[0].val[2] * (1 - marble_f) + obj->text.color[1].val[2] * marble_f;
 
-	color.val[0] = linear_interpolate(text->color_1.val[0], text->color_2.val[0], marble_f);
-	color.val[1] = linear_interpolate(text->color_1.val[1], text->color_2.val[1], marble_f);
-	color.val[2] = linear_interpolate(text->color_1.val[2], text->color_2.val[2], marble_f);
+	color.val[0] = linear_interpolate(text->color[0].val[0], text->color[1].val[0], marble_f);
+	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
+	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -147,9 +147,9 @@ t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	color.val[0] = (double)(text->pixels[pixel_addr] >> 16 & 0xff) / 255.;
 	color.val[1] = (double)(text->pixels[pixel_addr] >> 8 & 0xff) / 255.;
 	color.val[2] = (double)(text->pixels[pixel_addr] & 0xff) / 255.;
-	//linear_interpolate(text->color_1.val[0], text->color_2.val[0], marble_f);
-	//color.val[1] = linear_interpolate(text->color_1.val[1], text->color_2.val[1], marble_f);
-	//color.val[2] = linear_interpolate(text->color_1.val[2], text->color_2.val[2], marble_f);
+	//linear_interpolate(text->color[0].val[0], text->color[1].val[0], marble_f);
+	//color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
+	//color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -169,11 +169,11 @@ t_3vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	u_grid = (fmod(text_coord.val[0], 2) == 0);
 	v_grid = (fmod(text_coord.val[1], 2) == 0);
 	if ((u_grid ^ v_grid))
-		return (text->color_1);
-	return (text->color_2);
+		return (text->color[0]);
+	return (text->color[1]);
 }
 
-void	*parse_procedural(char *line, int *index)
+/*void	*parse_procedural(char *line, int *index)
 {
 	int	i;
 	t_text_proc	*param;
@@ -181,13 +181,13 @@ void	*parse_procedural(char *line, int *index)
 	if (!(param = malloc(sizeof(t_text_proc))))
 		return (NULL);
 	i = *index;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color_1))) == -1)
+	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color[0]))) == -1)
 	{
 		return (NULL);
 	}
 	while (ft_isspace(line[i]))
 		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color_2))) == -1)
+	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color[1]))) == -1)
 	{
 		return (NULL);
 	}
@@ -317,6 +317,6 @@ int		parse_texture(char *line, int i, t_obj *obj)
 	while (ft_isspace(line[i]))
 		++i;
 //	obj->color = assign_3vecf(1, 1, 1);
-	//bj->text.color_1;
+	//bj->text.color[0];
 	return (i);
-}
+}*/

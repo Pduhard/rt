@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   rt.h                                             .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 17:39:32 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:30:26 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -140,9 +140,9 @@ typedef struct	s_text_img
 
 typedef struct	s_text_proc
 {
-	t_3vecf		color_1;
-	t_3vecf		color_2;
-	t_3vecf		color_3;
+//	t_3vecf		color_1;
+//	t_3vecf		color_2;
+//	t_3vecf		color_3;
 
 	t_3vecf		color[3];
 	t_3vecf		transp;
@@ -151,9 +151,9 @@ typedef struct	s_text_proc
 typedef struct	s_text
 {
 	e_text_type	text_type;
-	void		*text_param;
 	t_2vecf		scale;
 	t_2vecf		offset;
+	void		*text_param;
 }				t_text;
 
 typedef struct	s_obj
@@ -167,6 +167,9 @@ typedef struct	s_obj
 	t_text		text;
 	double		reflection;
 	double		refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
+	double		transmitance;
+	double		transparence;
+	double		shininess;
 //	int			color;
 	struct s_obj	*next;
 }				t_obj;
@@ -174,39 +177,32 @@ typedef struct	s_obj
 typedef struct	s_light
 {
 	e_light_type	light_type;
-	t_3vecf		intensity;
-	t_3vecf		position;
-	t_3vecf		origin;
 	t_3vecf		color;
-	t_44matf	l_to_world;
-	t_3vecf		dir;
+	t_3vecf		param;
 	struct s_light	*next;
 }				t_light;
 
 typedef struct	s_cam
 {
-	double		fov;
-	t_44matf	camera_to_world;
 	t_3vecf		origin;
-	t_3vecf		rotation;
+	t_2vecf		rotation;
 }				t_cam;
 
 typedef struct	s_data
 {
-	double			f;
+//	double			f;
 	t_mlx		*mlx;
 	t_cam		*camera;
 	t_obj		*objs;
 	t_light		*lights;
-	double		fov;
-	t_44matf	camera_to_world;
+//	double		fov;
+//	t_44matf	camera_to_world;
 	char		*scene_name;
+	t_2vecf		size;
 	int			hooks;
 	t_33matf	rot_mat[3];
-	double		mouse_x;
-	double		mouse_y;
 	Uint32		fps;
-	clock_t		delta_time;
+	Uint32		delta_time;
 	int			anti_al;
 }				t_data;
 
@@ -230,12 +226,14 @@ void	render(t_data *data);
 int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
 int		parse_double(char *line, int i, double *val);
-int		parse_texture(char *line, int i, t_obj *obj);
+//int		parse_texture(char *line, int i, t_obj *obj);
+int		parse_2vecf(char *line, int i, t_2vecf *vec);
+int		parse_double2(char **line, int i, double *val);
 
-int		parse_sphere(char *line, t_data *data);
-int		parse_plane(char *line, t_data *data);
-int		parse_cone(char *line, t_data *data);
-int		parse_cylinder(char *line, t_data *data);
+//int		parse_sphere(char *line, t_data *data);
+//int		parse_plane(char *line, t_data *data);
+//int		parse_cone(char *line, t_data *data);
+//int		parse_cylinder(char *line, t_data *data);
 
 t_3vecf	assign_3vecf(double x, double y, double z);
 t_2vecf	assign_2vecf(double x, double y);
@@ -263,5 +261,57 @@ int		key_press(int keycode, void *param);
 int		key_release(int keycode, void *param);
 int		moov_hook(int x, int y, void *param);
 int		print_loop_image(void *param);
+
+int		brackets_rt(char *line);
+int		parse_scene(char **line, t_data *data);
+int		parse(char **line, t_data *data);
+char	goto_next_element(char **line);
+int		parse_scene_name(char **line, t_data *data);
+int		parse_size(char **line, t_data *data);
+int		parse_camera(char **line, t_data *data);
+int		parse_objects(char **line, t_data *data);
+int		parse_lights(char **line, t_data *data);
+int		parse_color_transp(char **line, t_3vecf *t_3vecf, int	i, double *val);
+void	*parse_proc(char **line, t_text *text);
+void	*parse_img(char **line, t_text *text);
+int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
+
+int		parse_rotation(char **line, t_2vecf *t, int i);
+int		parse_origin(char **line, t_3vecf *t, int i);
+
+int		parse_cone(char **line, t_obj *cone, t_data *data);
+int		parse_cylinder(char **line, t_obj *cylinder, t_data *data);
+int		parse_plane(char **line, t_obj *plane, t_data *data);
+int		parse_sphere(char **line, t_obj *sphere, t_data *data);
+
+int		parse_ambient(char **line, t_light *light, t_data *data);
+
+int		ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, double min_dist, double max_dist);
+t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone);
+t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
+
+int 	ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist);
+t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder);
+t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder);
+
+int		ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist);
+t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere);
+t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere);
+
+int		ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist);
+t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane);
+t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane);
+
+void	print_conf(t_data *data);
+void	print_vec2(double vec[2]);
+void	print_vec(double vec[3]);
+void	print_obj_param(t_obj *obj);
+
+t_3vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 #endif

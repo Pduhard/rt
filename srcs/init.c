@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   init.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 13:34:44 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:47:58 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,6 +40,9 @@ t_data	*init_data(char *file_name)
 	ft_bzero(data, sizeof(t_data));
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
+	printf("%p %p %p\n", data->lights, data->objs, data->camera);
+	printf("%f %f %f\n", ((t_cylinder*)data->objs->obj_param)->center.val[0], ((t_cylinder*)data->objs->obj_param)->center.val[1], ((t_cylinder*)data->objs->obj_param)->center.val[2]);
+	printf("%f %f \n", data->lights->param.val[2], data->lights->color.val[2]);
 	if (!(data->mlx = init_mlx()))
 	{
 		free(data->objs);
@@ -76,15 +79,12 @@ t_data	*init_data(char *file_name)
 //	init_light_to_world_matrix(data->lights->l_to_world.val);
 	data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
 	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
-	data->rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[2]));
+//	data->rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[2]));
 	//data->lights->color = assign_3vecf(1, 1, 1);
 	//data->fov = 51.12;
 	data->hooks = 0;
-	data->mouse_x = 0;
-	data->mouse_y = 0;
 	data->fps = 0;
 	data->delta_time = 0;
 	data->anti_al = 1;
-	data->f = 0.01;
 	return (data);
 }

@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/26 21:41:16 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/27 18:23:16 by aplat       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -42,7 +42,6 @@ SRC			=	main.c			\
 				cone.c			\
 				loop.c			\
 				key_hook.c		\
-				mouse_hook.c	\
 				cylinder.c		\
 
 BIN			=	$(SRC:.c=.o)

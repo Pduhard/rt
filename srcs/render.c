@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   render.c                                         .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 17:38:14 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:51:54 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -177,20 +177,20 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 	{
 		if (lights->light_type == LIGHT_AMBIENT)
 		{
-			light_fact.val[0] += lights->intensity.val[0];
-			light_fact.val[1] += lights->intensity.val[1];
-			light_fact.val[2] += lights->intensity.val[2];
+			light_fact.val[0] += lights->color.val[0];
+			light_fact.val[1] += lights->color.val[1];
+			light_fact.val[2] += lights->color.val[2];
 		}
 		else
 		{
 			if (lights->light_type == LIGHT_POINT)
 			{
-				light_dir = sub_3vecf(lights->origin, inter_point);
+				light_dir = sub_3vecf(lights->param, inter_point);
 				light_len = get_length_3vecf(light_dir);
 			}
 			else if (lights->light_type == LIGHT_DIRECTIONAL)
 			{
-				light_dir = assign_3vecf(-lights->origin.val[0], -lights->origin.val[1], -lights->origin.val[2]);
+				light_dir = assign_3vecf(-lights->param.val[0], -lights->param.val[1], -lights->param.val[2]);
 				light_len = MAX_VIEW;
 			}
 			//get_length_3vecf(light_dir);
@@ -231,9 +231,9 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 				norm_dot_ldir = dot_product_3vecf(normal_inter, light_dir);
 				if (norm_dot_ldir > 0)
 				{
-					light_fact.val[0] += lights->intensity.val[0] * transp_fact.val[0] * norm_dot_ldir /  get_length_3vecf(light_dir);
-					light_fact.val[1] += lights->intensity.val[1] * transp_fact.val[1] * norm_dot_ldir /  get_length_3vecf(light_dir);
-					light_fact.val[2] += lights->intensity.val[2] * transp_fact.val[2] * norm_dot_ldir /  get_length_3vecf(light_dir);
+					light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * norm_dot_ldir /  get_length_3vecf(light_dir);
+					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * norm_dot_ldir /  get_length_3vecf(light_dir);
+					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * norm_dot_ldir /  get_length_3vecf(light_dir);
 				}
 				spec_vec = reflect_ray(light_dir, normal_inter);
 			/*	spec_vec.val[0] = 2 * normal_inter.val[0] * norm_dot_ldir - light_dir.val[0];
@@ -242,9 +242,9 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			*/	ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
 				if (ref_dot_idir > 0)// && !CEL_SHADING)
 				{
-					light_fact.val[0] += lights->intensity.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
-					light_fact.val[1] += lights->intensity.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
-					light_fact.val[2] += lights->intensity.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
+					light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
+					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
+					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
 			
 				}
 			}
@@ -317,9 +317,9 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		double	bump_factor = 0.2;
 		t_3vecf	normal_inter_save = normal_inter;
 	
-		normal_inter.val[0] += inter_point.val[0] + data->f;
-		normal_inter.val[1] = 50 * normal_inter.val[1] + data->f + 100 * inter_point.val[1] + data->f ;
-		normal_inter.val[2] += inter_point.val[2] + data->f;
+		normal_inter.val[0] += inter_point.val[0];
+		normal_inter.val[1] = 50 * normal_inter.val[1] + 100 * inter_point.val[1] ;
+		normal_inter.val[2] += inter_point.val[2];
 	
 		double	bump_x = compute_perlin_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
 			-compute_perlin_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
@@ -517,7 +517,7 @@ void	*render_thread(void *param)
 				color = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
 				ray_put_pixel(i, j, data->mlx->img_str, color);
 			}
-			else
+			/*else
 			{
 				t_3vecf	clr;
 				int		anti_all_iter;
@@ -539,7 +539,7 @@ void	*render_thread(void *param)
 				color.val[1] /= (double)anti_all_iter;
 				color.val[2] /= (double)anti_all_iter;
 				ray_put_pixel(i, j, data->mlx->img_str, color);
-			}
+			}*/
 			++j;
 		}
 		++i;

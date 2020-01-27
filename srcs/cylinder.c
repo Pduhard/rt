@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/26 16:27:02 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/27 18:14:20 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -146,7 +146,7 @@ int ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *d
 	return (0);
 }
 
-int			parse_cylinder(char *line, t_data *data)
+/*int			parse_cylinder(char *line, t_data *data)
 {
 	int			i;
 	t_obj		*cylinder;
@@ -210,3 +210,4 @@ int			parse_cylinder(char *line, t_data *data)
 	data->objs = cylinder;
 	return (1);
 }
+*/
