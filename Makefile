@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/27 18:23:16 by aplat       ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/27 20:56:33 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -26,7 +26,8 @@ SRC_PATH	=	./srcs/
 BIN_PATH	=	./bins/
 INC_PATH	=	./includes/
 LIB_PATH	=	./libft/
-MLX_PATH	=	./minilibx_macos/
+EXT_LIB		=	./external_libs
+MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
 
 SRC			=	main.c			\
 				init.c			\
