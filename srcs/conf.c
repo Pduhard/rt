@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/23 01:19:51 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 14:41:31 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 18:46:46 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -508,7 +508,7 @@ int		parse_texture2(char **line, t_obj *obj)
 //				return (0);
 			}
 		}
-		else if (obj->text.text_type && !(obj->text.text_param))
+		else if (!(obj->text.text_param))
 		{
 			if (!(obj->text.text_param = parse_proc(line, &obj->text)))
 			{

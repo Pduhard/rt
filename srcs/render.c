@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 14:36:36 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 22:56:00 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -85,27 +85,26 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter, double refraction_index)
 	double	eta;
 	double	k;
 
-	cosi = dot_product_3vecf(ray, normal_inter);
-	if (cosi < -1)
-		cosi = -1;
-	else if (cosi > 1)
-		cosi = 1;
-	cosi = -cosi;
+	cosi = -dot_product_3vecf(assign_3vecf(-ray.val[0], -ray.val[1], -ray.val[2]), normal_inter);
+//	if (cosi < -1)
+//		cosi = -1;
+//	else if (cosi > 1)
+//		cosi = 1;
 	etai = 1;
 	etat = refraction_index;
 	eta = etai / etat;
 	k = 1 - eta * eta * (1 - cosi * cosi);
-	if (k < 0)
-		return (assign_3vecf(0, 0, 0));
-	ref.val[0] = eta * ray.val[0] + (eta * cosi - sqrtf(k)) * normal_inter.val[0];
-	ref.val[1] = eta * ray.val[1] + (eta * cosi - sqrtf(k)) * normal_inter.val[1];
-	ref.val[2] = eta * ray.val[2] + (eta * cosi - sqrtf(k)) * normal_inter.val[2];
+	k = eta * cosi - sqrtf(k);
+	ref.val[0] = eta * ray.val[0] + k * normal_inter.val[0];
+	ref.val[1] = eta * ray.val[1] + k * normal_inter.val[1];
+	ref.val[2] = eta * ray.val[2] + k * normal_inter.val[2];
 	return (ref);
 }
 
 double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index)
 {
-	double	cosi;
+/*		TRUE FRESNEL RATIO
+ *	double	cosi;
 	double	etai;
 	double	etat;
 	double	sint;
@@ -141,6 +140,22 @@ double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refractio
 	rs = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
 	rp = (etai * cosi - etat * cost) / (etai * cosi + etat * cost);
 	return ((rs * rs + rp * rp) / 2);
+*/
+	/*	SCHLICK approximation	3 times faster*/
+	//	R0 + (1 - R0)(1 - cos(theta))^5;
+	
+	double	r0;
+	t_3vecf	inv_dir;
+	double	cos_theta;
+	double	n_cos_theta;
+
+	inv_dir = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
+	cos_theta = dot_product_3vecf(inv_dir, normal_inter);
+	r0 = (1 - refraction_index) / (1 + refraction_index);
+	r0 *= r0;
+	n_cos_theta = 1 - cos_theta;
+	n_cos_theta = n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta; 
+	return (r0 + (1 - r0) * (1 - cos_theta) * n_cos_theta);
 }
 
 void	cel_shade(double *val)
@@ -200,12 +215,21 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, 0.01, light_len, &shadow_dist, objs)))
 			{
 		//		printf("wefwef\n");
-				if (shadow_obj->refraction > 0)
+				if (shadow_obj->transmitance > 0)
 				{
+					break ; //!!!!!!!!!!!!!!!!!!!!
 					t_3vecf obj_color = shadow_obj->get_text_color(inter_point, normal_inter, shadow_obj);
-					transp_fact.val[0] -= shadow_obj->refraction > 1 ? 0.1/* false */ : ((1 -shadow_obj->refraction) * (1 - obj_color.val[0])); // ->transmitance !!
-					transp_fact.val[1] -= shadow_obj->refraction > 1 ? 0.1/* false */ : ((1 - shadow_obj->refraction) * (1 - obj_color.val[1])); // ->transmitance !!
-					transp_fact.val[2] -= shadow_obj->refraction > 1 ? 0.1/* false */ : ((1 - shadow_obj->refraction) * (1 - obj_color.val[2])); // ->transmitance !!
+	/*				t_3vecf	trans;
+					
+					trans.val[0] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[0]));
+					trans.val[1] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[1]));
+					trans.val[2] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[2]));
+					transp_fact.val[0] -= trans.val[0] ? trans.val[0] : 0.1; // ->transmitance !!
+					transp_fact.val[1] -= trans.val[1] ? trans.val[1] : 0.1; // ->transmitance !!
+					transp_fact.val[2] -= trans.val[2] ? trans.val[2] : 0.1; // ->transmitance !!
+	*/				transp_fact.val[0] -= ((1 - shadow_obj->transmitance) * (1 - obj_color.val[0])); // ->transmitance !!
+					transp_fact.val[1] -= ((1 - shadow_obj->transmitance) * (1 - obj_color.val[1])); // ->transmitance !!
+					transp_fact.val[2] -= ((1 - shadow_obj->transmitance) * (1 - obj_color.val[2])); // ->transmitance !!
 				}
 				else
 					break;
@@ -218,12 +242,12 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 	//		transp_fact = 1;
 		//	printf("flute\n");
 		//	shadow_obj = NULL;//ray_first_intersect(inter_point, light_dir, 0.001, light_len, &shadow_dist, objs);
-		//	printf("%f %f %f\n", shadow_obj->color.val[0], shadow_obj->color.val[1], shadow_obj->color.val[2]);
-			if (transp_fact.val[0] < 0)
+		//	printf("%f %f %f\n", transp_fact.val[0], transp_fact.val[1], transp_fact.val[2]);
+			if (transp_fact.val[0] <= 0)
 				transp_fact.val[0] = 0;
-			if (transp_fact.val[1] < 0)
+			if (transp_fact.val[1] <= 0)
 				transp_fact.val[1] = 0;
-			if (transp_fact.val[2] < 0)
+			if (transp_fact.val[2] <= 0)
 				transp_fact.val[2] = 0;
 			if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
 			{
@@ -373,7 +397,48 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[1] = 0;
 		lighted_color.val[2] = 0;
 	}
-	else if (closest_obj->refraction < 1 && closest_obj->reflection > 0) // reflection
+	else if (closest_obj->refraction) // reflection and refraction
+	{
+		t_3vecf	refr_color = assign_3vecf(0, 0, 0);
+		t_3vecf refl_color = assign_3vecf(0, 0, 0);
+		if (!depth)
+			return (assign_3vecf(0, 0, 0));
+		double fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, closest_obj->refraction);
+		
+	//	printf("%f\n", fresnel_ratio);
+		if (fresnel_ratio < 0.999999) // else reflection
+		{
+			t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
+			normalize_3vecf(&refr_ray);
+			refr_color = ray_trace(inter_point, refr_ray, 0.01, MAX_VIEW, data, depth - 1);
+		}
+		if (fresnel_ratio > 0.01) // eles full refraction
+		{
+			t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
+			normalize_3vecf(&refl_ray);
+			refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
+		}
+		/*	not sure */	
+/*		light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
+		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;
+		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
+		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;*/
+
+		refr_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
+		refr_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
+		refr_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+
+	//	lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
+	//	lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
+	//	lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+
+		/*	-------- */
+		
+		lighted_color.val[0] = refr_color.val[0] * (1 - fresnel_ratio) + refl_color.val[0] * fresnel_ratio;
+		lighted_color.val[1] = refr_color.val[1] * (1 - fresnel_ratio) + refl_color.val[1] * fresnel_ratio;
+		lighted_color.val[2] = refr_color.val[2] * (1 - fresnel_ratio) + refl_color.val[2] * fresnel_ratio;
+	}
+	else if (closest_obj->reflection > 1) // reflection
 	{
 	/*	light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
 		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;
@@ -392,39 +457,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		//lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
 		//lighted_color.val[2] = closest_obj->color.val[2] * light_fact;
 	}
-	else if (closest_obj->refraction > 1) // reflection and refraction
-	{
-		t_3vecf	refr_color = assign_3vecf(0, 0, 0);
-		if (!depth)
-			return (assign_3vecf(0, 0, 0));
-			//return (lighted_color);
-		double fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, closest_obj->refraction);
-		if (fresnel_ratio < 1)
-		{
-			t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
-			normalize_3vecf(&refr_ray);
-			refr_color = ray_trace(inter_point, refr_ray, 0.01, MAX_VIEW, data, depth - 1);
-		}
-		t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
-		normalize_3vecf(&refl_ray);
-		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
-
-		/*	not sure */	
-/*		light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
-		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;
-		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
-		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;*/
-
-//		refr_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refr_color.val[0] * closest_obj->reflection; // !!!! ->reflection => ->transmitance
-//		refr_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refr_color.val[1] * closest_obj->reflection;
-//		refr_color.val[2] = lighted_color.val[2] * (1 - closest_obj->reflection) + refr_color.val[2] * closest_obj->reflection;
-		/*	-------- */
-		
-		lighted_color.val[0] = refr_color.val[0] * (1 - fresnel_ratio) + refl_color.val[0] * fresnel_ratio;
-		lighted_color.val[1] = refr_color.val[1] * (1 - fresnel_ratio) + refl_color.val[1] * fresnel_ratio;
-		lighted_color.val[2] = refr_color.val[2] * (1 - fresnel_ratio) + refl_color.val[2] * fresnel_ratio;
-	}
-	else if (closest_obj->refraction > 0 && closest_obj->refraction <= 1) // transparency
+	else if (closest_obj->transmitance) // transparency
 	{
 		t_3vecf	refr_color = assign_3vecf(0, 0, 0);
 		if (!depth)
@@ -439,14 +472,15 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 //		{
 			//t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
 			//normalize_3vecf(&refr_ray);
-			refr_color = ray_trace(inter_point, dir, 0.01, MAX_VIEW, data, depth - 1);
+		refr_color = ray_trace(inter_point, dir, 0.01, MAX_VIEW, data, depth - 1);
 //		}
 	//	t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 	//	normalize_3vecf(&refl_ray);
 	//	t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
-		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->refraction) + refr_color.val[0] * closest_obj->refraction;
-		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->refraction) + refr_color.val[1] * closest_obj->refraction;
-		lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->refraction) + refr_color.val[2] * closest_obj->refraction;
+		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
+		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
+		lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+
 	}
 /*
 	else //diffus only

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 16:22:55 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 17:57:59 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,6 +16,7 @@
 
 # include "../libft/libft.h"
 # include "../external_libs/minilibx_macos/mlx.h"
+//# include "../external_libs/minilibx_mms_20191207_beta/mlx.h"
 # include "../external_libs/sdl/SDL.h"
 # include "../frameworks/SDL2.framework/Headers/SDL.h"
 # include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"

@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/28 16:10:10 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/28 17:45:38 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -28,6 +28,7 @@ INC_PATH	=	./includes/
 LIB_PATH	=	./libft/
 EXT_LIB		=	./external_libs
 MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
+#MLX_PATH	=	$(EXT_LIB)/minilibx_mms_20191207_beta/ //new lib in beta
 
 SRC			=	main.c			\
 				init.c			\
@@ -51,6 +52,7 @@ LIB_FLAG			=	-lft
 LIB					=	libft.a
 MLX_FLAG			=	-lmlx
 MLX					=	libmlx.a
+#MLX					=	libmlx.dylib //new lib in beta
 
 SRCS		=	$(addprefix $(SRC_PATH), $(SRC))
 BINS		=	$(addprefix $(BIN_PATH), $(BIN))
@@ -107,10 +109,10 @@ clean:
 fclean: clean
 
 	@echo "\n${R}[REMOVING "libft.a"]"
-	@rm -rf $(LIB_PATH)/libft.a
+	@rm -rf $(LIBS)
 	@echo "\n${R}[REMOVING "libmlx.a"]"
-	@rm -rf $(MLX_PATH)/libmlx.a
-	@echo "\n${R}[REMOVING "libpng.a"]\n"
+	@rm -rf $(MLXS)
+	@echo "\n${R}[REMOVING "$(NAME)"]\n"
 	@rm -f $(NAME)
 
 re: fclean all

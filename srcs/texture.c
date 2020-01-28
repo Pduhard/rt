@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 14:08:20 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 18:00:30 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -161,6 +161,8 @@ t_3vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 
 	text = (t_text_proc *)obj->text.text_param;
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+	text_coord.val[0] *= obj->text.scale.val[0];
+	text_coord.val[1] *= obj->text.scale.val[1];
 	text_coord.val[0] -= text_coord.val[0] < 0 ? (1 + fmod(text_coord.val[0], 1)) : fmod(text_coord.val[0], 1);
 	text_coord.val[1] -= text_coord.val[1] < 0 ? (1 + fmod(text_coord.val[1], 1)) : fmod(text_coord.val[1], 1);
 	int		u_grid;
