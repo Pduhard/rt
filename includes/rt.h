@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 16:22:55 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 18:37:23 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,6 +72,7 @@
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
 typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
+typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
 
 typedef struct	s_mlx
 {
@@ -154,6 +155,8 @@ typedef struct	s_text
 	e_text_type	text_type;
 	t_2vecf		scale;
 	t_2vecf		offset;
+	e_bump_type	bump_type;
+	double		bump_fact;
 	void		*text_param;
 }				t_text;
 
@@ -276,6 +279,10 @@ int		parse_color_transp(char **line, t_3vecf *t_3vecf, int	i, double *val);
 void	*parse_proc(char **line, t_text *text);
 void	*parse_img(char **line, t_text *text);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
+int		parse_bump_mapping(char **line, t_text *text);
+void	set_bump_own(t_text *text);
+int		parse_bump_inde(char **line, t_text *text, int	index);
+void	set_bump_inde(char *s, t_text *text);
 
 int		parse_rotation(char **line, t_2vecf *t, int i);
 int		parse_origin(char **line, t_3vecf *t, int i);
