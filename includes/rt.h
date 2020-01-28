@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 18:37:23 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 22:01:17 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -95,6 +95,11 @@ typedef struct	s_33matf
 	double		val[3][3];
 }				t_33matf;
 
+typedef struct	s_4vecf
+{
+	double		val[4];
+}				t_4vecf;
+
 typedef struct	s_3vecf
 {
 	double		val[3];
@@ -146,8 +151,7 @@ typedef struct	s_text_proc
 //	t_3vecf		color_2;
 //	t_3vecf		color_3;
 
-	t_3vecf		color[3];
-	t_3vecf		transp;
+	t_4vecf		color[3];
 }				t_text_proc;
 
 typedef struct	s_text
@@ -229,6 +233,7 @@ void	render(t_data *data);
 
 int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
+int		parse_4vecf(char *line, int i, t_4vecf *vec);
 int		parse_double(char *line, int i, double *val);
 //int		parse_texture(char *line, int i, t_obj *obj);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
@@ -275,7 +280,7 @@ int		parse_size(char **line, t_data *data);
 int		parse_camera(char **line, t_data *data);
 int		parse_objects(char **line, t_data *data);
 int		parse_lights(char **line, t_data *data);
-int		parse_color_transp(char **line, t_3vecf *t_3vecf, int	i, double *val);
+int		parse_color_transp(char **line, int i, t_4vecf *t);
 void	*parse_proc(char **line, t_text *text);
 void	*parse_img(char **line, t_text *text);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
