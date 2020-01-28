@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/23 01:19:51 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 22:51:38 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 14:41:31 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -282,6 +282,11 @@ int		parse_scene(char **line, t_data *data)
 			ret = parse_objects(line, data);
 		else if (!ft_strncmp(*line, "lights", 6))
 			ret = parse_lights(line, data);
+/*		else
+		{
+			printf("Unrecognized element\n");
+			return (0);
+		}*/
 	}
 	return (ret);
 }
@@ -655,6 +660,7 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
 	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
+	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
 	if (data->objs)
 		cylinder->next = data->objs;
 	else
@@ -695,6 +701,7 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 	plane->obj_type = OBJ_PLANE;
 	plane->ray_intersect = &ray_intersect_plane;
 	plane->get_normal_inter = &get_normal_intersect_plane;
+	plane->get_text_coordinate = &get_text_coordinate_plane;
 	if (data->objs)
 		plane->next = data->objs;
 	else
@@ -734,6 +741,7 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->ray_intersect = &ray_intersect_sphere;
 	sphere->get_normal_inter = &get_normal_intersect_sphere;
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 	if (data->objs)
 		sphere->next = data->objs;
 	else
@@ -775,6 +783,7 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 	cone->obj_type = OBJ_CONE;
 	cone->ray_intersect = &ray_intersect_cone;
 	cone->get_normal_inter = &get_normal_intersect_cone;
+	cone->get_text_coordinate = &get_text_coordinate_cone;
 	if (data->objs)
 		cone->next = data->objs;
 	else

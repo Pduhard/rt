@@ -37,7 +37,9 @@
 	>
 	<objects
 		<texture
-			<UNI
+			<PERLIN
+				<color (0.8, 0.6, 0.8)(0)>
+				<color (0.8, 0.6, 0.8)(0)>
 				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<offset(0, 0)>
@@ -48,12 +50,12 @@
 			<radius(1)>
 		>
 	>
-	<light
-		<directional(0, 0.5, 1)>
-		<color(1, 1, 1)>
+	<lights
+		<directional (0, 0.5, 1)>
+		<color (1, 1, 1)>
 	>
-	<light
-		<directional(0.2, 0.5, 1)>
-		<color(1, 1, 1)>
+	<lights
+		<directional (0.2, 0.5, 1)>
+		<color (1, 1, 1)>
 	>
 >

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 22:51:22 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/28 14:36:36 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -424,7 +424,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[1] = refr_color.val[1] * (1 - fresnel_ratio) + refl_color.val[1] * fresnel_ratio;
 		lighted_color.val[2] = refr_color.val[2] * (1 - fresnel_ratio) + refl_color.val[2] * fresnel_ratio;
 	}
-	else if (closest_obj->refraction <= 1) // transparency
+	else if (closest_obj->refraction > 0 && closest_obj->refraction <= 1) // transparency
 	{
 		t_3vecf	refr_color = assign_3vecf(0, 0, 0);
 		if (!depth)
@@ -457,7 +457,8 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;
 	//	return (lighted_color);
 	}
-*/	return (lighted_color);
+*/	
+	return (lighted_color);
 }
 
 int		clip_color(double color)

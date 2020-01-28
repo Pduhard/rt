@@ -1,1 +1,3 @@
 object -> shininess
+
+light (without s) in conf no parse error but no light in scene ??
