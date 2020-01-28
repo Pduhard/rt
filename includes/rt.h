@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   rt.h                                             .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/16 01:10:39 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 17:57:59 by pduhard-    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
-/* ************************************************************************** */
-
 #ifndef RT_H
 # define RT_H
 
@@ -73,6 +60,7 @@
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
 typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
+typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
 
 typedef struct	s_mlx
 {
@@ -94,6 +82,11 @@ typedef struct	s_33matf
 {
 	double		val[3][3];
 }				t_33matf;
+
+typedef struct	s_4vecf
+{
+	double		val[4];
+}				t_4vecf;
 
 typedef struct	s_3vecf
 {
@@ -146,8 +139,7 @@ typedef struct	s_text_proc
 //	t_3vecf		color_2;
 //	t_3vecf		color_3;
 
-	t_3vecf		color[3];
-	t_3vecf		transp;
+	t_4vecf		color[3];
 }				t_text_proc;
 
 typedef struct	s_text
@@ -155,6 +147,8 @@ typedef struct	s_text
 	e_text_type	text_type;
 	t_2vecf		scale;
 	t_2vecf		offset;
+	e_bump_type	bump_type;
+	double		bump_fact;
 	void		*text_param;
 }				t_text;
 
@@ -227,6 +221,7 @@ void	render(t_data *data);
 
 int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
+int		parse_4vecf(char *line, int i, t_4vecf *vec);
 int		parse_double(char *line, int i, double *val);
 //int		parse_texture(char *line, int i, t_obj *obj);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
@@ -273,10 +268,14 @@ int		parse_size(char **line, t_data *data);
 int		parse_camera(char **line, t_data *data);
 int		parse_objects(char **line, t_data *data);
 int		parse_lights(char **line, t_data *data);
-int		parse_color_transp(char **line, t_3vecf *t_3vecf, int	i, double *val);
+int		parse_color_transp(char **line, int i, t_4vecf *t);
 void	*parse_proc(char **line, t_text *text);
 void	*parse_img(char **line, t_text *text);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
+int		parse_bump_mapping(char **line, t_text *text);
+void	set_bump_own(t_text *text);
+int		parse_bump_inde(char **line, t_text *text, int	index);
+void	set_bump_inde(char *s, t_text *text);
 
 int		parse_rotation(char **line, t_2vecf *t, int i);
 int		parse_origin(char **line, t_3vecf *t, int i);

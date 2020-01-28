@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   conf.c                                           .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/23 01:19:51 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 18:46:46 by pduhard-    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
-/* ************************************************************************** */
-
 #include "rt.h"
 
 /*int		parse_scene_name(char *line, t_data *data)
@@ -426,8 +413,6 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_double2(line, 10, &obj->refraction);
 		else if (!ft_strncmp(*line, "transmitance", 12))
 			ret = parse_double2(line, 12, &obj->transmitance);
-		else if (!ft_strncmp(*line, "transparence", 12))
-			ret = parse_double2(line, 10, &obj->transparence);
 		else if (!ft_strncmp(*line, "shininess", 9))
 			ret = parse_double2(line, 9, &obj->shininess);
 		else if (**line != '<')
@@ -495,6 +480,8 @@ int		parse_texture2(char **line, t_obj *obj)
 			ret = parse_rotation(line, &obj->text.offset, 6);
 		else if (!(ft_strncmp(*line, "scale", 5)))
 			ret = parse_rotation(line, &obj->text.scale, 5);
+		else if (!(ft_strncmp(*line, "BumpMapping", 11)) && obj->text.text_param)
+			ret = parse_bump_mapping(line, &obj->text);
 //		else
 //		{
 //			ft_printf("C'est pas un nom de texture gros Con\n==> %s\n", *line);
@@ -518,6 +505,134 @@ int		parse_texture2(char **line, t_obj *obj)
 		}
 	}
 	return (ret);
+}
+
+int		parse_bump_mapping(char **line, t_text *text)
+{
+	char	stripe;
+	int		ret;
+
+	ret = 1;
+	stripe = 0;
+	while (stripe != '>' && ret != 0)
+	{
+		printf("Parse_BUMP BEFORE ==> %s\n", *line);
+		stripe = goto_next_element(line);
+		printf("Parse_BUMP ==> %s\n", *line);
+		if (!(ft_strncmp(*line, "own", 3)))
+		{
+			set_bump_own(text);
+			ret = parse_double2(line, 3, &text->bump_fact);
+		}
+		else if (!(ft_strncmp(*line, "independent", 11)))
+		{
+			ret = parse_bump_inde(line, text, 11);
+		}
+/*		else
+		{
+			ft_printf("PAs un bon param de bumpmapping ==> %s\n", *line);
+			return (0);
+		}*/
+	}
+	return (ret);
+}
+
+void	set_bump_own(t_text *text)
+{
+	if (text->text_type == TEXT_PERLIN)
+		text->bump_type = BUMP_PERLIN;
+	else if (text->text_type == TEXT_MARBLE)
+		text->bump_type = BUMP_MARBLE;
+	else if (text->text_type == TEXT_WOOD)
+		text->bump_type = BUMP_WOOD;
+	else if (text->text_type == TEXT_IMAGE)
+		text->bump_type = BUMP_IMAGE;
+}
+
+int		parse_bump_inde(char **line, t_text *text, int	index)
+{
+	int	i;
+	int	start;
+	char	*s;
+	char	*tmp;
+
+	tmp = *line;
+	printf("\n\n\nTEST\n\n\n%s\n\n\n", *line);
+	i = index;
+	while (ft_isspace(tmp[i]))
+		++i;
+	if (tmp[i] != '(')
+	{
+		printf("\n\n\n\nhbjviudvdsv\n\n\n==> %s\n", &tmp[i]);
+		return (0);
+	}
+	start = ++i;
+	while (tmp[i] && tmp[i] != ')')
+		++i;
+	printf("Into Parse_Bump inde ==> %s\n", &tmp[i]);
+	if (tmp[i] != ')')
+		return (0);
+	s =	ft_strsub(tmp, start, i - start);
+	set_bump_inde(s, text);
+	printf("Type bump Inde ==> %s\n", s);
+	while (tmp[i] && tmp[i] != '(')
+		++i;
+	*line += i;
+	printf("Line apres bump ==> %s\n", *line);
+	return (parse_double2(line, 0, &text->bump_fact));
+}
+
+void	set_bump_inde(char *s, t_text *text)
+{
+	if (!(ft_strncmp(s, "PERLIN", 6)))
+		text->bump_type = BUMP_PERLIN;
+	if (!(ft_strncmp(s, "MARBLE", 6)))
+		text->bump_type = BUMP_MARBLE;
+	if (!(ft_strncmp(s, "WOOD", 4)))
+		text->bump_type = BUMP_WOOD;
+	if (!(ft_strncmp(s, "IMAGE", 5)))
+		text->bump_type = BUMP_IMAGE;
+	if (!(ft_strncmp(s, "SINUS", 5)))
+		text->bump_type = BUMP_SINUS;
+}
+
+int		parse_scene_name(char **line, t_data *data)
+{
+	int	i;
+	int	start;
+	char	*s;
+
+	i = 4;
+	s = *line;
+	while (ft_isspace(s[i]))
+		++i;
+	if (s[i] != '(')
+	{
+		printf("Syntax error name");
+		return (0);
+	}
+	if (data->scene_name)
+		ft_strdel(&data->scene_name);
+	start = ++i;
+	while (s[i] && s[i] != ')')
+		++i;
+	if (s[i] != ')')
+	{
+		printf("Syntax error name");
+		return (0);
+	}
+	data->scene_name = ft_strsub(s, start, i - start);
+	printf("Scene name ==> %s\n", data->scene_name);
+	++i;
+	while (ft_isspace(s[i]))
+		++i;
+	printf("Test ==> %s\n", &s[i]);
+	if (goto_next_element(line) != '>')
+	{
+		printf("Error parse_origin\n");
+		return(0);
+	}
+	return (1);
 }
 
 void	*parse_img(char **line, t_text *text)
@@ -581,7 +696,110 @@ void	*parse_proc(char **line, t_text *text)
 {
 	char	stripe;
 	int		cmp;
+	int		ret;
 	t_text_proc	*param;
+
+	stripe = 0;
+	cmp = -1;
+	ret = 1;
+	printf("ParseProc ==> %s\n", *line);
+	if (text->text_param)
+	{
+		ft_printf("Deja une texture\n==> %s\n", *line);
+		return (NULL);
+	}
+	if (!(param = ft_memalloc(sizeof(t_text_proc))))
+		return (NULL);
+	while (goto_next_element(line) != '>' && ++cmp < 3 && ret != 0)
+	{
+		printf("Line into parseproc ==> %s\n", *line);
+		if (ft_strncmp(*line, "color", 5))
+		{
+			printf("Pas un bon nom de color\n");
+			return (NULL);
+		}
+		else if (!(ft_strncmp(*line, "color", 5)))
+		{
+			ret = parse_color_transp(line, 5, &param->color[cmp]);
+		}
+	}
+	if (cmp == 3 || cmp == -1)
+	{
+		printf("Casse TOI!!!!\n\n");
+		return (NULL);
+	}
+	return ((void *)param);
+}
+
+int		parse_color_transp(char **line, int i, t_4vecf *t)
+{
+	char	*s;
+
+	s = *line;
+	while (ft_isspace(s[i]))
+		++i;
+	if (s[i] != '(' || (i = parse_4vecf(s, i, t)) == -1)
+		return (0);
+	if (goto_next_element(line) != '>')
+	{
+		printf("Errore parse_color_transp\n");
+		return (0);
+	}
+	printf("LINE into COLORTRANS ==> %s\nval 0 ==> %f\nval 1 ==> %f\nval 2 ==> %f\nval 3 ==> %f\n", *line, t->val[0], t->val[1], t->val[2], t->val[3]);
+	return (1);
+}
+
+int		parse_4vecf(char *line, int i, t_4vecf *vec)
+{
+	int		cpt;
+
+	cpt = 0;
+	++i;
+	if (line[i] == '(')
+		i++;
+	while (cpt < 4)
+	{
+		vec->val[cpt++] = ft_atold(&(line[i]));
+		while (line[i] && ((line[i] != ',' && cpt < 4) || (line[i] != ')' && cpt == 4)))
+			++i;
+		if (!line[i])
+			return (-1);
+		++i;
+	}
+	while (line[i] && line[i] != ')')
+		++i;
+	if (line[i] != ')')
+		return (-1);
+	return (i);
+}
+
+int		parse_origin(char **line, t_3vecf *t, int i)
+{
+	char	*s;
+
+	s = *line;
+//	printf("Test origin 1 ==> %s\n", &s[i]);
+	while (ft_isspace(s[i]))
+		++i;
+	if (s[i] != '(' || (i = parse_3vecf(s, i, t)) == -1)
+		return (0);
+//	while (ft_isspace(s[i]))
+//		++i;
+//	printf("Test origin 2 ==> %s\n", &s[i]);
+	if (goto_next_element(line) != '>')
+	{
+		printf("Error parse_origin\n");
+		return(0);
+	}
+	return (1);
+}
+
+/*void	*parse_proc(char **line, t_text *text)
+{
+	char	stripe;
+	int		cmp;
+	t_text_proc	*param;
+	int		ret;
 
 	stripe = 0;
 	cmp = 0;
@@ -595,17 +813,26 @@ void	*parse_proc(char **line, t_text *text)
 		return (NULL);
 	while (stripe != '>' && cmp < 3)
 	{
+		printf("Parse Proc While ==> %s ==> %d\n", *line, cmp);
+		if (**line == '>')
+			break ;
 		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "color", 5)) && parse_color_transp(line, &(param->color[cmp]), 5, &(param->transp.val[cmp])) == 0)
+		printf("Parse Proc While next ==> %s ==> %d\n", *line, cmp);
+		if (!(ft_strncmp(*line, "color", 5)) && (ret = parse_color_transp(line, &(param->color[cmp]), 5, &(param->transp.val[cmp]))) == 1)
 		{
-			ft_printf("Tu sais pas conf une couleur trou de bal\n==> %s\n", *line);
+			cmp++;
+			printf("\n\n\n\nret == %d\n\n\n\n", ret);
 		}
-		cmp++;
+		else if (**line != '>' || ret == 0)
+		{
+			printf("\n\nCACA ==> %s\n\n", *line);
+			return (NULL);
+		}
 	}
-	ft_printf("PARSE_PROC FIN==> %s\n", *line);
+	ft_printf("PARSE_PROC FIN==> %s\n%d\n", *line, cmp);
 	if (goto_next_element(line) != '>')
 	{
-		printf("Error parse_proc\n");
+		printf("Error parse_proc ==> %s\n", *line);
 		return(0);
 	}
 	return ((void *)param);
@@ -614,21 +841,29 @@ void	*parse_proc(char **line, t_text *text)
 int		parse_color_transp(char **line, t_3vecf *t, int	i, double *val)
 {
 	char	*s;
+	int		ret;
 
 	s = *line;
+	ret = 1;
+	printf("\n\nBefore Color_transp ==> %s\n\n", *line);
 	while (ft_isspace(s[i]))
 		++i;
-	if (s[i] != '(' || (i = parse_3vecf(s, i, t)) == -1)
-		return (0);
-	if (s[i] != '(' || (i = parse_double2(&s, i, val)) == -1)
-		return (0);
+	printf("Parse 3vecf ==> %s\n", &s[i]);
+	ret = parse_origin(line, t, 5);
+//	if (s[i] != '(' || (i = parse_3vecf(s, i, t)) == -1)
+//		return (0);
+	printf("Parse double 2 ==> %s\n", &s[i]);
+	ret = parse_double2(line, 0, val);
+//	if (s[i] != '(' || (i = parse_double2(&s, i, val)) == 0)
+//		return (0);
+	ft_printf("\n\nPARSE_COLOR_TRANSP ==> %s\n\n", &s[i]);
 	if (goto_next_element(line) != '>')
 	{
 		printf("Error parse_color_text\n");
 		return(0);
 	}
 	return (1);
-}
+}*/
 
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 {
@@ -843,27 +1078,6 @@ int		parse_rotation(char **line, t_2vecf *t, int i)
 	return (1);
 }
 
-int		parse_origin(char **line, t_3vecf *t, int i)
-{
-	char	*s;
-
-	s = *line;
-//	printf("Test origin 1 ==> %s\n", &s[i]);
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(' || (i = parse_3vecf(s, i, t)) == -1)
-		return (0);
-//	while (ft_isspace(s[i]))
-//		++i;
-//	printf("Test origin 2 ==> %s\n", &s[i]);
-	if (goto_next_element(line) != '>')
-	{
-		printf("Error parse_origin\n");
-		return(0);
-	}
-	return (1);
-}
-
 int		parse_size(char **line, t_data *data)
 {
 	int	i;
@@ -882,45 +1096,6 @@ int		parse_size(char **line, t_data *data)
 	while (ft_isspace(s[i]))
 		++i;
 //	printf("Test size ==> %s\n", &s[i]);
-	if (goto_next_element(line) != '>')
-	{
-		printf("Error parse_origin\n");
-		return(0);
-	}
-	return (1);
-}
-
-int		parse_scene_name(char **line, t_data *data)
-{
-	int	i;
-	int	start;
-	char	*s;
-
-	i = 4;
-	s = *line;
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(')
-	{
-		printf("Syntax error name");
-		return (0);
-	}
-	if (data->scene_name)
-		ft_strdel(&data->scene_name);
-	start = ++i;
-	while (s[i] && s[i] != ')')
-		++i;
-	if (s[i] != ')')
-	{
-		printf("Syntax error name");
-		return (0);
-	}
-	data->scene_name = ft_strsub(s, start, i - start);
-	printf("Scene name ==> %s\n", data->scene_name);
-	++i;
-	while (ft_isspace(s[i]))
-		++i;
-	printf("Test ==> %s\n", &s[i]);
 	if (goto_next_element(line) != '>')
 	{
 		printf("Error parse_origin\n");
