@@ -6,14 +6,14 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/28 18:00:30 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/29 20:57:01 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_3vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	t_text_proc	*text;
 
@@ -23,57 +23,65 @@ t_3vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter; // warning
 }
 
-t_3vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
-	double	perlin_f = fabs(compute_perlin_factor(inter_point));
+	double	perlin_f;
 	t_text_proc	*text;
-
+	t_4vecf	color;
 	text = (t_text_proc *)obj->text.text_param;
 
+   	perlin_f = compute_3dperlin_factor(inter_point, obj->text.scale.val[0]);
 /*	if (perlin_f > 0.8)
-		return (assign_3vecf(obj->text.color[0].val[0] * perlin_f, obj->text.color[0].val[1] * perlin_f, obj->text.color[0].val[2] * perlin_f));
+		return (text->color[0]);
+	//	return (assign_3vecf(obj->text.color[0].val[0] * perlin_f, obj->text.color[0].val[1] * perlin_f, obj->text.color[0].val[2] * perlin_f));
 	else if (perlin_f > 0.5)
-		return (assign_3vecf(obj->text.color[1].val[0] * perlin_f, obj->text.color[1].val[1] * perlin_f, obj->text.color[1].val[2] * perlin_f));
+		return (text->color[1]);
+	//	return (assign_3vecf(obj->text.color[1].val[0] * perlin_f, obj->text.color[1].val[1] * perlin_f, obj->text.color[1].val[2] * perlin_f));
 	else
-		return (assign_3vecf(obj->text.color_3.val[0] * perlin_f, obj->text.color_3.val[1] * perlin_f, obj->text.color_3.val[2] * perlin_f));
-*/	return (assign_3vecf(text->color[0].val[0] * perlin_f, text->color[0].val[1] * perlin_f, text->color[0].val[2] * perlin_f));
+		return (text->color[2]);
+	//	return (assign_3vecf(obj->text.color_3.val[0] * perlin_f, obj->text.color_3.val[1] * perlin_f, obj->text.color_3.val[2] * perlin_f));
+*/
+	color.val[0] = text->color[0].val[0] * perlin_f;
+	color.val[1] = text->color[0].val[1] * perlin_f;
+	color.val[2] = text->color[0].val[2] * perlin_f;
+	return (color);
 	(void)normal_inter;
 }
 
-double	compute_wood_factor(t_3vecf inter_point)
+double	compute_wood_factor(t_3vecf inter_point, double scale)
 {
 	double	perlin_f;
 	double	wood_f;
 
-	perlin_f = compute_perlin_factor(inter_point);
+	perlin_f = compute_3dperlin_factor(inter_point, scale);
 	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
 
 	return (wood_f);
 }
 
-double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale)
 {
 	double	perlin_f;
 	double	marble_f;
 	t_2vecf	text_coord;
 
-	perlin_f = compute_perlin_factor(inter_point);
+	perlin_f = compute_3dperlin_factor(inter_point, scale);
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
-//	perlin_f = compute_perlin_factor(inter_point);
+//	perlin_f = compute_3dperlin_factor(inter_point);
 //	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
 
 	return (marble_f);
 }
 
-t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	double	wood_f;
-	t_3vecf	color;
+	t_4vecf	color;
 	t_text_proc	*text;
 
 	text = (t_text_proc *)obj->text.text_param;
-	wood_f = compute_wood_factor(inter_point);
+	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0]);
 //	color.val[0] = obj->text.color[0].val[0] * (1 - marble_f) + obj->text.color[1].val[0] * marble_f;
 //	color.val[1] = obj->text.color[0].val[1] * (1 - marble_f) + obj->text.color[1].val[1] * marble_f;
 //	color.val[2] = obj->text.color[0].val[2] * (1 - marble_f) + obj->text.color[1].val[2] * marble_f;
@@ -85,17 +93,17 @@ t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter;
 }
 
-t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	t_2vecf	text_coord;
 	double	perlin_f;
 	double	marble_f;
-	t_3vecf	color;
+	t_4vecf	color;
 	t_text_proc	*text;
 
 	text = (t_text_proc *)obj->text.text_param;
 	//perlin_f = compute_perlin_factor(inter_point);
-	perlin_f = compute_perlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5));
+	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
@@ -111,10 +119,10 @@ t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter;
 }
 
-t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	t_2vecf	text_coord;
-	t_3vecf	color;
+	t_4vecf	color;
 	t_text_img	*text;
 	int		row;
 	int		col;
@@ -154,7 +162,7 @@ t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter;
 }
 
-t_3vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	t_2vecf	text_coord;
 	t_text_proc	*text;

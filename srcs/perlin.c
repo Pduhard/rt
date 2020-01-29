@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/22 04:26:42 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/22 08:00:46 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/29 20:57:47 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,7 +18,7 @@ t_2vecf		get_2d_random_gradient(const int permutation[512], const t_2vecf gradie
 	return (gradient[permutation[y + permutation[x]] % 8]);
 }
 */
-t_3vecf		get_random_gradient(const int permutation[512], const t_3vecf gradient[16], int x, int y, int z)
+t_3vecf		get_3drandom_gradient(const int permutation[512], const t_3vecf gradient[16], int x, int y, int z)
 {
 	return (gradient[permutation[z + permutation[y + permutation[x]]] & 15]);
 }
@@ -33,7 +33,7 @@ double	quintic_poly(float val)
 	return (val * val * val * (val * (val * 6.0 - 15.0) + 10.0));
 }
 
-double	compute_perlin_factor(t_3vecf inter_point)
+double	compute_3dperlin_factor(t_3vecf inter_point, double scale)
 {
 
 
@@ -80,10 +80,10 @@ double	compute_perlin_factor(t_3vecf inter_point)
 //	t_2vecf text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 //	text_coord.val[0]*=8; //for resolution
 //	text_coord.val[1]*=8; //for resolution
-/*	inter_point.val[0] *= 8;
-	inter_point.val[1] *= 8;
-	inter_point.val[2] *= 8;
-*/	t_3vecf	int_part = assign_3vecf((int)inter_point.val[0], (int)inter_point.val[1], (int)inter_point.val[2]);
+	inter_point.val[0] *= scale;
+	inter_point.val[1] *= scale;
+	inter_point.val[2] *= scale;
+	t_3vecf	int_part = assign_3vecf((int)inter_point.val[0], (int)inter_point.val[1], (int)inter_point.val[2]);
 
 //	printf("text_coord %f %f\n", text_coord.val[0], text_coord.val[1]);
 	if (inter_point.val[0] < 0)
@@ -98,15 +98,15 @@ double	compute_perlin_factor(t_3vecf inter_point)
 	int_part.val[1] = (int)int_part.val[1] & 255;
 	int_part.val[2] = (int)int_part.val[2] & 255;
 
-	double	g000 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1], (int)int_part.val[2]), floating_part);
-	double	g001 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1], (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0], floating_part.val[1], floating_part.val[2] - 1.0));
-	double	g010 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1] + 1, (int)int_part.val[2]), assign_3vecf(floating_part.val[0], floating_part.val[1] - 1.0, floating_part.val[2]));
-	double	g011 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1] + 1, (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0], floating_part.val[1] - 1.0, floating_part.val[2] - 1.0));
+	double	g000 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1], (int)int_part.val[2]), floating_part);
+	double	g001 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1], (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0], floating_part.val[1], floating_part.val[2] - 1.0));
+	double	g010 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1] + 1, (int)int_part.val[2]), assign_3vecf(floating_part.val[0], floating_part.val[1] - 1.0, floating_part.val[2]));
+	double	g011 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0], (int)int_part.val[1] + 1, (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0], floating_part.val[1] - 1.0, floating_part.val[2] - 1.0));
 
-	double	g100 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1], (int)int_part.val[2]), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1], floating_part.val[2]));
-	double	g101 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1], (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1], floating_part.val[2] - 1.0));
-	double	g110 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1] + 1, (int)int_part.val[2]), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1] - 1.0, floating_part.val[2]));
-	double	g111 = dot_product_3vecf(get_random_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1] + 1, (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1] - 1.0, floating_part.val[2] - 1.0));
+	double	g100 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1], (int)int_part.val[2]), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1], floating_part.val[2]));
+	double	g101 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1], (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1], floating_part.val[2] - 1.0));
+	double	g110 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1] + 1, (int)int_part.val[2]), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1] - 1.0, floating_part.val[2]));
+	double	g111 = dot_product_3vecf(get_3drandom_gradient(permutation, gradient, (int)int_part.val[0] + 1, (int)int_part.val[1] + 1, (int)int_part.val[2] + 1), assign_3vecf(floating_part.val[0] - 1.0, floating_part.val[1] - 1.0, floating_part.val[2] - 1.0));
 
 	double	z_quintic = quintic_poly(floating_part.val[0]);
 	double	y_quintic = quintic_poly(floating_part.val[1]);

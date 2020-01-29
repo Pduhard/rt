@@ -481,7 +481,7 @@ int		parse_texture2(char **line, t_obj *obj)
 		else if (!(ft_strncmp(*line, "scale", 5)))
 			ret = parse_rotation(line, &obj->text.scale, 5);
 		else if (!(ft_strncmp(*line, "BumpMapping", 11)) && obj->text.text_param)
-			ret = parse_bump_mapping(line, &obj->text);
+			ret = parse_bump_mapping(line, obj);
 //		else
 //		{
 //			ft_printf("C'est pas un nom de texture gros Con\n==> %s\n", *line);
@@ -507,11 +507,13 @@ int		parse_texture2(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		parse_bump_mapping(char **line, t_text *text)
+int		parse_bump_mapping(char **line, t_obj *obj)
 {
+//	t_text *text;
 	char	stripe;
 	int		ret;
 
+//	text = obj
 	ret = 1;
 	stripe = 0;
 	while (stripe != '>' && ret != 0)
@@ -521,12 +523,12 @@ int		parse_bump_mapping(char **line, t_text *text)
 		printf("Parse_BUMP ==> %s\n", *line);
 		if (!(ft_strncmp(*line, "own", 3)))
 		{
-			set_bump_own(text);
-			ret = parse_double2(line, 3, &text->bump_fact);
+			set_bump_own(obj);
+			ret = parse_double2(line, 3, &obj->text.bump_fact);
 		}
 		else if (!(ft_strncmp(*line, "independent", 11)))
 		{
-			ret = parse_bump_inde(line, text, 11);
+			ret = parse_bump_inde(line, obj, 11);
 		}
 /*		else
 		{
@@ -537,19 +539,31 @@ int		parse_bump_mapping(char **line, t_text *text)
 	return (ret);
 }
 
-void	set_bump_own(t_text *text)
+void	set_bump_own(t_obj *obj)//t_text *text)
 {
-	if (text->text_type == TEXT_PERLIN)
-		text->bump_type = BUMP_PERLIN;
-	else if (text->text_type == TEXT_MARBLE)
-		text->bump_type = BUMP_MARBLE;
-	else if (text->text_type == TEXT_WOOD)
-		text->bump_type = BUMP_WOOD;
-	else if (text->text_type == TEXT_IMAGE)
-		text->bump_type = BUMP_IMAGE;
+	if (obj->text.text_type == TEXT_PERLIN)
+	{
+		obj->get_bump_mapping = &get_bump_mapping_perlin;
+		obj->text.bump_type = BUMP_PERLIN;
+	}
+	else if (obj->text.text_type == TEXT_MARBLE)
+	{
+		obj->get_bump_mapping = &get_bump_mapping_marble;
+		obj->text.bump_type = BUMP_MARBLE;
+	}
+	else if (obj->text.text_type == TEXT_WOOD)
+	{
+		obj->get_bump_mapping = &get_bump_mapping_wood;
+		obj->text.bump_type = BUMP_WOOD;
+	}
+	else if (obj->text.text_type == TEXT_IMAGE)
+	{
+		obj->get_bump_mapping = &get_bump_mapping_image;
+		obj->text.bump_type = BUMP_IMAGE;
+	}
 }
 
-int		parse_bump_inde(char **line, t_text *text, int	index)
+int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index)
 {
 	int	i;
 	int	start;
@@ -573,27 +587,52 @@ int		parse_bump_inde(char **line, t_text *text, int	index)
 	if (tmp[i] != ')')
 		return (0);
 	s =	ft_strsub(tmp, start, i - start);
-	set_bump_inde(s, text);
+	set_bump_inde(s, obj);//text);
 	printf("Type bump Inde ==> %s\n", s);
 	while (tmp[i] && tmp[i] != '(')
 		++i;
 	*line += i;
 	printf("Line apres bump ==> %s\n", *line);
-	return (parse_double2(line, 0, &text->bump_fact));
+	return (parse_double2(line, 0, &obj->text.bump_fact));
 }
 
-void	set_bump_inde(char *s, t_text *text)
+void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
 {
 	if (!(ft_strncmp(s, "PERLIN", 6)))
-		text->bump_type = BUMP_PERLIN;
+	{
+		obj->get_bump_mapping = &get_bump_mapping_perlin;
+		obj->text.bump_type = BUMP_PERLIN;
+	}
+
+	//	text->bump_type = BUMP_PERLIN;
 	if (!(ft_strncmp(s, "MARBLE", 6)))
-		text->bump_type = BUMP_MARBLE;
+	{
+		obj->get_bump_mapping = &get_bump_mapping_marble;
+		obj->text.bump_type = BUMP_MARBLE;
+	}
+
+	//	text->bump_type = BUMP_MARBLE;
 	if (!(ft_strncmp(s, "WOOD", 4)))
-		text->bump_type = BUMP_WOOD;
+	{
+		obj->get_bump_mapping = &get_bump_mapping_wood;
+		obj->text.bump_type = BUMP_WOOD;
+	}
+
+//		text->bump_type = BUMP_WOOD;
 	if (!(ft_strncmp(s, "IMAGE", 5)))
-		text->bump_type = BUMP_IMAGE;
+	{
+		obj->get_bump_mapping = &get_bump_mapping_wood;
+		obj->text.bump_type = BUMP_WOOD;
+	}
+
+	//	text->bump_type = BUMP_IMAGE;
 	if (!(ft_strncmp(s, "SINUS", 5)))
-		text->bump_type = BUMP_SINUS;
+	{
+		obj->get_bump_mapping = &get_bump_mapping_image;
+		obj->text.bump_type = BUMP_IMAGE;
+	}
+
+	//	text->bump_type = BUMP_SINUS;
 }
 
 int		parse_scene_name(char **line, t_data *data)

@@ -158,8 +158,9 @@ typedef struct	s_obj
 	void		*obj_param;
 	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
-	t_3vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
+	t_4vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
 	t_2vecf		(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
+	t_3vecf		(*get_bump_mapping)(t_3vecf, t_3vecf, struct s_obj *);
 	t_text		text;
 	double		reflection;
 	double		refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
@@ -246,9 +247,9 @@ t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
 void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 
-double	compute_perlin_factor(t_3vecf inter_point);
-double	compute_wood_factor(t_3vecf inter_point);
-double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
+double	compute_wood_factor(t_3vecf inter_point, double scale);
+double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
 
 double	linear_interpolate(double a, double b, double val);
 
@@ -272,10 +273,10 @@ int		parse_color_transp(char **line, int i, t_4vecf *t);
 void	*parse_proc(char **line, t_text *text);
 void	*parse_img(char **line, t_text *text);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
-int		parse_bump_mapping(char **line, t_text *text);
-void	set_bump_own(t_text *text);
-int		parse_bump_inde(char **line, t_text *text, int	index);
-void	set_bump_inde(char *s, t_text *text);
+int		parse_bump_mapping(char **line, t_obj *obj);//t_text *text);
+void	set_bump_own(t_obj *obj);//t_text *text);
+int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index);
+void	set_bump_inde(char *s, t_obj *obj);//t_text *text);
 
 int		parse_rotation(char **line, t_2vecf *t, int i);
 int		parse_origin(char **line, t_3vecf *t, int i);
@@ -308,11 +309,16 @@ void	print_vec2(double vec[2]);
 void	print_vec(double vec[3]);
 void	print_obj_param(t_obj *obj);
 
-t_3vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+
+t_3vecf	get_bump_mapping_perlin(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_bump_mapping_wood(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 #endif
