@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 21:53:10 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/29 21:34:21 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,8 +38,18 @@ t_data	*init_data(char *file_name)
 	if (!(data = (t_data *)malloc(sizeof(t_data))))
 		return (NULL);
 	ft_bzero(data, sizeof(t_data));
+	if (NB_THREADS < 1 || NB_THREADS > 16)
+	{
+		ft_fdprintf(2, "Invalid number of threads\n");
+		return (NULL);
+	}
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
+	if (data->size.val[0] < 400 || data->size.val[0] > 2560 || data->size.val[1] < 400 || data->size.val[1] > 1420)
+	{
+		ft_fdprintf(2, ERRORSIZE);
+		return (0);
+	}
 //	printf("%p %p %p\n", data->lights, data->objs, data->camera);
 //	printf("%f %f %f\n", ((t_cylinder*)data->objs->obj_param)->center.val[0], ((t_cylinder*)data->objs->obj_param)->center.val[1], ((t_cylinder*)data->objs->obj_param)->center.val[2]);
 //	printf("%f %f \n", data->lights->param.val[2], data->lights->color.val[2]);

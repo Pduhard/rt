@@ -407,6 +407,8 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_cylinder(line, obj, data);
 		else if (!ft_strncmp(*line, "texture", 7))
 			ret = parse_texture2(line, obj);
+		else if (!(ft_strncmp(*line, "cutting", 7)))
+			ret = parse_cutting(line, obj);
 		else if (!ft_strncmp(*line, "reflection", 10))
 			ret = parse_double2(line, 10, &obj->reflection);
 		else if (!ft_strncmp(*line, "refraction", 10))
@@ -421,6 +423,73 @@ int		parse_objects(char **line, t_data *data)
 			return (0);
 		}
 	}
+	return (ret);
+}
+
+int		parse_cutting(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+	t_cut	*cut;
+
+	stripe = 0;
+	ret = 1;
+	printf("Parse Cutting\n");
+	if (!(cut = ft_memalloc(sizeof(t_cut))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "static", 6)))
+		{
+			cut->cut_type = CUT_STATIC;
+			ret = parse_cut_static_real(line, cut, obj);
+		}
+		else if (!(ft_strncmp(*line, "real", 4)))
+		{
+			cut->cut_type = CUT_REAL;
+			ret = parse_cut_static_real(line, cut, obj);
+		}
+/*		if (!(cut->cut_param))
+		{
+			ft_printf("Unrecognized element in Cutting: \n%s\n", *line);
+			return (0);
+		}*/
+	}
+	return (ret);
+}
+
+int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+	t_cut_classic	*param;
+
+	stripe = 0;
+	ret = 1;
+	if (cut->cut_param)
+	{
+		printf("Deja une coupe\n");
+		return (0);
+	}
+	if (!(param = ft_memalloc(sizeof(t_cut_classic))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "origin", 6)))
+			ret = parse_origin(line, &param->origin, 6);
+		else if (!(ft_strncmp(*line, "normal", 6)))
+			ret = parse_origin(line, &param->normal, 6);
+		printf("CUTTING ==> %s\n", *line);
+	}
+	cut->cut_param = param;
+	if (obj->cuts)
+		cut->next = obj->cuts;
+	else
+		cut->next = NULL;
+	obj->cuts = cut;
+	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
 	return (ret);
 }
 
@@ -1255,3 +1324,23 @@ void	print_conf(t_data *data)
 //{
 //	ft_printf("Val 1 : %f\nVal 2 : %f\nVal 3 : %f\n", t.val[0], t.val[1], t.val[2]);
 //}
+
+int		check_normal(t_3vecf *t)
+{
+	if (t->val[0] == 0 && t->val[1] == 0 && t->val[2] == 0)
+	{
+		ft_fdprintf(2, "Normal Nul\n");
+		return(0);
+	}
+	return (1);
+}
+
+int		isequal_3vecf(t_3vecf *t1, t_3vecf *t2)
+{
+	if (t1->val[0] == t2->val[0] && t1->val[1] == t2->val[1] && t1->val[2] == t2->val[2])
+	{
+		ft_fdprintf(2, "Same Origin and Tip\n");
+		return (0);
+	}
+	return (1);
+}
