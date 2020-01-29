@@ -467,7 +467,7 @@ int		parse_texture2(char **line, t_obj *obj)
 		else if (!(ft_strncmp(*line, "WOOD", 4)))
 		{
 			obj->get_text_color = &get_wood_color;
-			obj->text.text_type = TEXT_GRID;
+			obj->text.text_type = TEXT_WOOD;
 			ret = obj->text.text_param ? 0 : 1;
 		}
 		else if (!(ft_strncmp(*line, "IMAGE", 5)))
