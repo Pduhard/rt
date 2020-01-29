@@ -57,10 +57,24 @@
 # define SPACE_KEY	(1 << 10)
 # define SHIFT_KEY	(1 << 11)
 
+# define ESC_KEY 0x0035
+
+/* Error Mess*/
+# define ERRORSIZE "WIN_Size: Min 400/400, Max 2560/1420\n"
+# define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
+# define SERRORNAME "Syntax error: name(scene_name)\n"
+# define SERRORCAM "Syntax error: camera(origin)(rotation)\n"
+# define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
+# define SERRORCYL "Syntax error: cylinder(center)(tip)(radius)(color)\n"
+# define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
+# define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
+# define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
+
 typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
 typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
 typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
+typedef enum	{CUT_STATIC, CUT_REAL, CUT_PLAN} e_cut_type;
 
 typedef struct	s_mlx
 {
@@ -126,6 +140,19 @@ typedef struct	s_cylinder
 	double		radius;
 }				t_cylinder;
 
+typedef struct	s_cut_classic
+{
+	t_3vecf		origin;
+	t_3vecf		normal;
+}				t_cut_classic;
+
+typedef	struct	s_cut
+{
+	e_cut_type	cut_type;
+	void		*cut_param;
+	struct s_cut	*next;
+}				t_cut;
+
 typedef struct	s_text_img
 {
 	int				width;
@@ -156,6 +183,7 @@ typedef struct	s_obj
 {
 	e_obj_type	obj_type;
 	void		*obj_param;
+	t_cut		*cuts;
 	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
 	t_4vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
@@ -309,6 +337,8 @@ void	print_conf(t_data *data);
 void	print_vec2(double vec[2]);
 void	print_vec(double vec[3]);
 void	print_obj_param(t_obj *obj);
+int		isequal_3vecf(t_3vecf *t1, t_3vecf *t2);
+int		check_normal(t_3vecf *t);
 
 t_4vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
@@ -321,5 +351,8 @@ t_3vecf	get_bump_mapping_perlin(t_3vecf inter_point, t_3vecf normal_inter, t_obj
 t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_wood(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+
+int		parse_cutting(char **line, t_obj *obj);
+int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj);
 
 #endif

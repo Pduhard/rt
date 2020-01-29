@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   key_hook.c                                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:52:29 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 13:37:29 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/29 21:29:26 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -48,6 +48,8 @@ int		key_press(int keycode, void *param)
 	if (keycode == 0) //
 		data->hooks |= A_KEY;
 		//data->cam.origin[0] -= 0.2;
+	else if (keycode == ESC_KEY)
+		exit(0);
 	else if (keycode == 1) //s
 		data->hooks |= S_KEY;
 		//data->cam.origin[2] -= 0.2;
