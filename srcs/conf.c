@@ -345,6 +345,48 @@ int		parse_lights(char **line, t_data *data)
 	return (ret);
 }
 
+int		parse_motion(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+	t_motion *motion;
+
+	stripe = 0;
+	ret = 1;
+	if (!(motion = ft_memalloc(sizeof(t_motion))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "dir", 3)))
+		{
+			ret = parse_origin(line, &motion->dir, 3);
+			goto_next_element(line);
+			printf("Parse_moyion ==> %s\n", *line);
+			if (!(ft_strncmp(*line, "speed", 5)))
+				ret = parse_double2(line, 5, &motion->speed_fact);
+			else if (**line != '>')
+			{
+				printf("Bad conf Motion\n");
+				return (0);
+			}
+		}
+		else if (**line != '<')
+		{
+			printf("Parse_motion ==> %s\n", *line);
+			printf("Bad conf 2 Motion\n");
+			return (0);
+		}
+	}
+	if (obj->motions)
+		motion->next = obj->motions;
+	else
+		motion->next = NULL;
+	obj->motions = motion;
+	return (ret);
+}
+
+
 /*int		parse_ambient(char **line, t_light *light, t_data *data)
 {
 	char	stripe;
@@ -409,6 +451,8 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_texture2(line, obj);
 		else if (!(ft_strncmp(*line, "cutting", 7)))
 			ret = parse_cutting(line, obj);
+		else if (!(ft_strncmp(*line, "MotionBlur", 10)))
+			ret = parse_motion(line, obj);
 		else if (!ft_strncmp(*line, "reflection", 10))
 			ret = parse_double2(line, 10, &obj->reflection);
 		else if (!ft_strncmp(*line, "refraction", 10))

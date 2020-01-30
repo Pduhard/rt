@@ -179,11 +179,19 @@ typedef struct	s_text
 	void		*text_param;
 }				t_text;
 
+typedef	struct	s_motion
+{
+	t_3vecf		dir;
+	double		speed_fact;
+	struct s_motion	*next;
+}				t_motion;
+
 typedef struct	s_obj
 {
 	e_obj_type	obj_type;
 	void		*obj_param;
 	t_cut		*cuts;
+	t_motion	*motions;
 	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double);
 	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *);
 	t_4vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
@@ -305,6 +313,7 @@ int		parse_bump_mapping(char **line, t_obj *obj);//t_text *text);
 void	set_bump_own(t_obj *obj);//t_text *text);
 int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index);
 void	set_bump_inde(char *s, t_obj *obj);//t_text *text);
+int		parse_motion(char **line, t_obj *obj);
 
 int		parse_rotation(char **line, t_2vecf *t, int i);
 int		parse_origin(char **line, t_3vecf *t, int i);
