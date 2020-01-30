@@ -283,6 +283,7 @@ t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
 void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
 
+double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
