@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/29 20:57:01 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/30 18:08:24 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,19 +59,38 @@ double	compute_wood_factor(t_3vecf inter_point, double scale)
 	return (wood_f);
 }
 
+double	test(t_3vecf inter_point, double scale)
+{
+	double	t;
+
+	t = 0;
+	for ( ; scale <= ROUGHCAST_LIMIT ; scale *= 2) // W = Image width in pixels
+		t += fabs(compute_3dperlin_factor(inter_point, scale) / scale);
+	return t;
+}
+
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale)
 {
-	double	perlin_f;
-	double	marble_f;
-	t_2vecf	text_coord;
+//	double	perlin_f;
+//	double	marble_f;
+//	t_2vecf	text_coord;
 
-	perlin_f = compute_3dperlin_factor(inter_point, scale);
-	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
+//	perlin_f = compute_3dperlin_factor(inter_point, scale);
+//	return (test(inter_point, scale));
+	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * test(inter_point, scale))));
+	return (t * t - .5);
+//	0.01 * ()
+//	marble_f = compute_3dperlin_factor(assign_3vecf(powf(2, inter_point.val[0]) * inter_point.val[0], powf(2, inter_point.val[0]) * inter_point.val[1], powf(2, inter_point.val[0]) * inter_point.val[2]), scale) / powf(2, inter_point.val[0]);
+//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+//	marble_f = (1. + sin((inter_point.val[0] + perlin_f / 2) * 3.)) / 2.;
+//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+//	marble_f = (1. + sin((inter_point.val[1] + perlin_f / 2) * 3.)) / 2.;
 //	perlin_f = compute_3dperlin_factor(inter_point);
 //	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
 
-	return (marble_f);
+//	return (marble_f);
+	(void)normal_inter;
+	(void)obj;
 }
 
 t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
@@ -95,17 +114,18 @@ t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 
 t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
-	t_2vecf	text_coord;
-	double	perlin_f;
+//	t_2vecf	text_coord;
+//	double	perlin_f;
 	double	marble_f;
 	t_4vecf	color;
 	t_text_proc	*text;
 
 	text = (t_text_proc *)obj->text.text_param;
 	//perlin_f = compute_perlin_factor(inter_point);
-	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
-	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	marble_f = (1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
+//	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
+//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+	marble_f = compute_marble_factor(inter_point, normal_inter, obj, obj->text.scale.val[0]);
+	//(1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 //	color.val[0] = obj->text.color[0].val[0] * (1 - marble_f) + obj->text.color[1].val[0] * marble_f;

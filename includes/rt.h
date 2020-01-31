@@ -12,6 +12,7 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
+//# include <gsl/gsl_sf_bessel.h>
 # define WIN_WIDTH	600
 # define WIN_HEIGHT	600
 # define NB_THREADS	8
@@ -41,6 +42,8 @@
 # define CEL_BOUND_6	0.90
 
 # define CEL_BOUNDARY	0.04
+# define ROUGHCAST_LIMIT	12
+
 /* HOOKS MACRO */
 # define A_KEY	1
 # define D_KEY	(1 << 1)
@@ -284,6 +287,7 @@ double	linear_interpolate(double a, double b, double val);
 
 double	degree_to_radian(double degree);
 
+t_3vecf	solve_cubic(double a, double b, double c, double d);
 int		key_press(int keycode, void *param);
 int		key_release(int keycode, void *param);
 int		moov_hook(int x, int y, void *param);
@@ -351,6 +355,7 @@ t_3vecf	get_bump_mapping_perlin(t_3vecf inter_point, t_3vecf normal_inter, t_obj
 t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_wood(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 int		parse_cutting(char **line, t_obj *obj);
 int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj);

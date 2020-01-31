@@ -690,15 +690,15 @@ void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
 //		text->bump_type = BUMP_WOOD;
 	if (!(ft_strncmp(s, "IMAGE", 5)))
 	{
-		obj->get_bump_mapping = &get_bump_mapping_wood;
-		obj->text.bump_type = BUMP_WOOD;
+		obj->get_bump_mapping = &get_bump_mapping_image;
+		obj->text.bump_type = BUMP_IMAGE;
 	}
 
 	//	text->bump_type = BUMP_IMAGE;
 	if (!(ft_strncmp(s, "SINUS", 5)))
 	{
-		obj->get_bump_mapping = &get_bump_mapping_image;
-		obj->text.bump_type = BUMP_IMAGE;
+		obj->get_bump_mapping = &get_bump_mapping_sinus;
+		obj->text.bump_type = BUMP_SINUS;
 	}
 
 	//	text->bump_type = BUMP_SINUS;

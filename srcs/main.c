@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 21:07:09 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/25 13:35:33 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/31 07:38:35 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,6 +17,10 @@ int		main(int argc, char **argv)
 {
 	t_data	*data;
 
+	t_3vecf	t = solve_cubic(1, -3, 3, -1);
+	printf("%lf %lf %lf\n", t.val[0], t.val[1], t.val[2]);
+	printf("%lf\n", -54. * t.val[0] * t.val[0] * t.val[0] + 110. * t.val[0] * t.val[0] - 64. * t.val[0] + 8);
+	//exit(0);
 	//check error
 	if (argc != 2)
 	{

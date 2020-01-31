@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/29 15:31:02 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/01/31 06:43:00 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -46,6 +46,7 @@ SRC			=	main.c			\
 				loop.c			\
 				key_hook.c		\
 				cylinder.c		\
+				polynomial.c	\
 
 BIN			=	$(SRC:.c=.o)
 
