@@ -1,0 +1,84 @@
+<scene
+	<name(Moebius stripe)	>
+	<size(1000, 1000)>
+	<camera
+		<origin (0, 0, -5)>
+		<rotation (0, 0)>
+	>
+	<objects
+		<texture
+			<WOOD
+				<color(0, 0.8, 0)(0)>
+				<color(0, 0.7, 0)(0)>
+			>
+			<offset(0, 0)>
+			<scale(1, 2)>
+			<BumpMapping
+				<own (0.02)>
+			>
+		>
+		<moebius
+			<origin(0, 0, 0)>
+			<radius(4)>
+		>
+	>	
+	<objects
+		<texture
+			<UNI
+				<color(1, 1, 1)(0)>
+			>
+			<offset(0, 0)>
+			<scale(10, 2)>
+		>
+		<sphere
+			<origin(0, 0, 0)>
+			<radius(0.1)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(1, 0, 0)(0)>
+			>
+			<offset(0, 0)>
+			<scale(10, 2)>
+		>
+		<plane
+			<origin(0, 0, 10)>
+			<normal(0, 0, -1)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0, 0, 1)(0)>
+			>
+			<offset(0, 0)>
+			<scale(10, 2)>
+		>
+		<plane
+			<origin(0, 0, -20)>
+			<normal(0, 0, 1)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0, 1, 0)(0)>
+			>
+			<offset(0, 0)>
+			<scale(10, 2)>
+		>
+		<plane
+			<origin(10, 0, 0)>
+			<normal(-1, 0, 0)>
+		>
+	>
+	<lights
+		<point (0, 0, -2)>
+		<color (1, 1, 1)>
+	>
+	<lights
+		<ambient (0.2, 0.2, 0.2)>
+	>
+>

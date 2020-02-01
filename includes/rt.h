@@ -43,7 +43,7 @@
 
 # define CEL_BOUNDARY	0.04
 # define ROUGHCAST_LIMIT	12
-
+# define BIAS				0.0001
 /* HOOKS MACRO */
 # define A_KEY	1
 # define D_KEY	(1 << 1)
@@ -121,6 +121,12 @@ typedef struct	s_sphere
 	double		radius;
 }				t_sphere;
 
+typedef struct	s_moebius
+{
+	t_3vecf		origin;
+	double		radius;
+}				t_moebius;
+
 typedef struct	s_plane
 {
 	t_3vecf		origin;
@@ -189,6 +195,8 @@ typedef	struct	s_motion
 	struct s_motion	*next;
 }				t_motion;
 
+typedef struct	s_data	t_data;
+
 typedef struct	s_obj
 {
 	e_obj_type	obj_type;
@@ -208,6 +216,8 @@ typedef struct	s_obj
 	double		shininess;
 //	int			color;
 	struct s_obj	*next;
+
+	t_data		*data;
 }				t_obj;
 
 typedef struct	s_light
@@ -226,7 +236,7 @@ typedef struct	s_cam
 
 typedef struct	s_data
 {
-//	double			f;
+	double			f;
 	t_mlx		*mlx;
 	t_cam		*camera;
 	t_obj		*objs;
@@ -293,6 +303,7 @@ double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *o
 
 double	linear_interpolate(double a, double b, double val);
 
+int		is_null(double value);
 double	degree_to_radian(double degree);
 
 t_3vecf	solve_cubic(double a, double b, double c, double d);
@@ -327,6 +338,7 @@ int		parse_cone(char **line, t_obj *cone, t_data *data);
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data);
 int		parse_plane(char **line, t_obj *plane, t_data *data);
 int		parse_sphere(char **line, t_obj *sphere, t_data *data);
+int		parse_moebius(char **line, t_obj *moebius, t_data *data);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
 
@@ -345,6 +357,11 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_
 int		ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist);
 t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane);
 t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane);
+
+int		ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist);
+t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius);
+t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius);
+
 
 void	print_conf(t_data *data);
 void	print_vec2(double vec[2]);

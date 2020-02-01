@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 02:20:57 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/31 07:31:13 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/01 00:53:30 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -156,6 +156,23 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 
 /* https://stackoverflow.com/questions/13328676/c-solving-cubic-equations =>>
  * YYESSSS */
+t_2vecf	solve_quadratic(double a, double b, double c)
+{
+	double	delta;
+	t_2vecf	roots;
+
+	delta = b * b - 4 * a * c;
+	if (delta < 0)
+	{
+		roots.val[0] = DBL_MAX;
+		roots.val[1] = DBL_MAX;
+		return (roots);
+	}
+	roots.val[0] = (-b - sqrt(delta)) / (2 * a);
+	roots.val[1] = (-b + sqrt(delta)) / (2 * a);
+	return (roots);
+}
+
 t_3vecf	solve_cubic(double a, double b, double c, double d)
 {
 	double	q;
@@ -167,13 +184,28 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 
 	if (a == 0)
 	{
-		printf("a == 0: Solve 2nd degree !! \n");
-		exit(0);
+		t_2vecf	quadra_roots;
+	
+		quadra_roots = solve_quadratic(b ,c, d);
+		roots.val[0] = quadra_roots.val[0];
+		roots.val[1] = quadra_roots.val[1];
+		roots.val[2] = quadra_roots.val[0];
+		return (roots);
+	//	printf("a == 0: Solve 2nd degree !! \n");
+	//	exit(0);
 	}
 	if (d == 0)
 	{
-		printf("d == 0: ax^3 + bx^2 + cx + d = 0 => 0 and Solve 2nd degree f(x) / x !!\n");
-		exit(0);
+		t_2vecf	quadra_roots;
+
+		quadra_roots = solve_quadratic(a ,b, c);
+		roots.val[0] = quadra_roots.val[0];
+		roots.val[1] = quadra_roots.val[1];
+		roots.val[2] = 0;
+		return (roots);
+
+//		printf("d == 0: ax^3 + bx^2 + cx + d = 0 => 0 and Solve 2nd degree f(x) / x !!\n");
+//		exit(0);
 	}
 	b /= a;
 	c /= a;
@@ -186,7 +218,12 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 	{
 		double	s;
 		double	t;
-
+/*		roots.val[0] = 0;
+		roots.val[1] = 0;
+		roots.val[2] = 0;// SAME
+	//	exit(0);
+		return (roots);
+*/
 		s = r + sqrt(delta);
 		s = s < 0 ? -powf(-s, (1. / 3.)) : powf(s, (1. / 3.));
 		t = r - sqrt(delta);
@@ -197,6 +234,7 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 	}
 	else if (delta < 0)
 	{
+
 		if (q < 0)
 			q = -q;
 		//	r13 =  2 * sqrt(-q);

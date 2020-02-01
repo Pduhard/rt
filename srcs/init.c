@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/29 21:34:21 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/01 05:37:21 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -92,6 +92,7 @@ t_data	*init_data(char *file_name)
 //	data->rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[2]));
 	//data->lights->color = assign_3vecf(1, 1, 1);
 	//data->fov = 51.12;
+	data->f = 1;
 	data->hooks = 0;
 	data->fps = 0;
 	data->delta_time = 0;

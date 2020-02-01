@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 15:18:48 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/01 05:41:36 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -189,7 +189,7 @@ int		print_loop_image(void *param)
 	Uint32	frame_start;
 
 	frame_start = SDL_GetTicks();
-//	data->f += 0.01;
+	data->f += 0.01;
 //	printf("%x\n", data->hooks);
 //	loop_manage_speed(data);
 //	loop_manage_render(data);

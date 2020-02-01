@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/29 18:47:29 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/01 07:44:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -192,6 +192,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 	{
 		if (lights->light_type == LIGHT_AMBIENT)
 		{
+		//	printf("lights type: AMBIENT param: %f %f %f\n", lights->color.val[0], lights->color.val[1], lights->color.val[2]);
 			light_fact.val[0] += lights->color.val[0];
 			light_fact.val[1] += lights->color.val[1];
 			light_fact.val[2] += lights->color.val[2];
@@ -200,11 +201,14 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 		{
 			if (lights->light_type == LIGHT_POINT)
 			{
+		//		printf("lights type: iPOINT  param: %f %f %f\n", lights->param.val[0], lights->param.val[1], lights->param.val[2]);
+		//		printf("lights type: iPOINT  param: %f %f %f\n", lights->color.val[0], lights->color.val[1], lights->color.val[2]);
 				light_dir = sub_3vecf(lights->param, inter_point);
 				light_len = get_length_3vecf(light_dir);
 			}
 			else if (lights->light_type == LIGHT_DIRECTIONAL)
 			{
+		//		printf("lights type: DIR  param: %f %f %f\n", lights->param.val[0], lights->param.val[1], lights->param.val[2]);
 				light_dir = assign_3vecf(-lights->param.val[0], -lights->param.val[1], -lights->param.val[2]);
 				light_len = MAX_VIEW;
 			}
@@ -212,7 +216,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			normalize_3vecf(&light_dir);// same
 			shadow_inter_point = inter_point;
 			transp_fact = assign_3vecf(1, 1, 1);
-			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, 0.01, light_len, &shadow_dist, objs)))
+			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs)))
 			{
 		//		printf("wefwef\n");
 				if (shadow_obj->transmitance > 0)
@@ -415,13 +419,13 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		{
 			t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
 			normalize_3vecf(&refr_ray);
-			refr_color = ray_trace(inter_point, refr_ray, 0.01, MAX_VIEW, data, depth - 1);
+			refr_color = ray_trace(inter_point, refr_ray, BIAS, MAX_VIEW, data, depth - 1);
 		}
 		if (fresnel_ratio > 0.01) // eles full refraction
 		{
 			t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 			normalize_3vecf(&refl_ray);
-			refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
+			refl_color = ray_trace(inter_point, refl_ray, BIAS, MAX_VIEW, data, depth - 1);
 		}
 		/*	not sure */	
 /*		light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
@@ -454,7 +458,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 			return (lighted_color);
 		t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 		normalize_3vecf(&refl_ray);
-		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
+		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, BIAS, MAX_VIEW, data, depth - 1);
 	
 		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refl_color.val[0] * closest_obj->reflection;
 		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refl_color.val[1] * closest_obj->reflection;
@@ -477,7 +481,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 //		{
 			//t_3vecf	refr_ray = refract_ray(dir, normal_inter, closest_obj->refraction);
 			//normalize_3vecf(&refr_ray);
-		refr_color = ray_trace(inter_point, dir, 0.01, MAX_VIEW, data, depth - 1);
+		refr_color = ray_trace(inter_point, dir, BIAS, MAX_VIEW, data, depth - 1);
 //		}
 	//	t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 	//	normalize_3vecf(&refl_ray);
@@ -554,7 +558,7 @@ void	*render_thread(void *param)
 			if (!ANTI_AL)
 			{
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-				color = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
+				color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6);
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
 			/*else

@@ -447,6 +447,8 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_plane(line, obj, data);
 		else if (!ft_strncmp(*line, "cylinder", 8))
 			ret = parse_cylinder(line, obj, data);
+		else if (!ft_strncmp(*line, "moebius", 7))
+			ret = parse_moebius(line, obj, data);
 		else if (!ft_strncmp(*line, "texture", 7))
 			ret = parse_texture2(line, obj);
 		else if (!(ft_strncmp(*line, "cutting", 7)))
@@ -1182,6 +1184,48 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 	ft_printf("Radius : %f\n", cone_param->radius);
 	return (ret);
 }
+
+int		parse_moebius(char **line, t_obj *moebius, t_data *data)
+{
+	char	stripe;
+	int		ret;
+	t_sphere	*moebius_param;
+
+	stripe = 0;
+	ret = 1;
+	printf("\nMoebius ==> %s\n", *line);
+	if (moebius->obj_param)
+	{
+		printf("\n Fais IECH Moebius ==> %s\n", *line);
+		return (0);
+	}
+	if (!(moebius_param = ft_memalloc(sizeof(t_moebius))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp(*line, "origin", 6))
+			ret = parse_origin(line, &moebius_param->origin, 6);
+		else if (!ft_strncmp(*line, "radius", 6))
+			ret = parse_double2(line, 6, &moebius_param->radius);
+	}
+	moebius->obj_param = moebius_param;
+	moebius->obj_type = OBJ_SPHERE;
+	moebius->ray_intersect = &ray_intersect_moebius;
+	moebius->get_normal_inter = &get_normal_intersect_moebius;
+	moebius->get_text_coordinate = &get_text_coordinate_moebius;
+	if (data->objs)
+		moebius->next = data->objs;
+	else
+		moebius->next = NULL;
+	data->objs = moebius;
+	printf("Fin Moebius ==> %s\n", *line);
+	print_vec(moebius_param->origin.val);
+	ft_printf("Radius : %f\n", moebius_param->radius);
+	moebius->data = data;
+	return (ret);
+}
+
 
 int		parse_camera(char **line, t_data *data)
 {
