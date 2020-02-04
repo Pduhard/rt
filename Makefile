@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/01/31 20:11:30 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/04 07:22:11 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -16,7 +16,7 @@
 NAME		=	rt
 
 CC			=	gcc
-FLAGS		=	-Wall -Werror -Wextra -O3 -march=native -flto -ffast-math
+FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
 FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
@@ -48,6 +48,7 @@ SRC			=	main.c			\
 				key_hook.c		\
 				cylinder.c		\
 				polynomial.c	\
+				motion.c		\
 
 BIN			=	$(SRC:.c=.o)
 
