@@ -1049,6 +1049,8 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
 	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
+	cylinder->get_origin = &get_origin_cylinder;
+	cylinder->move = &move_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
 	if (data->objs)
 		cylinder->next = data->objs;
@@ -1090,6 +1092,8 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 	plane->obj_type = OBJ_PLANE;
 	plane->ray_intersect = &ray_intersect_plane;
 	plane->get_normal_inter = &get_normal_intersect_plane;
+	plane->get_origin = &get_origin_plane;
+	plane->move = &move_plane;
 	plane->get_text_coordinate = &get_text_coordinate_plane;
 	if (data->objs)
 		plane->next = data->objs;
@@ -1130,6 +1134,8 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->ray_intersect = &ray_intersect_sphere;
 	sphere->get_normal_inter = &get_normal_intersect_sphere;
+	sphere->get_origin = &get_origin_sphere;
+	sphere->move = &move_sphere;
 	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 	if (data->objs)
 		sphere->next = data->objs;
@@ -1172,6 +1178,8 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 	cone->obj_type = OBJ_CONE;
 	cone->ray_intersect = &ray_intersect_cone;
 	cone->get_normal_inter = &get_normal_intersect_cone;
+	cone->get_origin = &get_origin_cone;
+	cone->move = &move_cone;
 	cone->get_text_coordinate = &get_text_coordinate_cone;
 	if (data->objs)
 		cone->next = data->objs;
@@ -1189,7 +1197,7 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 {
 	char	stripe;
 	int		ret;
-	t_sphere	*moebius_param;
+	t_moebius	*moebius_param;
 
 	stripe = 0;
 	ret = 1;
@@ -1208,11 +1216,15 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 			ret = parse_origin(line, &moebius_param->origin, 6);
 		else if (!ft_strncmp(*line, "radius", 6))
 			ret = parse_double2(line, 6, &moebius_param->radius);
+		else if (!ft_strncmp(*line, "half_width", 10))
+			ret = parse_double2(line, 10, &moebius_param->half_width);
 	}
 	moebius->obj_param = moebius_param;
 	moebius->obj_type = OBJ_SPHERE;
 	moebius->ray_intersect = &ray_intersect_moebius;
 	moebius->get_normal_inter = &get_normal_intersect_moebius;
+	moebius->get_origin = &get_origin_moebius;
+	moebius->move = &move_moebius;
 	moebius->get_text_coordinate = &get_text_coordinate_moebius;
 	if (data->objs)
 		moebius->next = data->objs;

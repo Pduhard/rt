@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/27 18:14:52 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/04 06:59:05 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,15 +25,32 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_
 	(void)sphere;
 }
 
-t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere)
+void	move_sphere(t_obj *sphere, t_3vecf dir, double fact)
 {
-	t_sphere *param;
+	t_sphere	*param;
 
 	param = (t_sphere *)sphere->obj_param;
-	return (sub_3vecf(inter_point, param->origin));
+	param->origin.val[0] += dir.val[0] * fact;
+	param->origin.val[1] += dir.val[1] * fact;
+	param->origin.val[2] += dir.val[2] * fact;
 }
 
-int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist)
+t_3vecf	get_origin_sphere(t_obj *sphere)
+{
+	return (((t_sphere *)sphere->obj_param)->origin);
+}
+
+t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int sp_id)
+{
+	t_sphere	*param;
+	t_3vecf		sph_orig;
+
+	param = (t_sphere *)sphere->obj_param;
+	sph_orig = sp_id ? move_3vecf(param->origin, sphere->motions, sp_id) : param->origin;
+	return (sub_3vecf(inter_point, sph_orig));
+}
+
+int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist, int sp_id)
 {
 	t_3vecf	dist_vec;
 	double	a, b, c;
@@ -41,9 +58,11 @@ int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist,
 	t_2vecf	hit_point;
 	t_sphere	*sphere_param;
 	int		check = 0;
+	t_3vecf	sph_origin;
 
 	sphere_param = (t_sphere *)sphere->obj_param;
-	dist_vec = sub_3vecf(orig, sphere_param->origin);
+	sph_origin = sp_id ? move_3vecf(sphere_param->origin, sphere->motions, sp_id) : sphere_param->origin;
+	dist_vec = sub_3vecf(orig, sph_origin);
 	a = dot_product_3vecf(dir, dir);
 	b = 2.f * dot_product_3vecf(dist_vec, dir);
 	c = dot_product_3vecf(dist_vec, dist_vec) - sphere_param->radius * sphere_param->radius;
@@ -66,62 +85,62 @@ int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist,
 }
 
 /*int		parse_sphere(char *line, t_data *data)
+  {
+  int			i;
+  t_obj		*sphere;
+  t_sphere	*sphere_param;
+
+  if (!(sphere = malloc(sizeof(t_obj))) || !(sphere_param = malloc(sizeof(t_sphere))))
+  return (0);
+  i = 6;
+  while (ft_isspace(line[i]))
+  ++i;
+  if (line[i] != '(' || (i = parse_3vecf(line, i, &sphere_param->origin)) == -1)
+  {
+  ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+  return (0);
+  }
+  while (ft_isspace(line[i]))
+  ++i;
+  if (line[i] != '(' || (i = parse_double(line, i, &sphere_param->radius)) == -1)
+  {
+  ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+  return (0);
+  }
+  while (ft_isspace(line[i]))
+  ++i;
+  if (line[i] != '(' || (i = parse_texture(line, i, sphere)) == -1)
+  {
+  ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+  return (0);
+  }
+  while (ft_isspace(line[i]))
+  ++i;
+  if (line[i] != '(' || (i = parse_double(line, i, &sphere->reflection)) == -1)
+  {
+  ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+  return (0);
+  }
+  while (ft_isspace(line[i]))
+  ++i;
+  if (line[i] != '(' || (i = parse_double(line, i, &sphere->refraction)) == -1)
+  {
+  ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
+  return (0);
+  }
+
+//printf("sphere : %f %f %f && %f && %f %f %f\n", sphere_param->origin.val[0], sphere_param->origin.val[1], sphere_param->origin.val[2], sphere_param->radius, sphere->color.val[0], sphere->color.val[1], sphere->color.val[2]);
+sphere->obj_param = sphere_param;
+sphere->obj_type = OBJ_SPHERE;
+sphere->ray_intersect = &ray_intersect_sphere;
+sphere->get_normal_inter = &get_normal_intersect_sphere;
+sphere->get_text_coordinate = &get_text_coordinate_sphere;
+if (data->objs)
 {
-	int			i;
-	t_obj		*sphere;
-	t_sphere	*sphere_param;
-
-	if (!(sphere = malloc(sizeof(t_obj))) || !(sphere_param = malloc(sizeof(t_sphere))))
-		return (0);
-	i = 6;
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &sphere_param->origin)) == -1)
-	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
-		return (0);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_double(line, i, &sphere_param->radius)) == -1)
-	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
-		return (0);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_texture(line, i, sphere)) == -1)
-	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
-		return (0);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_double(line, i, &sphere->reflection)) == -1)
-	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
-		return (0);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_double(line, i, &sphere->refraction)) == -1)
-	{
-		ft_printf("Syntax error: sphere syntax: sphere(origin)(radius)(color)(reflection)(refraction)\n");
-		return (0);
-	}
-
-	//printf("sphere : %f %f %f && %f && %f %f %f\n", sphere_param->origin.val[0], sphere_param->origin.val[1], sphere_param->origin.val[2], sphere_param->radius, sphere->color.val[0], sphere->color.val[1], sphere->color.val[2]);
-	sphere->obj_param = sphere_param;
-	sphere->obj_type = OBJ_SPHERE;
-	sphere->ray_intersect = &ray_intersect_sphere;
-	sphere->get_normal_inter = &get_normal_intersect_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;
-	if (data->objs)
-	{
-		sphere->next = data->objs;
-	}
-	else
-		sphere->next = NULL;
-	data->objs = sphere;
-	return (1);
+sphere->next = data->objs;
+}
+else
+sphere->next = NULL;
+data->objs = sphere;
+return (1);
 }*/

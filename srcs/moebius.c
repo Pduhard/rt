@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 18:29:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/01 08:24:39 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/04 07:49:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,18 +26,35 @@ t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t
 	(void)moebius;
 }
 
-t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius)
+void	move_moebius(t_obj *moebius, t_3vecf dir, double fact)
+{
+	t_moebius	*param;
+
+	param = (t_moebius *)moebius->obj_param;
+	param->origin.val[0] += dir.val[0] * fact;
+	param->origin.val[1] += dir.val[1] * fact;
+	param->origin.val[2] += dir.val[2] * fact;
+}
+
+t_3vecf	get_origin_moebius(t_obj *moebius)
+{
+	return (((t_moebius *)moebius->obj_param)->origin);
+}
+
+t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius, int sp_id)
 {
 	t_moebius	*param;
 	t_3vecf		normal_inter;
 	double		x;
 	double		y;
 	double		z;
+	t_3vecf		moebius_origin;
 
 	param = (t_moebius *)moebius->obj_param;
-	x = inter_point.val[0] - param->origin.val[0];
-	y = inter_point.val[1] - param->origin.val[1];
-	z = inter_point.val[2] - param->origin.val[2];
+	moebius_origin = sp_id ? move_3vecf(param->origin, moebius->motions, sp_id) : param->origin;
+	x = inter_point.val[0] - moebius_origin.val[0];
+	y = inter_point.val[1] - moebius_origin.val[1];
+	z = inter_point.val[2] - moebius_origin.val[2];
 	normal_inter.val[0] = 2 * x * y - 2 * param->radius * z - 4 * x * z;
 	normal_inter.val[1] = -param->radius * param->radius + x * x + 3 * y * y - 4 * y * z + z * z;
 	normal_inter.val[2] = -2 * param->radius * x - 2 * x * x - 2 * y * y + 2 * y * z;
@@ -45,7 +62,7 @@ t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius)
 	return (normal_inter);
 }
 
-int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist)
+int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist, int sp_id)
 {
 	t_moebius	*param;
 	double		ox;
@@ -57,12 +74,15 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	t_4vecf		t_fact;
 	t_3vecf		roots;
 	int			check;
+	t_3vecf		moebius_origin;
 
+	(void)sp_id;
 	check = 0;
 	param = (t_moebius *)moebius->obj_param;
-	ox = orig.val[0] - param->origin.val[0];
-	oy = orig.val[1] - param->origin.val[1];
-	oz = orig.val[2] - param->origin.val[2];
+	moebius_origin = sp_id ? move_3vecf(param->origin, moebius->motions, sp_id) : param->origin;
+	ox = orig.val[0] - moebius_origin.val[0];
+	oy = orig.val[1] - moebius_origin.val[1];
+	oz = orig.val[2] - moebius_origin.val[2];
 	vx = dir.val[0];
 	vy = dir.val[1];
 	vz = dir.val[2];
@@ -78,37 +98,24 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	while (++i < 3)
 	{
 		t_3vecf	coord;
-		(void)min_dist;
-		(void)max_dist;
 		if (roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
 		{
-			coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - param->origin.val[0];
-			coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - param->origin.val[1];
-			coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - param->origin.val[2];
+			coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - moebius_origin.val[0];
+			coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - moebius_origin.val[1];
+			coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - moebius_origin.val[2];
 
 			double	v;
 			double	u;
+			double	sin_v_2;
 
-//			if (coord.val[0] < 0)
 			v = atan2(coord.val[1], coord.val[0]);
-		//	v = atan(coord.val[1] / coord.val[0]);
-//			else
-//			v = atan(coord.val[1] / coord.val[0]) / 2;
-		//	if (coord.val[0] < 0)
-		//		u = (coord.val[0] / cos(2 * v) - 2) * cos(v);
-		//		u = (coord.val[2] / 2) / (sin(v  / 2));
-		//	else
-//			t_3vecf	bord = assign_3vecf((param->radius + cos(v)) * cos(2 * v), (param->radius + cos(v)) * sin(2 * v), sin(v));
-		//	u = get_length_3vecf(sub_3vecf(coord, assign_3vecf(param->radius * cos(2 * v), param->radius * sin(2 * v), 0)));
-	//		u = get_length_3vecf(sub_3vecf(coord, assign_3vecf(param->radius * cos(2 * v), param->radius * sin(2 * v), 0)));
-			//printf("%f \n", get_length_3vecf(sub_3vecf(bord, assign_3vecf(param->radius * cos(2 * v), param->radius * sin(2 * v), 0))));
-			//	u = coord.val[2] / sin(v / 2);
-			if (!is_null(sin(v / 2)))
-		//	{
-				u = coord.val[2] / sin(v / 2);
-		//	}
+			if (!is_null((sin_v_2 = sin(v / 2))))
+				u = coord.val[2] / sin_v_2;
+			else if (!is_null(v))
+				u = (coord.val[0] / cos(v) - param->radius) / cos(v / 2);
 			else
-				u = (coord.val[0]  / cos(v) - param->radius) / cos(v / 2);
+				u = (coord.val[0] - param->radius);
+		//	}
 	//		double	x = coord.val[0];
 	//		double	y = coord.val[1];
 	//		double	z = coord.val[2];
@@ -119,7 +126,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	//		{
 			coord.val[0] -= (param->radius + u * cos(v / 2)) * cos(v);
 			coord.val[1] -= (param->radius + u * cos(v / 2)) * sin(v);
-			coord.val[2] -= u * sin(v / 2);
+			coord.val[2] -= u * sin_v_2;
 
 //			u = (coord.val[2] / 2) / (sin(v));
 		/*	if (coord.val[0] < -1.99 && coord.val[0] > -2.01 && coord.val[1] > -0.01 && coord.val[1] < 0.01 && coord.val[2] > -1 && coord.val[2] < -0.5)
@@ -137,7 +144,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 		//	}
 				//			if (v > 0 && v < 2 * M_PI)
 		//	printf("%f\n",coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2] );
-			if (is_null(coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2]) && u  < 2 && u > -2)//get_length_3vecf(sub_3vecf(bord, assign_3vecf(param->radius * cos(2 * v), param->radius * sin(2 * v), 0))))
+			if (is_null(coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2]) && u < param->half_width && u > -param->half_width)
 			{
 				
 				check = 1;
