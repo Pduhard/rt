@@ -10,7 +10,6 @@
             <UNI
                 <color (1, 0, 1, 1)>
                 <color (1, 1, 1, 1)>
-
             >
             <BumpMapping
                 <independent (PERLIN)(0.5)>

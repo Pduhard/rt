@@ -1,6 +1,7 @@
 <scene
     <    name  (test)     >
     <size (600, 600)>
+	<MotionBlur	(ON)>
     <camera
         <origin (1, 0, -5)   >
         <rotation (0, 0)  >
@@ -19,12 +20,9 @@
             <radius (1)>
         >
 		<MotionBlur
-            <dir (-1, 1, 0)>
-            <speed (0)>
-        >
-		<MotionBlur
             <dir (1.5, -0.5, 0)>
             <speed (1.5)>
+            <spf (32)>
         >
 		<reflection(0)>
     >
@@ -38,9 +36,8 @@
             <offset (0, 0)>
             <scale (0, 0)>
         >
-        <cone
+        <sphere
             <origin (0, 0.5, 0)>
-            <tip (0, 2, 0)>
             <radius (1)>
         >
         <cutting
@@ -55,50 +52,15 @@
                 <normal (1, 0, 0)>
             >
         >
-		<MotionBlur
-            <dir (-1, 1, 0)>
-            <speed (6)>
-        >
         <MotionBlur
             <dir (2, 0, 0)>
             <speed (6)>
-        >
-		<reflection(0)>
-    >
-	<objects
-        <texture
-            <UNI
-                <color (0, 0, 1, 0)>
-                <color (1, 1, 1, 1)>
-
-            >
-            <offset (0, 0)>
-            <scale (0, 0)>
-        >
-        <cylinder
-            <origin (0, 0.5, 0)>
-            <tip (0, 2, 0)>
-            <radius (1)>
-        >
-        <cutting
-            <static
-                <origin (0, 0, 0)>
-                <normal (0, 1, 0)>
-            >
-        >
-        <cutting
-            <static
-                <origin (0, 0, 0)>
-                <normal (1, 0, 0)>
-            >
+            <spf (16)>
         >
 		<MotionBlur
             <dir (-1, 1, 0)>
             <speed (6)>
-        >
-        <MotionBlur
-            <dir (2, 0, 0)>
-            <speed (6)>
+            <spf (16)>
         >
 		<reflection(0)>
     >

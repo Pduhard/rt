@@ -8,9 +8,7 @@
 	<objects
 		<texture
 			<UNI
-				<color(0.5, 0.5, 0.8)(0)>
-				<color(0.8, 0.4, 0.8)(0)>
-				<color (0.8, 0.6, 0.8)(1)>
+				<color(0.5, 0.5, 0.8, 0)(0)>
 			>
 			<offset(0, 0)>
 			<scale(2, 2)>
@@ -23,9 +21,7 @@
 	<objects
 		<texture
 			<UNI
-				<color(1, 0, 0)(0)>
-				<color(1, 1, 1)(0)>
-				<color (0.8, 0.6, 0.8)(1)>
+				<color(1, 0, 0, 0)(0)>
 			>
 			<offset(0, 0)>
 			<scale(4, 8)>
@@ -34,14 +30,11 @@
 			<origin(0, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.8, 0.6, 0.8)(0)>
+				<color (1, 0, 0, 0.1)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -50,14 +43,11 @@
 			<origin(1, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.1)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.2)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -66,14 +56,11 @@
 			<origin(2, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.2)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.3)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -82,14 +69,11 @@
 			<origin(3, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.3)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.4)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -98,14 +82,11 @@
 			<origin(4, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.4)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.5)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -114,14 +95,11 @@
 			<origin(5, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.5)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.6)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -130,14 +108,11 @@
 			<origin(6, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.6)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.7)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -146,14 +121,11 @@
 			<origin(7, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.7)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.8)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -162,14 +134,11 @@
 			<origin(8, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.8)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 0.91)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -178,14 +147,11 @@
 			<origin(9, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (0.9)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 0, 0, 1)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -194,19 +160,12 @@
 			<origin(10, -1, 12)>
 			<radius(0.25)>
 		>
-		<transmitance (1)>
 	>
-
-
-
-
 
 	<objects
 		<texture
 			<UNI
-				<color(1, 1, 1)(0)>
-				<color(1, 1, 1)(0)>
-				<color (0.8, 0.6, 0.8)(1)>
+				<color(1, 1, 1, 0)(0)>
 			>
 			<offset(0, 0)>
 			<scale(4, 8)>
@@ -215,14 +174,11 @@
 			<origin(0, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (0.9, 0.9, 0.9)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.8, 0.6, 0.8)(0)>
+				<color (0.9, 0.9, 0.9, 0.1)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -231,14 +187,11 @@
 			<origin(1, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.1)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.2)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -247,14 +200,11 @@
 			<origin(2, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.2)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.3)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -263,14 +213,11 @@
 			<origin(3, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.3)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.4)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -279,14 +226,11 @@
 			<origin(4, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.4)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.5)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -295,14 +239,11 @@
 			<origin(5, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.5)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.6)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -311,14 +252,11 @@
 			<origin(6, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.6)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.7)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -327,14 +265,11 @@
 			<origin(7, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.7)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.8)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -343,14 +278,11 @@
 			<origin(8, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.8)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 0.9)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -359,14 +291,11 @@
 			<origin(9, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (0.9)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
-				<color (0.2, 0.2, 0.8)(0)>
+				<color (1, 1, 1, 1)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -375,7 +304,6 @@
 			<origin(10, -1, 6)>
 			<radius(0.25)>
 		>
-		<transmitance (1)>
 	>
 
 	<lights

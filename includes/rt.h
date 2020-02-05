@@ -22,18 +22,17 @@
 # define MAX_VIEW		500
 
 /* TMP MACRO  */
-# define SCALE_X	0.1
-# define SCALE_Y	0.1
 
-# define OFFSET_X	0.4
-# define OFFSET_Y	0
 
 # define CEL_SHADING	0
 # define ANTI_AL		0
-# define MOTION_BLUR	0
 
+/*ALTERABLE MACRO	*/
+
+# define PERLIN_TRANSP_ADD	0.3
 # define MOTION_STEP	0.02
-# define MOTION_SPP		8
+# define MOTION_FVEL	8
+# define MOTION_SPP		32
 
 /* CST MACROS */
 # define _M_PI_180	0.01745329251
@@ -259,6 +258,7 @@ typedef struct	s_data
 	Uint32		fps;
 	Uint32		delta_time;
 	int			anti_al;
+	int			motion_blur;
 }				t_data;
 
 typedef struct	s_thread
@@ -285,6 +285,7 @@ int		parse_double(char *line, int i, double *val);
 //int		parse_texture(char *line, int i, t_obj *obj);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
 int		parse_double2(char **line, int i, double *val);
+int		parse_int(char **line, int i, int *val);
 
 //int		parse_sphere(char *line, t_data *data);
 //int		parse_plane(char *line, t_data *data);

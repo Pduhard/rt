@@ -246,6 +246,31 @@ int		parse(char **line, t_data *data)
 	return (0);
 }
 
+int		parse_onoff(char **line, int *onoff)
+{
+	char	*s;
+
+	s = *line;
+
+	while (*s != '(' && *s)
+		++s;
+	if (!ft_strncmp(s, "(ON)", 4))
+		*onoff = 1;
+	else if (!ft_strncmp(s, "(OFF)", 5))
+		*onoff = 0;
+	else if (!ft_strncmp(s, "(1)", 3))
+		*onoff = 1;
+	else if (!ft_strncmp(s, "(0)", 3))
+		*onoff = 0;
+	else
+	{
+		ft_printf("ON OFF possible value: ON/1, OFF/0\n");
+		return (0);
+	}
+	goto_next_element(line);
+	return (1);
+}
+
 int		parse_scene(char **line, t_data *data)
 {
 	char	stripe;
@@ -269,6 +294,8 @@ int		parse_scene(char **line, t_data *data)
 			ret = parse_objects(line, data);
 		else if (!ft_strncmp(*line, "lights", 6))
 			ret = parse_lights(line, data);
+		else if (!ft_strncmp(*line, "MotionBlur", 10))
+			ret = parse_onoff(line, &data->motion_blur);
 /*		else
 		{
 			printf("Unrecognized element\n");
@@ -345,7 +372,7 @@ int		parse_lights(char **line, t_data *data)
 	return (ret);
 }
 
-int		parse_motion(char **line, t_obj *obj)
+/*int		parse_motion(char **line, t_obj *obj)
 {
 	char	stripe;
 	int		ret;
@@ -383,6 +410,55 @@ int		parse_motion(char **line, t_obj *obj)
 	else
 		motion->next = NULL;
 	obj->motions = motion;
+	return (ret);
+}
+*/
+
+void	push_front_motion(t_motion **root, t_motion *new)
+{
+	t_motion	*motion;
+
+	if (!*root)
+		*root = new;
+	else
+	{
+		motion = *root;
+		while (motion->next)
+			motion = motion->next;
+		motion->next = new;
+	}
+}
+
+int		parse_motion(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+	t_motion *motion;
+
+	stripe = 0;
+	ret = 1;
+	if (!(motion = ft_memalloc(sizeof(t_motion))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "dir", 3)))
+			ret = parse_origin(line, &motion->dir, 3);
+		else if (!(ft_strncmp(*line, "speed", 3)))
+			ret = parse_double2(line, 5, &motion->speed_fact);
+		else if (!(ft_strncmp(*line, "spf", 3)))
+		{
+			ret = parse_int(line, 3, &motion->spf);
+			printf("\n\n%s\n", *line);
+		}
+		else if (**line != '<' && **line != '>') //ie end of element
+		{
+			printf("Parse_motion ==> %s\n", *line);
+			printf("Bad conf 2 Motion\n");
+			return (0);
+		}
+	}
+	push_front_motion(&obj->motions, motion);
 	return (ret);
 }
 
@@ -791,10 +867,10 @@ int		parse_scene_name(char **line, t_data *data)
 
 void	*parse_img(char **line, t_text *text)
 {
-//	SDL_Surface		*image_bmp;
-//	SDL_Surface		*image;
+	SDL_Surface		*image_bmp;
+	SDL_Surface		*image;
 	t_text_img		*param;
-//	unsigned int	pixels_nb;
+	unsigned int	pixels_nb;
 	unsigned int	i;
 	int				name_len;
 	char			*image_name;
@@ -806,19 +882,21 @@ void	*parse_img(char **line, t_text *text)
 		ft_printf("Deja une texture\n==> %s\n", *line);
 		return (NULL);
 	}
-	goto_next_element(line);
+	while (**line != '(' && **line)
+		++(*line);
 	if (**line != '(')
 		return (NULL);
+	*line += 1;
 	if ((name_len = ft_strichr(*line, ')')) == -1)
 		return (NULL);
 	if (!(image_name = ft_strsub(*line, i, name_len)))
 		return (NULL);
-//	printf("%s %d\n", image_name, name_len);
+	printf("%s %d\n", image_name, name_len);
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
-/*	if (!(image_bmp = SDL_LoadBMP(image_name)))
+	if (!(image_bmp = IMG_Load(image_name)))
 		return (NULL);
-	if (!(image = SDL_ConvertSurfaceFormat(image_bmp, SDL_PIXELFORMAT_RGB888, 0)))
+	if (!(image = SDL_ConvertSurfaceFormat(image_bmp, SDL_PIXELFORMAT_RGBA8888, 0)))
 		return (NULL);
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
@@ -841,7 +919,8 @@ void	*parse_img(char **line, t_text *text)
 	printf("%s\n", *line);
 	SDL_UnlockSurface(image);
 	SDL_FreeSurface(image_bmp);
-	SDL_FreeSurface(image);*/
+	SDL_FreeSurface(image);
+	goto_next_element(line);
 	return ((void *)param);
 	(void)line;
 }
@@ -1373,6 +1452,28 @@ int		parse_3vecf(char *line, int i, t_3vecf *vec)
 //	if (line[i] != ')')
 //		return (-1);
 	return (i);
+}
+
+int		parse_int(char **line, int i, int *val)
+{
+	char *s;
+
+	s = *line;
+	while (ft_isspace(s[i]))
+		i++;
+	if (s[i] == '(')
+		i++;
+	*val = ft_atoi(&(s[i]));
+	while (s[i] && s[i] != ')')
+			++i;
+	if (!s[i])
+		return (0);
+	if (goto_next_element(line) != '>')
+	{
+		printf("Error parse_int\n");
+		return(0);
+	}
+	return (1);
 }
 
 int		parse_double2(char **line, int i, double *val)

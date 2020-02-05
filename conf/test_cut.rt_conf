@@ -40,7 +40,7 @@
             <dir (0, 0, 0)>
             <speed (2)>
         >
-        <reflection(0.3)>
+		<reflection(0.3)>
     >
     <lights
         <point (0, 0, -5)>

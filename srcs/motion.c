@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/04 00:42:41 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 08:01:13 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/05 01:59:56 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -79,26 +79,18 @@ t_3vecf		motion_trace(t_3vecf orig, t_3vecf dir, t_data *data)
 	t_3vecf	color;
 	t_3vecf	ray_color;
 	int		i;
-
-	i = -1;
 	double	tt_vel;
 	double	vel;
 
+	i = -1;
 	vel = 0;
 	tt_vel = 0;
-/*	data->objs->motions->spf = 16;
-	data->objs->motions->next->spf = 16;
-	data->objs->next->motions->spf = 32;
-	data->objs->next->motions->next->spf = 0;
 	color = assign_3vecf(0, 0, 0);
-*/
-//	color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6);
-//	move_objects(data->objs);
+
 	while (++i < MOTION_SPP)
 	{
 		ray_color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6, i);
-	//	move_objects(data->objs);
-		vel = i + 1 == MOTION_SPP ? 8. : 1.;
+		vel = i + 1 == MOTION_SPP ? MOTION_FVEL : 1.;
 		color.val[0] += ray_color.val[0] * vel;
 		color.val[1] += ray_color.val[1] * vel;
 		color.val[2] += ray_color.val[2] * vel;
@@ -107,6 +99,5 @@ t_3vecf		motion_trace(t_3vecf orig, t_3vecf dir, t_data *data)
 	color.val[0] /= tt_vel;
 	color.val[1] /= tt_vel;
 	color.val[2] /= tt_vel;
-//	reset_objs_position(data->objs);
 	return (color);
 }

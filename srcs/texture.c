@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/30 18:08:24 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/05 08:57:15 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,7 +30,7 @@ t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	t_4vecf	color;
 	text = (t_text_proc *)obj->text.text_param;
 
-   	perlin_f = compute_3dperlin_factor(inter_point, obj->text.scale.val[0]);
+   	perlin_f = fabs(compute_3dperlin_factor(inter_point, obj->text.scale.val[0]));
 /*	if (perlin_f > 0.8)
 		return (text->color[0]);
 	//	return (assign_3vecf(obj->text.color[0].val[0] * perlin_f, obj->text.color[0].val[1] * perlin_f, obj->text.color[0].val[2] * perlin_f));
@@ -41,9 +41,11 @@ t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 		return (text->color[2]);
 	//	return (assign_3vecf(obj->text.color_3.val[0] * perlin_f, obj->text.color_3.val[1] * perlin_f, obj->text.color_3.val[2] * perlin_f));
 */
+//	printf("%f\n", perlin_f);
 	color.val[0] = text->color[0].val[0] * perlin_f;
 	color.val[1] = text->color[0].val[1] * perlin_f;
 	color.val[2] = text->color[0].val[2] * perlin_f;
+	color.val[3] = text->color[0].val[3] * (perlin_f + PERLIN_TRANSP_ADD);
 	return (color);
 	(void)normal_inter;
 }
@@ -59,36 +61,23 @@ double	compute_wood_factor(t_3vecf inter_point, double scale)
 	return (wood_f);
 }
 
-double	test(t_3vecf inter_point, double scale)
+double	marble_noise(t_3vecf inter_point, double scale)
 {
 	double	t;
 
 	t = 0;
-	for ( ; scale <= ROUGHCAST_LIMIT ; scale *= 2) // W = Image width in pixels
+	while (scale <= ROUGHCAST_LIMIT)
+	{
 		t += fabs(compute_3dperlin_factor(inter_point, scale) / scale);
+	   	scale *= 2;
+	}
 	return t;
 }
 
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale)
 {
-//	double	perlin_f;
-//	double	marble_f;
-//	t_2vecf	text_coord;
-
-//	perlin_f = compute_3dperlin_factor(inter_point, scale);
-//	return (test(inter_point, scale));
-	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * test(inter_point, scale))));
+	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * marble_noise(inter_point, scale))));
 	return (t * t - .5);
-//	0.01 * ()
-//	marble_f = compute_3dperlin_factor(assign_3vecf(powf(2, inter_point.val[0]) * inter_point.val[0], powf(2, inter_point.val[0]) * inter_point.val[1], powf(2, inter_point.val[0]) * inter_point.val[2]), scale) / powf(2, inter_point.val[0]);
-//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-//	marble_f = (1. + sin((inter_point.val[0] + perlin_f / 2) * 3.)) / 2.;
-//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-//	marble_f = (1. + sin((inter_point.val[1] + perlin_f / 2) * 3.)) / 2.;
-//	perlin_f = compute_3dperlin_factor(inter_point);
-//	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
-
-//	return (marble_f);
 	(void)normal_inter;
 	(void)obj;
 }
@@ -108,6 +97,7 @@ t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	color.val[0] = linear_interpolate(text->color[0].val[0], text->color[1].val[0], wood_f);
 	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], wood_f);
 	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], wood_f);
+	color.val[3] = linear_interpolate(text->color[0].val[3], text->color[1].val[3], wood_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -135,6 +125,7 @@ t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	color.val[0] = linear_interpolate(text->color[0].val[0], text->color[1].val[0], marble_f);
 	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
 	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);
+	color.val[3] = linear_interpolate(text->color[0].val[3], text->color[1].val[3], marble_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -152,8 +143,8 @@ t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 
 	text = (t_text_img *)obj->text.text_param;
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	text_coord.val[1] *= SCALE_X;
-	text_coord.val[0] *= SCALE_Y;
+	text_coord.val[1] *= obj->text.scale.val[1];
+	text_coord.val[0] *= obj->text.scale.val[0];
 	if (text_coord.val[1] < 0)
 		col = (int)((1 - ((-text_coord.val[1] - (int)-text_coord.val[1]))) * (double)(text->width));
 	else
@@ -164,17 +155,18 @@ t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 		row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
 //	row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
 //	col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
-	row += OFFSET_Y * (double)(text->height);
-	col += (1. - OFFSET_X) * (double)(text->width);
+	row += obj->text.offset.val[1] * (double)(text->height);
+	col += (1. - obj->text.offset.val[0]) * (double)(text->width);
 
 	row %= text->height;
 	col %= text->width;
 	pixel_addr = row * text->width + col;
 	//pixel_addr = (((row + offset_row - 1) * text->width) % text->height) + ((col + offset_col) % text->width);
 //	pixel_addr = pixel_addr % (text->height * text->width);
-	color.val[0] = (double)(text->pixels[pixel_addr] >> 16 & 0xff) / 255.;
-	color.val[1] = (double)(text->pixels[pixel_addr] >> 8 & 0xff) / 255.;
-	color.val[2] = (double)(text->pixels[pixel_addr] & 0xff) / 255.;
+	color.val[0] = (double)(text->pixels[pixel_addr] >> 24 & 0xff) / 255.;
+	color.val[1] = (double)(text->pixels[pixel_addr] >> 16 & 0xff) / 255.;
+	color.val[2] = (double)(text->pixels[pixel_addr] >> 8 & 0xff) / 255.;
+	color.val[3] = (255. - (double)(text->pixels[pixel_addr] & 0xff)) / 255.;
 	//linear_interpolate(text->color[0].val[0], text->color[1].val[0], marble_f);
 	//color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
 	//color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);

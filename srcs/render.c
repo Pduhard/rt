@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 05:35:12 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/05 06:05:17 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -164,7 +164,7 @@ void	cel_shade(double *val)
 		*val = CEL_BOUND_6;
 }
 
-t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_dir, t_light *lights, t_obj *objs, int sp_id)
+t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t_light *lights, t_obj *objs, int sp_id)
 {
 	t_3vecf	light_fact;
 	double	norm_dot_ldir;
@@ -176,6 +176,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 	t_3vecf	light_dir;
 	t_3vecf	spec_vec;
 	t_obj	*shadow_obj;
+	t_3vecf	inv_dir = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 
 	light_fact = assign_3vecf(0, 0, 0);
 	while (lights)
@@ -209,30 +210,32 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf inv_di
 			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs, sp_id)))
 			{
 		//		printf("wefwef\n");
-				if (shadow_obj->transmitance > 0)
-				{
-				//	break ; //!!!!!!!!!!!!!!!!!!!! need to manage shadow
-					t_4vecf obj_color_t = shadow_obj->get_text_color(inter_point, normal_inter, shadow_obj);
-					t_3vecf obj_color;
-					obj_color = assign_3vecf(obj_color_t.val[0], obj_color_t.val[1], obj_color_t.val[2]);
-	/*				t_3vecf	trans;
-					
-					trans.val[0] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[0]));
-					trans.val[1] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[1]));
-					trans.val[2] = ((1 - shadow_obj->transmitance) * (1 - obj_color.val[2]));
-					transp_fact.val[0] -= trans.val[0] ? trans.val[0] : 0.1; // ->transmitance !!
-					transp_fact.val[1] -= trans.val[1] ? trans.val[1] : 0.1; // ->transmitance !!
-					transp_fact.val[2] -= trans.val[2] ? trans.val[2] : 0.1; // ->transmitance !!
-	*/				transp_fact.val[0] -= ((1 - shadow_obj->transmitance) * (1.1 - obj_color.val[0])); // ->transmitance !!
-					transp_fact.val[1] -= ((1 - shadow_obj->transmitance) * (1.1 - obj_color.val[1])); // ->transmitance !!
-					transp_fact.val[2] -= ((1 - shadow_obj->transmitance) * (1.1 - obj_color.val[2])); // ->transmitance !!
-				}
-				else
-					break;
 				shadow_inter_point.val[0] += (light_dir.val[0] * shadow_dist);
 				shadow_inter_point.val[1] += (light_dir.val[1] * shadow_dist);
 				shadow_inter_point.val[2] += (light_dir.val[2] * shadow_dist);
-				light_len -= shadow_dist;
+				light_len -= shadow_dist;	
+				t_3vecf tex_normal_inter = shadow_obj->get_normal_inter(shadow_inter_point, shadow_obj, sp_id);
+				normalize_3vecf(&tex_normal_inter);
+		//		if (dot_product_3vecf(tex_normal_inter, light_dir) < 0)
+	//				tex_normal_inter = assign_3vecf(-tex_normal_inter.val[0], -tex_normal_inter.val[1], -tex_normal_inter.val[2]);
+				t_4vecf obj_color = shadow_obj->get_text_color(shadow_inter_point, tex_normal_inter, shadow_obj);
+				if (obj_color.val[3] > 0)
+				{
+			//		break ; //!!!!!!!!!!!!!!!!!!!! need to manage shadow
+	/*				t_3vecf	trans;
+					
+					trans.val[0] = ((1 - obj_color.val[3]) * (1 - obj_color.val[0]));
+					trans.val[1] = ((1 - obj_color.val[3]) * (1 - obj_color.val[1]));
+					trans.val[2] = ((1 - obj_color.val[3]) * (1 - obj_color.val[2]));
+					transp_fact.val[0] -= trans.val[0] ? trans.val[0] : 0.1; // ->transmitance !!
+					transp_fact.val[1] -= trans.val[1] ? trans.val[1] : 0.1; // ->transmitance !!
+					transp_fact.val[2] -= trans.val[2] ? trans.val[2] : 0.1; // ->transmitance !!
+	*/				transp_fact.val[0] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[0])); // ->transmitance !!
+					transp_fact.val[1] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[1])); // ->transmitance !!
+					transp_fact.val[2] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[2])); // ->transmitance !!
+				}
+				else
+					break;
 			}
 	//		shadow_obj = ray_first_intersect(inter_point, light_dir, 0.01, light_len, &shadow_dist, objs);
 	//		transp_fact = 1;
@@ -302,91 +305,28 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	double	closest_dist;
 	t_obj	*closest_obj;
 
-//	printf("orig then dir\n");
-//	print_vec(orig.val);
-//	print_vec(dir.val);
-//	if (!depth)
-//		return (assign_3vecf(0, 0, 0));
-		//return (lighted_color);
 	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id);
 	if (!closest_obj)
 		return (assign_3vecf(0, 0, 0));
-	//
-	// new function i think ^^
-	//
-	//return (closest_obj->color);
-//	if (closest_obj->obj_type == OBJ_CONE)
-//		return (closest_obj->color);
 	t_3vecf		inter_point;
 	t_3vecf		normal_inter;
 	t_3vecf		lighted_color;
 	t_3vecf		inv_dir =  assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 	t_3vecf		light_fact;
-//	double		normal_length;
+	t_4vecf		obj_color;
 
 	inter_point.val[0] = orig.val[0] + dir.val[0] * closest_dist;
 	inter_point.val[1] = orig.val[1] + dir.val[1] * closest_dist;
 	inter_point.val[2] = orig.val[2] + dir.val[2] * closest_dist;
 	normal_inter = closest_obj->get_normal_inter(inter_point, closest_obj, sp_id);
 	normalize_3vecf(&normal_inter);
+	t_3vecf	tex_normal_inter = normal_inter;
 	if (dot_product_3vecf(normal_inter, dir) > 0)
 		normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
 	if (closest_obj->get_bump_mapping)
 		normal_inter = closest_obj->get_bump_mapping(inter_point, normal_inter, closest_obj);
-/*	if (closest_obj->obj_type == OBJ_PLANE)
-	{
-		double	bump_factor = 0.2;
-		t_3vecf	normal_inter_save = normal_inter;
-	
-		normal_inter.val[0] += inter_point.val[0];
-		normal_inter.val[1] = 50 * normal_inter.val[1] + 100 * inter_point.val[1] ;
-		normal_inter.val[2] += inter_point.val[2];
-	
-		double	bump_x = compute_perlin_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
-			-compute_perlin_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
-		double	bump_y = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
-			-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
-		double	bump_z = compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
-			-compute_perlin_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
-	
-		double	bump_x = compute_wood_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]))
-		-compute_wood_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]));
-	double	bump_y = compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]))
-		-compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]));
-	double	bump_z = compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor))
-		-compute_wood_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor));
-
-	double	bump_x = compute_marble_factor(assign_3vecf(normal_inter.val[0] - bump_factor, normal_inter.val[1], normal_inter.val[2]), normal_inter_save, closest_obj)
-		-compute_marble_factor(assign_3vecf(normal_inter.val[0] + bump_factor, normal_inter.val[1], normal_inter.val[2]), normal_inter_save, closest_obj);
-	double	bump_y = compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] - bump_factor, normal_inter.val[2]), normal_inter_save, closest_obj)
-		-compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1] + bump_factor, normal_inter.val[2]), normal_inter, closest_obj);
-	double	bump_z = compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] - bump_factor), normal_inter, closest_obj)
-		-compute_marble_factor(assign_3vecf(normal_inter.val[0], normal_inter.val[1], normal_inter.val[2] + bump_factor), normal_inter, closest_obj);
-
-
-		normal_inter.val[0] = normal_inter_save.val[0] + bump_x;
-		normal_inter.val[1] = normal_inter_save.val[1] + bump_y;
-		normal_inter.val[2] = normal_inter_save.val[2] + bump_z;
-	}99999*/
-//	if (closest_obj->obj_type != OBJ_PLANE)
-/*	else
-	{
-		normal_inter.val[0] = normal_inter_save.val[0];
-		normal_inter.val[1] = normal_inter_save.val[1];
-		normal_inter.val[2] = normal_inter_save.val[2];
-	}
-*/
-
-/*	normal_length = get_length_3vecf(normal_inter);
-	normal_inter.val[0] /= normal_length;
-	normal_inter.val[1] /= normal_length;
-	normal_inter.val[2] /= normal_length;
-*/	
-	t_4vecf	obj_color_t;
-	t_3vecf	obj_color;
-	obj_color_t = closest_obj->get_text_color(inter_point, normal_inter, closest_obj);
-	obj_color = assign_3vecf(obj_color_t.val[0], obj_color_t.val[1], obj_color_t.val[2]);
-	light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs, sp_id);
+	obj_color = closest_obj->get_text_color(inter_point, tex_normal_inter, closest_obj);
+	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id);
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];
@@ -423,13 +363,13 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
 		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;*/
 
-		refr_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
-		refr_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
-		refr_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+		refr_color.val[0] = lighted_color.val[0] * (1 - obj_color.val[3]) + refr_color.val[0] * obj_color.val[3];
+		refr_color.val[1] = lighted_color.val[1] * (1 - obj_color.val[3]) + refr_color.val[1] * obj_color.val[3];
+		refr_color.val[2] = lighted_color.val[2] * (1 - obj_color.val[3]) + refr_color.val[2] * obj_color.val[3];
 
-	//	lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
-	//	lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
-	//	lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+	//	lighted_color.val[0] = lighted_color.val[0] * (1 - obj_color.val[3]) + refr_color.val[0] * obj_color.val[3];
+	//	lighted_color.val[1] = lighted_color.val[1] * (1 - obj_color.val[3]) + refr_color.val[1] * obj_color.val[3];
+	//	lighted_color.val[2] = lighted_color.val[2] * (1 - obj_color.val[3]) + refr_color.val[2] * obj_color.val[3];
 
 		/*	-------- */
 		
@@ -456,7 +396,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		//lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
 		//lighted_color.val[2] = closest_obj->color.val[2] * light_fact;
 	}
-	else if (closest_obj->transmitance) // transparency
+	else if (obj_color.val[3] > 0) // transparency
 	{
 		t_3vecf	refr_color = assign_3vecf(0, 0, 0);
 		if (!depth)
@@ -476,9 +416,9 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	//	t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 	//	normalize_3vecf(&refl_ray);
 	//	t_3vecf	refl_color = ray_trace(inter_point, refl_ray, 0.01, MAX_VIEW, data, depth - 1);
-		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->transmitance) + refr_color.val[0] * closest_obj->transmitance;
-		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->transmitance) + refr_color.val[1] * closest_obj->transmitance;
-		lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->transmitance) + refr_color.val[2] * closest_obj->transmitance;
+		lighted_color.val[0] = lighted_color.val[0] * (1 - obj_color.val[3]) + refr_color.val[0] * obj_color.val[3];
+		lighted_color.val[1] = lighted_color.val[1] * (1 - obj_color.val[3]) + refr_color.val[1] * obj_color.val[3];
+		lighted_color.val[2] = lighted_color.val[2] * (1 - obj_color.val[3]) + refr_color.val[2] * obj_color.val[3];
 
 	}
 /*
@@ -550,7 +490,7 @@ void	*render_thread(void *param)
 			{
 
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-				if (!MOTION_BLUR)
+				if (!data->motion_blur)
 					color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6, 0);
 				else
 					color = motion_trace(orig, dir, data);
