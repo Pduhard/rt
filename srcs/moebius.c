@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 18:29:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 07:49:43 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/06 06:26:08 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,14 +16,25 @@
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius)
 {
 	t_2vecf	text_coord;
+	double	sin_v_2;
+	t_moebius	*param;
+
+	param = (t_moebius *)moebius->obj_param;
+	text_coord.val[1] = atan2(inter_point.val[1], inter_point.val[0]);
+	if (!is_null((sin_v_2 = sin(text_coord.val[1] / 2))))
+		text_coord.val[0] = inter_point.val[2] / sin_v_2;
+	else if (!is_null(text_coord.val[1]))
+		text_coord.val[0] = (inter_point.val[0] / cos(text_coord.val[1]) - param->radius) / cos(text_coord.val[1] / 2);
+	else
+		text_coord.val[0] = (inter_point.val[0] - param->radius);
+
 /* FALSE need to get from parametric equation*/
 
-	text_coord.val[1] = (1 - fmod((atan2(normal_inter.val[0], normal_inter.val[2]) / (2 * M_PI) + 0.5), 1));
-	text_coord.val[0] = (normal_inter.val[1] * 0.5 + 0.5);
 	//printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
+	text_coord.val[0] = (text_coord.val[0] + param->half_width) / (2 * param->half_width);
+	text_coord.val[1] /= M_PI * 2;
 	return (text_coord);
-	(void)inter_point;
-	(void)moebius;
+	(void)normal_inter;
 }
 
 void	move_moebius(t_obj *moebius, t_3vecf dir, double fact)

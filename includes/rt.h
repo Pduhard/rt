@@ -29,7 +29,7 @@
 
 /*ALTERABLE MACRO	*/
 
-# define PERLIN_TRANSP_ADD	0.3
+# define PERLIN_TRANSP_ADD	1
 # define MOTION_STEP	0.02
 # define MOTION_FVEL	8
 # define MOTION_SPP		32
@@ -77,7 +77,7 @@
 # define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
 # define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
 
-typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER} e_obj_type;
+typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER, OBJ_MOEBIUS, OBJ_CUT_TEXTURE} e_obj_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
 typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
 typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
@@ -136,6 +136,7 @@ typedef struct	s_plane
 {
 	t_3vecf		origin;
 	t_3vecf		normal;
+	t_3vecf		x2d_axis;
 }				t_plane;
 
 typedef struct	s_cone
@@ -205,27 +206,23 @@ typedef struct	s_data	t_data;
 
 typedef struct	s_obj
 {
-	e_obj_type	obj_type;
-	void		*obj_param;
-	t_cut		*cuts;
-	t_motion	*motions;
-	int			(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
-	t_3vecf		(*get_origin)(struct s_obj *);
-	t_3vecf		(*get_normal_inter)(t_3vecf, struct s_obj *i, int);
-	t_4vecf		(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
-	t_2vecf		(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
-	t_3vecf		(*get_bump_mapping)(t_3vecf, t_3vecf, struct s_obj *);
-	void		(*move)(struct s_obj *, t_3vecf, double);
-	t_text		text;
-	double		reflection;
-	double		refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
-	double		transmitance;
-	double		transparence;
-	double		shininess;
-//	int			color;
+	e_obj_type		obj_type;
+	void			*obj_param;
+	struct s_obj	*cuts;
+	t_motion		*motions;
+	int				(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
+	t_3vecf			(*get_origin)(struct s_obj *);
+	t_3vecf			(*get_normal_inter)(t_3vecf, struct s_obj *i, int);
+	t_4vecf			(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
+	t_2vecf			(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
+	t_3vecf			(*get_bump_mapping)(t_3vecf, t_3vecf, struct s_obj *);
+	void			(*move)(struct s_obj *, t_3vecf, double);
+	t_text			text;
+	double			reflection;
+	double			refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
+	double			shininess;
 	struct s_obj	*next;
-
-	t_data		*data;
+	t_data			*data;
 }				t_obj;
 
 typedef struct	s_light
@@ -386,6 +383,8 @@ t_3vecf	get_origin_moebius(t_obj *);
 void	move_moebius(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius);
 
+t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id);
+t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id);
 
 void	print_conf(t_data *data);
 void	print_vec2(double vec[2]);
@@ -408,6 +407,6 @@ t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj 
 t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 int		parse_cutting(char **line, t_obj *obj);
-int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj);
+int		parse_cut_static_real(char **line, t_obj *cut);
 
 #endif

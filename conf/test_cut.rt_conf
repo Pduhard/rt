@@ -8,16 +8,16 @@
     <objects
         <texture
             <UNI
-                <color (1, 0, 1, 1)>
-                <color (1, 1, 1, 1)>
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
 
             >
             <offset (1, 0)>
             <scale (0, 0)>
         >
-        <cone
+        <cylinder
             <origin (8, 0, 0)>
-            <tip (0, 0, 1)>
+            <tip (0, 0, 0)>
             <radius (1)>
         >
         <cutting
@@ -32,21 +32,64 @@
                 <normal (1, 0, 0)>
             >
         >
-        <MotionBlur
-            <dir (1, 0, 0)>
-            <speed (2)>
+    >
+	<objects
+        <texture
+            <UNI
+                <color (0, 0.8, 0, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
         >
-        <MotionBlur
-            <dir (0, 0, 0)>
-            <speed (2)>
+        <sphere
+            <origin (4, 0, 0)>
+            <radius (1)>
         >
-		<reflection(0.3)>
+        <cutting
+            <static
+                <origin (4, 0, 0)>
+                <normal (-1, 0, 0)>
+            >
+        >
+    >
+	<objects
+        <texture
+            <IMAGE(img/fire_flame2.png)>
+            <offset (0, -0)>
+            <scale (2, 4)>
+        >
+        <sphere
+            <origin (0, 0, 0)>
+            <radius (1)>
+        >
+        <cutting
+            <texture
+            >
+        >
+    >
+	<objects
+        <texture
+            <IMAGE(img/tulipes.png)>
+            <offset (0, 0)>
+            <scale (0.5, 0.5)>
+        >
+        <plane
+            <origin (0, 0, -2)>
+            <normal (0, 0, -1)>
+			<xaxis (1, 0, 0) >
+        >
+        <cutting
+            <texture
+            >
+        >
     >
     <lights
-        <point (0, 0, -5)>
-        <color (1, 0, 1)>
+        <point (0, -2, -5)>
+        <color (1, 1, 1)>
     >
     <lights
-        <ambient (0, 1, 1)>
+        <ambient (0.2, 0.2, 0.2)>
     >
 >

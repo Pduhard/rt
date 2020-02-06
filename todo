@@ -1,3 +1,51 @@
 object -> shininess
 
 light (without s) in conf no parse error but no light in scene ??
+
+cut static
+
+obj_type	PLANE
+obj_param	plane param
+cuts		NULL
+motion		NULL
+*fct		NULL
+text		obj->text
+reflection	obj->reflection
+refraction	obj->refraction
+shininess	obj->shininess
+
+cut real
+
+obj_type	PLANE
+obj_param	plane param
+cuts		NULL
+motion		NULL
+*fct		NULL
+text		obj->text
+reflection	obj->reflection
+refraction	obj->refraction
+shininess	obj->shininess
+
+cut plane
+
+obj_type	CUT_PLANE
+obj_param	cut_plane_param
+cuts		NULL
+motion		NULL
+*fct		NULL
+text		obj->text
+reflection	obj->reflection
+refraction	obj->refraction
+shininess	obj->shininess
+
+cut texture
+
+obj_type	CUT_TEXTURE
+obj_param	NULL
+cuts		NULL
+motion		NULL
+*fct		NULL
+text		0
+reflection	NULL
+refraction	NULL
+shininess	NULL

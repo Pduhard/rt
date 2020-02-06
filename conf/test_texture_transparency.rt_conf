@@ -131,9 +131,22 @@
 	>
 	<objects
 		<texture
+			<IMAGE(img/vitral.png)>
+			<offset(0, 0)>
+			<scale(0.5, 0.5)>
+		>
+		<plane
+			<origin (1, -3.7, 14)>
+			<normal (-0.5, 0, -0.5)>
+			<xaxis (0.5, 0, -0.5)>
+		>
+		<cutting<texture>>
+	>	
+	<objects
+		<texture
 			<IMAGE(img/fire_2.png)
 			>
-			<offset(0.6, 0)>
+			<offset(0, 0.6)>
 			<scale(1, 2)>
 		>
 		<sphere

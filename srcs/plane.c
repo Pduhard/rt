@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 07:20:16 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/06 06:44:36 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,32 +22,38 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_o
 	t_3vecf	origin_inter;
 
 	param = (t_plane *)plane->obj_param;
-	if (normal_inter.val[0] != 0)
+	if (param->x2d_axis.val[0] * param->x2d_axis.val[0] + param->x2d_axis.val[1] * param->x2d_axis.val[1] + param->x2d_axis.val[2] * param->x2d_axis.val[2] == 0 || !is_null(dot_product_3vecf(param->x2d_axis, param->normal)))
 	{
-		u_axis = assign_3vecf(0, 1, 1);
-		u_axis.val[0] = (-normal_inter.val[1] - normal_inter.val[2]) / normal_inter.val[0];
-	}
-	else if (normal_inter.val[1] != 0)
-	{
-		u_axis = assign_3vecf(1, 0, 1);
-		u_axis.val[1] = (-normal_inter.val[0] - normal_inter.val[2]) / normal_inter.val[1];
-	}
-	else if (normal_inter.val[2] != 0)
-	{
-		u_axis = assign_3vecf(1, 1, 0);
-		u_axis.val[2] = (-normal_inter.val[0] - normal_inter.val[1]) / normal_inter.val[2];
+		if (normal_inter.val[0] != 0)
+		{
+			u_axis = assign_3vecf(0, 1, 1);
+			u_axis.val[0] = (-normal_inter.val[1] - normal_inter.val[2]) / normal_inter.val[0];
+		}
+		else if (normal_inter.val[1] != 0)
+		{
+			u_axis = assign_3vecf(1, 0, 1);
+			u_axis.val[1] = (-normal_inter.val[0] - normal_inter.val[2]) / normal_inter.val[1];
+		}
+		else if (normal_inter.val[2] != 0)
+		{
+			u_axis = assign_3vecf(1, 1, 0);
+			u_axis.val[2] = (-normal_inter.val[0] - normal_inter.val[1]) / normal_inter.val[2];
+		}
+		normalize_3vecf(&u_axis);
+		v_axis = product_3vecf(u_axis, normal_inter);
+		normalize_3vecf(&v_axis);
 	}
 	else
 	{
-		//	ft_printf("plane normal == [0, 0, 0] => exit\n");
-		//	exit(0);
+		v_axis = param->x2d_axis;
+		normalize_3vecf(&v_axis);
+		u_axis = product_3vecf(v_axis, normal_inter);
+		normalize_3vecf(&u_axis);
 	}
-	normalize_3vecf(&u_axis);
-	v_axis = product_3vecf(u_axis, normal_inter);
 	origin_inter = sub_3vecf(inter_point, param->origin);
 	//	printf("%f %f %f , %f %f %f, %f %f %f\n", param->normal.val[0], param->normal.val[1], param->normal.val[2], u_axis.val[0], u_axis.val[1], u_axis.val[2], v_axis.val[0], v_axis.val[1], v_axis.val[2]);
 	text_coord.val[0] = dot_product_3vecf(origin_inter, u_axis) / 2;
-	text_coord.val[1] = -dot_product_3vecf(origin_inter, v_axis) / 2;
+	text_coord.val[1] = dot_product_3vecf(origin_inter, v_axis) / 2;
 	return (text_coord);
 }
 

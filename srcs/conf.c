@@ -451,12 +451,12 @@ int		parse_motion(char **line, t_obj *obj)
 			ret = parse_int(line, 3, &motion->spf);
 			printf("\n\n%s\n", *line);
 		}
-		else if (**line != '<' && **line != '>') //ie end of element
+	/*	else if (**line != '<' && **line != '>') //ie end of element
 		{
 			printf("Parse_motion ==> %s\n", *line);
 			printf("Bad conf 2 Motion\n");
 			return (0);
-		}
+		}*/
 	}
 	push_front_motion(&obj->motions, motion);
 	return (ret);
@@ -535,8 +535,6 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_double2(line, 10, &obj->reflection);
 		else if (!ft_strncmp(*line, "refraction", 10))
 			ret = parse_double2(line, 10, &obj->refraction);
-		else if (!ft_strncmp(*line, "transmitance", 12))
-			ret = parse_double2(line, 12, &obj->transmitance);
 		else if (!ft_strncmp(*line, "shininess", 9))
 			ret = parse_double2(line, 9, &obj->shininess);
 		else if (**line != '<')
@@ -548,53 +546,81 @@ int		parse_objects(char **line, t_data *data)
 	return (ret);
 }
 
+int		parse_cut_static_texture(char **line, t_obj *cut)
+{
+	char	stripe;
+
+	cut->obj_type = OBJ_CUT_TEXTURE;
+	stripe = goto_next_element(line);
+	if (stripe != '>')
+		return (0);
+	return (1);
+}
+
 int		parse_cutting(char **line, t_obj *obj)
 {
 	char	stripe;
 	int		ret;
-	t_cut	*cut;
+	t_obj	*cut;
 
 	stripe = 0;
 	ret = 1;
 	printf("Parse Cutting\n");
-	if (!(cut = ft_memalloc(sizeof(t_cut))))
+	if (!(cut = ft_memalloc(sizeof(t_obj))))
 		return (0);
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
 		if (!(ft_strncmp(*line, "static", 6)))
-		{
-			cut->cut_type = CUT_STATIC;
-			ret = parse_cut_static_real(line, cut, obj);
-		}
+			ret = parse_cut_static_real(line, cut);
 		else if (!(ft_strncmp(*line, "real", 4)))
-		{
-			cut->cut_type = CUT_REAL;
-			ret = parse_cut_static_real(line, cut, obj);
-		}
-/*		if (!(cut->cut_param))
+			ret = parse_cut_static_real(line, cut);
+//		else if (!(ft_strncmp(*line, "plane", 5)))
+//			ret = parse_cut_static_plane(line, cut, obj);
+		else if (!(ft_strncmp(*line, "texture", 7)))
+			ret = parse_cut_static_texture(line, cut);
+	
+		/*		if (!(cut->cut_param))
 		{
 			ft_printf("Unrecognized element in Cutting: \n%s\n", *line);
 			return (0);
 		}*/
 	}
+	cut->ray_intersect = &ray_intersect_plane;
+	cut->get_normal_inter = &get_normal_intersect_plane;
+	cut->get_origin = &get_origin_plane;
+	cut->move = &move_plane;
+	cut->get_text_coordinate = &get_text_coordinate_plane;
+	cut->text = obj->text;
+	cut->get_text_color = obj->get_text_color;
+	cut->get_bump_mapping = obj->get_bump_mapping;
+	cut->reflection = obj->reflection;
+	cut->refraction = obj->refraction;
+	cut->shininess = obj->shininess;
+	if (obj->cuts)
+		cut->next = obj->cuts;
+	else
+		cut->next = NULL;
+	obj->cuts = cut;
 	return (ret);
 }
 
-int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj)
+
+int		parse_cut_static_real(char **line, t_obj *cut)
 {
 	char	stripe;
 	int		ret;
-	t_cut_classic	*param;
+	t_plane	*param;
 
 	stripe = 0;
 	ret = 1;
-	if (cut->cut_param)
+	cut->obj_type = OBJ_PLANE;
+	if (cut->obj_param)
 	{
-		printf("Deja une coupe\n");
+		printf("Deja parametre\n");
 		return (0);
 	}
-	if (!(param = ft_memalloc(sizeof(t_cut_classic))))
+	if (!(param = ft_memalloc(sizeof(t_plane))))
 		return (0);
 	while (stripe != '>' && ret != 0)
 	{
@@ -605,13 +631,13 @@ int		parse_cut_static_real(char **line, t_cut *cut, t_obj *obj)
 			ret = parse_origin(line, &param->normal, 6);
 		printf("CUTTING ==> %s\n", *line);
 	}
-	cut->cut_param = param;
-	if (obj->cuts)
+	cut->obj_param = param;
+/*	if (obj->cuts)
 		cut->next = obj->cuts;
 	else
 		cut->next = NULL;
 	obj->cuts = cut;
-	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
+*/	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
 	return (ret);
 }
 
@@ -683,7 +709,7 @@ int		parse_texture2(char **line, t_obj *obj)
 			if (!(obj->text.text_param = parse_img(line, &obj->text)))
 			{
 				ft_printf("Ton image c'est de la merde\n");
-//				return (0);
+				return (0);
 			}
 		}
 		else if (!(obj->text.text_param))
@@ -1166,6 +1192,8 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 			ret = parse_origin(line, &plane_param->origin, 6);
 		else if (!ft_strncmp(*line, "normal", 6))
 			ret = parse_origin(line, &plane_param->normal, 6);
+		else if (!ft_strncmp(*line, "xaxis", 5))
+			ret = parse_origin(line, &plane_param->x2d_axis, 5);
 	}
 	plane->obj_param = plane_param;
 	plane->obj_type = OBJ_PLANE;

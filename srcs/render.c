@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/05 06:05:17 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/06 04:38:02 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,7 +40,9 @@ t_3vecf	window_to_view(double x, double y, double win_w, double win_h)
 t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id)
 {
 	t_obj	*closest_obj;
+	t_obj	*objs_save;
 
+	objs_save = objs;
 	closest_obj = NULL;
 	*closest_dist = MAX_VIEW;
 	while (objs)
@@ -49,8 +51,8 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 			closest_obj = objs;
 		objs = objs->next;
 	}
-//	if (objs->cuts)
-//		return ()
+	if (closest_obj && closest_obj->cuts)
+		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
 	return (closest_obj);
 }
 
@@ -221,7 +223,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				t_4vecf obj_color = shadow_obj->get_text_color(shadow_inter_point, tex_normal_inter, shadow_obj);
 				if (obj_color.val[3] > 0)
 				{
-			//		break ; //!!!!!!!!!!!!!!!!!!!! need to manage shadow
+		//			break ; //!!!!!!!!!!!!!!!!!!!! need to manage shadow
 	/*				t_3vecf	trans;
 					
 					trans.val[0] = ((1 - obj_color.val[3]) * (1 - obj_color.val[0]));
@@ -237,7 +239,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				else
 					break;
 			}
-	//		shadow_obj = ray_first_intersect(inter_point, light_dir, 0.01, light_len, &shadow_dist, objs);
+		//	shadow_obj = ray_first_intersect(inter_point, light_dir, 0.01, light_len, &shadow_dist, objs, sp_id);
 	//		transp_fact = 1;
 		//	printf("flute\n");
 		//	shadow_obj = NULL;//ray_first_intersect(inter_point, light_dir, 0.001, light_len, &shadow_dist, objs);
