@@ -15,22 +15,60 @@
             <offset (1, 0)>
             <scale (0, 0)>
         >
+		<material (negative)>
+        <cone
+            <origin (8, 0, 0)>
+            <tip (0, 0, 0)>
+            <radius (2)>
+        >
+    >
+	<objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (diffuse)>
         <cylinder
             <origin (8, 0, 0)>
             <tip (0, 0, 0)>
+            <radius (0.75)>
+        >
+    >	
+	<objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (negative)>
+        <plane
+            <origin (0, 0, 0)>
+            <normal (1, 0, 0)>
+        >
+    >	
+    <objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (negative)>
+        <sphere
+            <origin (2, -1, 0)>
             <radius (1)>
-        >
-        <cutting
-            <static
-                <origin (0, 0, 0)>
-                <normal (0, 1, 0)>
-            >
-        >
-        <cutting
-            <static
-                <origin (0, 0, 0)>
-                <normal (1, 0, 0)>
-            >
         >
     >
 	<objects
@@ -46,12 +84,6 @@
         <sphere
             <origin (4, 0, 0)>
             <radius (1)>
-        >
-        <cutting
-            <static
-                <origin (4, 0, 0)>
-                <normal (-1, 0, 0)>
-            >
         >
     >
 	<objects

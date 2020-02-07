@@ -6,12 +6,26 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/06 06:44:36 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 05:26:21 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+int		check_inside_plane(t_3vecf inter_point, t_obj *plane)
+{
+	t_plane *param;
+	t_3vecf	inter_orig;
+
+	param = (t_plane *)plane->obj_param;
+	inter_orig = sub_3vecf(inter_point, param->origin);
+	if (is_null_3vecf(inter_orig))
+		return (1);
+	if (is_null(dot_product_3vecf(inter_orig, param->normal)))
+		return (1);
+	return (0);
+}
 
 t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane)
 {

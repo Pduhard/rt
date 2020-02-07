@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/06 04:38:02 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 03:51:24 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,7 +37,18 @@ t_3vecf	window_to_view(double x, double y, double win_w, double win_h)
 	return (vec);
 }
 
-t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id)
+int		check_inside_negative(t_3vecf inter_point, t_obj *negative_objs)
+{
+	while (negative_objs)
+	{
+		if (negative_objs->check_inside(inter_point, negative_objs))
+			return (1);
+		negative_objs = negative_objs->next;
+	}
+	return (0);
+}
+
+t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data)
 {
 	t_obj	*closest_obj;
 	t_obj	*objs_save;
@@ -51,9 +62,35 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 			closest_obj = objs;
 		objs = objs->next;
 	}
+	if (closest_obj && data->negative_objs)
+	{
+		t_3vecf inter_point;
+
+		inter_point.val[0] = orig.val[0] + dir.val[0] * *closest_dist;
+		inter_point.val[1] = orig.val[1] + dir.val[1] * *closest_dist;
+		inter_point.val[2] = orig.val[2] + dir.val[2] * *closest_dist;
+		if (check_inside_negative(inter_point, data->negative_objs))
+			return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs_save, sp_id, data));
+	/*	min_dist = *closest_dist;
+		*closest_dist = MAX_VIEW;
+		if (closest_obj->ray_intersect(orig, dir, closest_obj, closest_dist, min_dist, max_dist, sp_id))
+		{
+	//		exit(0);
+			return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs_save, sp_id));
+		}
+		else
+		{
+			*closest_dist = min_dist;
+			return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs_save, sp_id));
+			//return (NULL);
+		}
+		*/
+	}
+	//	return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
 	if (closest_obj && closest_obj->cuts)
-		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
+		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data));
 	return (closest_obj);
+	(void)data;
 }
 
 t_3vecf	reflect_ray(t_3vecf ray, t_3vecf normal_inter)
@@ -166,7 +203,7 @@ void	cel_shade(double *val)
 		*val = CEL_BOUND_6;
 }
 
-t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t_light *lights, t_obj *objs, int sp_id)
+t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t_light *lights, t_obj *objs, int sp_id, t_data *data)
 {
 	t_3vecf	light_fact;
 	double	norm_dot_ldir;
@@ -209,7 +246,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 			normalize_3vecf(&light_dir);// same
 			shadow_inter_point = inter_point;
 			transp_fact = assign_3vecf(1, 1, 1);
-			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs, sp_id)))
+			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs, sp_id, data)))
 			{
 		//		printf("wefwef\n");
 				shadow_inter_point.val[0] += (light_dir.val[0] * shadow_dist);
@@ -260,6 +297,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * norm_dot_ldir /  get_length_3vecf(light_dir);
 					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * norm_dot_ldir /  get_length_3vecf(light_dir);
 				}
+
 				spec_vec = reflect_ray(light_dir, normal_inter);
 			/*	spec_vec.val[0] = 2 * normal_inter.val[0] * norm_dot_ldir - light_dir.val[0];
 				spec_vec.val[1] = 2 * normal_inter.val[1] * norm_dot_ldir - light_dir.val[1];
@@ -270,7 +308,6 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 					light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
 					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
 					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
-			
 				}
 			}
 		}
@@ -307,7 +344,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	double	closest_dist;
 	t_obj	*closest_obj;
 
-	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id);
+	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id, data);
 	if (!closest_obj)
 		return (assign_3vecf(0, 0, 0));
 	t_3vecf		inter_point;
@@ -328,7 +365,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	if (closest_obj->get_bump_mapping)
 		normal_inter = closest_obj->get_bump_mapping(inter_point, normal_inter, closest_obj);
 	obj_color = closest_obj->get_text_color(inter_point, tex_normal_inter, closest_obj);
-	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id);
+	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data);
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];

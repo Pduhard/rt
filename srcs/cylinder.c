@@ -6,13 +6,24 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 17:07:18 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 03:44:35 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
 // http://www.illusioncatalyst.com/notes_files/mathematics/line_cylinder_intersection.php
+
+int		check_inside_cylinder(t_3vecf inter_point, t_obj *cylinder)
+{
+	t_cylinder	*param;
+	
+	param = (t_cylinder *)cylinder->obj_param;
+	if (get_length_3vecf(product_3vecf(sub_3vecf(inter_point, param->tip), sub_3vecf(inter_point, param->center))) / get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
+		return (0);
+	return (1);
+}
 
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder)
 {

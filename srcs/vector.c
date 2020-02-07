@@ -6,12 +6,19 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 23:02:40 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/21 08:35:27 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 05:24:58 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+int		is_null_3vecf(t_3vecf vec)
+{
+	if (is_null(vec.val[0]) && is_null(vec.val[1]) && is_null(vec.val[2]))
+		return (1);
+	return (0);
+}
 
 double	dot_product_3vecf(t_3vecf a, t_3vecf b)
 {
