@@ -313,6 +313,7 @@ double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *o
 double	linear_interpolate(double a, double b, double val);
 
 int		is_null(double value);
+int		is_null_3vecf(t_3vecf t);
 double	degree_to_radian(double degree);
 
 t_3vecf	solve_cubic(double a, double b, double c, double d);
@@ -408,5 +409,8 @@ t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj 
 
 int		parse_cutting(char **line, t_obj *obj);
 int		parse_cut_static_real(char **line, t_obj *cut);
+
+int		return_update(char *error, int ret);
+int		clamp_val(double *val, double min, double max);
 
 #endif

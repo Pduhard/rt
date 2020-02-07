@@ -1,0 +1,59 @@
+<scene
+    <    name  (test )    >
+    <size (800,  400)>
+    <camera
+        <origin (0, -2, -10)   >
+        <rotation (0, 0)  >
+    >
+    <objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 1)>
+                <color (1, 1, 1, 1)>
+            >
+            <BumpMapping
+                <independent (PERLIN)(0.5)>
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+        <sphere
+            <origin (0, 0, 0)>
+            <radius -0>
+        >
+        <cutting
+            <static
+                <origin (0, 0, 0)>
+                <normal (0, 0, 0)>
+            >
+        >
+        <cutting
+            <static
+                <origin (0, 0, 0)>
+                <normal (0, 0, 0)>
+            >
+        >
+        <cutting
+            <static
+                <origin (0, 0, 0)>
+                <normal (0, 0, 0)>
+            >
+        >
+        <MotionBlur
+            <dir (0, 0, 0)>
+            <speed (2)>
+        >
+        <MotionBlur
+            <dir (0, 0, 0)>
+            <speed (2)>
+        >
+        <reflection(0.3)>
+    >
+    <lights
+        <point (0, 0, -5)>
+        <color (1, 0, 1)>
+    >
+    <lights
+        <ambient (0, 1, 1)>
+    >
+>
