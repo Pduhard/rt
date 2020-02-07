@@ -6,13 +6,44 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/04 07:16:44 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 05:14:57 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 // http://www.illusioncatalyst.com/notes_files/mathematics/line_cone_intersection.php
+
+int		check_inside_cone(t_3vecf inter_point, t_obj *obj)
+{
+	t_cone	*param;
+	double	c_dist;
+	double	height;
+	t_3vecf	cone_axis;
+	t_3vecf	p_tip_vec;
+	t_3vecf	orth_dist;
+	double	radius_inter;
+	int		check_rev;
+
+	check_rev = 0;
+	param = (t_cone *)obj->obj_param;
+	cone_axis = sub_3vecf(param->center, param->tip);
+	height = get_length_3vecf(cone_axis);
+	normalize_3vecf(&cone_axis);
+	p_tip_vec = sub_3vecf(inter_point, param->tip);
+	c_dist = dot_product_3vecf(p_tip_vec, cone_axis);
+	if (c_dist < 0 && (check_rev = 1))
+		c_dist *= -1;
+	radius_inter = (c_dist / height) * param->radius;
+//	if (c_dist < 0 || c_dist > height)
+//		return (0);
+	orth_dist.val[0] = p_tip_vec.val[0] - c_dist * (check_rev ? -cone_axis.val[0] : cone_axis.val[0]);
+	orth_dist.val[1] = p_tip_vec.val[1] - c_dist * (check_rev ? -cone_axis.val[1] : cone_axis.val[1]);
+	orth_dist.val[2] = p_tip_vec.val[2] - c_dist * (check_rev ? -cone_axis.val[2] : cone_axis.val[2]);
+	if (get_length_3vecf(orth_dist) > radius_inter)
+		return (0);
+	return (1);
+}
 
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone)
 {

@@ -6,12 +6,22 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/05 06:13:28 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 02:49:55 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+int		check_inside_sphere(t_3vecf point, t_obj *sphere)
+{
+	t_sphere	*param;
+
+	param = (t_sphere *)sphere->obj_param;
+	if (get_length_3vecf(sub_3vecf(point, param->origin)) > param->radius)
+		return (0);
+	return (1);
+}
 
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere)
 {

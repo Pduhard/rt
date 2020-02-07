@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/06 05:13:52 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/06 21:34:03 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -156,7 +156,7 @@ t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 //	row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
 //	col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
 	row += obj->text.offset.val[0] * (double)(text->height);
-	col += (1. - obj->text.offset.val[1]) * (double)(text->width);
+	col += (1 - obj->text.offset.val[1]) * (double)(text->width);
 
 	row %= text->height;
 	col %= text->width;

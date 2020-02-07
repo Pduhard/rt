@@ -77,7 +77,8 @@
 # define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
 # define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
 
-typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER, OBJ_MOEBIUS, OBJ_CUT_TEXTURE} e_obj_type;
+typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER, OBJ_MOEBIUS, OBJ_CUT_TEXTURE, OBJ_CUBE} e_obj_type;
+typedef	enum	{MAT_DIFFUSE, MAT_NEGATIVE} e_mat_type;
 typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
 typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
 typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
@@ -138,6 +139,13 @@ typedef struct	s_plane
 	t_3vecf		normal;
 	t_3vecf		x2d_axis;
 }				t_plane;
+
+typedef struct	s_cube
+{
+	t_2vecf		x_range;
+	t_2vecf		y_range;
+	t_2vecf		z_range;
+}				t_cube;
 
 typedef struct	s_cone
 {
@@ -207,10 +215,12 @@ typedef struct	s_data	t_data;
 typedef struct	s_obj
 {
 	e_obj_type		obj_type;
+	e_mat_type		material_type;
 	void			*obj_param;
 	struct s_obj	*cuts;
 	t_motion		*motions;
 	int				(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
+	int				(*check_inside)(t_3vecf, struct s_obj *);
 	t_3vecf			(*get_origin)(struct s_obj *);
 	t_3vecf			(*get_normal_inter)(t_3vecf, struct s_obj *i, int);
 	t_4vecf			(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
@@ -245,6 +255,7 @@ typedef struct	s_data
 	t_mlx		*mlx;
 	t_cam		*camera;
 	t_obj		*objs;
+	t_obj		*negative_objs;
 	t_light		*lights;
 //	double		fov;
 //	t_44matf	camera_to_world;
@@ -297,6 +308,7 @@ t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b);
 t_3vecf	product_3vecf(t_3vecf a, t_3vecf b);
 double	dot_product_3vecf(t_3vecf a, t_3vecf b);
 double	dot_product_2vecf(t_2vecf a, t_2vecf b);
+int		is_null_3vecf(t_3vecf vec);
 
 t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
 t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
@@ -355,37 +367,42 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 t_3vecf	motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
 
 int		ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_cone(t_3vecf point, t_obj *cone);
 t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id);
 t_3vecf	get_origin_cone(t_obj *cone);
 void	move_cone(t_obj *cone, t_3vecf, double);
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
 
 int 	ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_cylinder(t_3vecf point, t_obj *cylinder);
 t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinderi, int sp_id);
 t_3vecf	get_origin_cylinder(t_obj *);
 void	move_cylinder(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder);
 
 int		ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_sphere(t_3vecf point, t_obj *sphere);
 t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int);
 t_3vecf	get_origin_sphere(t_obj *);
 void	move_sphere(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere);
 
 int		ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_plane(t_3vecf point, t_obj *plane);
 t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane, int sp_id);
 t_3vecf	get_origin_plane(t_obj *);
 void	move_plane(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane);
 
 int		ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_moebius(t_3vecf point, t_obj *moebius);
 t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius, int sp_id);
 t_3vecf	get_origin_moebius(t_obj *);
 void	move_moebius(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius);
 
-t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id);
-t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id);
+t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
+t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
 
 void	print_conf(t_data *data);
 void	print_vec2(double vec[2]);

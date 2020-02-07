@@ -6,12 +6,36 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 18:29:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/06 06:26:08 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/07 06:32:50 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+int		check_inside_moebius(t_3vecf point, t_obj *moebius)
+{
+	t_moebius	*param;
+	double	v;
+	double	u;
+	double	sin_v_2;
+
+	param = (t_moebius *)moebius->obj_param;
+	v = atan2(point.val[1], point.val[0]);
+	if (!is_null((sin_v_2 = sin(v / 2))))
+		u = point.val[2] / sin_v_2;
+	else if (!is_null(v))
+		u = (point.val[0] / cos(v) - param->radius) / cos(v / 2);
+	else
+		u = (point.val[0] - param->radius);
+	point.val[0] -= (param->radius + u * cos(v / 2)) * cos(v);
+	point.val[1] -= (param->radius + u * cos(v / 2)) * sin(v);
+	point.val[2] -= u * sin_v_2;
+
+	if (is_null(point.val[0] * point.val[0] + point.val[1] * point.val[1] + point.val[2] * point.val[2]) && u < param->half_width && u > -param->half_width)
+		return (1);
+	return (0);
+}
 
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius)
 {
@@ -115,7 +139,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - moebius_origin.val[1];
 			coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - moebius_origin.val[2];
 
-			double	v;
+	/*		double	v;
 			double	u;
 			double	sin_v_2;
 
@@ -140,7 +164,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			coord.val[2] -= u * sin_v_2;
 
 //			u = (coord.val[2] / 2) / (sin(v));
-		/*	if (coord.val[0] < -1.99 && coord.val[0] > -2.01 && coord.val[1] > -0.01 && coord.val[1] < 0.01 && coord.val[2] > -1 && coord.val[2] < -0.5)
+*/		/*	if (coord.val[0] < -1.99 && coord.val[0] > -2.01 && coord.val[1] > -0.01 && coord.val[1] < 0.01 && coord.val[2] > -1 && coord.val[2] < -0.5)
 				//printf("wefwef\n");
 			{
 				printf("type A coord %f %f %f y / x : %f u %f v %f\n", coord.val[0], coord.val[1], coord.val[2], coord.val[1] / coord.val[0],  u, v);
@@ -155,7 +179,8 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 		//	}
 				//			if (v > 0 && v < 2 * M_PI)
 		//	printf("%f\n",coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2] );
-			if (is_null(coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2]) && u < param->half_width && u > -param->half_width)
+			if (moebius->check_inside(coord, moebius))
+		//	if (is_null(coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2]) && u < param->half_width && u > -param->half_width)
 			{
 				
 				check = 1;

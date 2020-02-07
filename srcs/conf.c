@@ -327,6 +327,30 @@ int		parse_motion(char **line, t_obj *obj)
 	return (ret);
 }*/
 
+int		parse_material(char **line, int i, t_obj *obj)
+{
+	char	*s;
+
+	s = *line;
+	while (s[i] && s[i] != '(')
+		++i;
+	if (s[i])
+		++i;
+	else
+		return (0);
+	if (!ft_strncmp(&(s[i]), "diffuse", 7))
+		obj->material_type = MAT_DIFFUSE;
+	else if (!ft_strncmp(&(s[i]), "negative", 8))
+		obj->material_type = MAT_NEGATIVE;
+	else
+	{
+		printf("Unknown material type\n");
+		return (0);
+	}
+	goto_next_element(line);
+	return (1);
+}
+
 int		parse_objects(char **line, t_data *data)
 {
 	char	stripe;
@@ -362,6 +386,8 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_double2(line, 10, &obj->refraction);
 		else if (!ft_strncmp(*line, "shininess", 9))
 			ret = parse_double2(line, 9, &obj->shininess);
+		else if (!ft_strncmp(*line, "material", 8))
+			ret = parse_material(line, 8, obj);
 		else if (**line != '<')
 			return (return_update("Unrecognized Object Element\n", 0));
 	}
@@ -382,7 +408,7 @@ int		clamp_val(double *val, double min, double max)
 	return (0);
 }
 
-int		parse_cut_static_texture(char **line, t_obj *cut)
+int		parse_cut_texture(char **line, t_obj *cut)
 {
 	char	stripe;
 	t_plane	*param;
@@ -397,6 +423,70 @@ int		parse_cut_static_texture(char **line, t_obj *cut)
 		return (return_update("Cutting texture don't need parameter\n", 0));
 	cut->obj_param = param;
 	return (1);
+}
+
+int		parse_cut_sphere(char **line, t_obj *cut)
+{
+	t_sphere	*param;
+	char		stripe;
+	int			ret;
+
+	stripe = 0;
+	ret = 1;
+	cut->obj_type = OBJ_SPHERE;
+	if (cut->obj_param)
+	{
+		printf("Deja parametre\n");
+		return (0);
+	}
+	if (!(param = ft_memalloc(sizeof(t_sphere))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "origin", 6)))
+			ret = parse_origin(line, &param->origin, 6);
+		else if (!(ft_strncmp(*line, "radius", 6)))
+			ret = parse_double2(line, 6, &param->radius);
+		printf("CUTTING ==> %s\n", *line);
+	}
+	cut->obj_param = param;
+//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
+	return (ret);
+
+}
+
+int		parse_cut_cube(char **line, t_obj *cut)
+{
+	t_cube		*param;
+	char		stripe;
+	int			ret;
+
+	stripe = 0;
+	ret = 1;
+	cut->obj_type = OBJ_CUBE;
+	if (cut->obj_param)
+	{
+		printf("Deja parametre\n");
+		return (0);
+	}
+	if (!(param = ft_memalloc(sizeof(t_cube))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp(*line, "x_range", 7)))
+			ret = parse_rotation(line, &param->x_range, 7);
+		else if (!(ft_strncmp(*line, "y_range", 7)))
+			ret = parse_rotation(line, &param->y_range, 7);
+		else if (!(ft_strncmp(*line, "z_range", 7)))
+			ret = parse_rotation(line, &param->z_range, 7);
+		printf("CUTTING ==> %s\n", *line);
+	}
+	cut->obj_param = param;
+//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
+	return (ret);
+
 }
 
 int		parse_cutting(char **line, t_obj *obj)
@@ -417,7 +507,17 @@ int		parse_cutting(char **line, t_obj *obj)
 		else if (!(ft_strncmp(*line, "real", 4)))
 			ret = parse_cut_static_real(line, cut);
 		else if (!(ft_strncmp(*line, "texture", 7)))
-			ret = parse_cut_static_texture(line, cut);
+			ret = parse_cut_texture(line, cut);
+		else if (!(ft_strncmp(*line, "sphere", 6)))
+			ret = parse_cut_sphere(line, cut);
+		else if (!(ft_strncmp(*line, "cube", 4)))
+			ret = parse_cut_cube(line, cut);
+	
+		/*		if (!(cut->cut_param))
+		{
+			ft_printf("Unrecognized element in Cutting: \n%s\n", *line);
+			return (0);
+		}*/
 		if (!(cut->obj_param))
 			return (return_update("Unrecognized element in Cutting\n", 0));
 	}
@@ -938,6 +1038,26 @@ int		parse_color_transp(char **line, t_3vecf *t, int	i, double *val)
 	return (1);
 }*/
 
+void	add_object(t_obj *obj, t_data *data)
+{
+	if (obj->material_type == MAT_DIFFUSE)
+	{
+		if (data->objs)
+			obj->next = data->objs;
+		else
+			obj->next = NULL;
+		data->objs = obj;
+	}
+	else if (obj->material_type == MAT_NEGATIVE)
+	{
+		if (data->negative_objs)
+			obj->next = data->negative_objs;
+		else
+			obj->next = NULL;
+		data->negative_objs = obj;
+	}
+}
+
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 {
 	char	stripe;
@@ -960,20 +1080,17 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 		else if (!ft_strncmp(*line, "radius", 6))
 			ret = parse_double2(line, 6, &cylinder_param->radius);
 	}
-	if ((ft_fabs(cylinder_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip)) == 0) && ret != 0)
+	if ((ft_fabs(cylinder_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip))) && ret != 0)
 		return (return_update("Syntax error cylinder\n", 0));
 	cylinder->obj_param = cylinder_param;
 	cylinder->obj_type = OBJ_CYLINDER;
+	cylinder->check_inside = &check_inside_cylinder;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
 	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
 	cylinder->get_origin = &get_origin_cylinder;
 	cylinder->move = &move_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	if (data->objs)
-		cylinder->next = data->objs;
-	else
-		cylinder->next = NULL;
-	data->objs = cylinder;
+	add_object(cylinder, data);
 	return (ret);
 }
 
@@ -1003,16 +1120,13 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 		return (return_update("Syntax error plane\n", 0));
 	plane->obj_param = plane_param;
 	plane->obj_type = OBJ_PLANE;
+	plane->check_inside = &check_inside_plane;
 	plane->ray_intersect = &ray_intersect_plane;
 	plane->get_normal_inter = &get_normal_intersect_plane;
 	plane->get_origin = &get_origin_plane;
 	plane->move = &move_plane;
 	plane->get_text_coordinate = &get_text_coordinate_plane;
-	if (data->objs)
-		plane->next = data->objs;
-	else
-		plane->next = NULL;
-	data->objs = plane;
+	add_object(plane, data);
 	return (ret);
 }
 
@@ -1040,16 +1154,13 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 		return (return_update("Syntax error Sphere\n", 0));
 	sphere->obj_param = sphere_param;
 	sphere->obj_type = OBJ_SPHERE;
+	sphere->check_inside = &check_inside_sphere;
 	sphere->ray_intersect = &ray_intersect_sphere;
 	sphere->get_normal_inter = &get_normal_intersect_sphere;
 	sphere->get_origin = &get_origin_sphere;
 	sphere->move = &move_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;
-	if (data->objs)
-		sphere->next = data->objs;
-	else
-		sphere->next = NULL;
-	data->objs = sphere;
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;	
+	add_object(sphere, data);
 	return (ret);
 }
 
@@ -1075,20 +1186,17 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 		else if (!ft_strncmp(*line, "radius", 6))
 			ret = parse_double2(line, 6, &cone_param->radius);
 	}
-	if ((ft_fabs(cone_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cone_param->center, cone_param->tip)) == 0) && ret != 0)
+	if ((ft_fabs(cone_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cone_param->center, cone_param->tip))) && ret != 0)
 		return (return_update("Syntax error Cone\n", 0));
 	cone->obj_param = cone_param;
 	cone->obj_type = OBJ_CONE;
 	cone->ray_intersect = &ray_intersect_cone;
+	cone->check_inside = &check_inside_cone;
 	cone->get_normal_inter = &get_normal_intersect_cone;
 	cone->get_origin = &get_origin_cone;
 	cone->move = &move_cone;
 	cone->get_text_coordinate = &get_text_coordinate_cone;
-	if (data->objs)
-		cone->next = data->objs;
-	else
-		cone->next = NULL;
-	data->objs = cone;
+	add_object(cone, data);
 	return (ret);
 }
 
@@ -1118,16 +1226,13 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 		return (return_update("Syntax error Moebius\n", 0));
 	moebius->obj_param = moebius_param;
 	moebius->obj_type = OBJ_SPHERE;
+	moebius->check_inside = &check_inside_moebius;
 	moebius->ray_intersect = &ray_intersect_moebius;
 	moebius->get_normal_inter = &get_normal_intersect_moebius;
 	moebius->get_origin = &get_origin_moebius;
 	moebius->move = &move_moebius;
 	moebius->get_text_coordinate = &get_text_coordinate_moebius;
-	if (data->objs)
-		moebius->next = data->objs;
-	else
-		moebius->next = NULL;
-	data->objs = moebius;
+	add_object(moebius, data);
 	moebius->data = data;
 	return (ret);
 }
@@ -1169,7 +1274,7 @@ int		parse_rotation(char **line, t_2vecf *t, int i)
 		++i;
 	if (s[i] != '(' || (i = parse_2vecf(s, i, t)) == -1)
 		return (0);
-	++i;
+//	++i;
 //	while (ft_isspace(s[i]))
 //		++i;	
 	if (goto_next_element(line) != '>')
