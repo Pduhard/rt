@@ -5,6 +5,7 @@
 		<origin (0, -2, 0)>
 		<rotation (0, 0)>
 	>
+	<Stereoscopy(ON)>
 	<objects
 		<texture
 			<UNI

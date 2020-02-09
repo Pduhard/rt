@@ -267,6 +267,8 @@ typedef struct	s_data
 	Uint32		delta_time;
 	int			anti_al;
 	int			motion_blur;
+	int			stereoscopy;
+	t_3vecf		(*apply_color_filter)(t_3vecf);
 }				t_data;
 
 typedef struct	s_thread
@@ -429,5 +431,7 @@ int		parse_cut_static_real(char **line, t_obj *cut);
 
 int		return_update(char *error, int ret);
 int		clamp_val(double *val, double min, double max);
+
+t_3vecf	apply_color_filter_sepia(t_3vecf color);
 
 #endif

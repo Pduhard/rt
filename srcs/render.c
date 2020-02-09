@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 06:40:02 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/09 23:36:19 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -114,7 +114,7 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter, double refraction_index)
 	double	eta;
 	double	k;
 
-	cosi = -dot_product_3vecf(assign_3vecf(-ray.val[0], -ray.val[1], -ray.val[2]), normal_inter);
+	cosi = dot_product_3vecf(assign_3vecf(-ray.val[0], -ray.val[1], -ray.val[2]), normal_inter);
 //	if (cosi < -1)
 //		cosi = -1;
 //	else if (cosi > 1)
@@ -123,10 +123,14 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter, double refraction_index)
 	etat = refraction_index;
 	eta = etai / etat;
 	k = 1 - eta * eta * (1 - cosi * cosi);
-	k = eta * cosi - sqrtf(k);
-	ref.val[0] = eta * ray.val[0] + k * normal_inter.val[0];
-	ref.val[1] = eta * ray.val[1] + k * normal_inter.val[1];
-	ref.val[2] = eta * ray.val[2] + k * normal_inter.val[2];
+	k = eta * cosi - sqrt(k);
+//	ref.val[0] = eta * ray.val[0] + k * normal_inter.val[0];
+//	ref.val[1] = eta * ray.val[1] + k * normal_inter.val[1];
+//	ref.val[2] = eta * ray.val[2] + k * normal_inter.val[2];
+	
+	ref.val[0] = k * normal_inter.val[0] - eta * -ray.val[0];
+	ref.val[1] = k * normal_inter.val[1] - eta * -ray.val[1];
+	ref.val[2] = k * normal_inter.val[2] - eta * -ray.val[2];
 	return (ref);
 }
 
@@ -305,9 +309,9 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 			*/	ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
 				if (ref_dot_idir > 0)// && !CEL_SHADING)
 				{
-					light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
-					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
-					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
+					light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
+					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
+					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), 100);
 			
 				}
 			}
@@ -491,6 +495,8 @@ void	ray_put_pixel(int i, int j, int *img, t_3vecf color, t_data *data)
 
 	i = (int)data->size.val[0] / 2 + i;
 	j = (int)data->size.val[1] / 2 + j;
+	if (data->apply_color_filter)
+		color = data->apply_color_filter(color);
 	rgb_color = (clip_color(color.val[0] * 255) << 16);
 	rgb_color |= (clip_color(color.val[1] * 255) << 8);
 	rgb_color |= clip_color(color.val[2] * 255);
@@ -526,7 +532,39 @@ void	*render_thread(void *param)
 		j = -data->size.val[1] / 2;
 		while (j < data->size.val[1] / 2)
 		{
-			if (!ANTI_AL)
+			if (data->stereoscopy)
+			{
+				t_3vecf	origs[2];
+			//	t_3vecf	dirs[2];
+				t_3vecf	colors[2];
+				t_3vecf	diff;
+
+				diff = mult_3vecf_33matf(assign_3vecf(0.1, 0, 0), data->rot_mat[1]);
+				origs[0] = orig;
+				origs[1] = orig;
+				origs[0].val[0] += diff.val[0];
+				origs[0].val[1] += diff.val[1];
+				origs[0].val[2] += diff.val[2];
+				origs[1].val[0] -= diff.val[0];
+				origs[1].val[1] -= diff.val[1];
+				origs[1].val[2] -= diff.val[2];
+				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+				if (!data->motion_blur)
+				{
+					colors[0] = ray_trace(origs[0], dir, BIAS, MAX_VIEW, data, 6, 0);
+					colors[1] = ray_trace(origs[1], dir, BIAS, MAX_VIEW, data, 6, 0);
+				}
+				else
+				{
+					colors[0] = motion_trace(origs[0], dir, data);
+					colors[1] = motion_trace(origs[1], dir, data);
+				}
+				color.val[0] = colors[1].val[0];
+				color.val[1] = colors[0].val[1];
+				color.val[2] = colors[0].val[2];
+				ray_put_pixel(i, j, data->mlx->img_str, color, data);
+			}
+			else if (!ANTI_AL)
 			{
 
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);

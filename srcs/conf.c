@@ -99,6 +99,24 @@ int		parse_onoff(char **line, int *onoff)
 	return (1);
 }
 
+int		parse_color_filter(char **line, t_data *data)
+{
+	char	*s;
+
+	s = *line;
+	while (*s != '(' && *s)
+		++s;
+	if (!ft_strncmp(s, "(SEPIA)", 4))
+		data->apply_color_filter = &apply_color_filter_sepia;
+//	else if (!ft_strncmp(s, "(SATURATE)", 4))
+//		data->apply_color_filter = &apply_color_filter_saturate;
+	else
+		return (return_update("Color filter possible value: SEPIA\n", 0));
+	goto_next_element(line);
+	return (1);
+	//*onoff = 1;
+}
+
 int		parse_scene(char **line, t_data *data)
 {
 	char	stripe;
@@ -122,6 +140,10 @@ int		parse_scene(char **line, t_data *data)
 			ret = parse_lights(line, data);
 		else if (!ft_strncmp(*line, "MotionBlur", 10))
 			ret = parse_onoff(line, &data->motion_blur);
+		else if (!ft_strncmp(*line, "Stereoscopy", 11))
+			ret = parse_onoff(line, &data->stereoscopy);
+		else if (!ft_strncmp(*line, "ColorFilter", 11))
+			ret = parse_color_filter(line, data);
 		else
 			return (return_update("Unrecognized Scene Element\n", 0));
 		if (ret == 0)
@@ -393,7 +415,9 @@ int		parse_objects(char **line, t_data *data)
 	}
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);
-	clamp_val(&obj->refraction, 1, 2.42);
+	clamp_val(&obj->refraction, 0, 3);
+	if (obj->refraction > 0 && obj->refraction < 1)
+		clamp_val(&obj->refraction, 1, 2.42);
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 	return (ret);

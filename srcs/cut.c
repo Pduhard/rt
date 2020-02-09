@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/03 23:03:19 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 06:23:52 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/09 22:25:08 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,9 +16,11 @@
 t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data)
 {
 	t_obj	*cuts;
-	t_obj	*next_obj;
-	double	next_dist;
-	double	cut_dist;
+//	t_obj	*next_obj;
+//	double	next_dist;
+//	double	cut_dist;
+//	double	cut_dist_tmp;
+//	t_obj	*cut_save;
 	t_3vecf	inter_point;
 	t_plane	*param;
 	
@@ -26,7 +28,10 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 	inter_point.val[0] = orig.val[0] + dir.val[0] * *closest_dist;
 	inter_point.val[1] = orig.val[1] + dir.val[1] * *closest_dist;
 	inter_point.val[2] = orig.val[2] + dir.val[2] * *closest_dist;
-	
+
+//	cut_dist = MAX_VIEW;
+//	cut_save = NULL;
+//	int	check = 0;
 	while (cuts)
 	{
 		if (cuts->obj_type == OBJ_PLANE)
@@ -34,24 +39,26 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 			param = (t_plane *)cuts->obj_param;
 			if (dot_product_3vecf(sub_3vecf(param->origin, inter_point), param->normal) > 0)
 			{
-				next_dist = MAX_VIEW;
-				next_obj = ray_first_intersect(orig, dir, *closest_dist, max_dist, &next_dist, objs, sp_id, data);
-				cut_dist = MAX_VIEW;
-				if (cuts->ray_intersect(orig, dir, cuts, &cut_dist, *closest_dist, max_dist, sp_id))
+			//	next_dist = MAX_VIEW;
+			//	next_obj = ray_first_intersect(orig, dir, *closest_dist, max_dist, &next_dist, objs, sp_id, data);
+			/*	cut_dist_tmp = MAX_VIEW;
+				check = 1;
+				if (cuts->ray_intersect(orig, dir, cuts, &cut_dist_tmp, *closest_dist, max_dist, sp_id))
 				{
-					inter_point.val[0] = orig.val[0] + dir.val[0] * cut_dist;
-					inter_point.val[1] = orig.val[1] + dir.val[1] * cut_dist;
-					inter_point.val[2] = orig.val[2] + dir.val[2] * cut_dist;
-					if (cut_dist > next_dist && closest_obj->check_inside(inter_point, closest_obj))
+					inter_point.val[0] = orig.val[0] + dir.val[0] * cut_dist_tmp;
+					inter_point.val[1] = orig.val[1] + dir.val[1] * cut_dist_tmp;
+					inter_point.val[2] = orig.val[2] + dir.val[2] * cut_dist_tmp;
+					if ((cut_dist_tmp > cut_dist || !cut_save) && closest_obj->check_inside(inter_point, closest_obj))
 					{
-						*closest_dist = cut_dist;
-						return (cuts);
+						cut_dist = cut_dist_tmp;
+						cut_save = cuts;
+						//		return (cuts);
 					}
 				}
-				*closest_dist = next_dist;
-				return (next_obj);
+	*/		//	*closest_dist = next_dist;
+			//	return (next_obj);
 		//		return (ray_intersect_);
-		//		return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data))
+				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 			}
 		}
 		else if (cuts->obj_type == OBJ_CUT_TEXTURE)
@@ -107,6 +114,22 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 
 		cuts = cuts->next;
 	}
-	return (closest_obj);
+/*	if (cut_save)
+	{
+		next_dist = MAX_VIEW;
+		next_obj = ray_first_intersect(orig, dir, *closest_dist, max_dist, &next_dist, objs, sp_id, data);
+	//	exit(0);
+		if (cut_dist < next_dist || !next_obj)
+		{
+			*closest_dist = cut_dist;
+			return (cut_save);
+		}
+		*closest_dist = next_dist;
+		return (next_obj);
+		
+	}
+	if (check)
+		return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
+*/	return (closest_obj);
 	(void)min_dist;
 }

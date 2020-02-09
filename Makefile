@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/06 01:35:31 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/09 23:34:54 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -50,6 +50,7 @@ SRC			=	main.c			\
 				cylinder.c		\
 				polynomial.c	\
 				motion.c		\
+				color_filter.c	\
 
 BIN			=	$(SRC:.c=.o)
 
