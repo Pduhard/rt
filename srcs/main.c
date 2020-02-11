@@ -3,10 +3,10 @@
 /*                                                              /             */
 /*   main.c                                           .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 21:07:09 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/31 07:38:35 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/11 08:10:18 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,16 +17,13 @@ int		main(int argc, char **argv)
 {
 	t_data	*data;
 
-	t_3vecf	t = solve_cubic(1, -3, 3, -1);
-	printf("%lf %lf %lf\n", t.val[0], t.val[1], t.val[2]);
-	printf("%lf\n", -54. * t.val[0] * t.val[0] * t.val[0] + 110. * t.val[0] * t.val[0] - 64. * t.val[0] + 8);
+//	t_3vecf	t = solve_cubic(1, -3, 3, -1);
+//	printf("%lf %lf %lf\n", t.val[0], t.val[1], t.val[2]);
+//	printf("%lf\n", -54. * t.val[0] * t.val[0] * t.val[0] + 110. * t.val[0] * t.val[0] - 64. * t.val[0] + 8);
 	//exit(0);
 	//check error
 	if (argc != 2)
-	{
-		if (!(data = init_data("conf/default.rt_conf")))
-			return (0);
-	}
+		return (return_update(ERRORARG, 0, 2));
 	else
 	{
 		if (!(data = init_data(argv[1])))

@@ -1,80 +1,9 @@
 #include "rt.h"
 
-int		return_update(char *error, int ret)
+int		return_update(char *error, int ret, int skip)
 {
-	ft_fdprintf(2, error);
+	ft_fdprintf(skip, error);
 	return (ret);
-}
-
-int		parse_rt_conf(char *file_name, t_data *data)
-{
-	int		fd;
-	char	*line = NULL;
-	int		ret;
-	char	*result;
-	char	*result_cpy;
-
-	if ((fd = open(file_name, O_RDONLY)) == -1)
-	{
-		ft_printf("%s: invalid rt_conf file\n", file_name);
-		return (0);
-	}
-	result = NULL;
-	while ((ret = get_next_line(fd, &line)) > 0)
-		result = ft_strfjoin(result, line);
-	if (ret == -1 || result == '\0' || brackets_rt(result) == 0)
-	{
-		free(result);
-		ft_printf("%s: invalid rt_conf file\n", file_name);
-		return (0);
-	}
-	result_cpy = result;
-	if(!parse(&result, data))
-	{
-		printf("Bad File ==> %s\n", result);
-		return (0);
-	}
-	else
-		print_conf(data);
-	return (1);
-}
-
-int		brackets_rt(char *line)
-{
-	int	i;
-	int	cmp;
-
-	i = 0;
-	cmp = 0;
-	while (line[i] != '<' && line[i] != '\0')
-		i++;
-	if (line[i] == '\0')
-		return (return_update("No open stripe\n", 0));
-	cmp++;
-	i++;
-	while (cmp > 0 && line[i] != '\0')
-	{
-		if (line[i] == '<')
-			cmp++;
-		if (line[i] == '>')
-			cmp--;
-		i++;
-	}
-	if ((cmp == 0 && line[i] != '\0') || cmp != 0)
-		return (return_update("Error conf brackets\n", 0));
-	return (1);
-}
-
-int		parse(char **line, t_data *data)
-{
-	char	stripe;
-
-	stripe = goto_next_element(line);
-	if (!(ft_strncmp(*line, "scene", 5)))
-		return (parse_scene(line, data));
-	else
-		return (return_update("Scene not found\n", 0));
-	return (0);
 }
 
 int		parse_onoff(char **line, int *onoff)
@@ -85,16 +14,16 @@ int		parse_onoff(char **line, int *onoff)
 
 	while (*s != '(' && *s)
 		++s;
-	if (!ft_strncmp(s, "(ON)", 4))
+	if (!ft_strncmp_case(s, "(ON)", 4))
 		*onoff = 1;
-	else if (!ft_strncmp(s, "(OFF)", 5))
+	else if (!ft_strncmp_case(s, "(OFF)", 5))
 		*onoff = 0;
-	else if (!ft_strncmp(s, "(1)", 3))
+	else if (!ft_strncmp_case(s, "(1)", 3))
 		*onoff = 1;
-	else if (!ft_strncmp(s, "(0)", 3))
+	else if (!ft_strncmp_case(s, "(0)", 3))
 		*onoff = 0;
 	else
-		return (return_update("ON OFF possible value: ON/1, OFF/0\n", 0));
+		return (return_update("ON OFF possible value: ON/1, OFF/0\n", 0, 2));
 	goto_next_element(line);
 	return (1);
 }
@@ -106,53 +35,15 @@ int		parse_color_filter(char **line, t_data *data)
 	s = *line;
 	while (*s != '(' && *s)
 		++s;
-	if (!ft_strncmp(s, "(SEPIA)", 4))
+	if (!ft_strncmp_case(s, "(SEPIA)", 4))
 		data->apply_color_filter = &apply_color_filter_sepia;
-//	else if (!ft_strncmp(s, "(SATURATE)", 4))
+//	else if (!ft_strncmp_case(s, "(SATURATE)", 4))
 //		data->apply_color_filter = &apply_color_filter_saturate;
 	else
-		return (return_update("Color filter possible value: SEPIA\n", 0));
+		return (return_update("Color filter possible value: SEPIA\n", 0, 2));
 	goto_next_element(line);
 	return (1);
 	//*onoff = 1;
-}
-
-int		parse_scene(char **line, t_data *data)
-{
-	char	stripe;
-	int		ret;
-
-	stripe = 0;
-	ret = 1;
-	
-	stripe = goto_next_element(line);
-	while (stripe != '>' && ret != 0)
-	{
-		if (!ft_strncmp(*line, "name", 4))
-			ret = parse_scene_name(line, data);
-		else if (!ft_strncmp(*line, "size", 4))
-			ret = parse_size(line, data);
-		else if (!ft_strncmp(*line, "camera", 6))
-			ret = parse_camera(line, data);
-		else if (!ft_strncmp(*line, "objects", 7))
-			ret = parse_objects(line, data);
-		else if (!ft_strncmp(*line, "lights", 6))
-			ret = parse_lights(line, data);
-		else if (!ft_strncmp(*line, "MotionBlur", 10))
-			ret = parse_onoff(line, &data->motion_blur);
-		else if (!ft_strncmp(*line, "Stereoscopy", 11))
-			ret = parse_onoff(line, &data->stereoscopy);
-		else if (!ft_strncmp(*line, "ColorFilter", 11))
-			ret = parse_color_filter(line, data);
-		else
-			return (return_update("Unrecognized Scene Element\n", 0));
-		if (ret == 0)
-			return (ret);
-		stripe = goto_next_element(line);
-	}
-	if (!data->camera)
-		return (return_update("No camera in file .rt_conf\n", 0));
-	return (ret);
 }
 
 int		parse_lights(char **line, t_data *data)
@@ -173,43 +64,32 @@ int		parse_lights(char **line, t_data *data)
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "ambient", 7)))
+		if (!(ft_strncmp_case(*line, "ambient", 7)))
 		{
 			light->light_type = LIGHT_AMBIENT;
 			ret = parse_origin(line, &light->color, 7);
-			printf("Parse_Lights ==> %s\n", *line);
 			if (**line == '<')
-			{
-				printf("ambient rien apres\n");
-				return (0);
-			}
+				return (return_update("Syntax error light ambient\n", 0, 2));
 		}
-		else if (!(ft_strncmp(*line, "directional", 11)))
+		else if (!(ft_strncmp_case(*line, "directional", 11)))
 		{
 			light->light_type = LIGHT_DIRECTIONAL;
 			ret = parse_origin(line, &light->param, 11);
 			goto_next_element(line);
-			if (!(ft_strncmp(*line, "color", 5)))
+			if (!(ft_strncmp_case(*line, "color", 5)))
 				ret = parse_origin(line, &light->color, 5);
 			else
-			{
-				printf("directional ==> %s\n", *line);
-				return (0);
-			}
+				return (return_update("Syntax error light directionnal\n", 0, 2));
 		}
-		else if (!(ft_strncmp(*line, "point", 5)))
+		else if (!(ft_strncmp_case(*line, "point", 5)))
 		{
 			light->light_type = LIGHT_POINT;
 			ret = parse_origin(line, &light->param, 5);
 			goto_next_element(line);
-			printf("pointsisi ==> %s\n", *line);
-			if (!(ft_strncmp(*line, "color", 5)))
+			if (!(ft_strncmp_case(*line, "color", 5)))
 				ret = parse_origin(line, &light->color, 5);
 			else
-			{
-				printf("point ==> %s\n", *line);
-				return (0);
-			}
+				return (return_update("Syntax error light point\n", 0, 2));
 		}
 	}
 	if (data->lights)
@@ -235,12 +115,12 @@ int		parse_lights(char **line, t_data *data)
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "dir", 3)))
+		if (!(ft_strncmp_case(*line, "dir", 3)))
 		{
 			ret = parse_origin(line, &motion->dir, 3);
 			goto_next_element(line);
 			printf("Parse_moyion ==> %s\n", *line);
-			if (!(ft_strncmp(*line, "speed", 5)))
+			if (!(ft_strncmp_case(*line, "speed", 5)))
 				ret = parse_double2(line, 5, &motion->speed_fact);
 			else if (**line != '>')
 			{
@@ -292,11 +172,11 @@ int		parse_motion(char **line, t_obj *obj)
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "dir", 3)))
+		if (!(ft_strncmp_case(*line, "dir", 3)))
 			ret = parse_origin(line, &motion->dir, 3);
-		else if (!(ft_strncmp(*line, "speed", 3)))
+		else if (!(ft_strncmp_case(*line, "speed", 3)))
 			ret = parse_double2(line, 5, &motion->speed_fact);
-		else if (!(ft_strncmp(*line, "spf", 3)))
+		else if (!(ft_strncmp_case(*line, "spf", 3)))
 			ret = parse_int(line, 3, &motion->spf);
 	/*	else if (**line != '<' && **line != '>') //ie end of element
 		{
@@ -327,11 +207,11 @@ int		parse_motion(char **line, t_obj *obj)
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "color", 5))
+		if (!ft_strncmp_case(*line, "color", 5))
 			ret = parse_origin(line, &light->color, 5);
-		if (!ft_strncmp(*line, "origin", 6))
+		if (!ft_strncmp_case(*line, "origin", 6))
 			ret = parse_origin(line, &light->origin, 6);
-		if (!ft_strncmp(*line, "dir", 3))
+		if (!ft_strncmp_case(*line, "dir", 3))
 			ret = parse_origin(line, &light->dir, 3);
 	}
 	light->light_type = LIGHT_AMBIENT;
@@ -360,67 +240,14 @@ int		parse_material(char **line, int i, t_obj *obj)
 		++i;
 	else
 		return (0);
-	if (!ft_strncmp(&(s[i]), "diffuse", 7))
+	if (!ft_strncmp_case(&(s[i]), "diffuse", 7))
 		obj->material_type = MAT_DIFFUSE;
-	else if (!ft_strncmp(&(s[i]), "negative", 8))
+	else if (!ft_strncmp_case(&(s[i]), "negative", 8))
 		obj->material_type = MAT_NEGATIVE;
 	else
-	{
-		printf("Unknown material type\n");
-		return (0);
-	}
+		return (return_update("Unknow material type\n", 0, 2));
 	goto_next_element(line);
 	return (1);
-}
-
-int		parse_objects(char **line, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_obj	*obj;
-
-	stripe = 0;
-	ret = 1;
-	if (!(obj = ft_memalloc(sizeof(t_obj))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "cone", 4))
-			ret = parse_cone(line, obj, data);
-		else if (!ft_strncmp(*line, "sphere", 6))
-			ret = parse_sphere(line, obj, data);
-		else if (!ft_strncmp(*line, "plane", 5))
-			ret = parse_plane(line, obj, data);
-		else if (!ft_strncmp(*line, "cylinder", 8))
-			ret = parse_cylinder(line, obj, data);
-		else if (!ft_strncmp(*line, "moebius", 7))
-			ret = parse_moebius(line, obj, data);
-		else if (!ft_strncmp(*line, "texture", 7))
-			ret = parse_texture2(line, obj);
-		else if (!(ft_strncmp(*line, "cutting", 7)))
-			ret = parse_cutting(line, obj);
-		else if (!(ft_strncmp(*line, "MotionBlur", 10)))
-			ret = parse_motion(line, obj);
-		else if (!ft_strncmp(*line, "reflection", 10))
-			ret = parse_double2(line, 10, &obj->reflection);
-		else if (!ft_strncmp(*line, "refraction", 10))
-			ret = parse_double2(line, 10, &obj->refraction);
-		else if (!ft_strncmp(*line, "shininess", 9))
-			ret = parse_double2(line, 9, &obj->shininess);
-		else if (!ft_strncmp(*line, "material", 8))
-			ret = parse_material(line, 8, obj);
-		else if (**line != '<')
-			return (return_update("Unrecognized Object Element\n", 0));
-	}
-	clamp_val(&obj->reflection, 0, 1);
-	clamp_val(&obj->shininess, 0, 1);
-	clamp_val(&obj->refraction, 0, 3);
-	if (obj->refraction > 0 && obj->refraction < 1)
-		clamp_val(&obj->refraction, 1, 2.42);
-	if (obj->shininess > 0)
-		obj->shininess = exp(11 - 10 * obj->shininess);
-	return (ret);
 }
 
 int		clamp_val(double *val, double min, double max)
@@ -430,164 +257,6 @@ int		clamp_val(double *val, double min, double max)
 	else if (*val > max)
 		*val = max;
 	return (0);
-}
-
-int		parse_cut_texture(char **line, t_obj *cut)
-{
-	char	stripe;
-	t_plane	*param;
-
-	cut->obj_type = OBJ_CUT_TEXTURE;
-	if (cut->obj_param)
-		return (return_update("Always cut parameter\n", 0));
-	if (!(param = ft_memalloc(sizeof(t_plane))))
-		return (0);
-	stripe = goto_next_element(line);
-	if (stripe != '>')
-		return (return_update("Cutting texture don't need parameter\n", 0));
-	cut->obj_param = param;
-	return (1);
-}
-
-int		parse_cut_sphere(char **line, t_obj *cut)
-{
-	t_sphere	*param;
-	char		stripe;
-	int			ret;
-
-	stripe = 0;
-	ret = 1;
-	cut->obj_type = OBJ_SPHERE;
-	if (cut->obj_param)
-	{
-		printf("Deja parametre\n");
-		return (0);
-	}
-	if (!(param = ft_memalloc(sizeof(t_sphere))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "origin", 6)))
-			ret = parse_origin(line, &param->origin, 6);
-		else if (!(ft_strncmp(*line, "radius", 6)))
-			ret = parse_double2(line, 6, &param->radius);
-		printf("CUTTING ==> %s\n", *line);
-	}
-	cut->obj_param = param;
-//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
-	return (ret);
-
-}
-
-int		parse_cut_cube(char **line, t_obj *cut)
-{
-	t_cube		*param;
-	char		stripe;
-	int			ret;
-
-	stripe = 0;
-	ret = 1;
-	cut->obj_type = OBJ_CUBE;
-	if (cut->obj_param)
-	{
-		printf("Deja parametre\n");
-		return (0);
-	}
-	if (!(param = ft_memalloc(sizeof(t_cube))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "x_range", 7)))
-			ret = parse_rotation(line, &param->x_range, 7);
-		else if (!(ft_strncmp(*line, "y_range", 7)))
-			ret = parse_rotation(line, &param->y_range, 7);
-		else if (!(ft_strncmp(*line, "z_range", 7)))
-			ret = parse_rotation(line, &param->z_range, 7);
-		printf("CUTTING ==> %s\n", *line);
-	}
-	cut->obj_param = param;
-//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
-	return (ret);
-
-}
-
-int		parse_cutting(char **line, t_obj *obj)
-{
-	char	stripe;
-	int		ret;
-	t_obj	*cut;
-
-	stripe = 0;
-	ret = 1;
-	if (!(cut = ft_memalloc(sizeof(t_obj))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "static", 6)))
-			ret = parse_cut_static_real(line, cut);
-		else if (!(ft_strncmp(*line, "real", 4)))
-			ret = parse_cut_static_real(line, cut);
-		else if (!(ft_strncmp(*line, "texture", 7)))
-			ret = parse_cut_texture(line, cut);
-		else if (!(ft_strncmp(*line, "sphere", 6)))
-			ret = parse_cut_sphere(line, cut);
-		else if (!(ft_strncmp(*line, "cube", 4)))
-			ret = parse_cut_cube(line, cut);
-	
-		/*		if (!(cut->cut_param))
-		{
-			ft_printf("Unrecognized element in Cutting: \n%s\n", *line);
-			return (0);
-		}*/
-		if (!(cut->obj_param))
-			return (return_update("Unrecognized element in Cutting\n", 0));
-	}
-	cut->ray_intersect = &ray_intersect_plane;
-	cut->get_normal_inter = &get_normal_intersect_plane;
-	cut->get_origin = &get_origin_plane;
-	cut->move = &move_plane;
-	cut->get_text_coordinate = &get_text_coordinate_plane;
-	cut->text = obj->text;
-	cut->get_text_color = obj->get_text_color;
-	cut->get_bump_mapping = obj->get_bump_mapping;
-	cut->reflection = obj->reflection;
-	cut->refraction = obj->refraction;
-	cut->shininess = obj->shininess;
-	if (obj->cuts)
-		cut->next = obj->cuts;
-	else
-		cut->next = NULL;
-	obj->cuts = cut;
-	return (ret);
-}
-
-
-int		parse_cut_static_real(char **line, t_obj *cut)
-{
-	char	stripe;
-	int		ret;
-	t_plane	*param;
-
-	stripe = 0;
-	ret = 1;
-	cut->obj_type = OBJ_PLANE;
-	if (cut->obj_param)
-		return (return_update("Always cut parameter\n", 0));
-	if (!(param = ft_memalloc(sizeof(t_plane))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp(*line, "origin", 6)))
-			ret = parse_origin(line, &param->origin, 6);
-		else if (!(ft_strncmp(*line, "normal", 6)))
-			ret = parse_origin(line, &param->normal, 6);
-	}
-	cut->obj_param = param;
-	return (ret);
 }
 
 int		parse_texture2(char **line, t_obj *obj)
@@ -606,47 +275,47 @@ int		parse_texture2(char **line, t_obj *obj)
 	{
 		stripe = goto_next_element(line);
 		printf("Parse_Texture ==> %s\n", *line);
-		if (!(ft_strncmp(*line, "UNI", 3)))
+		if (!(ft_strncmp_case(*line, "UNI", 3)))
 		{
 			obj->get_text_color = &get_uni_color;
 			obj->text.text_type = TEXT_UNI;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "GRID", 4)))
+		else if (!(ft_strncmp_case(*line, "GRID", 4)))
 		{
 			obj->get_text_color = &get_grid_color;
 			obj->text.text_type = TEXT_GRID;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "PERLIN", 6)))
+		else if (!(ft_strncmp_case(*line, "PERLIN", 6)))
 		{
 			obj->get_text_color = &get_perlin_color;
 			obj->text.text_type = TEXT_PERLIN;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "MARBLE", 6)))
+		else if (!(ft_strncmp_case(*line, "MARBLE", 6)))
 		{
 			obj->get_text_color = &get_marble_color;
 			obj->text.text_type = TEXT_MARBLE;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "WOOD", 4)))
+		else if (!(ft_strncmp_case(*line, "WOOD", 4)))
 		{
 			obj->get_text_color = &get_wood_color;
 			obj->text.text_type = TEXT_WOOD;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "IMAGE", 5)))
+		else if (!(ft_strncmp_case(*line, "IMAGE", 5)))
 		{
 			obj->get_text_color = &get_image_color;
 			obj->text.text_type = TEXT_IMAGE;
 			ret = obj->text.text_param ? 0 : 1;
 		}
-		else if (!(ft_strncmp(*line, "offset", 6)))
+		else if (!(ft_strncmp_case(*line, "offset", 6)))
 			ret = parse_rotation(line, &obj->text.offset, 6);
-		else if (!(ft_strncmp(*line, "scale", 5)))
+		else if (!(ft_strncmp_case(*line, "scale", 5)))
 			ret = parse_rotation(line, &obj->text.scale, 5);
-		else if (!(ft_strncmp(*line, "BumpMapping", 11)) && obj->text.text_param)
+		else if (!(ft_strncmp_case(*line, "BumpMapping", 11)) && obj->text.text_param)
 			ret = parse_bump_mapping(line, obj);
 //		else
 //		{
@@ -671,162 +340,6 @@ int		parse_texture2(char **line, t_obj *obj)
 		}
 	}
 	return (ret);
-}
-
-int		parse_bump_mapping(char **line, t_obj *obj)
-{
-//	t_text *text;
-	char	stripe;
-	int		ret;
-
-//	text = obj
-	ret = 1;
-	stripe = 0;
-	while (stripe != '>' && ret != 0)
-	{
-		printf("Parse_BUMP BEFORE ==> %s\n", *line);
-		stripe = goto_next_element(line);
-		printf("Parse_BUMP ==> %s\n", *line);
-		if (!(ft_strncmp(*line, "own", 3)))
-		{
-			set_bump_own(obj);
-			ret = parse_double2(line, 3, &obj->text.bump_fact);
-		}
-		else if (!(ft_strncmp(*line, "independent", 11)))
-		{
-			ret = parse_bump_inde(line, obj, 11);
-		}
-/*		else
-		{
-			ft_printf("PAs un bon param de bumpmapping ==> %s\n", *line);
-			return (0);
-		}*/
-	}
-	return (ret);
-}
-
-void	set_bump_own(t_obj *obj)//t_text *text)
-{
-	if (obj->text.text_type == TEXT_PERLIN)
-	{
-		obj->get_bump_mapping = &get_bump_mapping_perlin;
-		obj->text.bump_type = BUMP_PERLIN;
-	}
-	else if (obj->text.text_type == TEXT_MARBLE)
-	{
-		obj->get_bump_mapping = &get_bump_mapping_marble;
-		obj->text.bump_type = BUMP_MARBLE;
-	}
-	else if (obj->text.text_type == TEXT_WOOD)
-	{
-		obj->get_bump_mapping = &get_bump_mapping_wood;
-		obj->text.bump_type = BUMP_WOOD;
-	}
-	else if (obj->text.text_type == TEXT_IMAGE)
-	{
-		obj->get_bump_mapping = &get_bump_mapping_image;
-		obj->text.bump_type = BUMP_IMAGE;
-	}
-}
-
-int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index)
-{
-	int	i;
-	int	start;
-	char	*s;
-	char	*tmp;
-
-	tmp = *line;
-	printf("\n\n\nTEST\n\n\n%s\n\n\n", *line);
-	i = index;
-	while (ft_isspace(tmp[i]))
-		++i;
-	if (tmp[i] != '(')
-	{
-		printf("\n\n\n\nhbjviudvdsv\n\n\n==> %s\n", &tmp[i]);
-		return (0);
-	}
-	start = ++i;
-	while (tmp[i] && tmp[i] != ')')
-		++i;
-	printf("Into Parse_Bump inde ==> %s\n", &tmp[i]);
-	if (tmp[i] != ')')
-		return (0);
-	s =	ft_strsub(tmp, start, i - start);
-	set_bump_inde(s, obj);//text);
-	printf("Type bump Inde ==> %s\n", s);
-	while (tmp[i] && tmp[i] != '(')
-		++i;
-	*line += i;
-	printf("Line apres bump ==> %s\n", *line);
-	return (parse_double2(line, 0, &obj->text.bump_fact));
-}
-
-void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
-{
-	if (!(ft_strncmp(s, "PERLIN", 6)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_perlin;
-		obj->text.bump_type = BUMP_PERLIN;
-	}
-
-	//	text->bump_type = BUMP_PERLIN;
-	if (!(ft_strncmp(s, "MARBLE", 6)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_marble;
-		obj->text.bump_type = BUMP_MARBLE;
-	}
-
-	//	text->bump_type = BUMP_MARBLE;
-	if (!(ft_strncmp(s, "WOOD", 4)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_wood;
-		obj->text.bump_type = BUMP_WOOD;
-	}
-
-//		text->bump_type = BUMP_WOOD;
-	if (!(ft_strncmp(s, "IMAGE", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_image;
-		obj->text.bump_type = BUMP_IMAGE;
-	}
-
-	//	text->bump_type = BUMP_IMAGE;
-	if (!(ft_strncmp(s, "SINUS", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_sinus;
-		obj->text.bump_type = BUMP_SINUS;
-	}
-
-	//	text->bump_type = BUMP_SINUS;
-}
-
-int		parse_scene_name(char **line, t_data *data)
-{
-	int	i;
-	int	start;
-	char	*s;
-
-	i = 4;
-	s = *line;
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(')
-		return (return_update("Syntax error name\n", 0));
-	if (data->scene_name)
-		ft_strdel(&data->scene_name);
-	start = ++i;
-	while (s[i] && (s[i] != ')' && s[i] != '>'))
-		++i;
-	if (s[i] != ')')
-		return (return_update("Syntax error name\n", 0));
-	data->scene_name = ft_strsub(s, start, i - start);
-	++i;
-	while (ft_isspace(s[i]))
-		++i;
-	if (goto_next_element(line) != '>')
-		return (return_update("Syntax error name\n", 0));
-	return (1);
 }
 
 void	*parse_img(char **line, t_text *text)
@@ -910,12 +423,12 @@ void	*parse_proc(char **line, t_text *text)
 	while (goto_next_element(line) != '>' && ++cmp < 3 && ret != 0)
 	{
 		printf("Line into parseproc ==> %s\n", *line);
-		if (ft_strncmp(*line, "color", 5))
+		if (ft_strncmp_case(*line, "color", 5))
 		{
 			printf("Pas un bon nom de color\n");
 			return (NULL);
 		}
-		else if (!(ft_strncmp(*line, "color", 5)))
+		else if (!(ft_strncmp_case(*line, "color", 5)))
 		{
 			ret = parse_color_transp(line, 5, &param->color[cmp]);
 		}
@@ -1015,7 +528,7 @@ int		parse_origin(char **line, t_3vecf *t, int i)
 			break ;
 		stripe = goto_next_element(line);
 		printf("Parse Proc While next ==> %s ==> %d\n", *line, cmp);
-		if (!(ft_strncmp(*line, "color", 5)) && (ret = parse_color_transp(line, &(param->color[cmp]), 5, &(param->transp.val[cmp]))) == 1)
+		if (!(ft_strncmp_case(*line, "color", 5)) && (ret = parse_color_transp(line, &(param->color[cmp]), 5, &(param->transp.val[cmp]))) == 1)
 		{
 			cmp++;
 			printf("\n\n\n\nret == %d\n\n\n\n", ret);
@@ -1082,213 +595,6 @@ void	add_object(t_obj *obj, t_data *data)
 	}
 }
 
-int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_cylinder	*cylinder_param;
-
-	stripe = 0;
-	ret = 1;
-	if (cylinder->obj_param)
-		return (return_update("Object already declared\n", 0));
-	if (!(cylinder_param = ft_memalloc(sizeof(t_cylinder))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &cylinder_param->center, 6);
-		else if (!ft_strncmp(*line, "tip", 3))
-			ret = parse_origin(line, &cylinder_param->tip, 3);
-		else if (!ft_strncmp(*line, "radius", 6))
-			ret = parse_double2(line, 6, &cylinder_param->radius);
-	}
-	if ((ft_fabs(cylinder_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip))) && ret != 0)
-		return (return_update("Syntax error cylinder\n", 0));
-	cylinder->obj_param = cylinder_param;
-	cylinder->obj_type = OBJ_CYLINDER;
-	cylinder->check_inside = &check_inside_cylinder;
-	cylinder->ray_intersect = &ray_intersect_cylinder;
-	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
-	cylinder->get_origin = &get_origin_cylinder;
-	cylinder->move = &move_cylinder;
-	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	add_object(cylinder, data);
-	return (ret);
-}
-
-int		parse_plane(char **line, t_obj *plane, t_data *data)
-{
-	char	stripe;
-	int		ret; 
-	t_plane	*plane_param;
-
-	stripe = 0;
-	ret = 1;
-	if (plane->obj_param)
-		return (return_update("Object already declared\n", 0));
-	if (!(plane_param = ft_memalloc(sizeof(t_plane))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &plane_param->origin, 6);
-		else if (!ft_strncmp(*line, "normal", 6))
-			ret = parse_origin(line, &plane_param->normal, 6);
-		else if (!ft_strncmp(*line, "xaxis", 5))
-			ret = parse_origin(line, &plane_param->x2d_axis, 5);
-	}
-	if (is_null(plane_param->normal.val[0] * plane_param->normal.val[0] + plane_param->normal.val[1] * plane_param->normal.val[1] + plane_param->normal.val[2] * plane_param->normal.val[2]) || !is_null(dot_product_3vecf(plane_param->x2d_axis, plane_param->normal)))
-		return (return_update("Syntax error plane\n", 0));
-	plane->obj_param = plane_param;
-	plane->obj_type = OBJ_PLANE;
-	plane->check_inside = &check_inside_plane;
-	plane->ray_intersect = &ray_intersect_plane;
-	plane->get_normal_inter = &get_normal_intersect_plane;
-	plane->get_origin = &get_origin_plane;
-	plane->move = &move_plane;
-	plane->get_text_coordinate = &get_text_coordinate_plane;
-	add_object(plane, data);
-	return (ret);
-}
-
-int		parse_sphere(char **line, t_obj *sphere, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_sphere	*sphere_param;
-
-	stripe = 0;
-	ret = 1;
-	if (sphere->obj_param)
-		return (return_update("Object already declared\n", 0));
-	if (!(sphere_param = ft_memalloc(sizeof(t_sphere))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &sphere_param->origin, 6);
-		else if (!ft_strncmp(*line, "radius", 6))
-			ret = parse_double2(line, 6, &sphere_param->radius);
-	}
-	if (ft_fabs(sphere_param->radius) == 0.f && ret != 0)
-		return (return_update("Syntax error Sphere\n", 0));
-	sphere->obj_param = sphere_param;
-	sphere->obj_type = OBJ_SPHERE;
-	sphere->check_inside = &check_inside_sphere;
-	sphere->ray_intersect = &ray_intersect_sphere;
-	sphere->get_normal_inter = &get_normal_intersect_sphere;
-	sphere->get_origin = &get_origin_sphere;
-	sphere->move = &move_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;	
-	add_object(sphere, data);
-	return (ret);
-}
-
-int		parse_cone(char **line, t_obj *cone, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_cone	*cone_param;
-
-	stripe = 0;
-	ret = 1;
-	if (cone->obj_param)
-		return (return_update("Object already declared\n", 0));
-	if (!(cone_param = ft_memalloc(sizeof(t_cone))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &cone_param->center, 6);
-		else if (!ft_strncmp(*line, "tip", 3))
-			ret = parse_origin(line, &cone_param->tip, 3);
-		else if (!ft_strncmp(*line, "radius", 6))
-			ret = parse_double2(line, 6, &cone_param->radius);
-	}
-	if ((ft_fabs(cone_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cone_param->center, cone_param->tip))) && ret != 0)
-		return (return_update("Syntax error Cone\n", 0));
-	cone->obj_param = cone_param;
-	cone->obj_type = OBJ_CONE;
-	cone->ray_intersect = &ray_intersect_cone;
-	cone->check_inside = &check_inside_cone;
-	cone->get_normal_inter = &get_normal_intersect_cone;
-	cone->get_origin = &get_origin_cone;
-	cone->move = &move_cone;
-	cone->get_text_coordinate = &get_text_coordinate_cone;
-	add_object(cone, data);
-	return (ret);
-}
-
-int		parse_moebius(char **line, t_obj *moebius, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_moebius	*moebius_param;
-
-	stripe = 0;
-	ret = 1;
-	if (moebius->obj_param)
-		return (return_update("Object already declared\n", 0));
-	if (!(moebius_param = ft_memalloc(sizeof(t_moebius))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &moebius_param->origin, 6);
-		else if (!ft_strncmp(*line, "radius", 6))
-			ret = parse_double2(line, 6, &moebius_param->radius);
-		else if (!ft_strncmp(*line, "half_width", 10))
-			ret = parse_double2(line, 10, &moebius_param->half_width);
-	}
-	if ((moebius_param->radius <= 0.f || moebius_param->half_width <= 0.f) && ret != 0)
-		return (return_update("Syntax error Moebius\n", 0));
-	moebius->obj_param = moebius_param;
-	moebius->obj_type = OBJ_SPHERE;
-	moebius->check_inside = &check_inside_moebius;
-	moebius->ray_intersect = &ray_intersect_moebius;
-	moebius->get_normal_inter = &get_normal_intersect_moebius;
-	moebius->get_origin = &get_origin_moebius;
-	moebius->move = &move_moebius;
-	moebius->get_text_coordinate = &get_text_coordinate_moebius;
-	add_object(moebius, data);
-	moebius->data = data;
-	return (ret);
-}
-
-
-int		parse_camera(char **line, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_cam	*cam;
-
-	stripe = 0;
-	ret = 1;
-	if (data->camera)
-		return (return_update("Camera already exist\n", 0));
-	if(!(cam = ft_memalloc(sizeof(t_cam))))
-		return (0);
-	stripe = goto_next_element(line);
-	while (stripe != '>' && ret != 0)
-	{
-		if (!ft_strncmp(*line, "origin", 6))
-			ret = parse_origin(line, &cam->origin, 6);
-		else if (!ft_strncmp(*line, "rotation", 8))
-			ret = parse_rotation(line, &cam->rotation, 8);
-		stripe = goto_next_element(line);
-	}
-	data->camera = cam;
-	if (!data->camera || ret == 0)
-		return (return_update("Syntax error camera\n", 0));
-	return (ret);
-}
-
 int		parse_rotation(char **line, t_2vecf *t, int i)
 {
 	char	*s;
@@ -1306,26 +612,6 @@ int		parse_rotation(char **line, t_2vecf *t, int i)
 		printf("Error parse_rotation\n");
 		return(0);
 	}
-	return (1);
-}
-
-int		parse_size(char **line, t_data *data)
-{
-	int	i;
-	char	*s;
-
-	i = 4;
-	s = *line;
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(' || (i = parse_2vecf(s, i, &data->size)) == -1)
-		return (return_update("Syntax error: size\n", 0));
-	printf("size ==> %s\n", &s[i]);
-	++i;
-	while (ft_isspace(s[i]))
-		++i;
-	if (goto_next_element(line) != '>')
-		return (return_update("Syntax error: size\n", 0));
 	return (1);
 }
 
@@ -1429,7 +715,7 @@ int		parse_double2(char **line, int i, double *val)
 	if (!s[i])
 		return (0);
 	if (goto_next_element(line) != '>')
-		return (return_update("Error parse double\n", 0));
+		return (return_update("Error parse double\n", 0, 2));
 	return (1);
 }
 
@@ -1479,4 +765,21 @@ int		isequal_3vecf(t_3vecf *t1, t_3vecf *t2)
 		return (0);
 	}
 	return (1);
+}
+
+int		ft_strncmp_case(const char *s1, const char *s2, size_t n)
+{
+	size_t	cpt;
+
+	cpt = 1;
+	if (n < 1)
+		return (0);
+	cpt = 1;
+	while (ft_tolower(*s1) == ft_tolower(*s2) && cpt < n && *s1 != '\0')
+	{
+		cpt++;
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - *s2);
 }

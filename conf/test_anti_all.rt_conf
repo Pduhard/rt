@@ -8,9 +8,9 @@
 	<objects
 		<texture
 			<GRID
-				<color(1, 1, 0)(0)>
-				<color(0, 1, 1)(0)>
-				<color(0, 1, 1)(0)>
+				<color(1, 1, 0, 0)>
+				<color(0, 1, 1, 0)>
+				<color(0, 1, 1, 0)>
 			>
 			<offset(0, 0)>
 			<scale(0, 0)>
@@ -23,9 +23,9 @@
 	<objects
 		<texture
 			<PERLIN
-				<color(0.2, 0.6, 0.4)(0)>
-				<color(0.2, 0.6, 0.4)(0)>
-				<color(0.2, 0.6, 0.4)(0)>
+				<color(0.2, 0.6, 0.4, 0)>
+				<color(0.2, 0.6, 0.4, 0)>
+				<color(0.2, 0.6, 0.4, 0)>
 			>
 			<offset(0, 0)>
 			<scale(0, 0)>
@@ -38,15 +38,15 @@
 	<objects
 		<texture
 			<PERLIN
-				<color (0.8, 0.6, 0.8)(0)>
-				<color (0.8, 0.6, 0.8)(0)>
-				<color (0.8, 0.6, 0.8)(0)>
+				<color (0.8, 0.6, 0.8, 0)>
+				<color (0.8, 0.6, 0.8, 0)>
+				<color (0.8, 0.6, 0.8, 0)>
 			>
 			<offset(0, 0)>
 			<scale(0, 0)>
 		>
 		<sphere
-			<origin(1, -1, 6)>
+			<origin(1, -5, 6)>
 			<radius(1)>
 		>
 	>

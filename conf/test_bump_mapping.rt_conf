@@ -1,10 +1,109 @@
-name (ff)
-camera(0, -2, 0)(0, 0, -90)
-sphere(0, -0.5, 6)(1)(WOOD(0.47, 0.24,0.05)(0.6,0.28,0.1)(0.12,0.34,0.78))(0.4)(0)
-sphere(3, -0.2, 6)(1)(MARBLE(0.9, 0.9,0.9)(0.8,0.8,0.8)(0.12,0.34,0.78))(0.5)(0)
-sphere(-3, -0.7, 6)(1)(PERLIN(1, 1,1)(0.7, 0, 0.7)(1, 0.2, 0))(0)(0)
-sphere(-6, 0, 6)(1)(UNI(1, 1, 0)(0.7, 0, 0.7)(1, 0.2, 0))(0)(0)
-plane(0, 0, 3)(0, -1, 0)(UNI(0.5, 0.75, 0.85)(0.7, 0, 0.6)(0, 1, 0))(0.5)(0)
-light(directional)(0, 0.5, 1)(0.4, 0.4, 0.4)(1, 1, 1)
-light(directional)(0.2, 0.5, 1)(0.6, 0.6, 0.6)(1, 1, 1)
-light(ambient)(0, 0, 0)(0.2, 0.2, 0.2)(1, 1, 1)
+<scene
+    <name (test_bump_mapping)>
+    <size (600, 600)>
+    <camera
+        <origin (0, -2, 0)>
+        <rotation (0, 0)>
+    >
+    <objects
+        <sphere
+            <origin (0, -0.5, 6)>
+            <radius (1)>
+        >
+        <texture
+            <WOOD
+                <color (0.47, 0.24, 0.05, 0)>
+                <color  (0.6, 0.28, 0.1, 0)>
+                <color (0.12, 0.34, 0.78)>
+            >
+            <BumpMapping
+                <own (0.5)>
+            >
+            <offset(0, 0)>
+			<scale(3, 6)>
+        >
+    >
+    <objects
+        <sphere
+            <origin (-3, -0.7, 6)>
+            <radius (1)>
+        >
+        <texture
+            <PERLIN
+                <color (1, 1, 1, 0)>
+                <color  (0.7, 0, 0.7, 0)>
+                <color (0.7, 0.2, 0)>
+            >
+            <BumpMapping
+                <own (0.5)>
+            >
+            <offset(0, 0)>
+			<scale(3, 6)>
+        >
+    >
+    <objects
+        <sphere
+            <origin (-6, 0, 6)>
+            <radius (1)>
+        >
+        <texture
+            <UNI
+                <color (1, 1, 0, 0)>
+                <color  (0.7, 0, 0.4, 0)>
+                <color (1, 0.2, 0, 0)>
+            >
+            <BumpMapping
+                <own (0.5)>
+            >
+            <offset(0, 0)>
+			<scale(3, 6)>
+        >
+    >
+    <objects
+        <sphere
+            <origin (3, -0.2, 6)>
+            <radius (1)>
+        >
+        <texture
+            <MARBLE
+                <color (0.9, 0.9, 0.9, 0)>
+                <color  (0.8, 0.8, 0.8, 0)>
+                <color (0.12, 0.34, 0.78)>
+            >
+            <BumpMapping
+                <own (0.5)>
+            >
+            <offset(0, 0)>
+			<scale(3, 6)>
+        >
+    >
+    <objects
+        <plane
+            <origin (0, 0, 3)>
+            <normal (0, -1, 0)>
+        >
+        <texture
+            <UNI
+                <color (0.5, 0.75, 0.85, 0)>
+                <color  (0.7, 0, 0.6, 0)>
+                <color (0, 1, 0, 0)>
+            >
+            <BumpMapping
+                <own (0.5)>
+            >
+            <offset(0, 0)>
+			<scale(3, 6)>
+        >
+    >
+    <lights
+        <directional (0, 0.5, 1)>
+        <color (1, 1, 1)>
+    >
+    <lights
+        <diRectional (0.2, 0.5, 1)>
+        <color (1, 1, 1)>
+    >
+    <lights
+        <ambIent (1, 1, 1)>
+    >
+>

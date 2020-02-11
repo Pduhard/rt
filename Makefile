@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/09 23:34:54 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/11 07:19:31 by aplat       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -30,27 +30,32 @@ EXT_LIB		=	./external_libs
 MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
 #MLX_PATH	=	$(EXT_LIB)/minilibx_mms_20191207_beta/ //new lib in beta
 
-SRC			=	main.c			\
-				init.c			\
-				matrix.c		\
-				vector.c		\
-				render.c		\
-				cut.c			\
-				angles_utils.c	\
-				conf.c			\
-				texture.c		\
-				bump_mapping.c	\
-				perlin.c		\
-				sphere.c		\
-				plane.c			\
-				cone.c			\
-				moebius.c		\
-				loop.c			\
-				key_hook.c		\
-				cylinder.c		\
-				polynomial.c	\
-				motion.c		\
-				color_filter.c	\
+SRC			=	main.c					\
+				init.c					\
+				matrix.c				\
+				vector.c				\
+				render.c				\
+				cut.c					\
+				angles_utils.c			\
+				conf.c					\
+				parse.c					\
+				parse_scene_element.c	\
+				parse_flat_object.c		\
+				parse_bumpmap.c			\
+				parse_cutting.c			\
+				texture.c				\
+				bump_mapping.c			\
+				perlin.c				\
+				sphere.c				\
+				plane.c					\
+				cone.c					\
+				moebius.c				\
+				loop.c					\
+				key_hook.c				\
+				cylinder.c				\
+				polynomial.c			\
+				motion.c				\
+				color_filter.c			\
 
 BIN			=	$(SRC:.c=.o)
 

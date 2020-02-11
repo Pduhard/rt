@@ -69,8 +69,17 @@
 /* Error Mess*/
 # define ERRORSIZE "WIN_Size: Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
-# define SERRORNAME "Syntax error: name(scene_name)\n"
-# define SERRORCAM "Syntax error: camera(origin)(rotation)\n"
+# define ERRORTHREAD "Number Thread: Min 1, Max 16\n"
+# define ERRORFILE "Invalid File\n"
+# define ERROREMPTY "File error: empty\n"
+# define ERRORSTRIPE "File error: stripe\n"
+# define ERRORSCENE "File error: rt_conf start by <scene...\n"
+# define UNKNOWELE "Unrecognized Scene Element\n"
+# define ERRORCAM "No camera in file .rt_conf\n"
+# define ALREADYCAM "File error: Camera already exist\n"
+# define SERRORSIZE "Syntax error: <size (WD,HH)>\n"
+# define SERRORNAME "Syntax error: <name(scene_name)>\n"
+# define SERRORCAM "Syntax error:\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
 # define SERRORCYL "Syntax error: cylinder(center)(tip)(radius)(color)\n"
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
@@ -429,9 +438,16 @@ t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj 
 int		parse_cutting(char **line, t_obj *obj);
 int		parse_cut_static_real(char **line, t_obj *cut);
 
-int		return_update(char *error, int ret);
+int		parse_onoff(char **line, int *onoff);
+int		parse_color_filter(char **line, t_data *data);
+int		parse_material(char **line, int i, t_obj *obj);
+
+int		return_update(char *error, int ret, int skip);
 int		clamp_val(double *val, double min, double max);
 
 t_3vecf	apply_color_filter_sepia(t_3vecf color);
+
+int		ft_strncmp_case(const char *s1, const char *s2, size_t n);
+void	add_object(t_obj *obj, t_data *data);
 
 #endif
