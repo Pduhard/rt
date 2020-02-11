@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/03 23:03:19 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/09 22:25:08 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/11 13:27:04 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -108,7 +108,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 			param = (t_cube *)cuts->obj_param;
 			if (inter_point.val[0] < param->x_range.val[0] || inter_point.val[0] > param->x_range.val[1]
 				|| inter_point.val[1] < param->y_range.val[0] || inter_point.val[1] > param->y_range.val[1]
-					|| inter_point.val[1] < param->z_range.val[0] || inter_point.val[2] > param->z_range.val[1])
+					|| inter_point.val[2] < param->z_range.val[0] || inter_point.val[2] > param->z_range.val[1])
 				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 		}
 

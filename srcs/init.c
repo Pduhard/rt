@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 08:16:50 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/11 18:01:43 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -58,6 +58,11 @@ t_data	*init_data(char *file_name)
 		free(data->objs);
 		free(data);
 		return (NULL);	
+	}
+	if (GLOBAL_ILLUMINATION && !(data->photon_map = create_photon_map(data)))
+	{
+		//free all
+		return (NULL);
 	}
 	/*if (!(data->objs->obj_param = malloc(sizeof(t_sphere))))
 	{

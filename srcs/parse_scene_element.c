@@ -117,7 +117,7 @@ int		parse_objects(char **line, t_data *data)
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);
 	clamp_val(&obj->refraction, 0, 3);
-	clamp_val(&obj->refraction, 1, 2.42);
+	clamp_val(&obj->refraction, 0, 2.42);
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 	return (ret);

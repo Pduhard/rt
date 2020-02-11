@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:32:54 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 10:40:41 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/11 18:44:32 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,7 +34,9 @@
 
 /* TMP MACRO  */
 
-
+# define GLOBAL_ILLUMINATION	1
+# define NB_PHOTON				10000
+# define PHOTON_DEPTH			10
 # define CEL_SHADING	0
 # define ANTI_AL		0
 
@@ -312,6 +314,21 @@ typedef struct	s_cam
 	t_2vecf		rotation;
 }				t_cam;
 
+typedef	struct	s_photon
+{
+	t_3vecf		position;
+	t_3vecf		direction;
+	t_3vecf		color;
+}				t_photon;
+
+typedef	struct	s_kd_tree
+{
+	struct s_kdtree	*left;
+	struct s_kdtree	*right;
+	t_photon		*photon;
+	t_3vecf			cut_normal;
+}				t_kd_tree;
+
 typedef struct	s_data
 {
 	double			f;
@@ -330,6 +347,7 @@ typedef struct	s_data
 	int			motion_blur;
 	int			stereoscopy;
 	t_3vecf		(*apply_color_filter)(t_3vecf);
+	t_kd_tree	*photon_map;
 }				t_data;
 
 typedef struct	s_thread
@@ -345,7 +363,7 @@ void	init_light_to_world_matrix(double mat[4][4]);
 t_33matf	init_rotation_matrix_x(double theta);
 t_33matf	init_rotation_matrix_y(double theta);
 t_33matf	init_rotation_matrix_z(double theta);
-t_33matf	init_rotation_matrix_vec(t_3vecf ,double);
+t_33matf	init_rotation_matrix_vec(t_3vecf, double);
 
 void	render(t_data *data);
 
@@ -500,5 +518,8 @@ t_3vecf	apply_color_filter_sepia(t_3vecf color);
 
 int		ft_strncmp_case(const char *s1, const char *s2, size_t n);
 void	add_object(t_obj *obj, t_data *data);
+
+t_kd_tree	*create_photon_map(t_data *data);
+double		get_random_number(unsigned int x);
 
 #endif
