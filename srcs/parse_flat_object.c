@@ -9,7 +9,7 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (cylinder->obj_param)
-		return (return_update("Object already declared\n", 0, 2));
+		return (return_update(ALREADYOBJ, 0, 2));
 	if (!(cylinder_param = ft_memalloc(sizeof(t_cylinder))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -45,7 +45,7 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (plane->obj_param)
-		return (return_update("Object already declared\n", 0, 2));
+		return (return_update(ALREADYOBJ, 0, 2));
 	if (!(plane_param = ft_memalloc(sizeof(t_plane))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -81,7 +81,7 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (sphere->obj_param)
-		return (return_update("Object already declared\n", 0, 2));
+		return (return_update(ALREADYOBJ, 0, 2));
 	if (!(sphere_param = ft_memalloc(sizeof(t_sphere))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -115,7 +115,7 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (cone->obj_param)
-		return (return_update("Object already declared\n", 0, 2));
+		return (return_update(ALREADYOBJ, 0, 2));
 	if (!(cone_param = ft_memalloc(sizeof(t_cone))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -151,7 +151,7 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (moebius->obj_param)
-		return (return_update("Object already declared\n", 0, 2));
+		return (return_update(ALREADYOBJ, 0, 2));
 	if (!(moebius_param = ft_memalloc(sizeof(t_moebius))))
 		return (0);
 	while (stripe != '>' && ret != 0)

@@ -112,7 +112,7 @@ int		parse_objects(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "material", 8))
 			ret = parse_material(line, 8, obj);
 		else if (**line != '<')
-			return (return_update("Unrecognized Object Element\n", 0, 2));
+			return (return_update(UNKNOWOBJECT, 0, 2));
 	}
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);

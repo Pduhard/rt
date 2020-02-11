@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   rt.h                                             .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2020/02/11 10:32:54 by aplat        #+#   ##    ##    #+#       */
+/*   Updated: 2020/02/11 10:40:41 by aplat       ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
 #ifndef RT_H
 # define RT_H
 
 # include "../libft/libft.h"
 # include "../external_libs/minilibx_macos/mlx.h"
-//# include "../external_libs/minilibx_mms_20191207_beta/mlx.h"
 # include "../external_libs/sdl/SDL.h"
 # include "../frameworks/SDL2.framework/Headers/SDL.h"
 # include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
@@ -12,7 +24,6 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
-//# include <gsl/gsl_sf_bessel.h>
 # define WIN_WIDTH	600
 # define WIN_HEIGHT	600
 # define NB_THREADS	8
@@ -49,24 +60,31 @@
 # define BIAS				0.01
 
 /* HOOKS MACRO */
-# define A_KEY	1
-# define D_KEY	(1 << 1)
-# define W_KEY	(1 << 2)
-# define S_KEY	(1 << 3)
-# define F_KEY	(1 << 4)
-# define G_KEY	(1 << 5)
+# define A_KEY	0b1
+# define D_KEY	0b10
+# define W_KEY	0b100
+# define S_KEY	0b1000
+# define F_KEY	0b10000
+# define G_KEY	0b100000
 
-# define ARR_LEFT_KEY	(1 << 6)
-# define ARR_RIGHT_KEY	(1 << 7)
-# define ARR_DOWN_KEY	(1 << 8)
-# define ARR_UP_KEY		(1 << 9)
+# define ARR_LEFT_KEY	0b1000000
+# define ARR_RIGHT_KEY	0b10000000
+# define ARR_DOWN_KEY	0b100000000
+# define ARR_UP_KEY		0b1000000000
 
-# define SPACE_KEY	(1 << 10)
-# define SHIFT_KEY	(1 << 11)
+# define SPACE_KEY	0b10000000000
+# define SHIFT_KEY	0b100000000000
 
 # define ESC_KEY 0x0035
 
-/* Error Mess*/
+/* Conf Mess */
+
+//# define CONFORI "\n\t<origin (x, y, z)>"
+//# define CONFROT "\n\t<rotation (x, y)>"
+//# define CONFCAM "\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
+//# define CONFCYL "\n<cylinder\n\t<origin>>"
+
+/* Error Mess */
 # define ERRORSIZE "WIN_Size: Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
 # define ERRORTHREAD "Number Thread: Min 1, Max 16\n"
@@ -74,24 +92,66 @@
 # define ERROREMPTY "File error: empty\n"
 # define ERRORSTRIPE "File error: stripe\n"
 # define ERRORSCENE "File error: rt_conf start by <scene...\n"
-# define UNKNOWELE "Unrecognized Scene Element\n"
+# define UNKNOWSCENE "Unrecognized Scene Element\n"
+# define UNKNOWOBJECT "Unrecognized Object Element\n"
+# define SERROR "Syntax error: "
 # define ERRORCAM "No camera in file .rt_conf\n"
 # define ALREADYCAM "File error: Camera already exist\n"
-# define SERRORSIZE "Syntax error: <size (WD,HH)>\n"
-# define SERRORNAME "Syntax error: <name(scene_name)>\n"
-# define SERRORCAM "Syntax error:\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
+# define ALREADYOBJ "Object already declared\n"
+# define SERRORSIZE "\n<size (WD,HH)>\n"
+# define SERRORNAME "Syntax error:\n<name(scene_name)>\n"
+# define SERRORCAM "Syntax error:\n<name(scene_name)>\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
 # define SERRORCYL "Syntax error: cylinder(center)(tip)(radius)(color)\n"
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
 # define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
 # define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
 
-typedef	enum	{OBJ_SPHERE, OBJ_PLANE, OBJ_CONE, OBJ_CYLINDER, OBJ_MOEBIUS, OBJ_CUT_TEXTURE, OBJ_CUBE} e_obj_type;
-typedef	enum	{MAT_DIFFUSE, MAT_NEGATIVE} e_mat_type;
-typedef	enum	{LIGHT_POINT, LIGHT_AMBIENT, LIGHT_DIRECTIONAL} e_light_type;
-typedef	enum	{TEXT_UNI, TEXT_GRID, TEXT_PERLIN, TEXT_MARBLE, TEXT_WOOD, TEXT_IMAGE} e_text_type;
-typedef enum	{BUMP_UNI, BUMP_GRID, BUMP_PERLIN, BUMP_MARBLE, BUMP_WOOD, BUMP_IMAGE, BUMP_SINUS} e_bump_type;
-typedef enum	{CUT_STATIC, CUT_REAL, CUT_PLAN} e_cut_type;
+typedef	enum {
+	OBJ_SPHERE,
+	OBJ_PLANE,
+	OBJ_CONE,
+	OBJ_CYLINDER,
+	OBJ_MOEBIUS,
+	OBJ_CUT_TEXTURE,
+	OBJ_CUBE
+}	t_obj_type;
+
+typedef	enum {
+	MAT_DIFFUSE,
+	MAT_NEGATIVE
+}	t_mat_type;
+
+typedef	enum {
+	LIGHT_POINT,
+	LIGHT_AMBIENT,
+	LIGHT_DIRECTIONAL
+}	t_light_type;
+
+typedef	enum {
+	TEXT_UNI,
+	TEXT_GRID,
+	TEXT_PERLIN,
+	TEXT_MARBLE,
+	TEXT_WOOD,
+	TEXT_IMAGE
+}	t_text_type;
+
+typedef enum {
+	BUMP_UNI,
+	BUMP_GRID,
+	BUMP_PERLIN,
+	BUMP_MARBLE,
+	BUMP_WOOD,
+	BUMP_IMAGE,
+	BUMP_SINUS
+}	t_bump_type;
+
+typedef enum {
+	CUT_STATIC,
+	CUT_REAL,
+	CUT_PLAN
+}	t_cut_type;
 
 typedef struct	s_mlx
 {
@@ -161,8 +221,6 @@ typedef struct	s_cone
 	t_3vecf		center;
 	t_3vecf		tip;
 	double		radius;
-	//t_3vecf	origin;
-	//t_3vecf	normal;
 }				t_cone;
 
 typedef struct	s_cylinder
@@ -180,7 +238,7 @@ typedef struct	s_cut_classic
 
 typedef	struct	s_cut
 {
-	e_cut_type	cut_type;
+	t_cut_type	cut_type;
 	void		*cut_param;
 	struct s_cut	*next;
 }				t_cut;
@@ -194,19 +252,15 @@ typedef struct	s_text_img
 
 typedef struct	s_text_proc
 {
-//	t_3vecf		color_1;
-//	t_3vecf		color_2;
-//	t_3vecf		color_3;
-
 	t_4vecf		color[3];
 }				t_text_proc;
 
 typedef struct	s_text
 {
-	e_text_type	text_type;
+	t_text_type	text_type;
 	t_2vecf		scale;
 	t_2vecf		offset;
-	e_bump_type	bump_type;
+	t_bump_type	bump_type;
 	double		bump_fact;
 	void		*text_param;
 }				t_text;
@@ -223,8 +277,8 @@ typedef struct	s_data	t_data;
 
 typedef struct	s_obj
 {
-	e_obj_type		obj_type;
-	e_mat_type		material_type;
+	t_obj_type		obj_type;
+	t_mat_type		material_type;
 	void			*obj_param;
 	struct s_obj	*cuts;
 	t_motion		*motions;
@@ -238,7 +292,7 @@ typedef struct	s_obj
 	void			(*move)(struct s_obj *, t_3vecf, double);
 	t_text			text;
 	double			reflection;
-	double			refraction; // water = 1.3 diamond = 1.8 ... always > 1 => < 1 will be considered as non refractive
+	double			refraction;
 	double			shininess;
 	struct s_obj	*next;
 	t_data			*data;
@@ -246,7 +300,7 @@ typedef struct	s_obj
 
 typedef struct	s_light
 {
-	e_light_type	light_type;
+	t_light_type	light_type;
 	t_3vecf		color;
 	t_3vecf		param;
 	struct s_light	*next;
@@ -266,8 +320,6 @@ typedef struct	s_data
 	t_obj		*objs;
 	t_obj		*negative_objs;
 	t_light		*lights;
-//	double		fov;
-//	t_44matf	camera_to_world;
 	char		*scene_name;
 	t_2vecf		size;
 	int			hooks;
@@ -301,7 +353,6 @@ int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
 int		parse_4vecf(char *line, int i, t_4vecf *vec);
 int		parse_double(char *line, int i, double *val);
-//int		parse_texture(char *line, int i, t_obj *obj);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
 int		parse_double2(char **line, int i, double *val);
 int		parse_int(char **line, int i, int *val);
