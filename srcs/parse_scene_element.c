@@ -70,7 +70,10 @@ int		parse_camera(char **line, t_data *data)
 	}
 	data->camera = cam;
 	if (!data->camera || ret == 0)
+	{
+		ft_fdprintf(2, "Test fdprintf %s\n", SERRORCAM);
 		return (return_update(SERRORCAM, 0, 2));
+	}
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:32:54 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 10:40:41 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/11 11:00:56 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,13 +24,13 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
-# define WIN_WIDTH	600
+# define WIN_WIDTH 600
 # define WIN_HEIGHT	600
 # define NB_THREADS	8
-# define MAX_ANTI_AL	4
-# define MAX_ANTI_AL2	16
+# define MAX_ANTI_AL 4
+# define MAX_ANTI_AL2 16
 
-# define MAX_VIEW		500
+# define MAX_VIEW 500
 
 /* TMP MACRO  */
 
@@ -40,14 +40,14 @@
 
 /*ALTERABLE MACRO	*/
 
-# define PERLIN_TRANSP_ADD	1
-# define MOTION_STEP	0.02
-# define MOTION_FVEL	8
-# define MOTION_SPP		32
+# define PERLIN_TRANSP_ADD 1
+# define MOTION_STEP 0.02
+# define MOTION_FVEL 8
+# define MOTION_SPP 32
 
 /* CST MACROS */
-# define _M_PI_180	0.01745329251
-# define _SQRT_2	1.41421356237
+# define _M_PI_180 0.01745329251
+# define _SQRT_2 1.41421356237
 
 # define CEL_BOUND_1	0.05
 # define CEL_BOUND_2	0.15
@@ -77,13 +77,6 @@
 
 # define ESC_KEY 0x0035
 
-/* Conf Mess */
-
-//# define CONFORI "\n\t<origin (x, y, z)>"
-//# define CONFROT "\n\t<rotation (x, y)>"
-//# define CONFCAM "\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
-//# define CONFCYL "\n<cylinder\n\t<origin>>"
-
 /* Error Mess */
 # define ERRORSIZE "WIN_Size: Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
@@ -98,9 +91,9 @@
 # define ERRORCAM "No camera in file .rt_conf\n"
 # define ALREADYCAM "File error: Camera already exist\n"
 # define ALREADYOBJ "Object already declared\n"
-# define SERRORSIZE "\n<size (WD,HH)>\n"
+# define SERRORSIZE "Syntax erro:\n<size (WD,HH)>\n"
 # define SERRORNAME "Syntax error:\n<name(scene_name)>\n"
-# define SERRORCAM "Syntax error:\n<name(scene_name)>\n"
+# define SERRORCAM "Syntax error:\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
 # define SERRORCYL "Syntax error: cylinder(center)(tip)(radius)(color)\n"
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
