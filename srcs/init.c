@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 08:16:50 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/12 19:08:37 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,15 +40,15 @@ t_data	*init_data(char *file_name)
 	ft_bzero(data, sizeof(t_data));
 	if (NB_THREADS < 1 || NB_THREADS > 16)
 	{
-		return_update(ERRORTHREAD, 0, 2);
-		return (0);
+		error(ERRORTHREAD);
+		return (NULL);
 	}
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
 	if (data->size.val[0] < 400 || data->size.val[0] > 2560 || data->size.val[1] < 400 || data->size.val[1] > 1420)
 	{
-		ft_fdprintf(2, ERRORSIZE);
-		return (0);
+		error(ERRORSIZE);
+		return (NULL);
 	}
 //	printf("%p %p %p\n", data->lights, data->objs, data->camera);
 //	printf("%f %f %f\n", ((t_cylinder*)data->objs->obj_param)->center.val[0], ((t_cylinder*)data->objs->obj_param)->center.val[1], ((t_cylinder*)data->objs->obj_param)->center.val[2]);
@@ -58,6 +58,11 @@ t_data	*init_data(char *file_name)
 		free(data->objs);
 		free(data);
 		return (NULL);	
+	}
+	if (GLOBAL_ILLUMINATION && !(data->photon_map = create_photon_map(data)))
+	{
+		//free all
+		return (NULL);
 	}
 	/*if (!(data->objs->obj_param = malloc(sizeof(t_sphere))))
 	{

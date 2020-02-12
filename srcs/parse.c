@@ -10,18 +10,18 @@ int		parse_rt_conf(char *file_name, t_data *data)
 
 	line = NULL;
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-		return (return_update(ERRORARG, 0, 2));
+		return (error(ERRORARG));
 	result = NULL;
 	while ((ret = get_next_line(fd, &line)) > 0)
 		result = ft_strfjoin(result, line);
 	if (ret == -1 || result == '\0' || brackets_rt(result) == 0)
 	{
 		free(result);
-		return (return_update(ERRORFILE, 0, 2));
+		return (error(ERRORFILE));
 	}
 	result_cpy = result;
 	if (!parse(&result, data))
-		return (return_update(ERRORFILE, 0, 2));
+		return (error(ERRORFILE));
 	return (1);
 }
 
@@ -35,7 +35,7 @@ int		brackets_rt(char *line)
 	while (line[i] != '<' && line[i] != '\0')
 		i++;
 	if (line[i] == '\0' && i == 0)
-		return (return_update(ERROREMPTY, 0, 2));
+		return (error(ERROREMPTY));
 	cmp++;
 	i++;
 	while (cmp > 0 && line[i] != '\0')
@@ -47,7 +47,7 @@ int		brackets_rt(char *line)
 		i++;
 	}
 	if ((cmp == 0 && line[i] != '\0') || cmp != 0)
-		return (return_update(ERRORSTRIPE, 0, 2));
+		return (error(ERRORSTRIPE));
 	return (1);
 }
 
@@ -59,7 +59,7 @@ int		parse(char **line, t_data *data)
 	if (!(ft_strncmp_case(*line, "scene", 5)))
 		return (parse_scene(line, data));
 	else
-		return (return_update(ERRORSCENE, 0, 2));
+		return (error(ERRORSCENE));
 	return (0);
 }
 
@@ -91,12 +91,12 @@ int		parse_scene(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 			ret = parse_color_filter(line, data);
 		else
-			return (return_update(UNKNOWSCENE, 0, 2));
+			return (error(UNKNOWSCENE));
 		if (ret == 0)
 			return (ret);
 		stripe = goto_next_element(line);
 	}
 	if (!data->camera)
-		return (return_update(ERRORCAM, 0, 2));
+		return (error(ERRORCAM));
 	return (ret);
 }

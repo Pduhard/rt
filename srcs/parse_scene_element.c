@@ -11,20 +11,20 @@ int		parse_scene_name(char **line, t_data *data)
 	while (ft_isspace(s[i]))
 		++i;
 	if (s[i] != '(')
-		return (return_update(SERRORNAME, 0, 2));
+		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
 	if (data->scene_name)
 		ft_strdel(&data->scene_name);
 	start = ++i;
 	while (s[i] && (s[i] != ')' && s[i] != '>'))
 		++i;
 	if (s[i] != ')')
-		return (return_update(SERRORNAME, 0, 2));
+		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
 	data->scene_name = ft_strsub(s, start, i - start);
 	++i;
 	while (ft_isspace(s[i]))
 		++i;
 	if (goto_next_element(line) != '>')
-		return (return_update(SERRORNAME, 0, 2));
+		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
 	return (1);
 }
 
@@ -38,12 +38,12 @@ int		parse_size(char **line, t_data *data)
 	while (ft_isspace(s[i]))
 		++i;
 	if (s[i] != '(' || (i = parse_2vecf(s, i, &data->size)) == -1)
-		return (return_update(SERRORSIZE, 0, 2));
+		return (syn_error(SERROR, SIZE, NULL, NULL, NULL));
 	++i;
 	while (ft_isspace(s[i]))
 		++i;
 	if (goto_next_element(line) != '>')
-		return (return_update(SERRORSIZE, 0, 2));
+		return (syn_error(SERROR, SIZE, NULL, NULL, NULL));
 	return (1);
 }
 
@@ -56,7 +56,7 @@ int		parse_camera(char **line, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (data->camera)
-		return (return_update(ALREADYCAM, 0, 2));
+		return (error(ALREADYCAM));
 	if (!(cam = ft_memalloc(sizeof(t_cam))))
 		return (0);
 	stripe = goto_next_element(line);
@@ -71,8 +71,7 @@ int		parse_camera(char **line, t_data *data)
 	data->camera = cam;
 	if (!data->camera || ret == 0)
 	{
-		ft_fdprintf(2, "Test fdprintf %s\n", SERRORCAM);
-		return (return_update(SERRORCAM, 0, 2));
+		return (syn_error(SERROR, ORIGIN, NULL, NULL, NULL));
 	}
 	return (ret);
 }
@@ -115,12 +114,12 @@ int		parse_objects(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "material", 8))
 			ret = parse_material(line, 8, obj);
 		else if (**line != '<')
-			return (return_update(UNKNOWOBJECT, 0, 2));
+			return (error(UNKNOWOBJECT));
 	}
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);
 	clamp_val(&obj->refraction, 0, 3);
-	clamp_val(&obj->refraction, 1, 2.42);
+	clamp_val(&obj->refraction, 0, 2.42);
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 	return (ret);

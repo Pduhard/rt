@@ -3,6 +3,10 @@
     <size (800, 800 )>
     <camera
         <origin (0, -2, -10 )  >
+        <rotation (0,  0) >
+    >
+    <camera
+        <origin (0, -2, -10 )  >
         <rotation (0,   >
     >
     <objects

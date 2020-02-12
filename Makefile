@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/11 10:59:09 by aplat       ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/12 18:08:52 by aplat       ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -43,6 +43,7 @@ SRC			=	main.c					\
 				parse_flat_object.c		\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
+				error.c					\
 				texture.c				\
 				bump_mapping.c			\
 				perlin.c				\
@@ -56,6 +57,8 @@ SRC			=	main.c					\
 				polynomial.c			\
 				motion.c				\
 				color_filter.c			\
+				photon_map.c			\
+				random.c				\
 
 BIN			=	$(SRC:.c=.o)
 
