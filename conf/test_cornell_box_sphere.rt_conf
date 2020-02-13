@@ -2,7 +2,7 @@
 	<name(Bump mapping)	>
 	<size(800, 600)>
 	<camera
-		<origin (0, 0, -4)>
+		<origin (0, 0, -6)>
 		<rotation (0, 0)>
 	>
 	<objects
@@ -121,7 +121,7 @@
 		<refraction (1.5)>
 	>
 	<lights
-		<point (0, -2.6, 5.5)>
+		<point (0, -2.6, 4.5)>
 		<color (0.8, 0.8, 0.8)>
 	>
 	<lights

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 15:18:28 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/13 20:42:35 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -144,7 +144,7 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter, double refraction_index, 
 	return (ref);
 }
 
-double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index)
+double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside)
 {
 /*		TRUE FRESNEL RATIO
  *	double	cosi;
@@ -194,7 +194,7 @@ double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refractio
 
 	inv_dir = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 	cos_theta = dot_product_3vecf(inv_dir, normal_inter);
-	r0 = (1 - refraction_index) / (1 + refraction_index);
+	r0 = inside ? (refraction_index - 1) / (refraction_index + 1) : (1 - refraction_index) / (1 + refraction_index);
 	r0 *= r0;
 	n_cos_theta = 1 - cos_theta;
 	n_cos_theta = n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta; 
@@ -331,6 +331,16 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		}
 		lights = lights->next;
 	}
+	
+	if (GLOBAL_ILLUMINATION)
+	{
+		t_3vecf	global;
+
+		global = compute_global_illumination(inter_point, normal_inter, data);
+		light_fact.val[0] += global.val[0];
+		light_fact.val[1] += global.val[1];
+		light_fact.val[2] += global.val[2];
+	}
 	if (CEL_SHADING)
 	{
 		cel_shade(&(light_fact.val[0]));
@@ -400,7 +410,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		t_3vecf refl_color = assign_3vecf(0, 0, 0);
 		if (!depth)
 			return (assign_3vecf(0, 0, 0));
-		double fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, closest_obj->refraction);
+		double fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, closest_obj->refraction, inside);
 //		fresnel_ratio = 0;
 //		printf("%f\n", fresnel_ratio);
 		if (fresnel_ratio < 0.999999) // else reflection
@@ -652,6 +662,6 @@ void	render(t_data *data)
 	i = 0;
 	while (i < NB_THREADS)
 		pthread_join(threads[i++], NULL);
-
+	//exit(0);
 		//printf("end");
 }

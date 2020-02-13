@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/11 17:58:23 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/13 16:25:08 by pduhard-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -57,6 +57,7 @@ SRC			=	main.c					\
 				motion.c				\
 				color_filter.c			\
 				photon_map.c			\
+				global_illumination.c	\
 				random.c				\
 
 BIN			=	$(SRC:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:32:54 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 18:44:32 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/13 20:27:05 by pduhard-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,9 @@
 
 # define GLOBAL_ILLUMINATION	1
 # define NB_PHOTON				10000
+# define NN_PHOTON_MAX			20
+//# define NB_GLOBAL_PHOTON		10000
+//# define NB_CAUSTIC_PHOTON		100000
 # define PHOTON_DEPTH			10
 # define CEL_SHADING	0
 # define ANTI_AL		0
@@ -303,8 +306,8 @@ typedef struct	s_obj
 typedef struct	s_light
 {
 	t_light_type	light_type;
-	t_3vecf		color;
-	t_3vecf		param;
+	t_3vecf			color;
+	t_3vecf			param;
 	struct s_light	*next;
 }				t_light;
 
@@ -323,10 +326,9 @@ typedef	struct	s_photon
 
 typedef	struct	s_kd_tree
 {
-	struct s_kdtree	*left;
-	struct s_kdtree	*right;
+	struct s_kd_tree	*left;
+	struct s_kd_tree	*right;
 	t_photon		*photon;
-	t_3vecf			cut_normal;
 }				t_kd_tree;
 
 typedef struct	s_data
@@ -401,6 +403,10 @@ double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
+
+t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
+t_3vecf	reflect_ray(t_3vecf dir, t_3vecf normal_inter);
+double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
 
 double	linear_interpolate(double a, double b, double val);
 
@@ -521,5 +527,6 @@ void	add_object(t_obj *obj, t_data *data);
 
 t_kd_tree	*create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
+t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_data *data);
 
 #endif
