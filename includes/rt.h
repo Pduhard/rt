@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   rt.h                                             .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/11 10:32:54 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/13 20:27:05 by pduhard-    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
-/* ************************************************************************** */
-
 #ifndef RT_H
 # define RT_H
 
@@ -24,13 +11,13 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
-# define WIN_WIDTH	600
+# define WIN_WIDTH 600
 # define WIN_HEIGHT	600
 # define NB_THREADS	8
-# define MAX_ANTI_AL	4
-# define MAX_ANTI_AL2	16
+# define MAX_ANTI_AL 4
+# define MAX_ANTI_AL2 16
 
-# define MAX_VIEW		500
+# define MAX_VIEW 500
 
 /* TMP MACRO  */
 
@@ -45,14 +32,14 @@
 
 /*ALTERABLE MACRO	*/
 
-# define PERLIN_TRANSP_ADD	1
-# define MOTION_STEP	0.02
-# define MOTION_FVEL	8
-# define MOTION_SPP		32
+# define PERLIN_TRANSP_ADD 1
+# define MOTION_STEP 0.02
+# define MOTION_FVEL 8
+# define MOTION_SPP 32
 
 /* CST MACROS */
-# define _M_PI_180	0.01745329251
-# define _SQRT_2	1.41421356237
+# define _M_PI_180 0.01745329251
+# define _SQRT_2 1.41421356237
 
 # define CEL_BOUND_1	0.05
 # define CEL_BOUND_2	0.15
@@ -84,30 +71,40 @@
 
 /* Conf Mess */
 
-//# define CONFORI "\n\t<origin (x, y, z)>"
-//# define CONFROT "\n\t<rotation (x, y)>"
-//# define CONFCAM "\n<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
-//# define CONFCYL "\n<cylinder\n\t<origin>>"
+# define CAM "<camera\n"
+# define CYLINDER "<cylinder\n"
+# define SPHERE "<sphere\n"
+# define PLANE "<plane\n"
+# define CONE "<cone\n"
+# define MOEBIUS "<moebius\n"
+# define ORIGIN "\t<origin (x, y, z)>\n"
+# define CENTER "\t<center (x, y, z)>\n"
+# define ROTATION "\t<rotation (x, y)\n>"
+# define TIP "\t<tip (x, y)>\n"
+# define RADIUS "\t<radius (X)>\n"
+# define NAME "<name(scene_name)>\n"
+# define SIZE "<size (WD,HH)>\n"
+# define NORMAL "\t<normal (x, y ,z)>\n"
+# define XAXIS "\t<xaxis (x, y, z)>\n"
+# define HALFWIDTH "\t<half_width (X)>\n"
 
 /* Error Mess */
-# define ERRORSIZE "WIN_Size: Min 400/400, Max 2560/1420\n"
+# define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
-# define ERRORTHREAD "Number Thread: Min 1, Max 16\n"
+# define ERRORTHREAD "Number Thread : Min 1, Max 16\n"
 # define ERRORFILE "Invalid File\n"
-# define ERROREMPTY "File error: empty\n"
-# define ERRORSTRIPE "File error: stripe\n"
-# define ERRORSCENE "File error: rt_conf start by <scene...\n"
+# define ERROREMPTY "File error : empty\n"
+# define ERRORSTRIPE "File error : stripe\n"
+# define ERRORSCENE "File error : rt_conf start by <scene...\n"
 # define UNKNOWSCENE "Unrecognized Scene Element\n"
 # define UNKNOWOBJECT "Unrecognized Object Element\n"
-# define SERROR "Syntax error: "
-# define ERRORCAM "No camera in file .rt_conf\n"
-# define ALREADYCAM "File error: Camera already exist\n"
+# define ALREADYCAM "File error : Camera already exist\n"
 # define ALREADYOBJ "Object already declared\n"
-# define SERRORSIZE "\n<size (WD,HH)>\n"
-# define SERRORNAME "Syntax error:\n<name(scene_name)>\n"
-# define SERRORCAM "Syntax error:\n<name(scene_name)>\n"
+# define SERROR "Syntax or Values error :\n"
+# define ERRORCAM "No camera in file .rt_conf\n"
+# define SCAM "<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
-# define SERRORCYL "Syntax error: cylinder(center)(tip)(radius)(color)\n"
+# define SERRORCYL "<cylinder\n\t<origin (x,y,z)>\n\t(tip)(radius)(color)\n"
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
 # define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
 # define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
@@ -527,6 +524,11 @@ void	add_object(t_obj *obj, t_data *data);
 
 t_kd_tree	*create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
+<<<<<<< HEAD
 t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_data *data);
+=======
+int     syn_error(char *s1, char *s2, char*s3, char *s4, char *s5);
+int     error(char *s1);
+>>>>>>> 5f0b7e5ef030ea5f7e45eaf7ab94cfc9799bf6fb
 
 #endif

@@ -20,7 +20,7 @@
         <moebius
             <origin (0, 0, 0)>
             <radius (5)>
-            <half_width (2)>
+            <half_width >
         >
         <cutting
             <static

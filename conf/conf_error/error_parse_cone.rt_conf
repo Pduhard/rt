@@ -18,8 +18,8 @@
             <scale (0, 0)>
         >
         <cone
-            <origin (-10, 0, 1)>
-            <tip (-10, 0, 1)>
+            <origin (10, 0, 1)>
+            <tip (-10, 0, >
             <radius -5>
         >
         <cutting

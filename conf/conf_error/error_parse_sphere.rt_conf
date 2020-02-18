@@ -19,7 +19,7 @@
         >
         <sphere
             <origin (0, 0, 0)>
-            <radius -0>
+            <radis -2>
         >
         <cutting
             <static

@@ -20,7 +20,7 @@ FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
 FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
-INCLUDES	=	rt.h
+INCLUDES	=	rt.h \
 
 SRC_PATH	=	./srcs/
 BIN_PATH	=	./bins/
@@ -43,6 +43,7 @@ SRC			=	main.c					\
 				parse_flat_object.c		\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
+				error.c					\
 				texture.c				\
 				bump_mapping.c			\
 				perlin.c				\
