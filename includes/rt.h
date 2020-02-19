@@ -22,8 +22,9 @@
 
 /* TMP MACRO  */
 
-# define GLOBAL_ILLUMINATION	1
-# define NB_PHOTON				100000
+# define GLOBAL_ILLUMINATION	0
+# define GL_RADIUS				0.1
+# define NB_PHOTON				10000
 # define NN_PHOTON_MAX			20
 //# define NB_GLOBAL_PHOTON		10000
 //# define NB_CAUSTIC_PHOTON		100000
