@@ -1,6 +1,7 @@
 #ifndef RT_H
 # define RT_H
 
+
 # include "../libft/libft.h"
 # include "../external_libs/minilibx_macos/mlx.h"
 # include "../external_libs/sdl/SDL.h"
@@ -22,7 +23,7 @@
 /* TMP MACRO  */
 
 # define GLOBAL_ILLUMINATION	1
-# define NB_PHOTON				10000
+# define NB_PHOTON				100000
 # define NN_PHOTON_MAX			20
 //# define NB_GLOBAL_PHOTON		10000
 //# define NB_CAUSTIC_PHOTON		100000
@@ -347,6 +348,7 @@ typedef struct	s_data
 	int			stereoscopy;
 	t_3vecf		(*apply_color_filter)(t_3vecf);
 	t_kd_tree	*photon_map;
+	t_cube		bbox_photon;
 }				t_data;
 
 typedef struct	s_thread
@@ -524,11 +526,10 @@ void	add_object(t_obj *obj, t_data *data);
 
 t_kd_tree	*create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
-<<<<<<< HEAD
 t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_data *data);
-=======
+
 int     syn_error(char *s1, char *s2, char*s3, char *s4, char *s5);
 int     error(char *s1);
->>>>>>> 5f0b7e5ef030ea5f7e45eaf7ab94cfc9799bf6fb
+
 
 #endif

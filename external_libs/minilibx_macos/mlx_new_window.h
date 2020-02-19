@@ -8,6 +8,49 @@
 
 #import <Cocoa/Cocoa.h>
 #import "mlx_int.h"
+#ifndef NSEventTypeLeftMouseDown
+# define NSEventTypeLeftMouseDown	1
+#endif
+#ifndef NSEventTypeLeftMouseUp
+# define NSEventTypeLeftMouseUp 2
+#endif
+#ifndef NSEventTypeLeftMouseDragged
+# define NSEventTypeLeftMouseDragged	6
+#endif
+
+#ifndef NSEventTypeRightMouseDown
+# define NSEventTypeRightMouseDown	3
+#endif
+#ifndef NSEventTypeRightMouseUp
+# define NSEventTypeRightMouseUp 4
+#endif
+#ifndef NSEventTypeRightMouseDragged
+# define NSEventTypeRightMouseDragged	7
+#endif
+
+#ifndef NSEventTypeOtherMouseDown
+# define NSEventTypeOtherMouseDown 25
+#endif
+#ifndef NSEventTypeOtherMouseUp
+# define NSEventTypeOtherMouseUp 26
+#endif
+#ifndef NSEventTypeOtherMouseDragged
+# define NSEventTypeOtherMouseDragged	27
+#endif
+
+#ifndef NSWindowStyleMaskTitled
+# define NSWindowStyleMaskTitled          1
+#endif
+#ifndef NSWindowStyleMaskClosable
+# define NSWindowStyleMaskClosable        1 << 1
+#endif
+#ifndef NSWindowStyleMaskMiniaturizable
+# define NSWindowStyleMaskMiniaturizable  1 << 2
+#endif
+
+#ifndef NSEventMaskAny
+# define NSEventMaskAny NSUIntegerMax
+#endif
 
 @interface NSWindowEvent : NSWindow
 {

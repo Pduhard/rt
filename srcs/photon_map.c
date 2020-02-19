@@ -70,7 +70,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				photon_tab[*i] = photon;
 				printf("refract New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				*i += 1;
-				
+
 				return ;
 			}
 			else if (rr_f < refract_prob + absorb_prob) //refract
@@ -120,7 +120,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter);
 				return ;
 			}
-		}	
+		}
 	//	*i += 1;
 	//	return (photon);
 	//	photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
@@ -211,7 +211,25 @@ void		alloc_photon(t_photon **aphoton, t_photon photon)
 	(*aphoton)->color = photon.color;
 }
 
-t_kd_tree	*build_kd_tree(t_photon photon_tab[NB_PHOTON], int low, int high, int axis)
+void update_bbox_photon(t_cube *bbox_photon, t_photon *photon)
+{
+	if (photon->position.val[0] < bbox_photon->x_range.val[0])
+		bbox_photon->x_range.val[0] = photon->position.val[0];
+	else if (photon->position.val[0] > bbox_photon->x_range.val[1])
+		bbox_photon->x_range.val[1] = photon->position.val[0];
+
+	if (photon->position.val[1] < bbox_photon->y_range.val[0])
+		bbox_photon->y_range.val[0] = photon->position.val[1];
+	else if (photon->position.val[1] > bbox_photon->y_range.val[1])
+		bbox_photon->y_range.val[1] = photon->position.val[1];
+
+	if (photon->position.val[2] < bbox_photon->z_range.val[0])
+		bbox_photon->z_range.val[0] = photon->position.val[2];
+	else if (photon->position.val[2] > bbox_photon->z_range.val[1])
+		bbox_photon->z_range.val[1] = photon->position.val[2];
+}
+
+t_kd_tree	*build_kd_tree(t_photon photon_tab[NB_PHOTON], int low, int high, int axis, t_cube *bbox_photon)
 {
 	t_kd_tree	*kd_tree;
 //	t_photon	median;
@@ -241,15 +259,16 @@ t_kd_tree	*build_kd_tree(t_photon photon_tab[NB_PHOTON], int low, int high, int 
 			alloc_photon(&kd_tree->photon, photon_tab[low]);
 //		printf("median axis %c %f %f %f \n", axis == 0 ? 'x' : axis == 1 ? 'y' : 'z', kd_tree->photon->position.val[0], kd_tree->photon->position.val[1], kd_tree->photon->position.val[2]);
 			kd_tree->left = NULL;
-			kd_tree->right = build_kd_tree(photon_tab, high, high, (axis + 1) % 3);
+			kd_tree->right = build_kd_tree(photon_tab, high, high, (axis + 1) % 3, bbox_photon);
 		}
 		else
 		{
 			alloc_photon(&kd_tree->photon, photon_tab[high]);
 //		printf("median axis %c %f %f %f \n", axis == 0 ? 'x' : axis == 1 ? 'y' : 'z', kd_tree->photon->position.val[0], kd_tree->photon->position.val[1], kd_tree->photon->position.val[2]);
-			kd_tree->left = build_kd_tree(photon_tab, low, low, (axis + 1) % 3);
+			kd_tree->left = build_kd_tree(photon_tab, low, low, (axis + 1) % 3, bbox_photon);
 			kd_tree->right = NULL;
 		}
+		update_bbox_photon(bbox_photon, kd_tree->photon);
 		return (kd_tree);
 	}
 	quick_sort_photon(photon_tab, low, high, axis);
@@ -258,11 +277,12 @@ t_kd_tree	*build_kd_tree(t_photon photon_tab[NB_PHOTON], int low, int high, int 
 		printf("axis %c %f %f %f \n", axis == 0 ? 'x' : axis == 1 ? 'y' : 'z', photon_tab[i].position.val[0], photon_tab[i].position.val[1], photon_tab[i].position.val[2]);
 	}
 *///	exit(0);
-	
+
 	alloc_photon(&kd_tree->photon, photon_tab[(high - low) / 2 + low]);
+	update_bbox_photon(bbox_photon, kd_tree->photon);
 //	printf("median axis %c %f %f %f \n", axis == 0 ? 'x' : axis == 1 ? 'y' : 'z', kd_tree->photon->position.val[0], kd_tree->photon->position.val[1], kd_tree->photon->position.val[2]);
-	kd_tree->left = build_kd_tree(photon_tab, low, (high - low) / 2 + low - 1, (axis + 1) % 3);
-	kd_tree->right = build_kd_tree(photon_tab, (high - low) / 2 + low + 1, high, (axis + 1) % 3);
+	kd_tree->left = build_kd_tree(photon_tab, low, (high - low) / 2 + low - 1, (axis + 1) % 3, bbox_photon);
+	kd_tree->right = build_kd_tree(photon_tab, (high - low) / 2 + low + 1, high, (axis + 1) % 3, bbox_photon);
 	return (kd_tree);
 }
 
@@ -271,10 +291,20 @@ t_kd_tree	*create_photon_map(t_data *data)
 	t_photon	photon_tab[NB_PHOTON];
 	t_kd_tree	*kd_tree;
 
-	printf("erg\n");
+	printf("before scattering\n");
 	scatter_photon(photon_tab, data);
-	printf("sal\n");
-	kd_tree = build_kd_tree(photon_tab, 0, NB_PHOTON - 1, 0);
+	printf("after scattering\n");
+	data->bbox_photon.x_range.val[0] = MAX_VIEW;
+	data->bbox_photon.y_range.val[0] = MAX_VIEW;
+	data->bbox_photon.z_range.val[0] = MAX_VIEW;
+
+	data->bbox_photon.x_range.val[1] = -MAX_VIEW;
+	data->bbox_photon.y_range.val[1] = -MAX_VIEW;
+	data->bbox_photon.z_range.val[1] = -MAX_VIEW;
+	kd_tree = build_kd_tree(photon_tab, 0, NB_PHOTON - 1, 0, &data->bbox_photon);
+	printf("Bounding box photon scene: \nx %f %f\n", data->bbox_photon.x_range.val[0], data->bbox_photon.x_range.val[1]);
+	printf("y %f %f\n", data->bbox_photon.y_range.val[0], data->bbox_photon.y_range.val[1]);
+	printf("z %f %f\n", data->bbox_photon.z_range.val[0], data->bbox_photon.z_range.val[1]);
 /*	for (int i = 0; i < NB_PHOTON; ++i)
 	{
 		t_obj *sphere = malloc(sizeof(t_obj));

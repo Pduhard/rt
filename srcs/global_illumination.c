@@ -70,7 +70,7 @@ void	get_nearest_neighbors(t_3vecf inter_point, t_kd_tree *kd_tree, t_photon *ta
 	if (dist < farest)
 		farest = add_photon_to_nn(tab, kd_tree->photon, inter_point, dist);
 //	printf("b\n");
-	
+
 	if (inter_point.val[axis] < kd_tree->photon->position.val[axis])
 //	if (kd_tree->left)
 		get_nearest_neighbors(inter_point, kd_tree->left, tab, closest, farest, (axis + 1) % 3);
@@ -83,23 +83,52 @@ void	get_nearest_neighbors(t_3vecf inter_point, t_kd_tree *kd_tree, t_photon *ta
 
 }
 
+double		get_max_bbox(double a, double b, double c)
+{
+		if (a > b)
+		{
+			if (a > c)
+				return a;
+			return c;
+		}
+		else if (b > c)
+			return b;
+		return c;
+}
+
+double		get_dist_from_bbox(t_3vecf point, t_cube bbox)
+{
+		double	dx;
+		double	dy;
+		double	dz;
+
+		dx = get_max_bbox(bbox.x_range.val[0] - point.val[0], 0, point.val[0] - bbox.x_range.val[1]);
+		dy = get_max_bbox(bbox.y_range.val[0] - point.val[1], 0, point.val[1] - bbox.y_range.val[1]);
+		dz = get_max_bbox(bbox.z_range.val[0] - point.val[2], 0, point.val[2] - bbox.z_range.val[1]);
+		return (sqrt(dx * dx + dy * dy + dz * dz));
+}
+
 t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_data *data)
 {
 	t_photon	*nearest_n[NN_PHOTON_MAX];
+	t_cube		bbox;
 
-	return (assign_3vecf(0, 0,0));
+	bbox = data->bbox_photon;
+//	return (assign_3vecf(0, 0,0));
 	ft_bzero(nearest_n, sizeof(t_photon *) * NN_PHOTON_MAX);
 //	printf("inter_point %f %f %f\n", inter_point.val[0], inter_point.val[1], inter_point.val[2]);
+//printf("azd");
 	get_nearest_neighbors(inter_point, data->photon_map, nearest_n, MAX_VIEW, MAX_VIEW, 0);
+	//printf("POI");
 //	printf("inter_point %f %f %f\n", inter_point.val[0], inter_point.val[1], inter_point.val[2]);
 /*	for (int i = 0; i < NN_PHOTON_MAX; i++)
 	{
 		if (nearest_n[i])
-			;//printf("photon %f %f %f dist : %f\n", nearest_n[i]->position.val[0], nearest_n[i]->position.val[1], nearest_n[i]->position.val[2], get_length_3vecf(sub_3vecf(inter_point, nearest_n[i]->position)));
+			printf("photon %f %f %f dist : %f\n", nearest_n[i]->position.val[0], nearest_n[i]->position.val[1], nearest_n[i]->position.val[2], get_length_3vecf(sub_3vecf(inter_point, nearest_n[i]->position)));
 		else
-		;//	printf("nearest_ergerg\n");
+			printf("??\n");
 	}
-*/	
+*/
 
 	return (assign_3vecf(0, 0, 0));
 	(void)inter_point;
