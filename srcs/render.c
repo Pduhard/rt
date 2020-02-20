@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/19 19:09:22 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/20 16:16:45 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -301,7 +301,15 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				transp_fact.val[1] = 0;
 			if (transp_fact.val[2] <= 0)
 				transp_fact.val[2] = 0;
-			if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
+	/*		if (transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] < 3 || shadow_obj)
+			{	
+				t_3vecf	global;
+				global = compute_global_illumination(inter_point, normal_inter, data);
+				light_fact.val[0] += global.val[0];
+				light_fact.val[1] += global.val[1];
+				light_fact.val[2] += global.val[2];
+			}
+	*/		if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
 			{
 			//	printf("wefwef\n");
 				norm_dot_ldir = dot_product_3vecf(normal_inter, light_dir);
@@ -328,6 +336,13 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 					}
 				}
 			}
+		/*	else if (GLOBAL_ILLUMINATION) {
+				t_3vecf	global;
+				global = compute_global_illumination(inter_point, normal_inter, data);
+				light_fact.val[0] += global.val[0];
+				light_fact.val[1] += global.val[1];
+				light_fact.val[2] += global.val[2];
+			}*/
 		}
 		lights = lights->next;
 	}
@@ -336,6 +351,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 	{
 		t_3vecf	global;
 
+	//	return (compute_global_illumination(inter_point, normal_inter, data));
 		global = compute_global_illumination(inter_point, normal_inter, data);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];

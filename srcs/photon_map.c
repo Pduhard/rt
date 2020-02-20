@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/13 19:07:55 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/20 20:05:26 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,13 +59,18 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			double	absorb_prob = (1 - fresnel_ratio) * (1 - obj_color.val[3]);
 			double	refract_prob = (1 - fresnel_ratio) * obj_color.val[3];
 			double	reflect_prob = fresnel_ratio;
+			double	reflect_prob_spe = reflect_prob * SPEC_PROB;
+	//		double	reflect_prob_dif = reflect_prob * DIFF_PROB;
+		//	double	reflect_prob = fresnel_ratio;
 
-	//		printf("refr abs %f refr %f refl %f\n", absorb_prob, refract_prob, reflect_prob);
-			if (rr_f < absorb_prob) //diffuse
+	//		printf("refr abs %f refr %f refl sp %f refl diff %f => %f\n", absorb_prob, refract_prob, reflect_prob_spe, reflect_prob_dif, absorb_prob + refract_prob + reflect_prob_spe + reflect_prob_dif );
+			if (rr_f < absorb_prob) //absorb
 			{
 				if (depth == PHOTON_DEPTH)
 					return ;
-				photon.color = light->color;
+				photon.color.val[0] = light->color.val[0] / (double)NB_PHOTON;
+				photon.color.val[1] = light->color.val[1] / (double)NB_PHOTON;
+				photon.color.val[2] = light->color.val[2] / (double)NB_PHOTON;
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 				photon_tab[*i] = photon;
 				printf("refract New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
@@ -80,12 +85,28 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
 				return ;
 			}
-			else if (rr_f < refract_prob + absorb_prob + reflect_prob) // = reflect
+			else if (rr_f < refract_prob + absorb_prob + reflect_prob_spe) // = reflect
 			{
 				dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
 				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
 				return ;
+			}
+			else // reflect diffuse
+			{
+				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
+				while (dot_product_3vecf(dir, normal_inter) < 0)
+				{
+					dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
+					rand_iter ^= rand_iter >> 4;
+					rand_iter ^= rand_iter << 6;
+				}
+			// !! danger ^ ^ ^
+			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
+				normalize_3vecf(&dir);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
+				return ;
+
 			}
 			//		printf("%f %f %f => %f = 1 ? \n", absorb_prob, refract_prob, reflect_prob, absorb_prob + refract_prob + reflect_prob);
 		}
@@ -101,23 +122,46 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 
 			double	absorb_prob = obj->reflection ? 1 - obj->reflection : 0.4;
 			double	reflect_prob = obj->reflection ? obj->reflection : 0.6;
+			double	reflect_prob_spe = reflect_prob * SPEC_PROB;
+	//		double	reflect_prob_s = reflect_prob * SPEC_PROB;
 	//		printf("refl abs %f refl %f\n", absorb_prob, reflect_prob);
 			if (rr_f < absorb_prob)
 			{
 				if (depth == PHOTON_DEPTH)
 					return ;
-				photon.color = light->color;
+			//	photon.color = light->color;
+				photon.color.val[0] = light->color.val[0] / (double)NB_PHOTON;
+				photon.color.val[1] = light->color.val[1] / (double)NB_PHOTON;
+				photon.color.val[2] = light->color.val[2] / (double)NB_PHOTON;
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 				photon_tab[*i] = photon;
 				*i += 1;
 				printf("reflect New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				return ;
 			}
-			else if (rr_f < absorb_prob + reflect_prob) // = reflect
+			else if (rr_f < absorb_prob + reflect_prob_spe) // = reflect spe
 			{
 				dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
 				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter);
+				return ;
+			}
+			else //reflect diff
+			{
+				//	dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
+
+				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
+				while (dot_product_3vecf(dir, normal_inter) < 0)
+				{
+					dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
+					rand_iter ^= rand_iter >> 4;
+					rand_iter ^= rand_iter << 6;
+				}	
+					// !! danger ^ ^ ^
+
+			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
+				normalize_3vecf(&dir);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
 				return ;
 			}
 		}
@@ -312,7 +356,7 @@ t_kd_tree	*create_photon_map(t_data *data)
 		t_sphere *sphere_param = malloc(sizeof(t_sphere));
 		t_text_proc *tex = malloc(sizeof(t_text_proc));
 		sphere_param->origin = photon_tab[i].position;
-		sphere_param->radius = 0.05;
+		sphere_param->radius = 0.02;
 		sphere->obj_param = sphere_param;
 		sphere->obj_type = OBJ_SPHERE;
 		sphere->check_inside = &check_inside_sphere;
@@ -329,8 +373,8 @@ t_kd_tree	*create_photon_map(t_data *data)
 		sphere->get_text_coordinate = &get_text_coordinate_sphere;
 		add_object(sphere, data);
 	}
-	printf("wefwefwefw\n");
-*/	(void)data;
+*/	printf("wefwefwefw\n");
+	(void)data;
 //	return (malloc(123));
 	return (kd_tree);
 }

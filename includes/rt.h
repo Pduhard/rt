@@ -22,10 +22,12 @@
 
 /* TMP MACRO  */
 
-# define GLOBAL_ILLUMINATION	0
-# define GL_RADIUS				0.1
-# define NB_PHOTON				10000
-# define NN_PHOTON_MAX			20
+# define GLOBAL_ILLUMINATION	1
+# define GL_RADIUS				0.2
+# define NB_PHOTON				50000
+# define NN_PHOTON_MAX			70
+# define SPEC_PROB				0.35
+# define DIFF_PROB				0.65
 //# define NB_GLOBAL_PHOTON		10000
 //# define NB_CAUSTIC_PHOTON		100000
 # define PHOTON_DEPTH			10
@@ -118,7 +120,8 @@ typedef	enum {
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
 	OBJ_CUT_TEXTURE,
-	OBJ_CUBE
+	OBJ_CUBE,
+	OBJ_RECT
 }	t_obj_type;
 
 typedef	enum {
@@ -219,6 +222,14 @@ typedef struct	s_cube
 	t_2vecf		y_range;
 	t_2vecf		z_range;
 }				t_cube;
+
+typedef struct	s_rect
+{
+	t_3vecf		x_axis;
+	t_3vecf		y_axis;
+	t_3vecf		z_axis;
+	t_3vecf		origin;
+}				t_rect;
 
 typedef struct	s_cone
 {
@@ -445,6 +456,7 @@ int		parse_origin(char **line, t_3vecf *t, int i);
 int		parse_cone(char **line, t_obj *cone, t_data *data);
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data);
 int		parse_plane(char **line, t_obj *plane, t_data *data);
+int		parse_rect(char **line, t_obj *rect, t_data *data);
 int		parse_sphere(char **line, t_obj *sphere, t_data *data);
 int		parse_moebius(char **line, t_obj *moebius, t_data *data);
 
@@ -458,6 +470,13 @@ t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id);
 t_3vecf	get_origin_cone(t_obj *cone);
 void	move_cone(t_obj *cone, t_3vecf, double);
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
+
+int		ray_intersect_rect(t_3vecf orig, t_3vecf dir, t_obj *rect, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_rect(t_3vecf point, t_obj *rect);
+t_3vecf	get_normal_intersect_rect(t_3vecf inter_point, t_obj *rect, int sp_id);
+t_3vecf	get_origin_rect(t_obj *rect);
+void	move_rect(t_obj *rect, t_3vecf, double);
+t_2vecf	get_text_coordinate_rect(t_3vecf inter_point, t_3vecf normal_inter, t_obj *rect);
 
 int 	ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist, int sp_id);
 int		check_inside_cylinder(t_3vecf point, t_obj *cylinder);

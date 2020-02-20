@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/13 16:25:08 by pduhard-    ###    #+. /#+    ###.fr      #
+#    Updated: 2020/02/20 19:56:28 by pduhard-         ###   ########lyon.fr    #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -50,6 +50,7 @@ SRC			=	main.c					\
 				sphere.c				\
 				plane.c					\
 				cone.c					\
+				cube.c					\
 				moebius.c				\
 				loop.c					\
 				key_hook.c				\
