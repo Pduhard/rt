@@ -24,8 +24,8 @@
 
 # define GLOBAL_ILLUMINATION	1
 # define GL_RADIUS				0.2
-# define NB_PHOTON				50000
-# define NN_PHOTON_MAX			70
+# define NB_PHOTON				10000
+# define NN_PHOTON_MAX			50
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
 //# define NB_GLOBAL_PHOTON		10000

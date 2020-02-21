@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/20 16:16:45 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 19:48:22 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -351,7 +351,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 	{
 		t_3vecf	global;
 
-	//	return (compute_global_illumination(inter_point, normal_inter, data));
+//		return (compute_global_illumination(inter_point, normal_inter, data));
 		global = compute_global_illumination(inter_point, normal_inter, data);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
@@ -409,6 +409,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
 	if (closest_obj->get_bump_mapping)
 		normal_inter = closest_obj->get_bump_mapping(inter_point, normal_inter, closest_obj);
+	inside = 0;
 	obj_color = closest_obj->get_text_color(inter_point, tex_normal_inter, closest_obj);
 	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data);
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];

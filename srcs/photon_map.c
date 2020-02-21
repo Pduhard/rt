@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/20 20:05:26 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/21 20:52:17 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@ int			check_light_type(t_light *light)
 	return (0);
 }
 
-void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i, t_photon photon_tab[NB_PHOTON], int depth, unsigned int rand_iter)
+void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i, t_photon photon_tab[NB_PHOTON], int depth, unsigned int rand_iter, t_3vecf pwr)
 {
 	t_photon	photon;
 	t_obj		*obj;
@@ -55,41 +55,47 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			if (obj->get_bump_mapping)
 				normal_inter = obj->get_bump_mapping(photon.position, normal_inter, obj);
 
-			double	fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, obj->refraction, inside);
+			double	fresnel_ratio = compute_fresnel_ratio(dir, normal_inter, obj->refraction, 0);//inside);
 			double	absorb_prob = (1 - fresnel_ratio) * (1 - obj_color.val[3]);
 			double	refract_prob = (1 - fresnel_ratio) * obj_color.val[3];
 			double	reflect_prob = fresnel_ratio;
 			double	reflect_prob_spe = reflect_prob * SPEC_PROB;
-	//		double	reflect_prob_dif = reflect_prob * DIFF_PROB;
+			double	reflect_prob_dif = reflect_prob * DIFF_PROB;
 		//	double	reflect_prob = fresnel_ratio;
 
-	//		printf("refr abs %f refr %f refl sp %f refl diff %f => %f\n", absorb_prob, refract_prob, reflect_prob_spe, reflect_prob_dif, absorb_prob + refract_prob + reflect_prob_spe + reflect_prob_dif );
+			printf("refr abs %f refr %f refl sp %f refl diff %f => %f\n", absorb_prob, refract_prob, reflect_prob_spe, reflect_prob_dif, absorb_prob + refract_prob + reflect_prob_spe + reflect_prob_dif );
 			if (rr_f < absorb_prob) //absorb
 			{
 				if (depth == PHOTON_DEPTH)
 					return ;
-				photon.color.val[0] = light->color.val[0] / (double)NB_PHOTON;
-				photon.color.val[1] = light->color.val[1] / (double)NB_PHOTON;
-				photon.color.val[2] = light->color.val[2] / (double)NB_PHOTON;
+				photon.color.val[0] = pwr.val[0] / (double)NB_PHOTON;
+				photon.color.val[1] = pwr.val[1] / (double)NB_PHOTON;
+				photon.color.val[2] = pwr.val[2] / (double)NB_PHOTON;
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 				photon_tab[*i] = photon;
 				printf("refract New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				*i += 1;
-
 				return ;
 			}
-			else if (rr_f < refract_prob + absorb_prob) //refract
+			else
 			{
-				dir = refract_ray(dir, normal_inter, obj->refraction, inside);
+				pwr.val[0] *= obj_color.val[0];
+				pwr.val[1] *= obj_color.val[1];
+				pwr.val[2] *= obj_color.val[2];
+			}
+			if (rr_f < refract_prob + absorb_prob) //refract
+			{
+				printf("salut refraction \n");
+				dir = refract_ray(dir, normal_inter, obj->refraction, 0);//inside);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1, pwr);
 				return ;
 			}
 			else if (rr_f < refract_prob + absorb_prob + reflect_prob_spe) // = reflect
 			{
 				dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1, pwr);
 				return ;
 			}
 			else // reflect diffuse
@@ -104,7 +110,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			// !! danger ^ ^ ^
 			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1, pwr);
 				return ;
 
 			}
@@ -113,7 +119,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 		else
 		{
 			t_3vecf	normal_inter = obj->get_normal_inter(photon.position, obj, 0);
-		//	t_4vecf	obj_color = obj->get_text_color(photon.position, normal_inter, obj);
+			t_4vecf	obj_color = obj->get_text_color(photon.position, normal_inter, obj);
 
 			if (dot_product_3vecf(normal_inter, dir) > 0)
 				normal_inter = assign_3vecf(-normal_inter.val[0], -normal_inter.val[1], -normal_inter.val[2]);
@@ -130,20 +136,27 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				if (depth == PHOTON_DEPTH)
 					return ;
 			//	photon.color = light->color;
-				photon.color.val[0] = light->color.val[0] / (double)NB_PHOTON;
-				photon.color.val[1] = light->color.val[1] / (double)NB_PHOTON;
-				photon.color.val[2] = light->color.val[2] / (double)NB_PHOTON;
+				photon.color.val[0] = pwr.val[0] / (double)NB_PHOTON;
+				photon.color.val[1] = pwr.val[1] / (double)NB_PHOTON;
+				photon.color.val[2] = pwr.val[2] / (double)NB_PHOTON;
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 				photon_tab[*i] = photon;
 				*i += 1;
 				printf("reflect New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				return ;
 			}
-			else if (rr_f < absorb_prob + reflect_prob_spe) // = reflect spe
+			else
+			{
+				pwr.val[0] *= obj_color.val[0];
+				pwr.val[1] *= obj_color.val[1];
+				pwr.val[2] *= obj_color.val[2];
+			}
+			if (rr_f < absorb_prob + reflect_prob_spe) // = reflect spe
 			{
 				dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter, pwr);
+
 				return ;
 			}
 			else //reflect diff
@@ -161,7 +174,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 
 			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1);
+				cast_photon(photon.position, dir, light, data, i, photon_tab, depth - 1, rand_iter + 1, pwr);
 				return ;
 			}
 		}
@@ -206,7 +219,7 @@ void		scatter_photon(t_photon photon_tab[NB_PHOTON], t_data *data)
 				normalize_3vecf(&dir);
 		//		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
 			}
-			cast_photon(orig, dir, light, data, &i, photon_tab, PHOTON_DEPTH, rand_iter++);
+			cast_photon(orig, dir, light, data, &i, photon_tab, PHOTON_DEPTH, rand_iter++, assign_3vecf(light->color.val[0] * 100, light->color.val[1] * 100, light->color.val[2] * 100));
 	//		i++;
 		}
 		light = light->next ? light->next : data->lights;
