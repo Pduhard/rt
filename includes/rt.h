@@ -22,14 +22,19 @@
 
 /* TMP MACRO  */
 
+# define INDIRECT_GI			1
+# define CAUSTIC_GI				0
 # define GLOBAL_ILLUMINATION	1
 # define GL_RADIUS				0.2
-# define NB_PHOTON				10000
-# define NN_PHOTON_MAX			50
+//# define NB_PHOTON				100000
+# define NN_CAUSTIC_PHOTON_MAX	50
+# define NN_INDIRECT_PHOTON_MAX	50
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-//# define NB_GLOBAL_PHOTON		10000
-//# define NB_CAUSTIC_PHOTON		100000
+# define NB_INDIRECT_PHOTON		10000
+# define NB_CAUSTIC_PHOTON		100000
+# define MAX_CAUSTIC_RADIUS		0.3
+# define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
 # define CEL_SHADING	0
 # define ANTI_AL		0
@@ -359,7 +364,8 @@ typedef struct	s_data
 	int			motion_blur;
 	int			stereoscopy;
 	t_3vecf		(*apply_color_filter)(t_3vecf);
-	t_kd_tree	*photon_map;
+	t_kd_tree	*indirect_map;
+	t_kd_tree	*caustic_map;
 	t_cube		bbox_photon;
 }				t_data;
 
@@ -544,9 +550,9 @@ t_3vecf	apply_color_filter_sepia(t_3vecf color);
 int		ft_strncmp_case(const char *s1, const char *s2, size_t n);
 void	add_object(t_obj *obj, t_data *data);
 
-t_kd_tree	*create_photon_map(t_data *data);
+int			create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
-t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_data *data);
+t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, double max_radius, int nn_photon);
 
 int     syn_error(char *s1, char *s2, char*s3, char *s4, char *s5);
 int     error(char *s1);

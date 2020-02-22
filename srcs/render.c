@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/21 19:48:22 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/22 16:55:27 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -347,16 +347,27 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		lights = lights->next;
 	}
 	
-	if (GLOBAL_ILLUMINATION)
+	if (CAUSTIC_GI)
 	{
 		t_3vecf	global;
 
-//		return (compute_global_illumination(inter_point, normal_inter, data));
-		global = compute_global_illumination(inter_point, normal_inter, data);
+	//	return (compute_global_illumination(inter_point, normal_inter, data));
+		global = compute_global_illumination(inter_point, normal_inter, data->caustic_map, MAX_CAUSTIC_RADIUS, NN_CAUSTIC_PHOTON_MAX);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];
 	}
+	if (INDIRECT_GI)
+	{
+		t_3vecf	global;
+
+	//	return (compute_global_illumination(inter_point, normal_inter, data));
+		global = compute_global_illumination(inter_point, normal_inter, data->indirect_map, MAX_INDIRECT_RADIUS, NN_INDIRECT_PHOTON_MAX);
+		light_fact.val[0] += global.val[0];
+		light_fact.val[1] += global.val[1];
+		light_fact.val[2] += global.val[2];
+	}
+
 	if (CEL_SHADING)
 	{
 		cel_shade(&(light_fact.val[0]));
