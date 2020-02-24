@@ -22,23 +22,25 @@
 
 /* TMP MACRO  */
 
-# define INDIRECT_GI			1
+# define INDIRECT_GI			0
 # define CAUSTIC_GI				0
-# define GLOBAL_ILLUMINATION	1
+# define GLOBAL_ILLUMINATION	0
 # define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX	50
-# define NN_INDIRECT_PHOTON_MAX	50
+# define NN_CAUSTIC_PHOTON_MAX	500
+# define NN_INDIRECT_PHOTON_MAX	500
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		10000
-# define NB_CAUSTIC_PHOTON		100000
+# define NB_INDIRECT_PHOTON		100000
+# define NB_CAUSTIC_PHOTON		1000000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
 # define CEL_SHADING	0
 # define ANTI_AL		0
 
+# define FOG				0
+# define FOG_DIST			10.0
 /*ALTERABLE MACRO	*/
 
 # define PERLIN_TRANSP_ADD 1
