@@ -101,6 +101,12 @@
 # define IMG "\t<IMAGE (path)>\n"
 # define OFFSCALE "\t<offset (x, y)>\n\t<scale (x, y)>\n"
 # define TEXTPROC "\t<name_text\n\t\t<color(r, g, b, a)> (*1-3)\n\t>\n"
+# define CUTTEXTURE "Cutting texture don't need parameter\n"
+# define SYNCUT "<cutting\n"
+# define SPHERECUT "\t<sphere\n\t\t...\n\t>\t\n"
+# define CUBECUT "\t<cube\n\t\t<x_range (a, b)>\n\t\t<y_range (a, b)>\n"
+# define ZRANGE "\t\t<z_range (a,b)>\n\t>\n"
+# define STATICCUT "\t<static\n\t\t<origin(x,y,z)>\n\t\t<normal(x,y,z)>\n\t>\n"
 
 /* Error Mess */
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
@@ -119,6 +125,7 @@
 # define ALREADYCAM "File error : Camera already exist\n"
 # define ALREADYOBJ "Object already declared\n"
 # define ALREADYTEXTURE "Texture already exist for this object\n"
+# define ALREADYCUT "Cut parameter already exist\n"
 # define SERROR "Syntax or Values error :\n"
 # define ERRORCAM "No camera in file .rt_conf\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
@@ -126,6 +133,9 @@
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
 # define SERRORPLANE "Syntax error: plane(origin)(normal)(color)\n"
 # define SERRORCONE "Syntax error: cone(center)(tip)(radius)(color)\n"
+# define BUMPINDE "<BumpMapping\n\t<independent (Type)(BumpFact)>\n"
+# define BUMPOWN "<BumpMapping\n\t<own (BumpFact)>\n"
+# define MOTION "<MotionBlur\n\t<dir (x, y, z)>\n\t<speed (SpeedFact)>\n\t"
 
 typedef	enum {
 	OBJ_SPHERE,

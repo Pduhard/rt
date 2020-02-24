@@ -136,12 +136,8 @@ int		parse_motion(char **line, t_obj *obj)
 			ret = parse_double2(line, 5, &motion->speed_fact);
 		else if (!(ft_strncmp_case(*line, "spf", 3)))
 			ret = parse_int(line, 3, &motion->spf);
-	/*	else if (**line != '<' && **line != '>') //ie end of element
-		{
-			printf("Parse_motion ==> %s\n", *line);
-			printf("Bad conf 2 Motion\n");
-			return (0);
-		}*/
+		else if (stripe == '<')
+			return (syn_error(SERROR, MOTION, "<spf (Value)>\n", NULL));
 	}
 	clamp_val((double *)&motion->spf, 0, 32);
 	push_front_motion(&obj->motions, motion);

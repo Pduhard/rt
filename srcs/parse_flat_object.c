@@ -45,7 +45,7 @@ int		parse_rect(char **line, t_obj *rect, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (rect->obj_param)
-		return (error(ALREADYOBJ));
+		return (error(ALREADYOBJ, NULL));
 	if (!(rect_param = ft_memalloc(sizeof(t_rect))))
 		return (0);
 	while (stripe != '>' && ret != 0)

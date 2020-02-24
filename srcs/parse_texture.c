@@ -67,8 +67,8 @@ int		parse_texture2(char **line, t_obj *obj) //
 				return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
 		}
 	}
-	if (ret == 0)
-		return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
+//	if (ret == 0)
+//		return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
 	return (ret);
 }
 
