@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/13 16:21:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/22 18:33:08 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 17:21:34 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -93,7 +93,7 @@ void	update_bbox(t_cube *bbox, int axis, double val, int min_max)// min == 0 max
 		bbox->z_range.val[min_max ? 1 : 0] = val;
 }
 
-void	get_nearest_neighbors(t_3vecf inter_point, t_kd_tree *kd_tree, t_photon **tab, double *closest, double *farest, int axis, int nn_photon)
+void	get_nearest_neighbors(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *kd_tree, t_photon **tab, double *closest, double *farest, int axis, int nn_photon)
 {
 	double	dist;
 	//t_cube	n_bbox;
@@ -107,6 +107,8 @@ void	get_nearest_neighbors(t_3vecf inter_point, t_kd_tree *kd_tree, t_photon **t
 
 //	if (dist < GL_RADIUS)
 //	{	
+	if (dot_product_3vecf(normal_inter, kd_tree->photon->direction) > 0)
+	{
 		if (dist < *closest)
 			*closest = dist;
 		if (dist < *farest)
@@ -114,27 +116,28 @@ void	get_nearest_neighbors(t_3vecf inter_point, t_kd_tree *kd_tree, t_photon **t
 			*farest = add_photon_to_nn(tab, kd_tree->photon, inter_point, dist, nn_photon);
 		//	printf("new farest %f\n", *farest);
 		}
+	}
 //	}
 //	printf("b\n");
 	//n_bbox = bbox;
 	if (inter_point.val[axis] < kd_tree->photon->position.val[axis])
 	{
 	//	update_bbox(&n_bbox, axis, kd_tree->photon->position.val[axis], 1);
-		get_nearest_neighbors(inter_point, kd_tree->left, tab, closest, farest, (axis + 1) % 3, nn_photon);
+		get_nearest_neighbors(inter_point, normal_inter, kd_tree->left, tab, closest, farest, (axis + 1) % 3, nn_photon);
 		//n_bbox = bbox;
 		//update_bbox(&n_bbox, axis, kd_tree->photon->position.val[axis], 0);
 		if (*farest >= fabs(kd_tree->photon->position.val[axis] - inter_point.val[axis]))
-			get_nearest_neighbors(inter_point, kd_tree->right, tab, closest, farest, (axis + 1) % 3, nn_photon);
+			get_nearest_neighbors(inter_point, normal_inter, kd_tree->right, tab, closest, farest, (axis + 1) % 3, nn_photon);
 	}
 	else
 	{
 	//	update_bbox(&n_bbox, axis, kd_tree->photon->position.val[axis], 0);
-		get_nearest_neighbors(inter_point, kd_tree->right, tab, closest, farest, (axis + 1) % 3, nn_photon);
+		get_nearest_neighbors(inter_point, normal_inter, kd_tree->right, tab, closest, farest, (axis + 1) % 3, nn_photon);
 	//	n_bbox = bbox;
 		//update_bbox(&n_bbox, axis, kd_tree->photon->position.val[axis], 1);
 		if (*farest >= fabs(kd_tree->photon->position.val[axis] - inter_point.val[axis]))
 		//if (*farest >= get_dist_from_bbox(inter_point, n_bbox))
-			get_nearest_neighbors(inter_point, kd_tree->left, tab, closest, farest, (axis + 1) % 3, nn_photon);
+			get_nearest_neighbors(inter_point, normal_inter, kd_tree->left, tab, closest, farest, (axis + 1) % 3, nn_photon);
 	}
 //	get_nearest_neighbors(inter_point, kd_tree->left, tab, closest, farest, (axis + 1) % 3, n_bbox);
 //	get_nearest_neighbors(inter_point, kd_tree->right, tab, closest, farest, (axis + 1) % 3, n_bbox);
@@ -153,7 +156,7 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, 
 	double	closest = MAX_VIEW;
 	double	farest = MAX_VIEW;
 //	printf("Saliutttt\n");
-	get_nearest_neighbors(inter_point, photon_map, nearest_n, &closest, &farest, 0, nn_photon);
+	get_nearest_neighbors(inter_point, normal_inter, photon_map, nearest_n, &closest, &farest, 0, nn_photon);
 	t_3vecf	light_fact;
 	light_fact = assign_3vecf(0, 0, 0);
 
@@ -182,28 +185,28 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, 
 		{
 			double	dist = get_length_3vecf(sub_3vecf(inter_point, nearest_n[i]->position));
 		//	printf("photon %d %f %f %f dist : %f\n", i, nearest_n[i]->position.val[0], nearest_n[i]->position.val[1], nearest_n[i]->position.val[2], get_length_3vecf(sub_3vecf(inter_point, nearest_n[i]->position)));
-			normalize_3vecf(&(nearest_n[i]->direction));
-			double	dp = dot_product_3vecf(normal_inter, nearest_n[i]->direction);
+		//	normalize_3vecf(&(nearest_n[i]->direction));
+		//	double	dp = dot_product_3vecf(normal_inter, nearest_n[i]->direction);
 			//printf("dp : %f, %f %f %f\n", dp, nearest_n[i]->color.val[0], nearest_n[i]->color.val[1], nearest_n[i]->color.val[2]);
 			//double	l_len = get_length_3vecf(nearest_n[i]->direction);
 
-			if (dp > 0)
-			{
+		//	if (dp > 0)
+		//	{
 				double	cone_f;
 				cone_f = 1 - dist / (k * f);
 	//			printf("conef %f farest %f closest %f\n", cone_f, f, closest);
 	//			if (cone_f > 0)
 	//			{
-					light_fact.val[0] += nearest_n[i]->color.val[0] * dp * cone_f;
-					light_fact.val[1] += nearest_n[i]->color.val[1] * dp * cone_f;
-					light_fact.val[2] += nearest_n[i]->color.val[2] * dp * cone_f;
+					light_fact.val[0] += nearest_n[i]->color.val[0] * cone_f;
+					light_fact.val[1] += nearest_n[i]->color.val[1] * cone_f;
+					light_fact.val[2] += nearest_n[i]->color.val[2] * cone_f;
 	//			}
 				/* circle filter ...
 				light_fact.val[0] += ((nearest_n[i]->color.val[0])) / (M_PI * f * f);// / (M_PI * farest * farest);
 				light_fact.val[1] += ((nearest_n[i]->color.val[1])) / (M_PI * f * f);// / (M_PI * farest * farest);
 				light_fact.val[2] += ((nearest_n[i]->color.val[2])) / (M_PI * f * f);// / (M_PI * farest * farest);
 				*/
-			}
+		//	}
 			//printf("salut %d\n", i);
 		}
 	//	printf("lfact : %f %f %f\n", light_fact.val[0], light_fact.val[1], light_fact.val[2]);

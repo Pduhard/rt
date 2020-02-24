@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/24 23:35:28 by aplat       ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/24 23:37:10 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -527,7 +527,15 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	//	return (lighted_color);
 	}
 */	
-
+	if (FOG)
+	{
+		double	fog_fact = exp(-1 * (closest_dist / FOG_DIST));
+		//double	fog_fact = (closest_dist / FOG_DIST);
+	//	printf("%f\n", closest_dist);
+		lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0] * fog_fact;
+		lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1] * fog_fact;
+		lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2] * fog_fact;
+	}
 	return (lighted_color);
 }
 

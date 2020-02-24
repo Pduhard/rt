@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/22 20:41:58 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 20:52:26 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -68,26 +68,26 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			{
 				if (depth == PHOTON_DEPTH)
 					return ;
-			//	photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-			//	photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-			//	photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-				photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
-				photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
-				photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+				photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+				photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+				photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+		//		photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+		//		photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+		//		photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
-		/*		if (photon_type == 1 && *ind_i != NB_INDIRECT_PHOTON)
+				if (photon_type == 1 && *ind_i != NB_INDIRECT_PHOTON)
 				{
-		*/			photon_tab[1][*ind_i] = photon;
+					photon_tab[1][*ind_i] = photon;
 					*ind_i += 1;
 					printf("indirect photon refract New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
-		/*		}
+				}
 				if (photon_type == 0 && *caus_i != NB_CAUSTIC_PHOTON)
 				{
-					photon_tab[1][*caus_i] = photon;
+					photon_tab[0][*caus_i] = photon;
 					*caus_i += 1;
 					printf("caustic photon refract New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				}
-		*/		return ;
+				return ;
 			}
 			else
 			{
@@ -144,33 +144,34 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			double	absorb_prob = obj->reflection ? 1 - obj->reflection : 0.4;
 			double	reflect_prob = obj->reflection ? obj->reflection : 0.6;
 			double	reflect_prob_spe = reflect_prob * SPEC_PROB;
-	//		double	reflect_prob_s = reflect_prob * SPEC_PROB;
+		//	double	reflect_prob_dif = reflect_prob * DIFF_PROB;
 	//		printf("refl abs %f refl %f\n", absorb_prob, reflect_prob);
+		//	printf("diff abs %f refl sp %f refl diff %f => %f\n", absorb_prob, reflect_prob_spe, reflect_prob_dif, absorb_prob + reflect_prob_spe + reflect_prob_dif);
 			if (rr_f < absorb_prob)
 			{
 				if (depth == PHOTON_DEPTH)
 					return ;
 			//	photon.color = light->color;
-		//		photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-		//		photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-		//		photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
-				photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
-				photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
-				photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+				photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+				photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+				photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_CAUSTIC_PHOTON);
+		//		photon.color.val[0] = pwr.val[0] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+		//		photon.color.val[1] = pwr.val[1] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
+		//		photon.color.val[2] = pwr.val[2] / (photon_type == 1 ? (double)NB_INDIRECT_PHOTON : (double)NB_INDIRECT_PHOTON);
 				photon.direction = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
-		//		if (photon_type == 1 && *ind_i != NB_INDIRECT_PHOTON)
-		//		{
+				if (photon_type == 1 && *ind_i != NB_INDIRECT_PHOTON)
+				{
 					photon_tab[1][*ind_i] = photon;
 					*ind_i += 1;
 					printf("indirect reflect New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
-		/*		}
+				}
 				if (photon_type == 0 && *caus_i != NB_CAUSTIC_PHOTON)
 				{
 					photon_tab[0][*caus_i] = photon;
 					*caus_i += 1;
 					printf("caustic reflect New photon %f %f %f after %d bounce\n", photon.position.val[0], photon.position.val[1], photon.position.val[2], PHOTON_DEPTH - depth);
 				}
-		*/		return ;
+				return ;
 			}
 			else
 			{
@@ -182,13 +183,13 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			{
 				dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
-				cast_photon(photon.position, dir, light, data, ind_i, caus_i, photon_tab, depth - 1, rand_iter + 1, pwr, obj->reflection == 1 ? photon_type : 0);
+				cast_photon(photon.position, dir, light, data, ind_i, caus_i, photon_tab, depth - 1, rand_iter + 1, pwr, obj->reflection == 1 ? photon_type : 1);
 				return ;
 			}
 			else //reflect diff
 			{
 				//	dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
-				
+		//		printf("point %f %f %f from %f %f %f ", photon.position.val[0], photon.position.val[1], photon.position.val[2], dir.val[0], dir.val[1], dir.val[2]);
 				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 				while (dot_product_3vecf(dir, normal_inter) < 0)
 				{
@@ -200,6 +201,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 
 			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
 				normalize_3vecf(&dir);
+			//	printf("to %f %f %f ", dir.val[0], dir.val[1], dir.val[2]);
 				cast_photon(photon.position, dir, light, data, ind_i, caus_i, photon_tab, depth - 1, rand_iter + 1, pwr, 1);
 				return ;
 			}
@@ -246,6 +248,13 @@ void		scatter_photon(t_photon **photon_tab, t_data *data)
 				dir = assign_3vecf(get_random_number(rand_iter * 0xcacacaca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0xfeabcdef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x1056ffe << ((rand_iter + 8) % 24)) - 0.5);
 				normalize_3vecf(&dir);
 		//		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
+			}
+			if (light->light_type == LIGHT_DIRECTIONAL)
+			{
+				dir = light->param;
+				orig = assign_3vecf((get_random_number(rand_iter * 0xcacacaca << ((rand_iter + 23) % 23)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0xfeabcdef << ((rand_iter + 5) % 16)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0x1056ffe << ((rand_iter + 8) % 24)) - 0.5) * MAX_VIEW);	
+				normalize_3vecf(&dir);
+
 			}
 			cast_photon(orig, dir, light, data, &ind_i, &caus_i, photon_tab, PHOTON_DEPTH, rand_iter++, assign_3vecf(light->color.val[0] * 100, light->color.val[1] * 100, light->color.val[2] * 100), 0);
 	//		i++;

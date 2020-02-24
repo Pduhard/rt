@@ -17,10 +17,10 @@
                 <color (0.12, 0.34, 0.78)>
             >
             <BumpMapping
-                <own (0.5)>
+                <own (0.03)>
             >
             <offset(0, 0)>
-			<scale(3, 6)>
+			<scale(2, 6)>
         >
     >
     <objects
@@ -71,10 +71,10 @@
                 <color (0.12, 0.34, 0.78)>
             >
             <BumpMapping
-                <own (0.5)>
+                <own (0.03)>
             >
             <offset(0, 0)>
-			<scale(3, 6)>
+			<scale(1, 6)>
         >
     >
     <objects
@@ -89,21 +89,18 @@
                 <color (0, 1, 0, 0)>
             >
             <BumpMapping
-                <own (0.5)>
+                <independent(PERLIN) (0.03)>
             >
             <offset(0, 0)>
-			<scale(3, 6)>
+			<scale(2, 2)>
         >
+		<reflection (0.3)>
     >
     <lights
         <directional (0, 0.5, 1)>
-        <color (1, 1, 1)>
+        <color (0.8, 0.8, 0.8)>
     >
     <lights
-        <diRectional (0.2, 0.5, 1)>
-        <color (1, 1, 1)>
-    >
-    <lights
-        <ambIent (1, 1, 1)>
+        <ambIent (0.2, 0.2, 0.2)>
     >
 >
