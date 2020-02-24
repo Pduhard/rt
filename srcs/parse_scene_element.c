@@ -95,6 +95,8 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_sphere(line, obj, data);
 		else if (!ft_strncmp_case(*line, "plane", 5))
 			ret = parse_plane(line, obj, data);
+		else if (!ft_strncmp_case(*line, "rect", 4))
+			ret = parse_rect(line, obj, data);
 		else if (!ft_strncmp_case(*line, "cylinder", 8))
 			ret = parse_cylinder(line, obj, data);
 		else if (!ft_strncmp_case(*line, "moebius", 7))

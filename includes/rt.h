@@ -1,6 +1,7 @@
 #ifndef RT_H
 # define RT_H
 
+
 # include "../libft/libft.h"
 # include "../external_libs/minilibx_macos/mlx.h"
 # include "../external_libs/sdl/SDL.h"
@@ -21,8 +22,19 @@
 
 /* TMP MACRO  */
 
+# define INDIRECT_GI			1
+# define CAUSTIC_GI				0
 # define GLOBAL_ILLUMINATION	1
-# define NB_PHOTON				10000
+# define GL_RADIUS				0.2
+//# define NB_PHOTON				100000
+# define NN_CAUSTIC_PHOTON_MAX	50
+# define NN_INDIRECT_PHOTON_MAX	50
+# define SPEC_PROB				0.35
+# define DIFF_PROB				0.65
+# define NB_INDIRECT_PHOTON		10000
+# define NB_CAUSTIC_PHOTON		100000
+# define MAX_CAUSTIC_RADIUS		0.3
+# define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
 # define CEL_SHADING	0
 # define ANTI_AL		0
@@ -122,7 +134,8 @@ typedef	enum {
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
 	OBJ_CUT_TEXTURE,
-	OBJ_CUBE
+	OBJ_CUBE,
+	OBJ_RECT
 }	t_obj_type;
 
 typedef	enum {
@@ -224,6 +237,14 @@ typedef struct	s_cube
 	t_2vecf		z_range;
 }				t_cube;
 
+typedef struct	s_rect
+{
+	t_3vecf		x_axis;
+	t_3vecf		y_axis;
+	t_3vecf		z_axis;
+	t_3vecf		origin;
+}				t_rect;
+
 typedef struct	s_cone
 {
 	t_3vecf		center;
@@ -309,8 +330,8 @@ typedef struct	s_obj
 typedef struct	s_light
 {
 	t_light_type	light_type;
-	t_3vecf		color;
-	t_3vecf		param;
+	t_3vecf			color;
+	t_3vecf			param;
 	struct s_light	*next;
 }				t_light;
 
@@ -329,10 +350,9 @@ typedef	struct	s_photon
 
 typedef	struct	s_kd_tree
 {
-	struct s_kdtree	*left;
-	struct s_kdtree	*right;
+	struct s_kd_tree	*left;
+	struct s_kd_tree	*right;
 	t_photon		*photon;
-	t_3vecf			cut_normal;
 }				t_kd_tree;
 
 typedef struct	s_data
@@ -353,7 +373,9 @@ typedef struct	s_data
 	int			motion_blur;
 	int			stereoscopy;
 	t_3vecf		(*apply_color_filter)(t_3vecf);
-	t_kd_tree	*photon_map;
+	t_kd_tree	*indirect_map;
+	t_kd_tree	*caustic_map;
+	t_cube		bbox_photon;
 }				t_data;
 
 typedef struct	s_thread
@@ -408,6 +430,10 @@ double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
 
+t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
+t_3vecf	reflect_ray(t_3vecf dir, t_3vecf normal_inter);
+double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
+
 double	linear_interpolate(double a, double b, double val);
 
 int		is_null(double value);
@@ -445,6 +471,7 @@ int		parse_origin(char **line, t_3vecf *t, int i);
 int		parse_cone(char **line, t_obj *cone, t_data *data);
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data);
 int		parse_plane(char **line, t_obj *plane, t_data *data);
+int		parse_rect(char **line, t_obj *rect, t_data *data);
 int		parse_sphere(char **line, t_obj *sphere, t_data *data);
 int		parse_moebius(char **line, t_obj *moebius, t_data *data);
 
@@ -458,6 +485,13 @@ t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id);
 t_3vecf	get_origin_cone(t_obj *cone);
 void	move_cone(t_obj *cone, t_3vecf, double);
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
+
+int		ray_intersect_rect(t_3vecf orig, t_3vecf dir, t_obj *rect, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_rect(t_3vecf point, t_obj *rect);
+t_3vecf	get_normal_intersect_rect(t_3vecf inter_point, t_obj *rect, int sp_id);
+t_3vecf	get_origin_rect(t_obj *rect);
+void	move_rect(t_obj *rect, t_3vecf, double);
+t_2vecf	get_text_coordinate_rect(t_3vecf inter_point, t_3vecf normal_inter, t_obj *rect);
 
 int 	ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist, int sp_id);
 int		check_inside_cylinder(t_3vecf point, t_obj *cylinder);
@@ -525,9 +559,10 @@ t_3vecf	apply_color_filter_sepia(t_3vecf color);
 int		ft_strncmp_case(const char *s1, const char *s2, size_t n);
 void	add_object(t_obj *obj, t_data *data);
 
-t_kd_tree	*create_photon_map(t_data *data);
+int			create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
+
 
 #endif

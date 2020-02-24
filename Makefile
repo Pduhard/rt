@@ -1,15 +1,15 @@
 # **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: aplat <aplt@student.le-101.fr>             +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/11/13 00:29:26 by pduhard-          #+#    #+#              #
-#    Updated: 2020/02/20 18:05:43 by aplat            ###   ########lyon.fr    #
-#                                                                              #
+#                                                           LE - /             #
+#                                                               /              #
+#    Makefile                                         .::    .:/ .      .::    #
+#                                                  +:+:+   +:    +:  +:+:+     #
+#    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
+#                                                  #+#   #+    #+    #+#       #
+#    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
+#    Updated: 2020/02/24 18:52:03 by aplat       ###    #+. /#+    ###.fr      #
+#                                                          /                   #
+#                                                         /                    #
 # **************************************************************************** #
-
 
 #__________CONFIG__________#
 
@@ -51,6 +51,7 @@ SRC			=	main.c					\
 				sphere.c				\
 				plane.c					\
 				cone.c					\
+				cube.c					\
 				moebius.c				\
 				loop.c					\
 				key_hook.c				\
@@ -59,6 +60,7 @@ SRC			=	main.c					\
 				motion.c				\
 				color_filter.c			\
 				photon_map.c			\
+				global_illumination.c	\
 				random.c				\
 
 BIN			=	$(SRC:.c=.o)

@@ -36,6 +36,49 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	return (ret);
 }
 
+int		parse_rect(char **line, t_obj *rect, t_data *data)
+{
+	char		stripe;
+	int			ret;
+	t_rect	*rect_param;
+
+	stripe = 0;
+	ret = 1;
+	if (rect->obj_param)
+		return (error(ALREADYOBJ));
+	if (!(rect_param = ft_memalloc(sizeof(t_rect))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp_case(*line, "x_axis", 6))
+			ret = parse_origin(line, &rect_param->x_axis, 6);
+		else if (!ft_strncmp_case(*line, "y_axis", 6))
+			ret = parse_origin(line, &rect_param->y_axis, 6);
+		else if (!ft_strncmp_case(*line, "z_axis", 6))
+			ret = parse_origin(line, &rect_param->z_axis, 6);
+		else if (!ft_strncmp_case(*line, "origin", 6))
+			ret = parse_origin(line, &rect_param->origin, 6);
+	/*	else if (!ft_strncmp_case(*line, "tip", 3))
+			ret = parse_origin(line, &rect_param->tip, 3);
+		else if (!ft_strncmp_case(*line, "radius", 6))
+			ret = parse_double2(line, 6, &rect_param->radius);
+	*/
+	}
+//	if ((ft_fabs(rect_param->radius) == 0.f || is_null_3vecf(sub_3vecf(rect_param->center, rect_param->tip))) || ret == 0)
+//		return (syn_error(SERROR, rect, ORIGIN, TIP, RADIUS));
+	rect->obj_param = rect_param;
+	rect->obj_type = OBJ_RECT;
+	rect->check_inside = &check_inside_rect;
+	rect->ray_intersect = &ray_intersect_rect;
+	rect->get_normal_inter = &get_normal_intersect_rect;
+	rect->get_origin = &get_origin_rect;
+	rect->move = &move_rect;
+	rect->get_text_coordinate = &get_text_coordinate_rect;
+	add_object(rect, data);
+	return (ret);
+}
+
 int		parse_plane(char **line, t_obj *plane, t_data *data)
 {
 	char	stripe;

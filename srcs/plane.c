@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 05:26:21 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/20 18:03:29 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -104,10 +104,7 @@ int	ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, d
 	plane_origin = sp_id ? move_3vecf(plane_param->origin, plane->motions, sp_id) : plane_param->origin;
 	div = dot_product_3vecf(dir, plane_param->normal);
 	if (div == 0)//> -0.00000001 && div < 0.00000001)
-	{
 		return (0);
-		//		return (1);
-	}
 	inter_dist = dot_product_3vecf(sub_3vecf(plane_origin, orig), plane_param->normal) / div;
 	if (inter_dist < *dist && inter_dist > min_dist && inter_dist < max_dist)
 	{
