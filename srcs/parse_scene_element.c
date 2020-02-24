@@ -11,20 +11,20 @@ int		parse_scene_name(char **line, t_data *data)
 	while (ft_isspace(s[i]))
 		++i;
 	if (s[i] != '(')
-		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
+		return (error(SERROR, NAME));
 	if (data->scene_name)
 		ft_strdel(&data->scene_name);
 	start = ++i;
 	while (s[i] && (s[i] != ')' && s[i] != '>'))
 		++i;
 	if (s[i] != ')')
-		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
+		return (error(SERROR, NAME));
 	data->scene_name = ft_strsub(s, start, i - start);
 	++i;
 	while (ft_isspace(s[i]))
 		++i;
 	if (goto_next_element(line) != '>')
-		return (syn_error(SERROR, NAME, NULL, NULL, NULL));
+		return (error(SERROR, NAME));
 	return (1);
 }
 
@@ -38,12 +38,12 @@ int		parse_size(char **line, t_data *data)
 	while (ft_isspace(s[i]))
 		++i;
 	if (s[i] != '(' || (i = parse_2vecf(s, i, &data->size)) == -1)
-		return (syn_error(SERROR, SIZE, NULL, NULL, NULL));
+		return (error(SERROR, SIZE));
 	++i;
 	while (ft_isspace(s[i]))
 		++i;
 	if (goto_next_element(line) != '>')
-		return (syn_error(SERROR, SIZE, NULL, NULL, NULL));
+		return (error(SERROR, SIZE));
 	return (1);
 }
 
@@ -56,7 +56,7 @@ int		parse_camera(char **line, t_data *data)
 	stripe = 0;
 	ret = 1;
 	if (data->camera)
-		return (error(ALREADYCAM));
+		return (error(ALREADYCAM, NULL));
 	if (!(cam = ft_memalloc(sizeof(t_cam))))
 		return (0);
 	stripe = goto_next_element(line);
@@ -71,7 +71,7 @@ int		parse_camera(char **line, t_data *data)
 	data->camera = cam;
 	if (!data->camera || ret == 0)
 	{
-		return (syn_error(SERROR, ORIGIN, NULL, NULL, NULL));
+		return (error(SERROR, ORIGIN));
 	}
 	return (ret);
 }
@@ -114,7 +114,7 @@ int		parse_objects(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "material", 8))
 			ret = parse_material(line, 8, obj);
 		else if (**line != '<')
-			return (error(UNKNOWOBJECT));
+			return (error(UNKNOWOBJECT, NULL));
 	}
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);

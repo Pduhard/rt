@@ -69,11 +69,11 @@
 /* Conf Mess */
 
 # define CAM "<camera\n"
-# define CYLINDER "<cylinder\n"
-# define SPHERE "<sphere\n"
-# define PLANE "<plane\n"
-# define CONE "<cone\n"
-# define MOEBIUS "<moebius\n"
+# define CYLINDER "<cylinder\n\t<origin (x, y, z)>\n"
+# define SPHERE "<sphere\n\t<origin (x, y, z)>\n"
+# define PLANE "<plane\n\t<origin (x, y, z)>\n"
+# define CONE "<cone\n\t<origin (x, y, z)>\n"
+# define MOEBIUS "<moebius\n\t<origin (x, y, z)>\n"
 # define ORIGIN "\t<origin (x, y, z)>\n"
 # define CENTER "\t<center (x, y, z)>\n"
 # define ROTATION "\t<rotation (x, y)\n>"
@@ -84,6 +84,11 @@
 # define NORMAL "\t<normal (x, y ,z)>\n"
 # define XAXIS "\t<xaxis (x, y, z)>\n"
 # define HALFWIDTH "\t<half_width (X)>\n"
+# define LSTCOLOR "SEPIA\n"
+# define TEXT "<texture\n"
+# define IMG "\t<IMAGE (path)>\n"
+# define OFFSCALE "\t<offset (x, y)>\n\t<scale (x, y)>\n"
+# define TEXTPROC "\t<name_text\n\t\t<color(r, g, b, a)> (*1-3)\n\t>\n"
 
 /* Error Mess */
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
@@ -93,13 +98,17 @@
 # define ERROREMPTY "File error : empty\n"
 # define ERRORSTRIPE "File error : stripe\n"
 # define ERRORSCENE "File error : rt_conf start by <scene...\n"
+# define ERRORON "ON OFF possible value: ON/1, OFF/0\n"
+# define ERRORCOLOR "Color filter possible value: "
+# define ERRORMATERIAL "Unknow material type\n"
 # define UNKNOWSCENE "Unrecognized Scene Element\n"
 # define UNKNOWOBJECT "Unrecognized Object Element\n"
+# define UNKNOWTEXT "Unrecognized Texture Element\n"
 # define ALREADYCAM "File error : Camera already exist\n"
 # define ALREADYOBJ "Object already declared\n"
+# define ALREADYTEXTURE "Texture already exist for this object\n"
 # define SERROR "Syntax or Values error :\n"
 # define ERRORCAM "No camera in file .rt_conf\n"
-# define SCAM "<camera\n\t<origin (x,y,z)>\n\t<rotation (x,y)>\n>\n"
 # define SERRORLIGHT "Syntax error: light(type)(origin)(intensity)\n"
 # define SERRORCYL "<cylinder\n\t<origin (x,y,z)>\n\t(tip)(radius)(color)\n"
 # define SERRORSPHERE "Syntax error: sphere(origin)(radius)(color)\n"
@@ -421,8 +430,8 @@ int		parse_camera(char **line, t_data *data);
 int		parse_objects(char **line, t_data *data);
 int		parse_lights(char **line, t_data *data);
 int		parse_color_transp(char **line, int i, t_4vecf *t);
-void	*parse_proc(char **line, t_text *text);
-void	*parse_img(char **line, t_text *text);
+void	*parse_proc(char **line/*, t_text *text*/);
+void	*parse_img(char **line/*, t_text *text*/);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
 int		parse_bump_mapping(char **line, t_obj *obj);//t_text *text);
 void	set_bump_own(t_obj *obj);//t_text *text);
@@ -518,7 +527,7 @@ void	add_object(t_obj *obj, t_data *data);
 
 t_kd_tree	*create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
-int     syn_error(char *s1, char *s2, char*s3, char *s4, char *s5);
-int     error(char *s1);
+int     syn_error(char *s1, char *s2, char*s3, char *s4);
+int     error(char *s1, char *s2);
 
 #endif
