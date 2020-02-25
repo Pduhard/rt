@@ -79,6 +79,7 @@
 # define SHIFT_KEY	0b100000000000
 
 # define ESC_KEY 0x0035
+# define K_H	 0x0004
 
 /* Conf Mess */
 
@@ -109,6 +110,10 @@
 # define CUBECUT "\t<cube\n\t\t<x_range (a, b)>\n\t\t<y_range (a, b)>\n"
 # define ZRANGE "\t\t<z_range (a,b)>\n\t>\n"
 # define STATICCUT "\t<static\n\t\t<origin(x,y,z)>\n\t\t<normal(x,y,z)>\n\t>\n"
+# define LIGHT "<lights\n"
+# define AMBIENT "\t<ambient (r, g, b)>\n"
+# define DIRECTIONAL "\t<directional (x, y, z)>\n\t<color (r, g, b)>\n"
+# define POINT "\t<point (x, y, z)>\n\t<color (r, g, b)>\n"
 
 /* Error Mess */
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
@@ -371,6 +376,7 @@ typedef struct	s_data
 {
 	double			f;
 	t_mlx		*mlx;
+	t_mlx		*info;
 	t_cam		*camera;
 	t_obj		*objs;
 	t_obj		*negative_objs;
@@ -441,6 +447,8 @@ double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
+
+t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, double max_radius, int nn_photon);
 
 t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
 t_3vecf	reflect_ray(t_3vecf dir, t_3vecf normal_inter);
@@ -576,5 +584,7 @@ double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 
+int	check_lights(t_data *data);
+void	open_info(t_data *data);
 
 #endif

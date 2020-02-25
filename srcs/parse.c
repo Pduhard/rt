@@ -1,5 +1,20 @@
 #include "rt.h"
 
+void	check_line(char **line)
+{
+	int	i;
+	char *s;
+
+	i = 0;
+	s = *line;
+	while (s[i])
+	{
+		if (!(ft_strncmp(&s[i], "//", 2)))
+			*line = ft_strsub(*line, 0, i);
+		i++;
+	}
+}
+
 int		parse_rt_conf(char *file_name, t_data *data)
 {
 	int		fd;
@@ -13,7 +28,10 @@ int		parse_rt_conf(char *file_name, t_data *data)
 		return (error(ERRORARG, NULL));
 	result = NULL;
 	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		check_line(&line);
 		result = ft_strfjoin(result, line);
+	}
 	if (ret == -1 || result == '\0' || brackets_rt(result) == 0)
 	{
 		free(result);
@@ -96,6 +114,7 @@ int		parse_scene(char **line, t_data *data)
 			return (ret);
 		stripe = goto_next_element(line);
 	}
+	check_lights(data);
 	if (!data->camera)
 		return (error(ERRORCAM, NULL));
 	return (ret);

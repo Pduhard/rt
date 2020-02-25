@@ -1,5 +1,29 @@
 #include "rt.h"
 
+int	check_lights(t_data *data)
+{
+	t_light *light;
+	t_light *tmp;
+
+	tmp = data->lights;
+	while (tmp && tmp->light_type != LIGHT_AMBIENT)
+		tmp = tmp->next;
+	if (!tmp)
+	{
+		if (!(light = malloc(sizeof(t_light))))
+			return (0);
+		light->light_type = LIGHT_AMBIENT;
+		light->color = assign_3vecf(0.2, 0.2, 0.2);
+		light->next = NULL;
+		if (data->lights)
+			light->next = data->lights;
+		else
+			light->next = NULL;
+		data->lights = light;
+	}
+	return (1);
+}
+
 int		parse_scene_name(char **line, t_data *data)
 {
 	int		i;

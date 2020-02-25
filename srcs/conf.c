@@ -54,11 +54,6 @@ int		parse_lights(char **line, t_data *data)
 
 	stripe = 0;
 	ret = 1;
-/*	if (light->param)
-	{
-		printf("\n Fais IECH Lights ==> %s\n", *line);
-		return (0);
-	}*/
 	if (!(light = malloc(sizeof(t_light))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -69,7 +64,7 @@ int		parse_lights(char **line, t_data *data)
 			light->light_type = LIGHT_AMBIENT;
 			ret = parse_origin(line, &light->color, 7);
 			if (**line == '<')
-				return (return_update("Syntax error light ambient\n", 0, 2));
+				return (syn_error(SERROR, LIGHT, AMBIENT, NULL));
 		}
 		else if (!(ft_strncmp_case(*line, "directional", 11)))
 		{
@@ -79,7 +74,7 @@ int		parse_lights(char **line, t_data *data)
 			if (!(ft_strncmp_case(*line, "color", 5)))
 				ret = parse_origin(line, &light->color, 5);
 			else
-				return (return_update("Syntax error light directionnal\n", 0, 2));
+				return (syn_error(SERROR, LIGHT, DIRECTIONAL, NULL));
 		}
 		else if (!(ft_strncmp_case(*line, "point", 5)))
 		{
@@ -89,7 +84,7 @@ int		parse_lights(char **line, t_data *data)
 			if (!(ft_strncmp_case(*line, "color", 5)))
 				ret = parse_origin(line, &light->color, 5);
 			else
-				return (return_update("Syntax error light point\n", 0, 2));
+				return (syn_error(SERROR, LIGHT, POINT, NULL));
 		}
 	}
 	if (data->lights)
