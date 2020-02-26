@@ -1,22 +1,9 @@
-# **************************************************************************** #
-#                                                           LE - /             #
-#                                                               /              #
-#    Makefile                                         .::    .:/ .      .::    #
-#                                                  +:+:+   +:    +:  +:+:+     #
-#    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
-#                                                  #+#   #+    #+    #+#       #
-#    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/26 01:34:00 by pduhard-         ###   ########lyon.fr    #
-#                                                          /                   #
-#                                                         /                    #
-# **************************************************************************** #
-
 #__________CONFIG__________#
 
 NAME		=	rt
 
 CC			=	gcc
-FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
+FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math #-fsanitize=address
 FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
@@ -43,6 +30,7 @@ SRC			=	main.c					\
 				parse_flat_object.c		\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
+				parse_texture.c			\
 				error.c					\
 				texture.c				\
 				bump_mapping.c			\

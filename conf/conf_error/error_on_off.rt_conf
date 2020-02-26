@@ -1,8 +1,8 @@
 <scene
     <    name  (test)     >
     <size (600, 600)>
-	<MotionBlur	(ON)>
-    <camera//dfdsfdsfd
+	<MotionBlur	(O)>
+    <camera
         <origin (1, 0, -5)   >
         <rotation (0, 0)  >
     >
@@ -40,12 +40,12 @@
             <origin (0, 0.5, 0)>
             <radius (1)>
         >
-//        <cutting
-  //          <static
-    //            <origin (0, 0, 0)>
-      //          <normal (0, 1, 0)>
-        //    >
-       // >
+        <cutting
+            <static
+                <origin (0, 0, 0)>
+                <normal (0, 1, 0)>
+            >
+        >
         <cutting
             <static
                 <origin (0, 0, 0)>

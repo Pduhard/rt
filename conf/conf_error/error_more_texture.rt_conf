@@ -1,0 +1,171 @@
+<scene
+	<name(texture transparency)>
+	<size(600, 600)>
+	<camera
+		<origin (0, -2, 7)>
+		<rotation (0, 0)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.8, 0.8, 0.8, 0)(0)>
+			>
+			<offset(0, 0)>
+			<scale(2, 2)>
+		>
+		<plane
+			<origin(0, 0, 3)>
+			<normal(0, -1, 0)>
+		>
+	>
+	<objects
+		<texture
+			<GRID
+				<color(1, 0, 0, 1)(0)>
+				<color(0.2, 0.8, 0.3, 0.2)(0)>
+			>
+			<offset(0, 0)>
+			<scale(4, 8)>
+		>
+		<sphere
+			<origin(0, -1.1, 13)>
+			<radius(1)>
+		>
+	>
+	<objects
+		<texture
+			<WOOD
+				<color(0.545, 0.27, 0.075, 0)(0)>
+				<color(0.627, 0.322, 0.177, 1)(0)>
+			>
+			<offset(0, 0)>
+			<scale(1, 8)>
+			<BumpMapping<own(0.03)>>
+		>
+		<sphere
+			<origin(5, -1.1, 10)>
+			<radius(1)>
+		>
+	>
+	<objects
+		<texture
+			<MARBLE
+				<color(0.545, 0.545, 0.545, 0.6)(0)>
+				<color(0.745, 0.345, 0.545, 0.2)(0)>
+			>
+			<offset(0, 0)>
+			<scale(1, 8)>
+			<BumpMapping<own(0.03)>>
+		>
+		<sphere
+			<origin(0, -1.1, 5)>
+			<radius(1)>
+		>
+	>
+	<objects
+		<texture
+			<MARBLE
+				<color(0.545, 0.0, 0.0, 0.5)(0)>
+				<color(0.745, 0.345, 0.545, 1)(0)>
+			>
+			<offset(0, 0)>
+			<scale(0.5, 8)>
+			<BumpMapping<own(0.03)>>
+		>
+		<moebius
+			<origin(0.5, -4, 5)>
+			<radius(3)>
+			<half_width(0.5>
+		>
+	>
+	<objects
+		<texture
+			<PERLIN
+				<color(0, 0.545, 0.8, 0.8)(0)>
+			>
+			<offset(0, 0)>
+			<scale(6, 8)>
+			<BumpMapping<own(0.03)>>
+		>
+		<sphere
+			<origin(-5, -1.1, 10)>
+			<radius(1)>
+		>
+	>
+	<objects
+		<texture
+			<IMAGE(img/fire_3.png)
+			>
+			<offset(0, 0)>
+			<scale(1, 4)>
+		>
+		<sphere
+			<origin(-5, -1, 10)>
+			<radius(2)>
+		>
+	>
+	<objects
+		<texture
+			<IMAGE(img/fire_flame2.png)
+			>
+			<offset(0, 0)>
+			<scale(1, 1)>
+		>
+		<sphere
+			<origin(-4, -1.1, 14)>
+			<radius(1.01)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.52, 0.1, 0.1, 0.6)>
+			>
+			<offset(0, 0)>
+			<scale(1, 1)>
+		>
+		<sphere
+			<origin(-4, -1.1, 14)>
+			<radius(0.99)>
+		>
+	>
+	<objects
+		<texture
+			<IMAGE(img/vitral.png)>
+			<offset(0, 0)>
+			<scale(0.5, 0.5)>
+		>
+		<plane
+			<origin (1, -3.7, 14)>
+			<normal (-0.5, 0, -0.5)>
+			<xaxis (0.5, 0, -0.5)>
+		>
+		<cutting<texture>>
+	>	
+	<objects
+		<texture
+			<IMAGE(img/fire_2.png)
+			>
+			<offset(0, 0.6)>
+			<scale(1, 2)>
+		>
+        <texture
+            <offset(0, 0)>
+			<scale(2, 1)>
+			<UNI
+				<color(0.8, 0.8, 0.8, 0)(0)>
+			>
+		>
+		<sphere
+			<origin(5, -1, 10)>
+			<radius(2)>
+		>
+	>
+	<lights
+		<point (0, -3.5, 9)>
+		<color (1, 1, 1)>
+	>
+	<lights
+		<ambient (0.3, 0.3, 0.3)>
+	>
+>

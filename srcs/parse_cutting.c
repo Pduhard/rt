@@ -7,12 +7,12 @@ int		parse_cut_texture(char **line, t_obj *cut)
 
 	cut->obj_type = OBJ_CUT_TEXTURE;
 	if (cut->obj_param)
-		return (return_update("Always cut parameter\n", 0, 2));
+		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_plane))))
 		return (0);
 	stripe = goto_next_element(line);
 	if (stripe != '>')
-		return (return_update("Cutting texture don't need parameter\n", 0, 2));
+		return (error(CUTTEXTURE, NULL));
 	cut->obj_param = param;
 	return (1);
 }
@@ -27,10 +27,7 @@ int		parse_cut_sphere(char **line, t_obj *cut)
 	ret = 1;
 	cut->obj_type = OBJ_SPHERE;
 	if (cut->obj_param)
-	{
-		printf("Deja parametre\n");
-		return (0);
-	}
+		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_sphere))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -39,13 +36,12 @@ int		parse_cut_sphere(char **line, t_obj *cut)
 		if (!(ft_strncmp_case(*line, "origin", 6)))
 			ret = parse_origin(line, &param->origin, 6);
 		else if (!(ft_strncmp_case(*line, "radius", 6)))
-			ret = parse_double2(line, 6, &param->radius);
-		printf("CUTTING ==> %s\n", *line);
+			ret = parse_double2(line, 6, &param->radius);	
+		else if (stripe == '<' || ret == 0)
+			return (syn_error(SERROR, SYNCUT, SPHERECUT, ""));
 	}
 	cut->obj_param = param;
-//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
 	return (ret);
-
 }
 
 int		parse_cut_cube(char **line, t_obj *cut)
@@ -58,10 +54,7 @@ int		parse_cut_cube(char **line, t_obj *cut)
 	ret = 1;
 	cut->obj_type = OBJ_CUBE;
 	if (cut->obj_param)
-	{
-		printf("Deja parametre\n");
-		return (0);
-	}
+		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_cube))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -73,12 +66,11 @@ int		parse_cut_cube(char **line, t_obj *cut)
 			ret = parse_rotation(line, &param->y_range, 7);
 		else if (!(ft_strncmp_case(*line, "z_range", 7)))
 			ret = parse_rotation(line, &param->z_range, 7);
-		printf("CUTTING ==> %s\n", *line);
+		else if (stripe == '<' || ret == 0)
+			return (syn_error(SERROR, SYNCUT, CUBECUT, ZRANGE));
 	}
 	cut->obj_param = param;
-//	printf ("Parse Cutting\nOrigin ==> %f %f %f\n", param->origin.val[0], param->origin.val[1], param->origin.val[2]);
 	return (ret);
-
 }
 
 int		parse_cutting(char **line, t_obj *obj)
@@ -104,14 +96,8 @@ int		parse_cutting(char **line, t_obj *obj)
 			ret = parse_cut_sphere(line, cut);
 		else if (!(ft_strncmp_case(*line, "cube", 4)))
 			ret = parse_cut_cube(line, cut);
-	
-		/*		if (!(cut->cut_param))
-		{
-			ft_printf("Unrecognized element in Cutting: \n%s\n", *line);
-			return (0);
-		}*/
-		if (!(cut->obj_param))
-			return (return_update("Unrecognized element in Cutting\n", 0, 2));
+		else if (stripe == '<')
+			return (error("Unrecognized element in Cutting\n", NULL));
 	}
 	cut->ray_intersect = &ray_intersect_plane;
 	cut->get_normal_inter = &get_normal_intersect_plane;
@@ -143,7 +129,7 @@ int		parse_cut_static_real(char **line, t_obj *cut)
 	ret = 1;
 	cut->obj_type = OBJ_PLANE;
 	if (cut->obj_param)
-		return (return_update("Always cut parameter\n", 0, 2));
+		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_plane))))
 		return (0);
 	while (stripe != '>' && ret != 0)
@@ -153,7 +139,11 @@ int		parse_cut_static_real(char **line, t_obj *cut)
 			ret = parse_origin(line, &param->origin, 6);
 		else if (!(ft_strncmp_case(*line, "normal", 6)))
 			ret = parse_origin(line, &param->normal, 6);
+		else if (!(cut->obj_param) && stripe == '<')
+			return (syn_error(SERROR, SYNCUT, STATICCUT, ""));
 	}
 	cut->obj_param = param;
+	if (ret == 0)
+		return (syn_error(SERROR, SYNCUT, STATICCUT, ""));
 	return (ret);
 }

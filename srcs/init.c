@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/22 15:48:26 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/24 18:52:00 by aplat       ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,14 +40,14 @@ t_data	*init_data(char *file_name)
 	ft_bzero(data, sizeof(t_data));
 	if (NB_THREADS < 1 || NB_THREADS > 16)
 	{
-		error(ERRORTHREAD);
+		error(ERRORTHREAD, NULL);
 		return (NULL);
 	}
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
 	if (data->size.val[0] < 400 || data->size.val[0] > 2560 || data->size.val[1] < 400 || data->size.val[1] > 1420)
 	{
-		error(ERRORSIZE);
+		error(ERRORSIZE, NULL);
 		return (NULL);
 	}
 //	printf("%p %p %p\n", data->lights, data->objs, data->camera);

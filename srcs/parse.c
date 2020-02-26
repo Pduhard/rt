@@ -1,5 +1,20 @@
 #include "rt.h"
 
+void	check_line(char **line)
+{
+	int	i;
+	char *s;
+
+	i = 0;
+	s = *line;
+	while (s[i])
+	{
+		if (!(ft_strncmp(&s[i], "//", 2)))
+			*line = ft_strsub(*line, 0, i);
+		i++;
+	}
+}
+
 int		parse_rt_conf(char *file_name, t_data *data)
 {
 	int		fd;
@@ -10,18 +25,21 @@ int		parse_rt_conf(char *file_name, t_data *data)
 
 	line = NULL;
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-		return (error(ERRORARG));
+		return (error(ERRORARG, NULL));
 	result = NULL;
 	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		check_line(&line);
 		result = ft_strfjoin(result, line);
+	}
 	if (ret == -1 || result == '\0' || brackets_rt(result) == 0)
 	{
 		free(result);
-		return (error(ERRORFILE));
+		return (error(ERRORFILE, NULL));
 	}
 	result_cpy = result;
 	if (!parse(&result, data))
-		return (error(ERRORFILE));
+		return (error(ERRORFILE, NULL));
 	return (1);
 }
 
@@ -35,7 +53,7 @@ int		brackets_rt(char *line)
 	while (line[i] != '<' && line[i] != '\0')
 		i++;
 	if (line[i] == '\0' && i == 0)
-		return (error(ERROREMPTY));
+		return (error(ERROREMPTY, NULL));
 	cmp++;
 	i++;
 	while (cmp > 0 && line[i] != '\0')
@@ -47,7 +65,7 @@ int		brackets_rt(char *line)
 		i++;
 	}
 	if ((cmp == 0 && line[i] != '\0') || cmp != 0)
-		return (error(ERRORSTRIPE));
+		return (error(ERRORSTRIPE, NULL));
 	return (1);
 }
 
@@ -59,7 +77,7 @@ int		parse(char **line, t_data *data)
 	if (!(ft_strncmp_case(*line, "scene", 5)))
 		return (parse_scene(line, data));
 	else
-		return (error(ERRORSCENE));
+		return (error(ERRORSCENE, NULL));
 	return (0);
 }
 
@@ -91,12 +109,13 @@ int		parse_scene(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 			ret = parse_color_filter(line, data);
 		else
-			return (error(UNKNOWSCENE));
+			return (error(UNKNOWSCENE, NULL));
 		if (ret == 0)
 			return (ret);
 		stripe = goto_next_element(line);
 	}
+	check_lights(data);
 	if (!data->camera)
-		return (error(ERRORCAM));
+		return (error(ERRORCAM, NULL));
 	return (ret);
 }

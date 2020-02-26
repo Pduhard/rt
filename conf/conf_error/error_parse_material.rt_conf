@@ -1,0 +1,166 @@
+<scene
+    <    name  (test)     >
+    <size (800, 800)>
+    <camera
+        <origin (0, -2, -10)   >
+        <rotation (0, 0)  >
+    >
+    <objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (negaive)>
+        <cone
+            <origin (8, 0, 0)>
+            <tip (0, 0, 0)>
+            <radius (2)>
+        >
+        <shininess (0)>
+    >
+	<objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (diffuse)>
+        <cylinder
+            <origin (8, 0, 0)>
+            <tip (0, 0, 0)>
+            <radius (0.75)>
+        >
+    >	
+	<objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (negative)>
+        <plane
+            <origin (0, 0, 0)>
+            <normal (1, 0, 0)>
+        >
+    >	
+    <objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+		<material (negative)>
+        <sphere
+            <origin (2, -1, 0)>
+            <radius (1)>
+        >
+    >
+	<objects
+        <texture
+            <UNI
+                <color (0, 0.8, 0, 0)>
+                <color (1, 1, 1, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+        <sphere
+            <origin (4, 0, 0)>
+            <radius (1)>
+        >
+    >
+	<objects
+        <texture
+            <UNI
+                <color (0., 0., 0.8, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+        <plane
+            <origin (-4, 0, 0)>
+            <normal (0.01, 0, -1)>
+        >
+        <cutting
+            <sphere
+                <origin (0, 0, 0)>
+                <radius (2)>
+            >
+        >
+    >
+	<objects
+        <texture
+            <UNI
+                <color (0., 0., 0.8, 0)>
+
+            >
+            <offset (1, 0)>
+            <scale (0, 0)>
+        >
+        <plane
+            <origin (-4, 0, 0.5)>
+            <normal (0, 0, -1)>
+        >
+        <cutting
+            <cube
+                <x_range (-3, 1)>
+                <y_range (-3, 1)>
+                <z_range (-3, 1)>
+            >
+        >
+    >
+	<objects
+        <texture
+            <IMAGE(img/fire_flame2.png)>
+            <offset (0, 0)>
+            <scale (2, 4)>
+        >
+        <sphere
+            <origin (0, 0, 0)>
+            <radius (1)>
+        >
+		<cutting<texture>>
+    >
+	<objects
+        <texture
+            <IMAGE(img/tulipes.png)>
+            <offset (0, 0)>
+            <scale (0.5, 0.5)>
+        >
+        <plane
+            <origin (-4, 0, 0)>
+            <normal (0, 0, -1)>
+			<xaxis (1, 0, 0) >
+        >
+        <cutting
+            <texture
+            >
+        >
+    >
+    <lights
+        <point (0, -2, -5)>
+        <color (1, 1, 1)>
+    >
+    <lights
+        <ambient (0.2, 0.2, 0.2)>
+    >
+>
