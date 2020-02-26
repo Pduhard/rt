@@ -39,6 +39,7 @@ SRC			=	main.c					\
 				plane.c					\
 				cone.c					\
 				cube.c					\
+				triangle.c				\
 				moebius.c				\
 				loop.c					\
 				key_hook.c				\
@@ -46,6 +47,9 @@ SRC			=	main.c					\
 				ellipsoid.c				\
 				hyperboloid.c			\
 				horse_saddle.c			\
+				monkey_saddle.c			\
+				cyclide.c				\
+				fermat.c				\
 				polynomial.c			\
 				motion.c				\
 				color_filter.c			\

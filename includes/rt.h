@@ -31,7 +31,7 @@
 # define NN_INDIRECT_PHOTON_MAX	50
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		100000
+# define NB_INDIRECT_PHOTON		10000
 # define NB_CAUSTIC_PHOTON		100000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
@@ -152,10 +152,14 @@ typedef	enum {
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
 	OBJ_CUT_TEXTURE,
+	OBJ_TRIANGLE,
 	OBJ_CUBE,
 	OBJ_ELLIPSOID,
 	OBJ_HYPERBOLOID,
 	OBJ_HORSE_SADDLE,
+	OBJ_MONKEY_SADDLE,
+	OBJ_CYCLIDE,
+	OBJ_FERMAT,
 	OBJ_RECT
 }	t_obj_type;
 
@@ -261,6 +265,22 @@ typedef struct	s_horse_saddle
 	t_3vecf		origin;
 }				t_horse_saddle;
 
+typedef struct	s_monkey_saddle
+{
+	t_3vecf		origin;
+}				t_monkey_saddle;
+
+typedef struct	s_cyclide
+{
+	t_3vecf		origin;
+	double		param;
+}				t_cyclide;
+
+typedef struct	s_fermat
+{
+	t_3vecf		origin;
+}				t_fermat;
+
 typedef struct	s_moebius
 {
 	t_3vecf		origin;
@@ -281,6 +301,13 @@ typedef struct	s_cube
 	t_2vecf		y_range;
 	t_2vecf		z_range;
 }				t_cube;
+
+typedef struct	s_triangle
+{
+	t_3vecf		a;
+	t_3vecf		b;
+	t_3vecf		c;
+}				t_triangle;
 
 typedef struct	s_rect
 {
@@ -521,10 +548,14 @@ int		parse_cone(char **line, t_obj *cone, t_data *data);
 int		parse_cylinder(char **line, t_obj *cylinder, t_data *data);
 int		parse_plane(char **line, t_obj *plane, t_data *data);
 int		parse_rect(char **line, t_obj *rect, t_data *data);
+int		parse_triangle(char **line, t_obj *triangle, t_data *data);
 int		parse_sphere(char **line, t_obj *sphere, t_data *data);
 int		parse_ellipsoid(char **line, t_obj *ellipsoid, t_data *data);
 int		parse_hyperboloid(char **line, t_obj *hyperboloid, t_data *data);
 int		parse_horse_saddle(char **line, t_obj *horse_saddle, t_data *data);
+int		parse_monkey_saddle(char **line, t_obj *monkey_saddle, t_data *data);
+int		parse_cyclide(char **line, t_obj *cyclide, t_data *data);
+int		parse_fermat(char **line, t_obj *fermat, t_data *data);
 int		parse_moebius(char **line, t_obj *moebius, t_data *data);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
@@ -559,6 +590,20 @@ t_3vecf	get_origin_sphere(t_obj *);
 void	move_sphere(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere);
 
+int		ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_fermat(t_3vecf point, t_obj *fermat);
+t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int);
+t_3vecf	get_origin_fermat(t_obj *);
+void	move_fermat(t_obj *, t_3vecf, double);
+t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_obj *fermat);
+
+int		ray_intersect_triangle(t_3vecf orig, t_3vecf dir, t_obj *triangle, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_triangle(t_3vecf point, t_obj *triangle);
+t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int);
+t_3vecf	get_origin_triangle(t_obj *);
+void	move_triangle(t_obj *, t_3vecf, double);
+t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *triangle);
+
 int		ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double *dist, double min_dist, double max_dist, int sp_id);
 int		check_inside_ellipsoid(t_3vecf point, t_obj *ellipsoid);
 t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, int);
@@ -579,6 +624,20 @@ t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_sadd
 t_3vecf	get_origin_horse_saddle(t_obj *);
 void	move_horse_saddle(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_horse_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *horse_saddle);
+
+int		ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle);
+t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_saddle, int);
+t_3vecf	get_origin_monkey_saddle(t_obj *);
+void	move_monkey_saddle(t_obj *, t_3vecf, double);
+t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *monkey_saddle);
+
+int		ray_intersect_cyclide(t_3vecf orig, t_3vecf dir, t_obj *cyclide, double *dist, double min_dist, double max_dist, int sp_id);
+int		check_inside_cyclide(t_3vecf point, t_obj *cyclide);
+t_3vecf	get_normal_intersect_cyclide(t_3vecf inter_point, t_obj *cyclide, int sp_id);
+t_3vecf	get_origin_cyclide(t_obj *cyclide);
+void	move_cyclide(t_obj *cyclide, t_3vecf, double);
+t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cyclide);
 
 int		ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist, int sp_id);
 int		check_inside_plane(t_3vecf point, t_obj *plane);

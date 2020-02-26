@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/13 16:21:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/24 17:21:34 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/26 06:26:47 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -147,7 +147,7 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, 
 {
 	t_photon	**nearest_n;
 
-	if (!(nearest_n = malloc(sizeof(t_photon *) * nn_photon)))
+	if (!photon_map || !(nearest_n = malloc(sizeof(t_photon *) * nn_photon)))
 		return (assign_3vecf(0, 0, 0));
 //	return (assign_3vecf(0, 0,0));
 	ft_bzero(nearest_n, sizeof(t_photon *) * nn_photon);
@@ -211,6 +211,7 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, 
 		}
 	//	printf("lfact : %f %f %f\n", light_fact.val[0], light_fact.val[1], light_fact.val[2]);
 	}
+	free(nearest_n);
 	if (light_fact.val[0] < 0 || light_fact.val[1] < 0 || light_fact.val[2] < 0)
 		return (assign_3vecf(0, 0, 0));
 	light_fact.val[0] /= M_PI * f * f * (1. - 2. / (3. * k));

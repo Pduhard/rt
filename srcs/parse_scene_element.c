@@ -131,6 +131,14 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_hyperboloid(line, obj, data);
 		else if (!ft_strncmp_case(*line, "horse_saddle", 12))
 			ret = parse_horse_saddle(line, obj, data);
+		else if (!ft_strncmp_case(*line, "monkey_saddle", 13))
+			ret = parse_monkey_saddle(line, obj, data);
+		else if (!ft_strncmp_case(*line, "cyclide", 7))
+			ret = parse_cyclide(line, obj, data);
+		else if (!ft_strncmp_case(*line, "fermat", 6))
+			ret = parse_fermat(line, obj, data);
+		else if (!ft_strncmp_case(*line, "triangle", 8))
+			ret = parse_triangle(line, obj, data);
 		else if (!ft_strncmp_case(*line, "texture", 7))
 			ret = parse_texture2(line, obj);
 		else if (!(ft_strncmp_case(*line, "cutting", 7)))

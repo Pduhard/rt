@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/24 20:52:26 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/26 06:29:12 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -262,7 +262,15 @@ void		scatter_photon(t_photon **photon_tab, t_data *data)
 		light = light->next ? light->next : data->lights;
 		if ((ind_i == NB_INDIRECT_PHOTON && !caus_i)
 			|| (caus_i == NB_CAUSTIC_PHOTON && ind_i == NB_INDIRECT_PHOTON))
+		{
+			if (!caus_i)
+			{
+				free(photon_tab[0]);
+				photon_tab[0] = NULL;
+				printf("NO CAUSTICSSS\n");
+			}
 			return ;
+		}
 	}
 //	printf("i %d\n ", i);
 	(void)photon_tab;
@@ -405,7 +413,7 @@ int		create_photon_map(t_data *data)
 	data->bbox_photon.x_range.val[1] = -MAX_VIEW;
 	data->bbox_photon.y_range.val[1] = -MAX_VIEW;
 	data->bbox_photon.z_range.val[1] = -MAX_VIEW;
-	data->caustic_map = build_kd_tree(photon_tab[0], 0, NB_CAUSTIC_PHOTON - 1, 0, &data->bbox_photon);
+	data->caustic_map = photon_tab[0] ? build_kd_tree(photon_tab[0], 0, NB_CAUSTIC_PHOTON - 1, 0, &data->bbox_photon) : NULL;
 	data->indirect_map = build_kd_tree(photon_tab[1], 0, NB_INDIRECT_PHOTON - 1, 0, &data->bbox_photon);
 	printf("Bounding box photon scene: \nx %f %f\n", data->bbox_photon.x_range.val[0], data->bbox_photon.x_range.val[1]);
 	printf("y %f %f\n", data->bbox_photon.y_range.val[0], data->bbox_photon.y_range.val[1]);
