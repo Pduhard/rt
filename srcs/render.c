@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   render.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/21 22:42:45 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/24 23:37:10 by aplat       ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
-/* ************************************************************************** */
-
 #include "rt.h"
 
 void	print_mat(double mat[4][4])
@@ -529,7 +516,16 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 */	
 	if (FOG)
 	{
-		double	fog_fact = exp(-1 * (closest_dist / FOG_DIST));
+		
+		double	fog_fact;
+
+		if (closest_dist < FOG_NEAR)
+			fog_fact = 1;
+		else if (closest_dist < FOG_FAR)
+			fog_fact = (FOG_FAR - closest_dist) / (FOG_FAR - FOG_NEAR);
+		else
+			fog_fact = 0;
+		//	exp(-1 * (closest_dist / FOG_DIST));
 		//double	fog_fact = (closest_dist / FOG_DIST);
 	//	printf("%f\n", closest_dist);
 		lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0] * fog_fact;

@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 02:20:57 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/01 00:53:30 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/26 05:37:30 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -194,7 +194,7 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 	//	printf("a == 0: Solve 2nd degree !! \n");
 	//	exit(0);
 	}
-	if (d == 0)
+	if (is_null(d))
 	{
 		t_2vecf	quadra_roots;
 
