@@ -1,15 +1,15 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   key_hook.c                                       .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 20:52:29 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/25 23:39:12 by aplat       ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_hook.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/30 20:52:29 by pduhard-          #+#    #+#             */
+/*   Updated: 2020/02/26 18:52:39 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
+
 
 #include "rt.h"
 /*
@@ -46,7 +46,6 @@ void	open_info(t_data *data)
 	{
 		if (!(data->info = malloc(sizeof(t_mlx))))
 			return ;
-//		data->info->mlx_ptr = mlx_init();
 		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr, 400, 500, "Informations");
 		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 150, 10, 0xFFFFFF, "Controls");
 		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 10, 60, 0xFFFFFF, "Cam Mode :");
