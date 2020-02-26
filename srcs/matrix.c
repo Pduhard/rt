@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 22:36:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/16 01:12:43 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/25 20:43:46 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,6 +30,70 @@ void	mult_vec_matrix(t_3vecf vect, t_44matf mat, t_3vecf *dst)
 	dst->val[2] = c / w;
 } 
 */
+
+t_44matf	mult_44matf_44matf(t_44matf a, t_44matf b)
+{
+	t_44matf	mult;
+	int		i = -1;
+	int		j;
+	while (++i < 4 && (j = -1))
+		while (++j < 4)
+			mult.val[i][j] = a.val[i][0] * b.val[0][i] + a.val[i][1] * b.val[1][i] + a.val[i][2] * b.val[2][i] + a.val[i][3] * b.val[3][i];
+//	mult.val[1] = vect.val[0] * mat.val[1][0] + vect.val[1] * mat.val[1][1] + vect.val[2] * mat.val[1][2];
+//	mult.val[2] = vect.val[0] * mat.val[2][0] + vect.val[1] * mat.val[2][1] + vect.val[2] * mat.val[2][2];
+	return (mult);
+}
+
+t_44matf	build_translation_matrix(t_3vecf point, t_3vecf	x_axis, t_3vecf y_axis, t_3vecf z_axis)
+{
+	t_44matf	trans_mat;
+	t_44matf	b_mat;
+
+	ft_bzero(&trans_mat, sizeof(t_44matf));
+	ft_bzero(&b_mat, sizeof(t_44matf));
+	trans_mat.val[0][0] = 1;
+	trans_mat.val[1][1] = 1;
+	trans_mat.val[2][2] = 1;
+	trans_mat.val[3][3] = 1;
+	trans_mat.val[3][0] = point.val[0];
+	trans_mat.val[3][1] = point.val[1];
+	trans_mat.val[3][2] = point.val[2];
+
+	b_mat.val[0][0] = x_axis.val[0];
+	b_mat.val[1][0] = x_axis.val[1];
+	b_mat.val[2][0] = x_axis.val[2];
+
+	b_mat.val[0][1] = y_axis.val[0];
+	b_mat.val[1][1] = y_axis.val[1];
+	b_mat.val[2][1] = y_axis.val[2];
+
+	b_mat.val[0][2] = z_axis.val[0];
+	b_mat.val[1][2] = z_axis.val[1];
+	b_mat.val[2][2] = z_axis.val[2];
+	b_mat.val[3][3] = 1;
+
+	trans_mat = mult_44matf_44matf(trans_mat, b_mat);
+
+	ft_bzero(&b_mat, sizeof(t_44matf));
+	b_mat.val[0][0] = get_length_3vecf(x_axis);
+	b_mat.val[1][1] = get_length_3vecf(y_axis);
+	b_mat.val[2][2] = get_length_3vecf(z_axis);
+	b_mat.val[3][3] = 1;
+
+	trans_mat = mult_44matf_44matf(trans_mat, b_mat);
+	int		i = -1;
+	int		j;
+	while (++i < 4 && (j = -1))
+	{
+		while (++j < 4)
+			printf("%f ", trans_mat.val[i][j]);
+		printf("\n");
+	}
+	return (trans_mat);
+}
+
+
+
 t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat)
 {
 	t_3vecf	mult;

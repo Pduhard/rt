@@ -6,7 +6,7 @@
 #    By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/11/13 00:29:26 by pduhard-     #+#   ##    ##    #+#        #
-#    Updated: 2020/02/20 19:56:28 by pduhard-         ###   ########lyon.fr    #
+#    Updated: 2020/02/26 01:34:00 by pduhard-         ###   ########lyon.fr    #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -55,6 +55,9 @@ SRC			=	main.c					\
 				loop.c					\
 				key_hook.c				\
 				cylinder.c				\
+				ellipsoid.c				\
+				hyperboloid.c			\
+				horse_saddle.c			\
 				polynomial.c			\
 				motion.c				\
 				color_filter.c			\

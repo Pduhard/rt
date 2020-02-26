@@ -149,6 +149,127 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 	return (ret);
 }
 
+int		parse_horse_saddle(char **line, t_obj *horse_saddle, t_data *data)
+{
+	char	stripe;
+	int		ret;
+	t_horse_saddle	*horse_saddle_param;
+
+	stripe = 0;
+	ret = 1;
+	if (horse_saddle->obj_param)
+		return (error(ALREADYOBJ));
+	if (!(horse_saddle_param = ft_memalloc(sizeof(t_horse_saddle))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp_case(*line, "origin", 6))
+			ret = parse_origin(line, &horse_saddle_param->origin, 6);
+		else if (!ft_strncmp_case(*line, "x_fact", 6))
+			ret = parse_double2(line, 6, &horse_saddle_param->x_fact);
+		else if (!ft_strncmp_case(*line, "y_fact", 6))
+			ret = parse_double2(line, 6, &horse_saddle_param->y_fact);
+	}
+//	if (ft_fabs(horse_saddle_param->radius) == 0.f)
+//		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
+//	horse_saddle_param->translat_mat = build_translation_matrix(horse_saddle_param->origin, horse_saddle_param->x_axis, horse_saddle_param->y_axis, horse_saddle_param->z_axis);
+	horse_saddle->obj_param = horse_saddle_param;
+	horse_saddle->obj_type = OBJ_HORSE_SADDLE;
+	horse_saddle->check_inside = &check_inside_horse_saddle;
+	horse_saddle->ray_intersect = &ray_intersect_horse_saddle;
+	horse_saddle->get_normal_inter = &get_normal_intersect_horse_saddle;
+	horse_saddle->get_origin = &get_origin_horse_saddle;
+	horse_saddle->move = &move_horse_saddle;
+	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;	
+	add_object(horse_saddle, data);
+	return (ret);
+}
+
+int		parse_ellipsoid(char **line, t_obj *ellipsoid, t_data *data)
+{
+	char	stripe;
+	int		ret;
+	t_ellipsoid	*ellipsoid_param;
+
+	stripe = 0;
+	ret = 1;
+	if (ellipsoid->obj_param)
+		return (error(ALREADYOBJ));
+	if (!(ellipsoid_param = ft_memalloc(sizeof(t_ellipsoid))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp_case(*line, "origin", 6))
+			ret = parse_origin(line, &ellipsoid_param->origin, 6);
+		else if (!ft_strncmp_case(*line, "x_axis", 6))
+			ret = parse_double2(line, 6, &ellipsoid_param->x_fact);
+		else if (!ft_strncmp_case(*line, "y_axis", 6))
+			ret = parse_double2(line, 6, &ellipsoid_param->y_fact);
+		else if (!ft_strncmp_case(*line, "z_axis", 6))
+			ret = parse_double2(line, 6, &ellipsoid_param->z_fact);
+	}
+//	if (ft_fabs(ellipsoid_param->radius) == 0.f)
+//		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
+//	ellipsoid_param->translat_mat = build_translation_matrix(ellipsoid_param->origin, ellipsoid_param->x_axis, ellipsoid_param->y_axis, ellipsoid_param->z_axis);
+	ellipsoid->obj_param = ellipsoid_param;
+	ellipsoid->obj_type = OBJ_ELLIPSOID;
+	ellipsoid->check_inside = &check_inside_ellipsoid;
+	ellipsoid->ray_intersect = &ray_intersect_ellipsoid;
+	ellipsoid->get_normal_inter = &get_normal_intersect_ellipsoid;
+	ellipsoid->get_origin = &get_origin_ellipsoid;
+	ellipsoid->move = &move_ellipsoid;
+	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;	
+	add_object(ellipsoid, data);
+	return (ret);
+}
+
+int		parse_hyperboloid(char **line, t_obj *hyperboloid, t_data *data)
+{
+	char	stripe;
+	int		ret;
+	t_hyperboloid	*hyperboloid_param;
+
+	stripe = 0;
+	ret = 1;
+	if (hyperboloid->obj_param)
+		return (error(ALREADYOBJ));
+	if (!(hyperboloid_param = ft_memalloc(sizeof(t_hyperboloid))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp_case(*line, "origin", 6))
+			ret = parse_origin(line, &hyperboloid_param->origin, 6);
+		else if (!ft_strncmp_case(*line, "x_axis", 6))
+			ret = parse_double2(line, 6, &hyperboloid_param->x_fact);
+		else if (!ft_strncmp_case(*line, "y_axis", 6))
+			ret = parse_double2(line, 6, &hyperboloid_param->y_fact);
+		else if (!ft_strncmp_case(*line, "z_axis", 6))
+			ret = parse_double2(line, 6, &hyperboloid_param->z_fact);
+		else if (!ft_strncmp_case(*line, "surface", 7))
+			ret = parse_int(line, 7, &hyperboloid_param->surface);
+	}
+//	if (ft_fabs(hyperboloid_param->radius) == 0.f)
+//		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
+//	hyperboloid_param->translat_mat = build_translation_matrix(hyperboloid_param->origin, hyperboloid_param->x_axis, hyperboloid_param->y_axis, hyperboloid_param->z_axis);
+	if (!hyperboloid_param->surface)
+		hyperboloid_param->surface = -1;
+	else
+		hyperboloid_param->surface = 1;
+	hyperboloid->obj_param = hyperboloid_param;
+	hyperboloid->obj_type = OBJ_HYPERBOLOID;
+	hyperboloid->check_inside = &check_inside_hyperboloid;
+	hyperboloid->ray_intersect = &ray_intersect_hyperboloid;
+	hyperboloid->get_normal_inter = &get_normal_intersect_hyperboloid;
+	hyperboloid->get_origin = &get_origin_hyperboloid;
+	hyperboloid->move = &move_hyperboloid;
+	hyperboloid->get_text_coordinate = &get_text_coordinate_hyperboloid;	
+	add_object(hyperboloid, data);
+	return (ret);
+}
+
 int		parse_cone(char **line, t_obj *cone, t_data *data)
 {
 	char	stripe;
