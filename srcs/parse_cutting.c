@@ -97,7 +97,7 @@ int		parse_cutting(char **line, t_obj *obj)
 		else if (!(ft_strncmp_case(*line, "cube", 4)))
 			ret = parse_cut_cube(line, cut);
 		else if (stripe == '<')
-			return (error("Unrecognized element in Cutting\n", NULL));
+			return (error(UNKNOWCUT, NULL));
 	}
 	cut->ray_intersect = &ray_intersect_plane;
 	cut->get_normal_inter = &get_normal_intersect_plane;

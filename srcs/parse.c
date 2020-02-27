@@ -2,8 +2,8 @@
 
 void	check_line(char **line)
 {
-	int	i;
-	char *s;
+	int		i;
+	char	*s;
 
 	i = 0;
 	s = *line;
@@ -81,6 +81,32 @@ int		parse(char **line, t_data *data)
 	return (0);
 }
 
+int		pick_options(char **line, t_data *data)
+{
+	int ret;
+
+	ret = 1;
+	if (!ft_strncmp_case(*line, "MotionBlur", 10))
+		ret = parse_onoff(line, &data->motion_blur);
+	else if (!ft_strncmp_case(*line, "Stereoscopy", 11))
+		ret = parse_onoff(line, &data->stereoscopy);
+	else if (!ft_strncmp_case(*line, "Anti-Alliasing", 14))
+		ret = parse_onoff(line, &data->anti_al);
+	else if (!ft_strncmp_case(*line, "Cel_Shading", 11))
+		ret = parse_onoff(line, &data->cel_shading);
+	else if (!ft_strncmp_case(*line, "Indirect_GI", 11))
+		ret = parse_onoff(line, &data->indirect_gi);
+	else if (!ft_strncmp_case(*line, "Caustics_GI", 11))
+		ret = parse_onoff(line, &data->caustics_gi);
+	else if (!ft_strncmp_case(*line, "Fog", 3))
+		ret = parse_rotation(line, &data->fog, 3);
+	else if (!ft_strncmp_case(*line, "ColorFilter", 11))
+		ret = parse_color_filter(line, data);
+	else if (**line != '<')
+		return (error(UNKNOWSCENE, NULL));
+	return (ret);
+}
+
 int		parse_scene(char **line, t_data *data)
 {
 	char	stripe;
@@ -88,10 +114,10 @@ int		parse_scene(char **line, t_data *data)
 
 	stripe = 0;
 	ret = 1;
-
-	stripe = goto_next_element(line);
+	stripe = 0;
 	while (stripe != '>' && ret != 0)
 	{
+		stripe = goto_next_element(line);
 		if (!ft_strncmp_case(*line, "name", 4))
 			ret = parse_scene_name(line, data);
 		else if (!ft_strncmp_case(*line, "size", 4))
@@ -99,20 +125,36 @@ int		parse_scene(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "camera", 6))
 			ret = parse_camera(line, data);
 		else if (!ft_strncmp_case(*line, "objects", 7))
+		{
+			printf("TEST\n");
 			ret = parse_objects(line, data);
+		}
 		else if (!ft_strncmp_case(*line, "lights", 6))
+		{
 			ret = parse_lights(line, data);
-		else if (!ft_strncmp_case(*line, "MotionBlur", 10))
+			printf("Sortie light ==> %s\n", *line);
+		}
+		else if (**line != '>' && !(ret = pick_options(line, data)))
+			return (0);
+		/*else if (!ft_strncmp_case(*line, "MotionBlur", 10))
 			ret = parse_onoff(line, &data->motion_blur);
 		else if (!ft_strncmp_case(*line, "Stereoscopy", 11))
 			ret = parse_onoff(line, &data->stereoscopy);
+		else if (!ft_strncmp_case(*line, "Anti-Alliasing", 14))
+			ret = parse_onoff(line, &data->anti_al);
+		else if (!ft_strncmp_case(*line, "Cel_Shading", 11))
+			ret = parse_onoff(line, &data->cel_shading);
+		else if (!ft_strncmp_case(*line, "Indirect_GI", 11))
+			ret = parse_onoff(line, &data->indirect_gi);
+		else if (!ft_strncmp_case(*line, "Caustics_GI", 11))
+			ret = parse_onoff(line, &data->caustics_gi);
+		else if (!ft_strncmp_case(*line, "Fog", 3))
+			ret = parse_rotation(line, &data->fog, 3);
 		else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 			ret = parse_color_filter(line, data);
-		else
-			return (error(UNKNOWSCENE, NULL));
-		if (ret == 0)
-			return (ret);
-		stripe = goto_next_element(line);
+		else if (**line != '<')
+			return (error(UNKNOWSCENE, NULL));*/
+		printf("Fin Parse scene ==> %s\n", *line);
 	}
 	check_lights(data);
 	if (!data->camera)

@@ -24,6 +24,95 @@ int	check_lights(t_data *data)
 	return (1);
 }
 
+int		pick_spot(char **line, t_light *light)
+{
+	int ret;
+
+	ret = 1;
+	if (!(ft_strncmp_case(*line, "directional", 11)))
+	{
+		light->light_type = LIGHT_DIRECTIONAL;
+		ret = parse_origin(line, &light->param, 11);
+		goto_next_element(line);
+		if (!(ft_strncmp_case(*line, "color", 5)))
+			ret = parse_origin(line, &light->color, 5);
+		else
+			return (syn_error(SERROR, LIGHT, DIRECTIONAL, NULL));
+	}
+	else if (!(ft_strncmp_case(*line, "point", 5)))
+	{
+		light->light_type = LIGHT_POINT;
+		ret = parse_origin(line, &light->param, 5);
+		goto_next_element(line);
+		if (!(ft_strncmp_case(*line, "color", 5)))
+			ret = parse_origin(line, &light->color, 5);
+		else
+			return (syn_error(SERROR, LIGHT, POINT, NULL));
+	}
+	else
+		return (error(UNKNOWLIGHT, NULL));
+	return (ret);
+}
+
+int		parse_lights(char **line, t_data *data)
+{
+	char	stripe;
+	int		ret;
+	t_light	*light;
+
+	stripe = 0;
+	ret = 2;
+	if (!(light = malloc(sizeof(t_light))))
+		return (0);
+	while (stripe != '>' && ret != 0 && ret != 1)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp_case(*line, "ambient", 7)))
+		{
+			light->light_type = LIGHT_AMBIENT;
+			ret = parse_origin(line, &light->color, 7);
+			if (**line == '<')
+				return (syn_error(SERROR, LIGHT, AMBIENT, NULL));
+		}
+		else
+		{	
+			ret = pick_spot(line, light);
+			if (ret == 0)
+				return (0);
+		}
+		/*else if (!(ft_strncmp_case(*line, "directional", 11)))
+		{
+			light->light_type = LIGHT_DIRECTIONAL;
+			ret = parse_origin(line, &light->param, 11);
+			goto_next_element(line);
+			if (!(ft_strncmp_case(*line, "color", 5)))
+				ret = parse_origin(line, &light->color, 5);
+			else
+				return (syn_error(SERROR, LIGHT, DIRECTIONAL, NULL));
+		}
+		else if (!(ft_strncmp_case(*line, "point", 5)))
+		{
+			light->light_type = LIGHT_POINT;
+			ret = parse_origin(line, &light->param, 5);
+			goto_next_element(line);
+			if (!(ft_strncmp_case(*line, "color", 5)))
+				ret = parse_origin(line, &light->color, 5);
+			else
+				return (syn_error(SERROR, LIGHT, POINT, NULL));
+		}*/		
+	}
+	if (ret == 1)
+		goto_next_element(line);
+	if (data->lights)
+	{
+		light->next = data->lights;
+	}
+	else
+		light->next = NULL;
+	data->lights = light;
+	return (ret);
+}
+
 int		parse_scene_name(char **line, t_data *data)
 {
 	int		i;
@@ -90,12 +179,14 @@ int		parse_camera(char **line, t_data *data)
 			ret = parse_origin(line, &cam->origin, 6);
 		else if (!ft_strncmp_case(*line, "rotation", 8))
 			ret = parse_rotation(line, &cam->rotation, 8);
+		else if (stripe == '<')
+			return (syn_error(SERROR, CAM, ORIGIN, ROTATION));
 		stripe = goto_next_element(line);
 	}
 	data->camera = cam;
 	if (!data->camera || ret == 0)
 	{
-		return (error(SERROR, ORIGIN));
+		return (syn_error(SERROR, CAM, ORIGIN, ROTATION));
 	}
 	return (ret);
 }
@@ -119,8 +210,6 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_sphere(line, obj, data);
 		else if (!ft_strncmp_case(*line, "plane", 5))
 			ret = parse_plane(line, obj, data);
-		else if (!ft_strncmp_case(*line, "rect", 4))
-			ret = parse_rect(line, obj, data);
 		else if (!ft_strncmp_case(*line, "cylinder", 8))
 			ret = parse_cylinder(line, obj, data);
 		else if (!ft_strncmp_case(*line, "moebius", 7))

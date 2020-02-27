@@ -46,57 +46,6 @@ int		parse_color_filter(char **line, t_data *data)
 	//*onoff = 1;
 }
 
-int		parse_lights(char **line, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_light	*light;
-
-	stripe = 0;
-	ret = 1;
-	if (!(light = malloc(sizeof(t_light))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "ambient", 7)))
-		{
-			light->light_type = LIGHT_AMBIENT;
-			ret = parse_origin(line, &light->color, 7);
-			if (**line == '<')
-				return (syn_error(SERROR, LIGHT, AMBIENT, NULL));
-		}
-		else if (!(ft_strncmp_case(*line, "directional", 11)))
-		{
-			light->light_type = LIGHT_DIRECTIONAL;
-			ret = parse_origin(line, &light->param, 11);
-			goto_next_element(line);
-			if (!(ft_strncmp_case(*line, "color", 5)))
-				ret = parse_origin(line, &light->color, 5);
-			else
-				return (syn_error(SERROR, LIGHT, DIRECTIONAL, NULL));
-		}
-		else if (!(ft_strncmp_case(*line, "point", 5)))
-		{
-			light->light_type = LIGHT_POINT;
-			ret = parse_origin(line, &light->param, 5);
-			goto_next_element(line);
-			if (!(ft_strncmp_case(*line, "color", 5)))
-				ret = parse_origin(line, &light->color, 5);
-			else
-				return (syn_error(SERROR, LIGHT, POINT, NULL));
-		}
-	}
-	if (data->lights)
-	{
-		light->next = data->lights;
-	}
-	else
-		light->next = NULL;
-	data->lights = light;
-	return (ret);
-}
-
 void	push_front_motion(t_motion **root, t_motion *new)
 {
 	t_motion	*motion;
