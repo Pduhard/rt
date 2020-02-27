@@ -4,6 +4,7 @@
 //	<anti-alliasing (1)>
 //	<indirect_GI (on)>
 //	<Caustics_GI (on)>
+	<Fog (5, 50)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>

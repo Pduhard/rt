@@ -1,6 +1,7 @@
 <scene
 	<name(Bump mapping)	>
 	<size(800, 600)>
+	<Fog (5, 50)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>

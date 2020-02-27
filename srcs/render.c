@@ -385,13 +385,34 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 {
 	double	closest_dist;
 	t_obj	*closest_obj;
+	t_3vecf	lighted_color;
 
+	lighted_color = assign_3vecf(0, 0, 0);
 	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id, data);
 	if (!closest_obj)
-		return (assign_3vecf(0, 0, 0));
+	{
+		if (data->fog.val[0])
+		{
+		
+			double	fog_fact;
+
+			if (closest_dist < data->fog.val[0])
+				fog_fact = 1;
+			else if (closest_dist < data->fog.val[1])
+				fog_fact = (data->fog.val[1] - closest_dist) / (data->fog.val[1] - data->fog.val[0]);
+			else
+				fog_fact = 0;
+			//	exp(-1 * (closest_dist / FOG_DIST));
+			//double	fog_fact = (closest_dist / FOG_DIST);
+		//	printf("%f\n", closest_dist);
+			lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0] * fog_fact;
+			lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1] * fog_fact;
+			lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2] * fog_fact;
+		}
+		return (lighted_color);
+	}
 	t_3vecf		inter_point;
 	t_3vecf		normal_inter;
-	t_3vecf		lighted_color;
 	t_3vecf		inv_dir =  assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
 	t_3vecf		light_fact;
 	t_4vecf		obj_color;
