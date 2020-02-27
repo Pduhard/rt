@@ -22,26 +22,26 @@
 
 /* TMP MACRO  */
 
-# define INDIRECT_GI			0
-# define CAUSTIC_GI				0
-# define GLOBAL_ILLUMINATION	0
+//# define INDIRECT_GI			0
+//# define CAUSTIC_GI				0
+//# define GLOBAL_ILLUMINATION	0
 # define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX	100
-# define NN_INDIRECT_PHOTON_MAX	50
+# define NN_CAUSTIC_PHOTON_MAX	50
+# define NN_INDIRECT_PHOTON_MAX	20
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		10000
-# define NB_CAUSTIC_PHOTON		100000
+# define NB_INDIRECT_PHOTON		1000
+# define NB_CAUSTIC_PHOTON		10000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
-# define CEL_SHADING	0
-# define ANTI_AL		0
+//# define CEL_SHADING	0
+//# define ANTI_AL		0
 
-# define FOG				0
-# define FOG_NEAR			5.0
-# define FOG_FAR			20.0
+//# define FOG				0
+//# define FOG_NEAR			5.0
+//# define FOG_FAR			20.0
 /*ALTERABLE MACRO	*/
 
 # define PERLIN_TRANSP_ADD 1
@@ -89,16 +89,28 @@
 # define SPHERE "<sphere\n\t<origin (x, y, z)>\n"
 # define PLANE "<plane\n\t<origin (x, y, z)>\n"
 # define CONE "<cone\n\t<origin (x, y, z)>\n"
+# define TRIANGLE "<triangle\n\t<a (x, y, z)>\n"
+# define TRIBC "\t<b (x, y, z)>\n\t<c (x, y, z)>\n"
 # define MOEBIUS "<moebius\n\t<origin (x, y, z)>\n"
+# define HORSE "<horse_saddle\n\t<origin (x, y, z)>\n"
+# define MONKEY "<monkey_saddle\n"
+# define ELLIPSE "<ellipsoid\n\t<origin (x, y, z)>\n"
+# define HYPERBOL "<hyperboloid\n\t<origin (x, y, z)>\n"
+# define SURFACE "\t<surface (Value)> (optional)\n"
+# define CYCLIDE "<cyclide\n"
+# define FERMAT "<fermat\n"
+# define XYFACT "\t<x_fact (Value)>\n\t<y_fact (Value)>\n"
+# define PARAM "\t<param (Value)>\n"
 # define ORIGIN "\t<origin (x, y, z)>\n"
 # define CENTER "\t<center (x, y, z)>\n"
-# define ROTATION "\t<rotation (x, y)\n>"
+# define ROTATION "\t<rotation (x, y)>\n"
 # define TIP "\t<tip (x, y)>\n"
 # define RADIUS "\t<radius (X)>\n"
 # define NAME "<name(scene_name)>\n"
 # define SIZE "<size (WD,HH)>\n"
 # define NORMAL "\t<normal (x, y ,z)>\n"
 # define XAXIS "\t<xaxis (x, y, z)>\n"
+# define AXIS "\t<x_axis (x,y,z)>\n\t<y_axis (x,y,z)>\n\t<z_axis (x,y,z)>\n"
 # define HALFWIDTH "\t<half_width (X)>\n"
 # define LSTCOLOR "SEPIA\n"
 # define TEXT "<texture\n"
@@ -130,6 +142,7 @@
 # define UNKNOWSCENE "Unrecognized Scene Element\n"
 # define UNKNOWOBJECT "Unrecognized Object Element\n"
 # define UNKNOWTEXT "Unrecognized Texture Element\n"
+# define UNKNOWCUT "Unrecognized element in Cutting\n"
 # define ALREADYCAM "File error : Camera already exist\n"
 # define ALREADYOBJ "Object already declared\n"
 # define ALREADYTEXTURE "Texture already exist for this object\n"
@@ -443,8 +456,12 @@ typedef struct	s_data
 	Uint32		fps;
 	Uint32		delta_time;
 	int			anti_al;
+	int			cel_shading;
 	int			motion_blur;
 	int			stereoscopy;
+	int			indirect_gi;
+	int			caustics_gi;
+	t_2vecf		fog;
 	t_3vecf		(*apply_color_filter)(t_3vecf);
 	t_kd_tree	*indirect_map;
 	t_kd_tree	*caustic_map;

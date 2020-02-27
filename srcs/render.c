@@ -334,7 +334,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		lights = lights->next;
 	}
 	
-	if (CAUSTIC_GI)
+	if (data->caustics_gi)
 	{
 		t_3vecf	global;
 
@@ -344,7 +344,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];
 	}
-	if (INDIRECT_GI)
+	if (data->indirect_gi)
 	{
 		t_3vecf	global;
 
@@ -355,7 +355,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		light_fact.val[2] += global.val[2];
 	}
 
-	if (CEL_SHADING)
+	if (data->cel_shading)
 	{
 		cel_shade(&(light_fact.val[0]));
 		cel_shade(&(light_fact.val[1]));
@@ -413,7 +413,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];
-	if (CEL_SHADING && is_on_cell_boundary(orig, inter_point, normal_inter, closest_obj, sp_id))
+	if (data->cel_shading && is_on_cell_boundary(orig, inter_point, normal_inter, closest_obj, sp_id))
 	{
 		lighted_color.val[0] = 0;
 		lighted_color.val[1] = 0;
@@ -514,15 +514,15 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	//	return (lighted_color);
 	}
 */	
-	if (FOG)
+	if (data->fog.val[0])
 	{
 		
 		double	fog_fact;
 
-		if (closest_dist < FOG_NEAR)
+		if (closest_dist < data->fog.val[0])
 			fog_fact = 1;
-		else if (closest_dist < FOG_FAR)
-			fog_fact = (FOG_FAR - closest_dist) / (FOG_FAR - FOG_NEAR);
+		else if (closest_dist < data->fog.val[1])
+			fog_fact = (data->fog.val[1] - closest_dist) / (data->fog.val[1] - data->fog.val[0]);
 		else
 			fog_fact = 0;
 		//	exp(-1 * (closest_dist / FOG_DIST));
@@ -621,7 +621,7 @@ void	*render_thread(void *param)
 				color.val[2] = colors[0].val[2];
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
-			else if (!ANTI_AL)
+			else if (!data->anti_al)
 			{
 
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
@@ -632,19 +632,19 @@ void	*render_thread(void *param)
 					color = motion_trace(orig, dir, data);
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
-		/*	else
+			else
 			{
 				t_3vecf	clr;
 				int		anti_all_iter;
 				int		offset;
 
 				offset = 0;
-				anti_all_iter = ANTI_AL * ANTI_AL;
+				anti_all_iter = data->anti_al * data->anti_al;
 				color = assign_3vecf(0, 0, 0);
 				while (offset < anti_all_iter)
 				{
-					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * ANTI_AL + offset / ANTI_AL, j * ANTI_AL + offset % ANTI_AL, WIN_WIDTH * ANTI_AL, WIN_HEIGHT * ANTI_AL), data->rot_mat[1]), data->rot_mat[0]);
-					clr = ray_trace(orig, dir, 0.01, MAX_VIEW, data, 6);
+					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * data->anti_al + offset / data->anti_al, j * data->anti_al + offset % data->anti_al, WIN_WIDTH * data->anti_al, WIN_HEIGHT * data->anti_al), data->rot_mat[1]), data->rot_mat[0]);
+					clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6, 0);
 					color.val[0] += clr.val[0];
 					color.val[1] += clr.val[1];
 					color.val[2] += clr.val[2];
@@ -655,7 +655,7 @@ void	*render_thread(void *param)
 				color.val[2] /= (double)anti_all_iter;
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
-		*/	++j;
+			++j;
 		}
 		++i;
 	}

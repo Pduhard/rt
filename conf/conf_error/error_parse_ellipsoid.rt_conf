@@ -1,9 +1,6 @@
 <scene
 	<name(Bump mapping)	>
 	<size(800, 600)>
-//	<anti-alliasing (1)>
-//	<indirect_GI (on)>
-//	<Caustics_GI (on)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>
@@ -134,7 +131,7 @@
 			>
 		>
 		<ellipsoid
-			<origin(2, 1.49, 3)>
+			<oriin(2, 1.49, 3)>
 			<x_axis(1)>
 			<y_axis(1.5)>
 			<z_axis(3)>
@@ -142,10 +139,10 @@
 		<refraction (1.2)>
 	>
 	<lights
-		<ambient (0.2, 0.2, 0.2)>
-	>
-	<lights
 		<point (0, -2.6, 4.5)>
 		<color (0.8, 0.8, 0.8)>
+	>
+	<lights
+		<ambient (0.2, 0.2, 0.2)>
 	>
 >

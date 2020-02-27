@@ -1,15 +1,15 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   init.c                                           .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/21 22:19:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/24 18:52:00 by aplat       ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/21 22:19:28 by pduhard-          #+#    #+#             */
+/*   Updated: 2020/02/27 01:15:07 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
+
 
 #include "rt.h"
 
@@ -59,7 +59,7 @@ t_data	*init_data(char *file_name)
 		free(data);
 		return (NULL);	
 	}
-	if (GLOBAL_ILLUMINATION && !(create_photon_map(data)))
+	if ((data->caustics_gi || data->indirect_gi) && !(create_photon_map(data)))
 	{
 		//free all
 		return (NULL);
@@ -101,6 +101,6 @@ t_data	*init_data(char *file_name)
 	data->hooks = 0;
 	data->fps = 0;
 	data->delta_time = 0;
-	data->anti_al = 1;
+//	data->anti_al = 1;
 	return (data);
 }

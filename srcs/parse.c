@@ -106,6 +106,16 @@ int		parse_scene(char **line, t_data *data)
 			ret = parse_onoff(line, &data->motion_blur);
 		else if (!ft_strncmp_case(*line, "Stereoscopy", 11))
 			ret = parse_onoff(line, &data->stereoscopy);
+		else if (!ft_strncmp_case(*line, "Anti-Alliasing", 14))
+			ret = parse_onoff(line, &data->anti_al);
+		else if (!ft_strncmp_case(*line, "Cel_Shading", 11))
+			ret = parse_onoff(line, &data->cel_shading);
+		else if (!ft_strncmp_case(*line, "Indirect_GI", 11))
+			ret = parse_onoff(line, &data->indirect_gi);
+		else if (!ft_strncmp_case(*line, "Caustics_GI", 11))
+			ret = parse_onoff(line, &data->caustics_gi);
+		else if (!ft_strncmp_case(*line, "Fog", 3))
+			ret = parse_rotation(line, &data->fog, 3);
 		else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 			ret = parse_color_filter(line, data);
 		else

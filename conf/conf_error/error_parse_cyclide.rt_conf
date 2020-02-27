@@ -1,9 +1,6 @@
 <scene
 	<name(Bump mapping)	>
 	<size(800, 600)>
-//	<anti-alliasing (1)>
-//	<indirect_GI (on)>
-//	<Caustics_GI (on)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>
@@ -105,13 +102,10 @@
 				<color(1, 1, 1, 0)(0)>
 			>
 		>
-		<ellipsoid
+		<cyclide
 			<origin(-1.5, 1.3, 5)>
-			<x_axis(2)>
-			<y_axis(1)>
-			<z_axis(3)>
+			<param(2)>
 		>
-		<reflection (1)>
 	>
 	<objects
 		<texture
@@ -119,12 +113,9 @@
 				<color(1, 1, 1, 0)(0)>
 			>
 		>
-		<material (negative)>
-		<ellipsoid
-			<origin(1.5, 0, 4)>
-			<x_axis(2)>
-			<y_axis(1)>
-			<z_axis(2)>
+		<cyclide
+			<origin 1. 0, 4)>
+			<param(0)>
 		>
 	>
 	<objects
@@ -133,19 +124,17 @@
 				<color(0.9, 0.9, 0.9, 0.9)(0)>
 			>
 		>
-		<ellipsoid
-			<origin(2, 1.49, 3)>
-			<x_axis(1)>
-			<y_axis(1.5)>
-			<z_axis(3)>
+		<cyclide
+			<origin(2, 1.49, 2)>
+			<param(0.5)>
 		>
-		<refraction (1.2)>
-	>
-	<lights
-		<ambient (0.2, 0.2, 0.2)>
+		<refraction (1.3)>
 	>
 	<lights
 		<point (0, -2.6, 4.5)>
 		<color (0.8, 0.8, 0.8)>
+	>
+	<lights
+		<ambient (0.2, 0.2, 0.2)>
 	>
 >

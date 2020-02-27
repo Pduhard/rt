@@ -21,6 +21,8 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 			ret = parse_origin(line, &cylinder_param->tip, 3);
 		else if (!ft_strncmp_case(*line, "radius", 6))
 			ret = parse_double2(line, 6, &cylinder_param->radius);
+		else if (stripe == '<')
+			return (syn_error(SERROR, CYLINDER, TIP, RADIUS));
 	}
 	if ((ft_fabs(cylinder_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip))) || ret == 0)
 		return (syn_error(SERROR, CYLINDER, TIP, RADIUS));
@@ -33,49 +35,6 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	cylinder->move = &move_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
 	add_object(cylinder, data);
-	return (ret);
-}
-
-int		parse_rect(char **line, t_obj *rect, t_data *data)
-{
-	char		stripe;
-	int			ret;
-	t_rect	*rect_param;
-
-	stripe = 0;
-	ret = 1;
-	if (rect->obj_param)
-		return (error(ALREADYOBJ, NULL));
-	if (!(rect_param = ft_memalloc(sizeof(t_rect))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!ft_strncmp_case(*line, "x_axis", 6))
-			ret = parse_origin(line, &rect_param->x_axis, 6);
-		else if (!ft_strncmp_case(*line, "y_axis", 6))
-			ret = parse_origin(line, &rect_param->y_axis, 6);
-		else if (!ft_strncmp_case(*line, "z_axis", 6))
-			ret = parse_origin(line, &rect_param->z_axis, 6);
-		else if (!ft_strncmp_case(*line, "origin", 6))
-			ret = parse_origin(line, &rect_param->origin, 6);
-	/*	else if (!ft_strncmp_case(*line, "tip", 3))
-			ret = parse_origin(line, &rect_param->tip, 3);
-		else if (!ft_strncmp_case(*line, "radius", 6))
-			ret = parse_double2(line, 6, &rect_param->radius);
-	*/
-	}
-//	if ((ft_fabs(rect_param->radius) == 0.f || is_null_3vecf(sub_3vecf(rect_param->center, rect_param->tip))) || ret == 0)
-//		return (syn_error(SERROR, rect, ORIGIN, TIP, RADIUS));
-	rect->obj_param = rect_param;
-	rect->obj_type = OBJ_RECT;
-	rect->check_inside = &check_inside_rect;
-	rect->ray_intersect = &ray_intersect_rect;
-	rect->get_normal_inter = &get_normal_intersect_rect;
-	rect->get_origin = &get_origin_rect;
-	rect->move = &move_rect;
-	rect->get_text_coordinate = &get_text_coordinate_rect;
-	add_object(rect, data);
 	return (ret);
 }
 
@@ -100,6 +59,8 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 			ret = parse_origin(line, &plane_param->normal, 6);
 		else if (!ft_strncmp_case(*line, "xaxis", 5))
 			ret = parse_origin(line, &plane_param->x2d_axis, 5);
+		else if (stripe == '<')
+			return (syn_error(SERROR, PLANE, NORMAL, XAXIS));
 	}
 	if (is_null(plane_param->normal.val[0] * plane_param->normal.val[0] + plane_param->normal.val[1] * plane_param->normal.val[1] + plane_param->normal.val[2] * plane_param->normal.val[2]) || !is_null(dot_product_3vecf(plane_param->x2d_axis, plane_param->normal)) || ret == 0)
 		return (syn_error(SERROR, PLANE, NORMAL, XAXIS));
@@ -134,8 +95,10 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 			ret = parse_origin(line, &sphere_param->origin, 6);
 		else if (!ft_strncmp_case(*line, "radius", 6))
 			ret = parse_double2(line, 6, &sphere_param->radius);
+		else if (stripe == '<')
+			return (syn_error(SERROR, SPHERE, RADIUS, NULL));
 	}
-	if (ft_fabs(sphere_param->radius) == 0.f)
+	if (ft_fabs(sphere_param->radius) == 0.f || ret == 0)
 		return (syn_error(SERROR, SPHERE, RADIUS, NULL));
 	sphere->obj_param = sphere_param;
 	sphere->obj_type = OBJ_SPHERE;
@@ -170,7 +133,11 @@ int		parse_triangle(char **line, t_obj *triangle, t_data *data)
 			ret = parse_origin(line, &triangle_param->b, 1);
 		else if (!ft_strncmp_case(*line, "c", 1))
 			ret = parse_origin(line, &triangle_param->c, 1);
+		else if (stripe == '<')
+			return (syn_error(SERROR, TRIANGLE, TRIBC, NULL));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, TRIANGLE, TRIBC, NULL));
 	//if (ft_fabs(triangle_param->radius) == 0.f)
 	//	return (syn_error(SERROR, triangle, RADIUS, NULL));
 	triangle->obj_param = triangle_param;
@@ -206,6 +173,8 @@ int		parse_horse_saddle(char **line, t_obj *horse_saddle, t_data *data)
 			ret = parse_double2(line, 6, &horse_saddle_param->x_fact);
 		else if (!ft_strncmp_case(*line, "y_fact", 6))
 			ret = parse_double2(line, 6, &horse_saddle_param->y_fact);
+		else if (stripe == '<')
+			return (syn_error(SERROR, HORSE, XYFACT, NULL));
 	}
 //	if (ft_fabs(horse_saddle_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
@@ -239,7 +208,11 @@ int		parse_monkey_saddle(char **line, t_obj *monkey_saddle, t_data *data)
 		stripe = goto_next_element(line);
 		if (!ft_strncmp_case(*line, "origin", 6))
 			ret = parse_origin(line, &monkey_saddle_param->origin, 6);
+		else if (stripe == '<')
+			return (syn_error(SERROR, MONKEY, ORIGIN, NULL));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, MONKEY, ORIGIN, NULL));
 //	if (ft_fabs(monkey_saddle_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
 //	monkey_saddle_param->translat_mat = build_translation_matrix(monkey_saddle_param->origin, monkey_saddle_param->x_axis, monkey_saddle_param->y_axis, monkey_saddle_param->z_axis);
@@ -274,7 +247,11 @@ int		parse_cyclide(char **line, t_obj *cyclide, t_data *data)
 			ret = parse_origin(line, &cyclide_param->origin, 6);
 		else if (!ft_strncmp_case(*line, "param", 5))
 			ret = parse_double2(line, 5, &cyclide_param->param);
+		else if (stripe == '<')
+			return (syn_error(SERROR, CYCLIDE, ORIGIN, PARAM));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, CYCLIDE, ORIGIN, PARAM));
 //	if (ft_fabs(cyclide_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
 //	cyclide_param->translat_mat = build_translation_matrix(cyclide_param->origin, cyclide_param->x_axis, cyclide_param->y_axis, cyclide_param->z_axis);
@@ -307,7 +284,11 @@ int		parse_fermat(char **line, t_obj *fermat, t_data *data)
 		stripe = goto_next_element(line);
 		if (!ft_strncmp_case(*line, "origin", 6))
 			ret = parse_origin(line, &fermat_param->origin, 6);
+		else if (stripe == '<')
+			return (syn_error(SERROR, FERMAT, ORIGIN, NULL));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, FERMAT, ORIGIN, NULL));
 //	if (ft_fabs(fermat_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
 //	fermat_param->translat_mat = build_translation_matrix(fermat_param->origin, fermat_param->x_axis, fermat_param->y_axis, fermat_param->z_axis);
@@ -346,7 +327,11 @@ int		parse_ellipsoid(char **line, t_obj *ellipsoid, t_data *data)
 			ret = parse_double2(line, 6, &ellipsoid_param->y_fact);
 		else if (!ft_strncmp_case(*line, "z_axis", 6))
 			ret = parse_double2(line, 6, &ellipsoid_param->z_fact);
+		else if (stripe == '<')
+			return (syn_error(SERROR, ELLIPSE, AXIS, NULL));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, ELLIPSE, AXIS, NULL));
 //	if (ft_fabs(ellipsoid_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
 //	ellipsoid_param->translat_mat = build_translation_matrix(ellipsoid_param->origin, ellipsoid_param->x_axis, ellipsoid_param->y_axis, ellipsoid_param->z_axis);
@@ -387,7 +372,11 @@ int		parse_hyperboloid(char **line, t_obj *hyperboloid, t_data *data)
 			ret = parse_double2(line, 6, &hyperboloid_param->z_fact);
 		else if (!ft_strncmp_case(*line, "surface", 7))
 			ret = parse_int(line, 7, &hyperboloid_param->surface);
+		else if (stripe == '<')
+			return (syn_error(SERROR, HYPERBOL, AXIS, SURFACE));
 	}
+	if (ret == 0)
+		return (syn_error(SERROR, HYPERBOL, AXIS, SURFACE));
 //	if (ft_fabs(hyperboloid_param->radius) == 0.f)
 //		return (syn_error(SERROR, SPHERE, ORIGIN, RADIUS, NULL));
 //	hyperboloid_param->translat_mat = build_translation_matrix(hyperboloid_param->origin, hyperboloid_param->x_axis, hyperboloid_param->y_axis, hyperboloid_param->z_axis);
@@ -428,6 +417,8 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 			ret = parse_origin(line, &cone_param->tip, 3);
 		else if (!ft_strncmp_case(*line, "radius", 6))
 			ret = parse_double2(line, 6, &cone_param->radius);
+		else if (stripe == '<')
+			return (syn_error(SERROR, CONE, TIP, RADIUS));
 	}
 	if ((ft_fabs(cone_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cone_param->center, cone_param->tip))) || ret == 0)
 		return (syn_error(SERROR, CONE, TIP, RADIUS));
@@ -464,6 +455,8 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 			ret = parse_double2(line, 6, &moebius_param->radius);
 		else if (!ft_strncmp_case(*line, "half_width", 10))
 			ret = parse_double2(line, 10, &moebius_param->half_width);
+		else if (stripe == '<')
+			return (syn_error(SERROR, MOEBIUS, RADIUS, HALFWIDTH));
 	}
 	if ((moebius_param->radius <= 0.f || moebius_param->half_width <= 0.f) || ret == 0)
 		return (syn_error(SERROR, MOEBIUS, RADIUS, HALFWIDTH));
