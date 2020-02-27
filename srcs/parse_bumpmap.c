@@ -37,6 +37,11 @@ void	set_bump_own(t_obj *obj)//t_text *text)
 		obj->get_bump_mapping = &get_bump_mapping_marble;
 		obj->text.bump_type = BUMP_MARBLE;
 	}
+	else if (obj->text.text_type == TEXT_FBM)
+	{
+		obj->get_bump_mapping = &get_bump_mapping_fbm;
+		obj->text.bump_type = BUMP_FBM;
+	}
 	else if (obj->text.text_type == TEXT_WOOD)
 	{
 		obj->get_bump_mapping = &get_bump_mapping_wood;
@@ -84,32 +89,36 @@ void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
 	}
 
 	//	text->bump_type = BUMP_PERLIN;
-	if (!(ft_strncmp_case(s, "MARBLE", 6)))
+	else if (!(ft_strncmp_case(s, "MARBLE", 6)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_marble;
 		obj->text.bump_type = BUMP_MARBLE;
 	}
 
 	//	text->bump_type = BUMP_MARBLE;
-	if (!(ft_strncmp_case(s, "WOOD", 4)))
+	else if (!(ft_strncmp_case(s, "WOOD", 4)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
 
 //		text->bump_type = BUMP_WOOD;
-	if (!(ft_strncmp_case(s, "IMAGE", 5)))
+	else 	if (!(ft_strncmp_case(s, "IMAGE", 5)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_image;
 		obj->text.bump_type = BUMP_IMAGE;
 	}
 
 	//	text->bump_type = BUMP_IMAGE;
-	if (!(ft_strncmp_case(s, "SINUS", 5)))
+	else if (!(ft_strncmp_case(s, "SINUS", 5)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_sinus;
 		obj->text.bump_type = BUMP_SINUS;
 	}
-
+	else if (!(ft_strncmp_case(s, "FBM", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_fbm;
+		obj->text.bump_type = BUMP_FBM;
+	}
 	//	text->bump_type = BUMP_SINUS;
 }

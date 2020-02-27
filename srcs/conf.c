@@ -180,7 +180,8 @@ int		parse_4vecf(char *line, int i, t_4vecf *vec)
 	while (cpt < 4)
 	{
 		vec->val[cpt++] = ft_atold(&(line[i]));
-		while (line[i] && ((line[i] != ',' && cpt < 4) || (line[i] != ')' && cpt == 4)))
+		while (line[i] && line[i] != ')' && line[i] != ',' && line[i] != '>')
+		//while (line[i] && ((line[i] != ',' && cpt < 4) || (line[i] != ')' && cpt == 4)))
 			++i;
 		if (!line[i])
 			return (-1);
@@ -304,8 +305,10 @@ int		parse_3vecf(char *line, int i, t_3vecf *vec)
 	while (cpt < 3)
 	{
 		vec->val[cpt++] = ft_atold(&(line[i]));
-		while (line[i] && ((line[i] != ',' && cpt < 3) || (line[i] != ')' && cpt == 3 && line[i] != '>')))
+		while (line[i] && line[i] != ')' && line[i] != ',' && line[i] != '>')
 			++i;
+		if (line[i] == ')')
+			return (i);
 		if (!line[i] || line[i] == '>')
 			return (-1);
 		++i;

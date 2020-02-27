@@ -7,14 +7,12 @@
 	>
 	<objects
 		<texture
-			<UNI
-				<color(0.5, 0.75, 0.85)(0)>
-			>
-			<BumpMapping
-				<independent (SINUS)(0.03)>
+			<FBM
+				<color(0.5, 0.75, 0.85, 0)(0)>
+				<color(0.7, 0.4, 0.2, 0)(0)>
 			>
 			<offset(0, 0)>
-			<scale(0.1, 2)>
+			<scale(1, 2)>
 		>
 		<plane
 			<origin(0, 0, 3)>
@@ -23,14 +21,14 @@
 	>
 	<objects
 		<texture
-			<GRID
-				<color(1, 1, 1)(0)>
-				<color(0, 0, 1)(0)>
+			<FBM
+				<color(1, 1, 0.3)(0)>
+				<color(0.3, 1, 1)(0)>
 			>
 			<offset(0, 0)>
 			<scale(10, 2)>
 			<BumpMapping
-				<independent (SINUS)(0.02)>
+				<independent (FBM)(0.02)>
 			>
 		>
 		<sphere
@@ -40,15 +38,16 @@
 	>
 	<objects
 		<texture
-			<GRID
-				<color (1, 1, 0)(0)>
-				<color (1, 1, 1)(0)>
+			<FBM
+				<color (1, 1, 0, 0)>
+				<color (0, 1, 1, 1)>
+				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<BumpMapping
-				<independent (SINUS)(0.02)>
+				<independent (FBM)(0.02)>
 			>
 			<offset(0, 0)>
-			<scale(0.5, 6)>
+			<scale(3, 6)>
 		>
 		<sphere
 			<origin(3, -1, 6)>
@@ -60,11 +59,11 @@
 		<texture
 			<GRID
 				<color (1, 0, 0)(0)>
-				<color (1, 1, 1)(0)>
+				<color (1, 1, 0.4, 0.7)(0)>
 				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<BumpMapping
-				<independent (SINUS)(0.02)>
+				<independent (FBM)(0.02)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -73,12 +72,13 @@
 			<origin(0, -1, 6)>
 			<radius(1)>
 		>
+		<refraction (1.2)>
 	>	
 	<objects
 		<texture
-			<GRID
-				<color (0.545, 0.27, 0.075)(0)>
-				<color (0.627, 0.322, 0.177)(0)>
+			<FBM
+				<color (1, 1, 0)(0)>
+				<color (0, 1, 1)(0)>
 				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<offset(0, 0)>
@@ -94,9 +94,9 @@
 	>
 	<objects
 		<texture
-			<GRID
-				<color (0.545, 0.27, 0.075)(0)>
-				<color (0.627, 0.322, 0.177)(0)>
+			<FBM
+				<color (1, 0, 1)(0)>
+				<color (0, 1, 1)(0)>
 				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<offset(0, 0)>
@@ -109,14 +109,13 @@
 	>
 	<objects
 		<texture
-			<WOOD
-				<color (0.545, 0.27, 0.075)(0)>
-				<color (0.627, 0.322, 0.177)(0)>
+			<FBM
+				<color (1, 0.2, 1, 0)(0)>
+				<color (0.2, 1, 1, 0.7)(0)>
 				<color (0.8, 0.6, 0.8)(0)>
 			>
 			<offset(0, 0)>
-			<scale(1, 6)>
-		<BumpMapping<own(0.03)>>
+			<scale(10, 6)>
 		>
 		<sphere
 			<origin(-6, -1, 6)>
@@ -125,49 +124,50 @@
 	>
 	<objects
 		<texture
-			<WOOD
+			<FBM
 				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
+				<color (0, 0, 1)(0)>
 				<color (0.2, 0.2, 0.8)(0)>
 			>
 			<BumpMapping
-				<independent (SINUS)(0.02)>
+				<own (0.02)>
 			>
 			<offset(0, 0)>
-			<scale(0.5, 6)>
+			<scale(3, 6)>
 		>
 		<sphere
 			<origin(6, -1, 6)>
 			<radius(1)>
 		>
-		<reflection (0.6)>
 	>
 	<objects
 		<texture
-			<UNI
+			<FBM
 				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
+				<color (0, 1, 0)(0)>
 				<color (0.2, 0.2, 0.8)(0)>
 			>
+			<BumpMapping
+				<independent (FBM)(0.03)>
+			>
 			<offset(0, 0)>
-			<scale(0.1, 6)>
+			<scale(1, 6)>
 		>
 		<plane
 			<origin(12, -1, 6)>
 			<normal(-0.7, 0.2, 0.3)>
 		>
-		<reflection (0.5)>
 	>
 	<objects
 		<texture
-			<UNI
+			<FBM
 				<color (1, 0.3, 1)(0)>
 			>
 			<BumpMapping
-				<independent (SINUS)(0.03)>
+				<independent (FBM)(0.3)>
 			>
 			<offset(0, 0)>
-			<scale(0.1, 6)>
+			<scale(1, 6)>
 		>
 		<plane
 			<origin(-15, -1, 6)>
@@ -176,9 +176,9 @@
 	>
 	<objects
 		<texture
-			<UNI
-				<color (1, 1, 1)(0)>
-				<color (1, 1, 1)(0)>
+			<FBM
+				<color (0, 1, 1)(0)>
+				<color (1, 1, 0)(0)>
 				<color (0.2, 0.2, 0.8)(0)>
 			>
 			<offset(0, 0)>
@@ -188,12 +188,12 @@
 			<origin(12, -1, 16)>
 			<normal(0, 0.2, -0.3)>
 		>
-		<reflection (0)>
 	>
 	<objects
 		<texture
-			<UNI
-				<color (1, 1, 1)(0)>
+			<FBM
+				<color (1, 1, 0)(0)>
+				<color (0.5, 0.5, 0)(0)>
 			>
 			<offset(0, 0)>
 			<scale(3, 6)>
@@ -204,7 +204,7 @@
 		>
 	>	
 	<lights
-		<point (0, -5, -6)>
+		<point (-2, -5, -6)>
 		<color (1, 1, 1)>
 	>
 	<lights

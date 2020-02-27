@@ -35,6 +35,7 @@ SRC			=	main.c					\
 				texture.c				\
 				bump_mapping.c			\
 				perlin.c				\
+				fbm.c					\
 				sphere.c				\
 				plane.c					\
 				cone.c					\

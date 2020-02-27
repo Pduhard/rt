@@ -27,8 +27,8 @@
 # define GLOBAL_ILLUMINATION	0
 # define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX	100
-# define NN_INDIRECT_PHOTON_MAX	50
+# define NN_CAUSTIC_PHOTON_MAX	10
+# define NN_INDIRECT_PHOTON_MAX	10
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
 # define NB_INDIRECT_PHOTON		10000
@@ -44,10 +44,17 @@
 # define FOG_FAR			20.0
 /*ALTERABLE MACRO	*/
 
-# define PERLIN_TRANSP_ADD 1
-# define MOTION_STEP 0.02
-# define MOTION_FVEL 8
-# define MOTION_SPP 32
+# define RAY_DEPTH			6
+# define PERLIN_TRANSP_ADD	0.5
+
+# define FBM_LACUNARITY		2.
+# define FBM_GAIN			0.5
+# define FBM_ITER			2
+
+# define FBM_AMPLITUDE		0.5
+# define MOTION_STEP		0.02
+# define MOTION_FVEL		8
+# define MOTION_SPP			32
 
 /* CST MACROS */
 # define _M_PI_180 0.01745329251
@@ -180,6 +187,7 @@ typedef	enum {
 	TEXT_PERLIN,
 	TEXT_MARBLE,
 	TEXT_WOOD,
+	TEXT_FBM,
 	TEXT_IMAGE
 }	t_text_type;
 
@@ -189,6 +197,7 @@ typedef enum {
 	BUMP_PERLIN,
 	BUMP_MARBLE,
 	BUMP_WOOD,
+	BUMP_FBM,
 	BUMP_IMAGE,
 	BUMP_SINUS
 }	t_bump_type;
@@ -501,6 +510,7 @@ t_3vecf	move_3vecf(t_3vecf, t_motion *, int);
 
 double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
+double	compute_3dfbm_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
 
@@ -666,11 +676,13 @@ int		check_normal(t_3vecf *t);
 t_4vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_4vecf	get_fbm_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 t_3vecf	get_bump_mapping_perlin(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
+t_3vecf	get_bump_mapping_fbm(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_wood(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);

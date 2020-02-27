@@ -381,19 +381,79 @@ int		is_on_cell_boundary(t_3vecf origin, t_3vecf inter_point, t_3vecf normal_int
 	return (1);
 }
 
+t_3vecf		compute_glare(t_3vecf orig, t_3vecf dir, t_light *lights, t_3vecf *inter_point)
+{
+	t_3vecf	glare;
+	t_3vecf	light_dir;
+	t_3vecf	light_pos;
+	double	obj_dist;
+	double	light_dist;
+
+	obj_dist = inter_point ? get_length_3vecf(sub_3vecf(*inter_point, orig)) : MAX_VIEW;
+	glare = assign_3vecf(0, 0, 0);
+	while (lights)
+	{
+		if (lights->light_type != LIGHT_AMBIENT)
+		{
+			if (lights->light_type == LIGHT_POINT)
+			{
+				light_dir = sub_3vecf(lights->param, orig);
+				light_dist = get_length_3vecf(light_dir);
+				normalize_3vecf(&light_dir);
+				light_pos = lights->param;
+			}	
+			if (light_dist < obj_dist)
+			{
+				double fact;
+				t_3vecf	light_npoint;
+
+				light_npoint.val[0] = orig.val[0] + dir.val[0] * light_dist;
+				light_npoint.val[1] = orig.val[1] + dir.val[1] * light_dist;
+				light_npoint.val[2] = orig.val[2] + dir.val[2] * light_dist;
+				double	lndist;
+				lndist = get_length_3vecf(sub_3vecf(light_pos, light_npoint));
+				if (lndist < 0.2)
+					fact = (0.2 - lndist) * 5;
+				else
+					fact = 0;
+				/*dot_product_3vecf(dir, light_dir);
+				if (fact > 0.9)
+				fact = exp(fact) - exp(1. - 0.05 / light_dist);
+				fact = fact < 0 ? 0 : fact;
+				fact *= exp(fact * 400);
+				*/glare.val[0] += fact;
+				glare.val[1] += fact;
+				glare.val[2] += fact;
+			}
+		}
+		lights = lights->next;
+	}
+	(void)dir;
+	return (glare);
+}
+
 t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t_data *data, int depth, int sp_id)
 {
 	double	closest_dist;
 	t_obj	*closest_obj;
+	t_3vecf		light_fact;
 
 	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id, data);
 	if (!closest_obj)
-		return (assign_3vecf(0, 0, 0));
+	{
+		light_fact = compute_glare(orig, dir, data->lights, NULL);
+	/*	if (light_fact.val[0] > 1)
+			light_fact.val[0] = 1;
+		if (light_fact.val[1] > 1)
+			light_fact.val[1] = 1;
+		if (light_fact.val[2] > 1)
+			light_fact.val[2] = 1;
+	*/	return (light_fact);
+	}
 	t_3vecf		inter_point;
 	t_3vecf		normal_inter;
 	t_3vecf		lighted_color;
 	t_3vecf		inv_dir =  assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
-	t_3vecf		light_fact;
 	t_4vecf		obj_color;
 
 	inter_point.val[0] = orig.val[0] + dir.val[0] * closest_dist;
@@ -532,6 +592,20 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1] * fog_fact;
 		lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2] * fog_fact;
 	}
+	if (depth == RAY_DEPTH)
+	{
+		t_3vecf	glare = compute_glare(orig, dir, data->lights, &inter_point);
+		lighted_color.val[0] += glare.val[0];
+		lighted_color.val[1] += glare.val[2];
+		lighted_color.val[2] += glare.val[2];
+	/*	if (lighted_color.val[0] > 1)
+			lighted_color.val[0] = 1;
+		if (lighted_color.val[1] > 1)
+			lighted_color.val[1] = 1;
+		if (lighted_color.val[2] > 1)
+			lighted_color.val[2] = 1;
+	*/
+	}
 	return (lighted_color);
 }
 
@@ -608,8 +682,8 @@ void	*render_thread(void *param)
 				normalize_3vecf(&dir);
 				if (!data->motion_blur)
 				{
-					colors[0] = ray_trace(origs[0], dir, BIAS, MAX_VIEW, data, 6, 0);
-					colors[1] = ray_trace(origs[1], dir, BIAS, MAX_VIEW, data, 6, 0);
+					colors[0] = ray_trace(origs[0], dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					colors[1] = ray_trace(origs[1], dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
 				}
 				else
 				{
@@ -627,7 +701,7 @@ void	*render_thread(void *param)
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
 				normalize_3vecf(&dir);
 				if (!data->motion_blur)
-					color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6, 0);
+					color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
 				else
 					color = motion_trace(orig, dir, data);
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);

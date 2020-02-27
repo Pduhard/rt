@@ -42,6 +42,12 @@ int		parse_texture2(char **line, t_obj *obj) //
 			obj->text.text_type = TEXT_WOOD;
 			ret = obj->text.text_param ? 0 : 1;
 		}
+		else if (!(ft_strncmp_case(*line, "FBM", 3)))
+		{
+			obj->get_text_color = &get_fbm_color;
+			obj->text.text_type = TEXT_FBM;
+			ret = obj->text.text_param ? 0 : 1;
+		}
 		else if (!(ft_strncmp_case(*line, "IMAGE", 5)))
 		{
 			obj->get_text_color = &get_image_color;

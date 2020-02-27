@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   texture.c                                        .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/19 17:18:27 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/06 21:34:03 by pduhard-    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/27 02:04:16 by pduhard-          #+#    #+#             */
+/*   Updated: 2020/02/27 06:48:27 by pduhard-         ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -126,6 +125,32 @@ t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
 	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);
 	color.val[3] = linear_interpolate(text->color[0].val[3], text->color[1].val[3], marble_f);
+	return (color);
+	(void)normal_inter;
+}
+
+t_4vecf	get_fbm_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+{
+	double	fbm_f;
+	t_4vecf	color;
+	t_text_proc	*text;
+
+	text = (t_text_proc *)obj->text.text_param;
+	//perlin_f = compute_perlin_factor(inter_point);
+//	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
+//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+	fbm_f = compute_3dfbm_factor(inter_point, obj->text.scale.val[0]);
+	//(1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
+	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
+//	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
+//	color.val[0] = obj->text.color[0].val[0] * (1 - fbm_f) + obj->text.color[1].val[0] * fbm_f;
+//	color.val[1] = obj->text.color[0].val[1] * (1 - fbm_f) + obj->text.color[1].val[1] * fbm_f;
+//	color.val[2] = obj->text.color[0].val[2] * (1 - fbm_f) + obj->text.color[1].val[2] * fbm_f;
+
+	color.val[0] = linear_interpolate(text->color[0].val[0], text->color[1].val[0], fbm_f);
+	color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], fbm_f);
+	color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], fbm_f);
+	color.val[3] = linear_interpolate(text->color[0].val[3], text->color[1].val[3], fbm_f);
 	return (color);
 	(void)normal_inter;
 }
