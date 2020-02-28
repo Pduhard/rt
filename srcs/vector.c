@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/21 23:02:40 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 05:24:58 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/28 03:51:40 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -53,6 +53,16 @@ t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b)
 	vec.val[0] = a.val[0] - b.val[0];
 	vec.val[1] = a.val[1] - b.val[1];
 	vec.val[2] = a.val[2] - b.val[2];
+	return (vec);
+}
+
+t_3vecf	add_3vecf(t_3vecf a, t_3vecf b)
+{
+	t_3vecf	vec;
+
+	vec.val[0] = a.val[0] + b.val[0];
+	vec.val[1] = a.val[1] + b.val[1];
+	vec.val[2] = a.val[2] + b.val[2];
 	return (vec);
 }
 

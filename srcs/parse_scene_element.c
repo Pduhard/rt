@@ -113,7 +113,7 @@ int		parse_lights(char **line, t_data *data)
 	return (ret);
 }
 
-int		parse_scene_name(char **line, t_data *data)
+int		parse_name(char **line, char **name)
 {
 	int		i;
 	int		start;
@@ -125,14 +125,14 @@ int		parse_scene_name(char **line, t_data *data)
 		++i;
 	if (s[i] != '(')
 		return (error(SERROR, NAME));
-	if (data->scene_name)
-		ft_strdel(&data->scene_name);
+	if (*name)
+		ft_strdel(name);
 	start = ++i;
 	while (s[i] && (s[i] != ')' && s[i] != '>'))
 		++i;
 	if (s[i] != ')')
 		return (error(SERROR, NAME));
-	data->scene_name = ft_strsub(s, start, i - start);
+	*name = ft_strsub(s, start, i - start);
 	++i;
 	while (ft_isspace(s[i]))
 		++i;
@@ -191,12 +191,14 @@ int		parse_camera(char **line, t_data *data)
 	return (ret);
 }
 
-int		parse_objects(char **line, t_data *data)
+int		parse_objects(char **line, t_data *data, t_composed *from)
 {
 	char	stripe;
 	int		ret;
+	int		composed;
 	t_obj	*obj;
 
+	composed = 0;
 	stripe = 0;
 	ret = 1;
 	if (!(obj = ft_memalloc(sizeof(t_obj))))
@@ -204,30 +206,32 @@ int		parse_objects(char **line, t_data *data)
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
+		//native 
 		if (!ft_strncmp_case(*line, "cone", 4))
-			ret = parse_cone(line, obj, data);
+			ret = parse_cone(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "sphere", 6))
-			ret = parse_sphere(line, obj, data);
+			ret = parse_sphere(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "plane", 5))
-			ret = parse_plane(line, obj, data);
+			ret = parse_plane(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "cylinder", 8))
-			ret = parse_cylinder(line, obj, data);
-		else if (!ft_strncmp_case(*line, "moebius", 7))
-			ret = parse_moebius(line, obj, data);
-		else if (!ft_strncmp_case(*line, "ellipsoid", 9))
-			ret = parse_ellipsoid(line, obj, data);
-		else if (!ft_strncmp_case(*line, "hyperboloid", 11))
-			ret = parse_hyperboloid(line, obj, data);
-		else if (!ft_strncmp_case(*line, "horse_saddle", 12))
-			ret = parse_horse_saddle(line, obj, data);
-		else if (!ft_strncmp_case(*line, "monkey_saddle", 13))
-			ret = parse_monkey_saddle(line, obj, data);
-		else if (!ft_strncmp_case(*line, "cyclide", 7))
-			ret = parse_cyclide(line, obj, data);
-		else if (!ft_strncmp_case(*line, "fermat", 6))
-			ret = parse_fermat(line, obj, data);
+			ret = parse_cylinder(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "triangle", 8))
-			ret = parse_triangle(line, obj, data);
+			ret = parse_triangle(line, obj);//, data);
+		// from eq
+		else if (!from && !ft_strncmp_case(*line, "moebius", 7))
+			ret = parse_moebius(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "ellipsoid", 9))
+			ret = parse_ellipsoid(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "hyperboloid", 11))
+			ret = parse_hyperboloid(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "horse_saddle", 12))
+			ret = parse_horse_saddle(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "monkey_saddle", 13))
+			ret = parse_monkey_saddle(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "cyclide", 7))
+			ret = parse_cyclide(line, obj);//, data);
+		else if (!from && !ft_strncmp_case(*line, "fermat", 6))
+			ret = parse_fermat(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "texture", 7))
 			ret = parse_texture2(line, obj);
 		else if (!(ft_strncmp_case(*line, "cutting", 7)))
@@ -242,7 +246,9 @@ int		parse_objects(char **line, t_data *data)
 			ret = parse_double2(line, 9, &obj->shininess);
 		else if (!ft_strncmp_case(*line, "material", 8))
 			ret = parse_material(line, 8, obj);
-		else if (**line != '<')
+		else if (is_composed_object(line, data, &ret))
+			composed = 1;
+		else if (**line != '<' && **line != '>')
 			return (error(UNKNOWOBJECT, NULL));
 	}
 	clamp_val(&obj->reflection, 0, 1);
@@ -251,5 +257,16 @@ int		parse_objects(char **line, t_data *data)
 	clamp_val(&obj->refraction, 0, 2.42);
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
+	if (composed)
+	{
+		//free object
+	}
+	else
+	{
+		if (!from)
+			add_object(obj, data);
+		else
+			add_component(obj, from);
+	}
 	return (ret);
 }

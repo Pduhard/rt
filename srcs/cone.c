@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 05:14:57 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/28 04:42:38 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,8 +35,8 @@ int		check_inside_cone(t_3vecf inter_point, t_obj *obj)
 	if (c_dist < 0 && (check_rev = 1))
 		c_dist *= -1;
 	radius_inter = (c_dist / height) * param->radius;
-//	if (c_dist < 0 || c_dist > height)
-//		return (0);
+	//	if (c_dist < 0 || c_dist > height)
+	//		return (0);
 	orth_dist.val[0] = p_tip_vec.val[0] - c_dist * (check_rev ? -cone_axis.val[0] : cone_axis.val[0]);
 	orth_dist.val[1] = p_tip_vec.val[1] - c_dist * (check_rev ? -cone_axis.val[1] : cone_axis.val[1]);
 	orth_dist.val[2] = p_tip_vec.val[2] - c_dist * (check_rev ? -cone_axis.val[2] : cone_axis.val[2]);
@@ -93,6 +93,7 @@ t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_ob
 void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 {
 	t_cone	*param;
+	t_obj	*cuts;
 
 	param = (t_cone *)cone->obj_param;
 	param->center.val[0] += dir.val[0] * fact;
@@ -101,6 +102,34 @@ void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 	param->tip.val[0] += dir.val[0] * fact;
 	param->tip.val[1] += dir.val[1] * fact;
 	param->tip.val[2] += dir.val[2] * fact;
+	cuts = cone->cuts;
+	while (cuts)
+	{
+		cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
+}
+
+void   rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
+{
+	t_cone *param;
+	t_obj   *cuts;
+
+	param = (t_cone *)cone->obj_param;
+	param->center = sub_3vecf(param->center, orig);
+	param->tip = sub_3vecf(param->tip, orig);
+	param->center = mult_3vecf_33matf(param->center, rot_mat[1]);
+	param->center = mult_3vecf_33matf(param->center, rot_mat[0]);
+	param->tip = mult_3vecf_33matf(param->tip, rot_mat[1]);
+	param->tip = mult_3vecf_33matf(param->tip, rot_mat[0]);
+	param->center = add_3vecf(param->center, orig);
+	param->tip = add_3vecf(param->tip, orig);
+	cuts = cone->cuts;
+	while (cuts)
+	{
+		cuts->rotate(cuts, orig, rot_mat);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_cone(t_obj *cone)
@@ -150,7 +179,7 @@ int	ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, dou
 	t_3vecf	cone_tip;
 	t_3vecf	cone_origin;
 
-		(void)sp_id;
+	(void)sp_id;
 	/*	(void)min_dist;
 		(void)max_dist;
 		*/

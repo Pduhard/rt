@@ -32,7 +32,7 @@ int		parse_rt_conf(char *file_name, t_data *data)
 		check_line(&line);
 		result = ft_strfjoin(result, line);
 	}
-	if (ret == -1 || result == '\0' || brackets_rt(result) == 0)
+	if (ret == -1 || !result || !brackets_rt(result))
 	{
 		free(result);
 		return (error(ERRORFILE, NULL));
@@ -119,7 +119,7 @@ int		parse_scene(char **line, t_data *data)
 	{
 		stripe = goto_next_element(line);
 		if (!ft_strncmp_case(*line, "name", 4))
-			ret = parse_scene_name(line, data);
+			ret = parse_name(line, &data->scene_name);
 		else if (!ft_strncmp_case(*line, "size", 4))
 			ret = parse_size(line, data);
 		else if (!ft_strncmp_case(*line, "camera", 6))
@@ -127,7 +127,12 @@ int		parse_scene(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "objects", 7))
 		{
 			printf("TEST\n");
-			ret = parse_objects(line, data);
+			ret = parse_objects(line, data, NULL);
+		}
+		else if (!ft_strncmp_case(*line, "composed", 8))
+		{
+			ret = parse_composed_model(line, data);
+	//		exit(0);
 		}
 		else if (!ft_strncmp_case(*line, "lights", 6))
 		{
@@ -159,5 +164,11 @@ int		parse_scene(char **line, t_data *data)
 	check_lights(data);
 	if (!data->camera)
 		return (error(ERRORCAM, NULL));
+//	t_obj *o = data->objs;
+//	while (o)
+///	{
+//		printf("a %p %d\n", o->ray_intersect, o->obj_type);	
+//		o = o->next;
+//	}
 	return (ret);
 }

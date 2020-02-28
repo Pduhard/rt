@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   triangle.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/26 07:29:41 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   triangle.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/28 03:46:18 by pduhard-          #+#    #+#             */
+/*   Updated: 2020/02/28 04:38:08 by pduhard-         ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -35,6 +34,7 @@ t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, 
 void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 {
 	t_triangle	*param;
+	t_obj	*cuts;
 
 	param = (t_triangle *)triangle->obj_param;
 	param->a.val[0] += dir.val[0] * fact;
@@ -46,6 +46,41 @@ void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 	param->c.val[0] += dir.val[0] * fact;
 	param->c.val[1] += dir.val[1] * fact;
 	param->c.val[2] += dir.val[2] * fact;
+	cuts = triangle->cuts;
+	while (cuts)
+	{
+		cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
+}
+
+void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
+{
+	t_triangle	*param;
+	t_obj	*cuts;
+
+	param = (t_triangle *)triangle->obj_param;
+	param->a = sub_3vecf(param->a, orig);
+	param->b = sub_3vecf(param->b, orig);
+	param->c = sub_3vecf(param->c, orig);
+	
+	param->a = mult_3vecf_33matf(param->a, rot_mat[1]);
+	param->b = mult_3vecf_33matf(param->b, rot_mat[1]);
+	param->c = mult_3vecf_33matf(param->c, rot_mat[1]);
+
+	param->a = mult_3vecf_33matf(param->a, rot_mat[0]);
+	param->b = mult_3vecf_33matf(param->b, rot_mat[0]);
+	param->c = mult_3vecf_33matf(param->c, rot_mat[0]);
+
+	param->a = add_3vecf(orig, param->a);
+	param->b = add_3vecf(orig, param->b);
+	param->c = add_3vecf(orig, param->c);
+	cuts = triangle->cuts;
+	while (cuts)
+	{
+		cuts->rotate(cuts, orig, rot_mat);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_triangle(t_obj *triangle)

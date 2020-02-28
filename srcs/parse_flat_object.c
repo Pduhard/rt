@@ -1,6 +1,6 @@
 #include "rt.h"
 
-int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
+int		parse_cylinder(char **line, t_obj *cylinder)
 {
 	char		stripe;
 	int			ret;
@@ -33,12 +33,13 @@ int		parse_cylinder(char **line, t_obj *cylinder, t_data *data)
 	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
 	cylinder->get_origin = &get_origin_cylinder;
 	cylinder->move = &move_cylinder;
+	cylinder->rotate = &rotate_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	add_object(cylinder, data);
+	//add_object(cylinder, data);
 	return (ret);
 }
 
-int		parse_plane(char **line, t_obj *plane, t_data *data)
+int		parse_plane(char **line, t_obj *plane)
 {
 	char	stripe;
 	int		ret; 
@@ -71,12 +72,13 @@ int		parse_plane(char **line, t_obj *plane, t_data *data)
 	plane->get_normal_inter = &get_normal_intersect_plane;
 	plane->get_origin = &get_origin_plane;
 	plane->move = &move_plane;
+	plane->rotate = &rotate_plane;
 	plane->get_text_coordinate = &get_text_coordinate_plane;
-	add_object(plane, data);
+//	add_object(plane, data);
 	return (ret);
 }
 
-int		parse_sphere(char **line, t_obj *sphere, t_data *data)
+int		parse_sphere(char **line, t_obj *sphere)
 {
 	char	stripe;
 	int		ret;
@@ -107,12 +109,13 @@ int		parse_sphere(char **line, t_obj *sphere, t_data *data)
 	sphere->get_normal_inter = &get_normal_intersect_sphere;
 	sphere->get_origin = &get_origin_sphere;
 	sphere->move = &move_sphere;
+	sphere->rotate = &rotate_sphere;
 	sphere->get_text_coordinate = &get_text_coordinate_sphere;	
-	add_object(sphere, data);
+//	add_object(sphere, data);
 	return (ret);
 }
 
-int		parse_triangle(char **line, t_obj *triangle, t_data *data)
+int		parse_triangle(char **line, t_obj *triangle)
 {
 	char	stripe;
 	int		ret;
@@ -147,12 +150,13 @@ int		parse_triangle(char **line, t_obj *triangle, t_data *data)
 	triangle->get_normal_inter = &get_normal_intersect_triangle;
 	triangle->get_origin = &get_origin_triangle;
 	triangle->move = &move_triangle;
+	triangle->rotate = &rotate_triangle;
 	triangle->get_text_coordinate = &get_text_coordinate_triangle;	
-	add_object(triangle, data);
+//	add_object(triangle, data);
 	return (ret);
 }
 
-int		parse_horse_saddle(char **line, t_obj *horse_saddle, t_data *data)
+int		parse_horse_saddle(char **line, t_obj *horse_saddle)
 {
 	char	stripe;
 	int		ret;
@@ -187,11 +191,11 @@ int		parse_horse_saddle(char **line, t_obj *horse_saddle, t_data *data)
 	horse_saddle->get_origin = &get_origin_horse_saddle;
 	horse_saddle->move = &move_horse_saddle;
 	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;	
-	add_object(horse_saddle, data);
+//	add_object(horse_saddle, data);
 	return (ret);
 }
 
-int		parse_monkey_saddle(char **line, t_obj *monkey_saddle, t_data *data)
+int		parse_monkey_saddle(char **line, t_obj *monkey_saddle)
 {
 	char	stripe;
 	int		ret;
@@ -224,11 +228,11 @@ int		parse_monkey_saddle(char **line, t_obj *monkey_saddle, t_data *data)
 	monkey_saddle->get_origin = &get_origin_monkey_saddle;
 	monkey_saddle->move = &move_monkey_saddle;
 	monkey_saddle->get_text_coordinate = &get_text_coordinate_monkey_saddle;	
-	add_object(monkey_saddle, data);
+//	add_object(monkey_saddle, data);
 	return (ret);
 }
 
-int		parse_cyclide(char **line, t_obj *cyclide, t_data *data)
+int		parse_cyclide(char **line, t_obj *cyclide)
 {
 	char	stripe;
 	int		ret;
@@ -263,11 +267,11 @@ int		parse_cyclide(char **line, t_obj *cyclide, t_data *data)
 	cyclide->get_origin = &get_origin_cyclide;
 	cyclide->move = &move_cyclide;
 	cyclide->get_text_coordinate = &get_text_coordinate_cyclide;	
-	add_object(cyclide, data);
+//	add_object(cyclide, data);
 	return (ret);
 }
 
-int		parse_fermat(char **line, t_obj *fermat, t_data *data)
+int		parse_fermat(char **line, t_obj *fermat)
 {
 	char	stripe;
 	int		ret;
@@ -300,11 +304,11 @@ int		parse_fermat(char **line, t_obj *fermat, t_data *data)
 	fermat->get_origin = &get_origin_fermat;
 	fermat->move = &move_fermat;
 	fermat->get_text_coordinate = &get_text_coordinate_fermat;	
-	add_object(fermat, data);
+//	add_object(fermat, data);
 	return (ret);
 }
 
-int		parse_ellipsoid(char **line, t_obj *ellipsoid, t_data *data)
+int		parse_ellipsoid(char **line, t_obj *ellipsoid)
 {
 	char	stripe;
 	int		ret;
@@ -343,11 +347,11 @@ int		parse_ellipsoid(char **line, t_obj *ellipsoid, t_data *data)
 	ellipsoid->get_origin = &get_origin_ellipsoid;
 	ellipsoid->move = &move_ellipsoid;
 	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;	
-	add_object(ellipsoid, data);
+//	add_object(ellipsoid, data);
 	return (ret);
 }
 
-int		parse_hyperboloid(char **line, t_obj *hyperboloid, t_data *data)
+int		parse_hyperboloid(char **line, t_obj *hyperboloid)
 {
 	char	stripe;
 	int		ret;
@@ -392,11 +396,11 @@ int		parse_hyperboloid(char **line, t_obj *hyperboloid, t_data *data)
 	hyperboloid->get_origin = &get_origin_hyperboloid;
 	hyperboloid->move = &move_hyperboloid;
 	hyperboloid->get_text_coordinate = &get_text_coordinate_hyperboloid;	
-	add_object(hyperboloid, data);
+//	add_object(hyperboloid, data);
 	return (ret);
 }
 
-int		parse_cone(char **line, t_obj *cone, t_data *data)
+int		parse_cone(char **line, t_obj *cone)
 {
 	char	stripe;
 	int		ret;
@@ -429,12 +433,13 @@ int		parse_cone(char **line, t_obj *cone, t_data *data)
 	cone->get_normal_inter = &get_normal_intersect_cone;
 	cone->get_origin = &get_origin_cone;
 	cone->move = &move_cone;
+	cone->rotate = &rotate_cone;
 	cone->get_text_coordinate = &get_text_coordinate_cone;
-	add_object(cone, data);
+//	add_object(cone, data);
 	return (ret);
 }
 
-int		parse_moebius(char **line, t_obj *moebius, t_data *data)
+int		parse_moebius(char **line, t_obj *moebius)
 {
 	char	stripe;
 	int		ret;
@@ -468,7 +473,7 @@ int		parse_moebius(char **line, t_obj *moebius, t_data *data)
 	moebius->get_origin = &get_origin_moebius;
 	moebius->move = &move_moebius;
 	moebius->get_text_coordinate = &get_text_coordinate_moebius;
-	add_object(moebius, data);
-	moebius->data = data;
+//	add_object(moebius, data);
+//	moebius->data = data;
 	return (ret);
 }

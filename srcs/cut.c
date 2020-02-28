@@ -6,14 +6,14 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/03 23:03:19 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/11 13:27:04 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/28 05:22:19 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data)
+t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data, int negative)
 {
 	t_obj	*cuts;
 //	t_obj	*next_obj;
@@ -58,7 +58,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 	*/		//	*closest_dist = next_dist;
 			//	return (next_obj);
 		//		return (ray_intersect_);
-				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
+				return (negative ? NULL : ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 			}
 		}
 		else if (cuts->obj_type == OBJ_CUT_TEXTURE)
@@ -91,7 +91,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 			if (row > text->height || row < 0 || col > text->width || col < 0)
 			*/
 			if (coord2d.val[0] > 1 || coord2d.val[0] < 0 || coord2d.val[1] > 1 || coord2d.val[1] < 0)
-				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
+				return (negative ? NULL : ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 		}
 		else if (cuts->obj_type == OBJ_SPHERE)
 		{
@@ -99,7 +99,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 
 			param = (t_sphere *)cuts->obj_param;
 			if (get_length_3vecf(sub_3vecf(inter_point, param->origin)) > param->radius)
-				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
+				return (negative ? NULL : ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 		}
 		else if (cuts->obj_type == OBJ_CUBE)
 		{
@@ -109,7 +109,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 			if (inter_point.val[0] < param->x_range.val[0] || inter_point.val[0] > param->x_range.val[1]
 				|| inter_point.val[1] < param->y_range.val[0] || inter_point.val[1] > param->y_range.val[1]
 					|| inter_point.val[2] < param->z_range.val[0] || inter_point.val[2] > param->z_range.val[1])
-				return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
+				return (negative ? NULL : ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
 		}
 
 		cuts = cuts->next;
@@ -130,6 +130,7 @@ t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist
 	}
 	if (check)
 		return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs, sp_id, data));
-*/	return (closest_obj);
+*/	
+	return (closest_obj);
 	(void)min_dist;
 }

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/07 03:44:35 by pduhard-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/02/28 04:48:33 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,7 +18,7 @@
 int		check_inside_cylinder(t_3vecf inter_point, t_obj *cylinder)
 {
 	t_cylinder	*param;
-	
+
 	param = (t_cylinder *)cylinder->obj_param;
 	if (get_length_3vecf(product_3vecf(sub_3vecf(inter_point, param->tip), sub_3vecf(inter_point, param->center))) / get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
 		return (0);
@@ -68,6 +68,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, 
 void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 {
 	t_cylinder	*param;
+	t_obj	*cuts;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	param->center.val[0] += dir.val[0] * fact;
@@ -76,6 +77,34 @@ void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 	param->tip.val[0] += dir.val[0] * fact;
 	param->tip.val[1] += dir.val[1] * fact;
 	param->tip.val[2] += dir.val[2] * fact;
+	cuts = cylinder->cuts;
+	while (cuts)
+	{
+		cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
+}
+
+void   rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
+{
+	t_cylinder *param;
+	t_obj   *cuts;
+
+	param = (t_cylinder *)cylinder->obj_param;
+	param->center = sub_3vecf(param->center, orig);
+	param->tip = sub_3vecf(param->tip, orig);
+	param->center = mult_3vecf_33matf(param->center, rot_mat[1]);
+	param->center = mult_3vecf_33matf(param->center, rot_mat[0]);
+	param->tip = mult_3vecf_33matf(param->tip, rot_mat[1]);
+	param->tip = mult_3vecf_33matf(param->tip, rot_mat[0]);
+	param->center = add_3vecf(param->center, orig);
+	param->tip = add_3vecf(param->tip, orig);
+	cuts = cylinder->cuts;
+	while (cuts)
+	{
+		cuts->rotate(cuts, orig, rot_mat);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_cylinder(t_obj *cylinder)
@@ -98,7 +127,7 @@ t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder, int 
 	t_3vecf	cylinder_origin;
 	t_3vecf	cylinder_tip;
 
-	
+
 	//return (assign_3vecf(1, 0, 0));
 	cylinder_param = (t_cylinder *)cylinder->obj_param;
 	cylinder_origin = sp_id ? move_3vecf(cylinder_param->center, cylinder->motions, sp_id) : cylinder_param->center;

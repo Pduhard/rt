@@ -60,7 +60,7 @@ int		parse_texture2(char **line, t_obj *obj) //
 			ret = parse_rotation(line, &obj->text.scale, 5);
 		else if (!(ft_strncmp_case(*line, "BumpMapping", 11)) && obj->text.text_param)
 			ret = parse_bump_mapping(line, obj);
-		else if (**line != '<')
+		else if (**line != '<' && **line != '>')
 			return (error(UNKNOWTEXT, NULL));
 		if (obj->text.text_type == TEXT_IMAGE && !(obj->text.text_param))
 		{

@@ -24,12 +24,19 @@ t_3vecf	window_to_view(double x, double y, double win_w, double win_h)
 	return (vec);
 }
 
-int		check_inside_negative(t_3vecf inter_point, t_obj *negative_objs)
+int		check_inside_negative(t_3vecf orig, t_3vecf dir, double *closest_dist, t_data *data, int sp_id, double min_dist, double max_dist/*t_obj *negative_objs*/)
 {
+	t_obj	*negative_objs;
+	t_3vecf	inter_point;
+
+	inter_point.val[0] = orig.val[0] + dir.val[0] * *closest_dist;
+	inter_point.val[1] = orig.val[1] + dir.val[1] * *closest_dist;
+	inter_point.val[2] = orig.val[2] + dir.val[2] * *closest_dist;
+	negative_objs = data->negative_objs;
 	while (negative_objs)
 	{
 		if (negative_objs->check_inside(inter_point, negative_objs))
-			return (1);
+			return (check_cuts(orig, dir, negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
 		negative_objs = negative_objs->next;
 	}
 	return (0);
@@ -37,6 +44,7 @@ int		check_inside_negative(t_3vecf inter_point, t_obj *negative_objs)
 
 t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data)
 {
+//	printf("wefwef\n");
 	t_obj	*closest_obj;
 	t_obj	*objs_save;
 
@@ -45,18 +53,15 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	*closest_dist = MAX_VIEW;
 	while (objs)
 	{
+//	printf("%p wefwef\n", objs->ray_intersect);
 		if (objs->ray_intersect(orig, dir, objs, closest_dist, min_dist, max_dist, sp_id))
 			closest_obj = objs;
+//	printf("wefwef\n");
 		objs = objs->next;
 	}
 	if (closest_obj && data->negative_objs)
 	{
-		t_3vecf inter_point;
-
-		inter_point.val[0] = orig.val[0] + dir.val[0] * *closest_dist;
-		inter_point.val[1] = orig.val[1] + dir.val[1] * *closest_dist;
-		inter_point.val[2] = orig.val[2] + dir.val[2] * *closest_dist;
-		if (check_inside_negative(inter_point, data->negative_objs))
+		if (check_inside_negative(orig, dir, closest_dist, data, sp_id, min_dist, max_dist))
 			return (ray_first_intersect(orig, dir, *closest_dist, max_dist, closest_dist, objs_save, sp_id, data));
 	/*	min_dist = *closest_dist;
 		*closest_dist = MAX_VIEW;
@@ -75,7 +80,7 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	}
 	//	return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
 	if (closest_obj && closest_obj->cuts)
-		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data));
+		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data, 0));
 	return (closest_obj);
 	(void)data;
 }

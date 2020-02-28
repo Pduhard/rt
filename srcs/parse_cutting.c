@@ -41,6 +41,8 @@ int		parse_cut_sphere(char **line, t_obj *cut)
 			return (syn_error(SERROR, SYNCUT, SPHERECUT, ""));
 	}
 	cut->obj_param = param;
+	cut->move = &move_sphere;
+	cut->rotate = &rotate_sphere;
 	return (ret);
 }
 
@@ -102,7 +104,6 @@ int		parse_cutting(char **line, t_obj *obj)
 	cut->ray_intersect = &ray_intersect_plane;
 	cut->get_normal_inter = &get_normal_intersect_plane;
 	cut->get_origin = &get_origin_plane;
-	cut->move = &move_plane;
 	cut->get_text_coordinate = &get_text_coordinate_plane;
 	cut->text = obj->text;
 	cut->get_text_color = obj->get_text_color;
@@ -143,6 +144,8 @@ int		parse_cut_static_real(char **line, t_obj *cut)
 			return (syn_error(SERROR, SYNCUT, STATICCUT, ""));
 	}
 	cut->obj_param = param;
+	cut->move = &move_plane;
+	cut->rotate = &rotate_plane;
 	if (ret == 0)
 		return (syn_error(SERROR, SYNCUT, STATICCUT, ""));
 	return (ret);

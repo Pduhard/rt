@@ -6,7 +6,7 @@
 #    By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 02:23:54 by pduhard-          #+#    #+#              #
-#    Updated: 2020/02/27 02:23:55 by pduhard-         ###   ########lyon.fr    #
+#    Updated: 2020/02/28 03:43:58 by pduhard-         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 CC			= gcc
 NAME		= libft.a
 
-FLAGS		= -Wall -Werror -Wextra -O3
+FLAGS		= -Wall -Werror -Wextra -O3 
 INCLUDES	= -I ./libft.h
 
 SRCDIR		= ./

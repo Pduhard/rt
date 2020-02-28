@@ -184,6 +184,31 @@ void	add_object(t_obj *obj, t_data *data)
 	}
 }
 
+void	add_component(t_obj *obj, t_composed *composed)
+{
+	t_obj **obj_tab;
+	int		i;
+
+	i = 0;
+	while (composed->components && composed->components[i])
+		++i;
+	if (!(obj_tab = malloc(sizeof(t_obj *) * (i + 2))))
+		return ;
+	printf("wwwwwww iiiiiiiiiii %d\n", i);
+	obj_tab[i + 1] = NULL;
+		//printf("i")
+	if (composed->components)
+	while (i > 0)
+	{
+		printf("%p\n", composed->components[i - 1]->ray_intersect);
+		obj_tab[i] = composed->components[i - 1];
+		--i;
+	}
+	obj_tab[0] = obj;
+	free(composed->components);
+	composed->components = obj_tab;
+}
+
 int		parse_rotation(char **line, t_2vecf *t, int i)
 {
 	char	*s;

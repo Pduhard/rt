@@ -3,7 +3,7 @@
 NAME		=	rt
 
 CC			=	gcc
-FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math #-fsanitize=address
+FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
 FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
@@ -27,6 +27,7 @@ SRC			=	main.c					\
 				conf.c					\
 				parse.c					\
 				parse_scene_element.c	\
+				parse_composed_object.c	\
 				parse_flat_object.c		\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
@@ -44,6 +45,7 @@ SRC			=	main.c					\
 				moebius.c				\
 				loop.c					\
 				key_hook.c				\
+				mouse_hook.c			\
 				cylinder.c				\
 				ellipsoid.c				\
 				hyperboloid.c			\
