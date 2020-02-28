@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 06:37:58 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 07:28:08 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -62,8 +62,15 @@ void	loop_manage_cam(t_data *data)
 	{
 		rot_mat[1]	= init_rotation_matrix_y(degree_to_radian(data->hooks & ARR_LEFT_KEY ? -5 : (data->hooks & ARR_RIGHT_KEY ? 5 : 0)));
 	t_3vecf	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_KEY ? -5 : (data->hooks & ARR_UP_KEY ? 5 : 0)));
-		data->selected_obj->rotate(data->selected_obj, data->selected_obj->get_origin(data->selected_obj), rot_mat);
+	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_KEY ? 5 : (data->hooks & ARR_UP_KEY ? -5 : 0)));
+		if (data->selected_obj->composed_w)
+		{
+			int i = -1;
+			while (data->selected_obj->composed_w[++i])
+				data->selected_obj->composed_w[i]->rotate(data->selected_obj->composed_w[i], data->selected_obj->composed_w[i]->composed_origin, rot_mat);
+		}
+		else
+			data->selected_obj->rotate(data->selected_obj, data->selected_obj->get_origin(data->selected_obj), rot_mat);
 	}
 	if (data->hooks & (ARR_LEFT_KEY | ARR_RIGHT_KEY))
 	{
@@ -118,7 +125,19 @@ void	loop_manage_cam(t_data *data)
 		if (data->hooks & W_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, dir, 1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, 1);
+						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, dir, 1);
+			}
 			else
 			{
 				data->camera->origin.val[0] += dir.val[0];
@@ -129,7 +148,19 @@ void	loop_manage_cam(t_data *data)
 		if (data->hooks & S_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, dir, -1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, -1);
+						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, dir, -1);
+			}
 			else
 			{
 				data->camera->origin.val[0] -= dir.val[0];
@@ -147,7 +178,19 @@ void	loop_manage_cam(t_data *data)
 		if (data->hooks & A_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, dir, -1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, -1);
+						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, dir, -1);
+			}
 			else
 			{
 				data->camera->origin.val[0] -= dir.val[0];
@@ -160,7 +203,19 @@ void	loop_manage_cam(t_data *data)
 		if (data->hooks & D_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, dir, 1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, 1);
+						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, dir, 1);
+			}
 			else
 			{
 				data->camera->origin.val[0] += dir.val[0];
@@ -176,14 +231,38 @@ void	loop_manage_cam(t_data *data)
 		if (data->hooks & SPACE_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), -1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], assign_3vecf(0, 0.2, 0), -1);
+						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, assign_3vecf(0, 0.2, 0));
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), -1);
+			}
 			else
 				data->camera->origin.val[1] -= 0.2;
 		}
 		if (data->hooks & SHIFT_KEY)
 		{
 			if (data->selected_obj)
-				data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), 1);
+			{
+				if (data->selected_obj->composed_w)
+				{
+					int i = -1;
+					while (data->selected_obj->composed_w[++i])
+					{
+						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], assign_3vecf(0, 0.2, 0), 1);
+						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, assign_3vecf(0, 0.2, 0));
+					}
+				}
+				else
+					data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), 1);
+			}
 			else
 				data->camera->origin.val[1] += 0.2;
 		}

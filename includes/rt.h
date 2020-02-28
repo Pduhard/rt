@@ -367,6 +367,8 @@ typedef	struct	s_cut
 {
 	t_cut_type	cut_type;
 	void		*cut_param;
+	//void		(*move)(struct s_cut *, t_3vecf, double);
+	//void		(*rotate)(struct s_cut *, t_3vecf, t_33matf *);
 	struct s_cut	*next;
 }				t_cut;
 
@@ -408,7 +410,7 @@ typedef struct	s_obj
 	t_obj_type		obj_type;
 	t_mat_type		material_type;
 	void			*obj_param;
-	struct s_obj	*cuts;
+	struct s_obj			*cuts;
 	t_motion		*motions;
 	int				(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
 	int				(*check_inside)(t_3vecf, struct s_obj *);
@@ -425,7 +427,8 @@ typedef struct	s_obj
 	double			shininess;
 	struct s_obj	*next;
 	t_data			*data;
-	t_composed		*from_composed;
+	t_3vecf			composed_origin;
+	struct s_obj	**composed_w;
 }				t_obj;
 
 typedef struct	s_composed

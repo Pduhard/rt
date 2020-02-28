@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 04:42:38 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 06:56:32 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -134,7 +134,7 @@ void   rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
 
 t_3vecf	get_origin_cone(t_obj *cone)
 {
-	return (((t_cone *)cone->obj_param)->center);
+	return (((t_cone *)cone->obj_param)->tip);
 }
 
 t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id)

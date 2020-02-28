@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 21:55:11 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 04:46:37 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 07:16:11 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 {
 	t_composed	*composed;
 	t_composed	*list;
-	t_obj		*obj;
+//	t_obj		*obj;
+	t_obj		**obj_tab;
 	t_3vecf		origin;
 	t_2vecf		rotation;
 	t_33matf	rot_mat[2];
@@ -110,6 +111,10 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 	if (!composed)
 		return (0);
 	i = 0;
+	while (composed->components[i])
+		i++;
+	if (!(obj_tab = ft_memalloc(sizeof(t_obj *) * (i + 1))))
+		return (0);
 //		print_vec(rot_mat[1].val[0]);
 //	print_vec(rot_mat[1].val[1]);
 //	print_vec(rot_mat[1].val[2]);
@@ -129,20 +134,26 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(rotation.val[0]));
 
 	//	ft_putendl("ici");
+	i = 0;
 	while (composed->components[i])
 	{
 		ft_putendl("ici ???");
-		if (!(obj = copy_object(composed->components[i])))
+		if (!(obj_tab[i] = copy_object(composed->components[i])))
 			return (0);
 		//	ft_putendl("salutt");
 		//rotation
-		if (obj->rotate)
-			obj->rotate(obj, assign_3vecf(0, 0, 0), rot_mat);
-		obj->move(obj, origin, 1);
+		obj_tab[i]->rotate(obj_tab[i], assign_3vecf(0, 0, 0), rot_mat);
+		obj_tab[i]->move(obj_tab[i], origin, 1);
 		//	printf("%p\n", composed->components[i]->ray_intersect);
-		add_object(obj, data);//composed->components[i], data);
-		printf("%p %s \n", data->objs->ray_intersect, data->objs->obj_type == OBJ_TRIANGLE ? "tri" : "oups");
+		add_object(obj_tab[i], data);//composed->components[i], data);
+	//	printf("%p %s \n", data->objs->ray_intersect, data->objs->obj_type == OBJ_TRIANGLE ? "tri" : "oups");
 		i++;
+	}
+	i = 0;
+	while (obj_tab[i])
+	{
+		obj_tab[i]->composed_origin = origin;
+		obj_tab[i++]->composed_w = obj_tab;
 	}
 /*	t_obj *o = data->objs;
 	while (o)
