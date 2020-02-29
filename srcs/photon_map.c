@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/26 06:29:12 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/29 07:36:27 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -224,14 +224,24 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 	//photon
 }
 
-void		scatter_photon(t_photon **photon_tab, t_data *data)
+void		scatter_photon(t_photon **photon_tab, t_data *data, t_text_img *img)
 {
 	t_light	*light;
 	int		ind_i;
 	int		caus_i;
 	t_3vecf	orig;
 	t_3vecf	dir;
+	double	pc;
+	int		pct;
+	double	div;
 
+	div = 0;
+	pct = 0;
+	if (data->caustics_gi)
+		div += NB_CAUSTIC_PHOTON;
+	if (data->indirect_gi)
+		div += NB_INDIRECT_PHOTON;
+	pc = 0;
 	if (!check_light_type(data->lights))
 		return ;
 	ind_i = 0;
@@ -258,6 +268,12 @@ void		scatter_photon(t_photon **photon_tab, t_data *data)
 			}
 			cast_photon(orig, dir, light, data, &ind_i, &caus_i, photon_tab, PHOTON_DEPTH, rand_iter++, assign_3vecf(light->color.val[0] * 100, light->color.val[1] * 100, light->color.val[2] * 100), 0);
 	//		i++;
+		}
+		pc = (double)(ind_i + caus_i) / div;
+		if ((int)(pc * (double)img->width) > pct)
+		{
+			update_loading_screen_gi(pct, img, data);
+			pct++;
 		}
 		light = light->next ? light->next : data->lights;
 		if ((ind_i == NB_INDIRECT_PHOTON && !caus_i)
@@ -394,6 +410,7 @@ t_kd_tree	*build_kd_tree(t_photon *photon_tab, int low, int high, int axis, t_cu
 int		create_photon_map(t_data *data)
 {
 	t_photon	**photon_tab;
+	t_text_img	*img = parse_img("img/global_illu_green.png");
 	//[NB_PHOTON];
 //	t_kd_tree	*kd_tree;
 
@@ -404,15 +421,15 @@ int		create_photon_map(t_data *data)
 	if (!(photon_tab[1] = malloc(sizeof(t_photon) * NB_INDIRECT_PHOTON)))
 		return (0);
 	printf("before scattering\n");
-	scatter_photon(photon_tab, data);
+	scatter_photon(photon_tab, data, img);
 	printf("after scattering\n");
-	data->bbox_photon.x_range.val[0] = MAX_VIEW;
-	data->bbox_photon.y_range.val[0] = MAX_VIEW;
-	data->bbox_photon.z_range.val[0] = MAX_VIEW;
+//	data->bbox_photon.x_range.val[0] = MAX_VIEW;
+//	data->bbox_photon.y_range.val[0] = MAX_VIEW;
+//	data->bbox_photon.z_range.val[0] = MAX_VIEW;
 
-	data->bbox_photon.x_range.val[1] = -MAX_VIEW;
-	data->bbox_photon.y_range.val[1] = -MAX_VIEW;
-	data->bbox_photon.z_range.val[1] = -MAX_VIEW;
+//	data->bbox_photon.x_range.val[1] = -MAX_VIEW;
+//	data->bbox_photon.y_range.val[1] = -MAX_VIEW;
+//	data->bbox_photon.z_range.val[1] = -MAX_VIEW;
 	data->caustic_map = photon_tab[0] ? build_kd_tree(photon_tab[0], 0, NB_CAUSTIC_PHOTON - 1, 0, &data->bbox_photon) : NULL;
 	data->indirect_map = build_kd_tree(photon_tab[1], 0, NB_INDIRECT_PHOTON - 1, 0, &data->bbox_photon);
 	printf("Bounding box photon scene: \nx %f %f\n", data->bbox_photon.x_range.val[0], data->bbox_photon.x_range.val[1]);

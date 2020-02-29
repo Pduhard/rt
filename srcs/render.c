@@ -426,7 +426,8 @@ t_3vecf		compute_glare(t_3vecf orig, t_3vecf dir, t_light *lights, t_3vecf *inte
 				fact = exp(fact) - exp(1. - 0.05 / light_dist);
 				fact = fact < 0 ? 0 : fact;
 				fact *= exp(fact * 400);
-				*/glare.val[0] += fact;
+				*/
+				glare.val[0] += fact;
 				glare.val[1] += fact;
 				glare.val[2] += fact;
 			}
@@ -456,7 +457,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		if (light_fact.val[2] > 1)
 			light_fact.val[2] = 1;
 	*/	return (light_fact);
-		if (data->fog.val[0])
+		if (data->fog.val[0] || data->fog.val[1])
 		{
 		
 			double	fog_fact;
@@ -599,7 +600,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	//	return (lighted_color);
 	}
 */	
-	if (data->fog.val[0])
+	if (data->fog.val[0] || data->fog.val[1])
 	{
 		
 		double	fog_fact;

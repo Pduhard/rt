@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 06:57:30 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:41:05 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -68,7 +68,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, 
 void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 {
 	t_cylinder	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	param->center.val[0] += dir.val[0] * fact;
@@ -80,7 +80,8 @@ void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 	cuts = cylinder->cuts;
 	while (cuts)
 	{
-		cuts->move(cuts, dir, fact);
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
 		cuts = cuts->next;
 	}
 }
@@ -88,7 +89,7 @@ void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 void   rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_cylinder *param;
-	t_obj   *cuts;
+	t_cut   *cuts;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	param->center = sub_3vecf(param->center, orig);
@@ -102,7 +103,8 @@ void   rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
 	cuts = cylinder->cuts;
 	while (cuts)
 	{
-		cuts->rotate(cuts, orig, rot_mat);
+		if (cuts->rotate && cuts->cut_type != CUT_STATIC)
+			cuts->rotate(cuts, orig, rot_mat);
 		cuts = cuts->next;
 	}
 }

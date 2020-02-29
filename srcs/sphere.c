@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 04:37:21 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/29 01:40:16 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,7 +38,7 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_
 void	move_sphere(t_obj *sphere, t_3vecf dir, double fact)
 {
 	t_sphere	*param;
-	t_obj		*cuts;
+	t_cut		*cuts;
 
 	param = (t_sphere *)sphere->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
@@ -47,7 +47,8 @@ void	move_sphere(t_obj *sphere, t_3vecf dir, double fact)
 	cuts = sphere->cuts;
 	while (cuts)
 	{
-		cuts->move(cuts, dir, fact);
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
 		cuts = cuts->next;
 	}
 }
@@ -55,7 +56,7 @@ void	move_sphere(t_obj *sphere, t_3vecf dir, double fact)
 void	rotate_sphere(t_obj *sphere, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_sphere	*param;
-	t_obj		*cuts;
+	t_cut		*cuts;
 	param = (t_sphere *)sphere->obj_param;
 	param->origin = sub_3vecf(param->origin, orig);
 
@@ -65,7 +66,8 @@ void	rotate_sphere(t_obj *sphere, t_3vecf orig, t_33matf rot_mat[2])
 	cuts = sphere->cuts;
 	while (cuts)
 	{
-		cuts->rotate(cuts, orig, rot_mat);
+		if (cuts->rotate && cuts->cut_type != CUT_STATIC)
+			cuts->rotate(cuts, orig, rot_mat);
 		cuts = cuts->next;
 	}
 }
@@ -79,10 +81,14 @@ t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int sp_i
 {
 	t_sphere	*param;
 	t_3vecf		sph_orig;
+	t_3vecf		normal;
 
 	param = (t_sphere *)sphere->obj_param;
 	sph_orig = sp_id ? move_3vecf(param->origin, sphere->motions, sp_id) : param->origin;
-	return (sub_3vecf(inter_point, sph_orig));
+
+	normal = sub_3vecf(inter_point, sph_orig);
+	normalize_3vecf(&normal);
+	return (normal);
 }
 
 int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist, int sp_id)

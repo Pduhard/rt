@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 06:56:32 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:41:36 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -93,7 +93,7 @@ t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_ob
 void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 {
 	t_cone	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_cone *)cone->obj_param;
 	param->center.val[0] += dir.val[0] * fact;
@@ -105,7 +105,8 @@ void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 	cuts = cone->cuts;
 	while (cuts)
 	{
-		cuts->move(cuts, dir, fact);
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
 		cuts = cuts->next;
 	}
 }
@@ -113,7 +114,7 @@ void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 void   rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_cone *param;
-	t_obj   *cuts;
+	t_cut   *cuts;
 
 	param = (t_cone *)cone->obj_param;
 	param->center = sub_3vecf(param->center, orig);
@@ -127,7 +128,8 @@ void   rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
 	cuts = cone->cuts;
 	while (cuts)
 	{
-		cuts->rotate(cuts, orig, rot_mat);
+		if (cuts->rotate && cuts->cut_type != CUT_STATIC)
+			cuts->rotate(cuts, orig, rot_mat);
 		cuts = cuts->next;
 	}
 }

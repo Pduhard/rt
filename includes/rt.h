@@ -15,7 +15,7 @@
 # include <time.h>
 # define WIN_WIDTH 600
 # define WIN_HEIGHT	600
-# define NB_THREADS	1
+# define NB_THREADS	8
 # define MAX_ANTI_AL 4
 # define MAX_ANTI_AL2 16
 
@@ -175,7 +175,6 @@ typedef	enum {
 	OBJ_CONE,
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
-	OBJ_CUT_TEXTURE,
 	OBJ_TRIANGLE,
 	OBJ_CUBE,
 	OBJ_ELLIPSOID,
@@ -222,7 +221,10 @@ typedef enum {
 typedef enum {
 	CUT_STATIC,
 	CUT_REAL,
-	CUT_PLAN
+	CUT_CUBE,
+	CUT_SPHERE,
+	CUT_TEXTURE,
+	CUT_UV
 }	t_cut_type;
 
 typedef struct	s_mlx
@@ -357,6 +359,12 @@ typedef struct	s_cylinder
 	double		radius;
 }				t_cylinder;
 
+typedef struct	s_cut_uv
+{
+	t_2vecf		u_range;
+	t_2vecf		v_range;
+}				t_cut_uv;
+
 typedef struct	s_cut_classic
 {
 	t_3vecf		origin;
@@ -367,8 +375,8 @@ typedef	struct	s_cut
 {
 	t_cut_type	cut_type;
 	void		*cut_param;
-	//void		(*move)(struct s_cut *, t_3vecf, double);
-	//void		(*rotate)(struct s_cut *, t_3vecf, t_33matf *);
+	void		(*move)(struct s_cut *, t_3vecf, double);
+	void		(*rotate)(struct s_cut *, t_3vecf, t_33matf *);
 	struct s_cut	*next;
 }				t_cut;
 
@@ -410,7 +418,7 @@ typedef struct	s_obj
 	t_obj_type		obj_type;
 	t_mat_type		material_type;
 	void			*obj_param;
-	struct s_obj			*cuts;
+	t_cut			*cuts;
 	t_motion		*motions;
 	int				(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
 	int				(*check_inside)(t_3vecf, struct s_obj *);
@@ -472,6 +480,7 @@ typedef struct	s_data
 {
 	double			f;
 	t_mlx		*mlx;
+	t_mlx		*loading_mlx;
 	t_mlx		*info;
 	t_cam		*camera;
 	t_obj		*objs;
@@ -587,7 +596,8 @@ int		parse_objects(char **line, t_data *data, t_composed *from);
 int		parse_lights(char **line, t_data *data);
 int		parse_color_transp(char **line, int i, t_4vecf *t);
 void	*parse_proc(char **line/*, t_text *text*/);
-void	*parse_img(char **line/*, t_text *text*/);
+void	*parse_img(char *name);
+void	*parse_texture_img(char **line);
 int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
 int		parse_bump_mapping(char **line, t_obj *obj);//t_text *text);
 void	set_bump_own(t_obj *obj);//t_text *text);
@@ -738,7 +748,12 @@ t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj 
 t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 int		parse_cutting(char **line, t_obj *obj);
-int		parse_cut_static_real(char **line, t_obj *cut);
+int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type);
+void	move_cut_plane(t_cut *cut, t_3vecf dir, double fact);
+void	move_cut_sphere(t_cut *cut, t_3vecf dir, double fact);
+void	move_cut_cube(t_cut *cut, t_3vecf dir, double fact);
+
+void	rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2]);
 
 int		parse_onoff(char **line, int *onoff);
 int		parse_color_filter(char **line, t_data *data);
@@ -758,7 +773,9 @@ double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 
-int	check_lights(t_data *data);
+int		check_lights(t_data *data);
 void	open_info(t_data *data);
+int		init_loading_screen(t_data *data);
+void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);
 
 #endif

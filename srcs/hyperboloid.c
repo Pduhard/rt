@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:28:43 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/25 23:38:15 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:49:41 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,19 @@ t_2vecf	get_text_coordinate_hyperboloid(t_3vecf inter_point, t_3vecf normal_inte
 void	move_hyperboloid(t_obj *hyperboloid, t_3vecf dir, double fact)
 {
 	t_hyperboloid	*param;
+	t_cut			*cuts;
 
 	param = (t_hyperboloid *)hyperboloid->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
 	param->origin.val[1] += dir.val[1] * fact;
 	param->origin.val[2] += dir.val[2] * fact;
+	cuts = hyperboloid->cuts;
+	while (cuts)
+	{
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_hyperboloid(t_obj *hyperboloid)

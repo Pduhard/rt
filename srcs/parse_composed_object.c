@@ -6,11 +6,57 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 21:55:11 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 07:16:11 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:38:31 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+void	move_cut_plane(t_cut *cut, t_3vecf dir, double fact)
+{
+	t_plane	*param;
+
+	param = (t_plane *)cut->cut_param;
+	param->origin.val[0] += dir.val[0] * fact;
+	param->origin.val[1] += dir.val[1] * fact;
+	param->origin.val[2] += dir.val[2] * fact;
+}
+
+void	move_cut_sphere(t_cut *cut, t_3vecf dir, double fact)
+{
+	t_sphere	*param;
+
+	param = (t_sphere *)cut->cut_param;
+	param->origin.val[0] += dir.val[0] * fact;
+	param->origin.val[1] += dir.val[1] * fact;
+	param->origin.val[2] += dir.val[2] * fact;
+}
+
+void	move_cut_cube(t_cut *cut, t_3vecf dir, double fact)
+{
+	t_cube	*param;
+
+	param = (t_cube *)cut->cut_param;
+	param->x_range.val[0] += dir.val[0] * fact;
+	param->x_range.val[1] += dir.val[1] * fact;
+	param->y_range.val[0] += dir.val[0] * fact;
+	param->y_range.val[1] += dir.val[1] * fact;
+	param->z_range.val[0] += dir.val[0] * fact;
+	param->z_range.val[1] += dir.val[1] * fact;
+}
+
+void	rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2])
+{
+	t_plane	*param;
+
+	param = (t_plane *)cut->cut_param;
+	param->origin = sub_3vecf(param->origin, orig);
+	param->origin = mult_3vecf_33matf(param->origin, rot_mat[1]);
+	param->origin = mult_3vecf_33matf(param->origin, rot_mat[0]);
+	param->normal = mult_3vecf_33matf(param->normal, rot_mat[1]);
+	param->normal = mult_3vecf_33matf(param->normal, rot_mat[0]);
+	param->origin = add_3vecf(param->origin, orig);
+}
 
 int		parse_composed_model(char **line, t_data *data)
 {
@@ -58,11 +104,16 @@ void	*copy_obj_param(void *obj_param, t_obj_type type)
 	return (NULL);
 }
 
+t_cut	*copy_cut(t_cut *src)
+{
+	return (ft_memcpy(ft_memalloc(sizeof(t_cut)), src, sizeof(t_cut)));
+}
+
 t_obj	*copy_object(t_obj *src)
 {
 	t_obj	*obj;
-	t_obj	*cuts_obj;
-	t_obj	*cuts;
+	t_cut	*cuts_obj;
+	t_cut	*cuts;
 
 	if (!(obj = ft_memalloc(sizeof(t_obj))))
 		return (NULL);
@@ -71,11 +122,11 @@ t_obj	*copy_object(t_obj *src)
 	obj->cuts = NULL;
 	while (cuts)
 	{
-		if (!obj->cuts && !(obj->cuts = copy_object(cuts)))
+		if (!obj->cuts && !(obj->cuts = copy_cut(cuts)))
 			return (NULL);
 		else
 		{
-			if (!(cuts_obj = copy_object(cuts)))
+			if (!(cuts_obj = copy_cut(cuts)))
 				return (NULL);
 			cuts_obj->next = obj->cuts;
 			obj->cuts = cuts_obj;
@@ -90,7 +141,7 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 {
 	t_composed	*composed;
 	t_composed	*list;
-//	t_obj		*obj;
+	//	t_obj		*obj;
 	t_obj		**obj_tab;
 	t_3vecf		origin;
 	t_2vecf		rotation;
@@ -115,10 +166,10 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 		i++;
 	if (!(obj_tab = ft_memalloc(sizeof(t_obj *) * (i + 1))))
 		return (0);
-//		print_vec(rot_mat[1].val[0]);
-//	print_vec(rot_mat[1].val[1]);
-//	print_vec(rot_mat[1].val[2]);
-//	ft_putendl("sallllllllut\n");
+	//		print_vec(rot_mat[1].val[0]);
+	//	print_vec(rot_mat[1].val[1]);
+	//	print_vec(rot_mat[1].val[2]);
+	//	ft_putendl("sallllllllut\n");
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);
@@ -146,7 +197,7 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 		obj_tab[i]->move(obj_tab[i], origin, 1);
 		//	printf("%p\n", composed->components[i]->ray_intersect);
 		add_object(obj_tab[i], data);//composed->components[i], data);
-	//	printf("%p %s \n", data->objs->ray_intersect, data->objs->obj_type == OBJ_TRIANGLE ? "tri" : "oups");
+		//	printf("%p %s \n", data->objs->ray_intersect, data->objs->obj_type == OBJ_TRIANGLE ? "tri" : "oups");
 		i++;
 	}
 	i = 0;
@@ -155,12 +206,12 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 		obj_tab[i]->composed_origin = origin;
 		obj_tab[i++]->composed_w = obj_tab;
 	}
-/*	t_obj *o = data->objs;
-	while (o)
-	{
+	/*	t_obj *o = data->objs;
+		while (o)
+		{
 		printf("a %p %d\n", o->ray_intersect, o->obj_type);
 		o = o->next;
-	}
-*/	//	exit(0);
+		}
+		*/	//	exit(0);
 	return (1);
 }

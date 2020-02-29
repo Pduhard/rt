@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 02:20:57 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/26 05:37:30 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 22:07:24 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -161,11 +161,17 @@ t_2vecf	solve_quadratic(double a, double b, double c)
 	double	delta;
 	t_2vecf	roots;
 
+	if (is_null(a))
+	{
+		roots.val[0] = (-c / b);
+		roots.val[1] = (-c / b);
+		return (roots);
+	}
 	delta = b * b - 4 * a * c;
 	if (delta < 0)
 	{
-		roots.val[0] = DBL_MAX;
-		roots.val[1] = DBL_MAX;
+		roots.val[0] = MAX_VIEW;
+		roots.val[1] = MAX_VIEW;
 		return (roots);
 	}
 	roots.val[0] = (-b - sqrt(delta)) / (2 * a);
@@ -182,7 +188,7 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 	double	r13;
 	t_3vecf	roots;
 
-	if (a == 0)
+	if (is_null(a))
 	{
 		t_2vecf	quadra_roots;
 	
@@ -201,7 +207,7 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 		quadra_roots = solve_quadratic(a ,b, c);
 		roots.val[0] = quadra_roots.val[0];
 		roots.val[1] = quadra_roots.val[1];
-		roots.val[2] = 0;
+		roots.val[2] = quadra_roots.val[1];
 		return (roots);
 
 //		printf("d == 0: ax^3 + bx^2 + cx + d = 0 => 0 and Solve 2nd degree f(x) / x !!\n");
@@ -248,10 +254,10 @@ t_3vecf	solve_cubic(double a, double b, double c, double d)
 	}
 	else
 	{
-		r13 = r < 0 ? - powf(-r, 1. / 3.) : powf(r, 1. / 3.);
+		r13 = r < 0 ? -powf(-r, 1. / 3.) : powf(r, 1. / 3.);
 		roots.val[0] = -t1 + 2. * r13;
 		roots.val[1] = -r13 - t1;
-		roots.val[2] = -r13 - t1;// SAME
+		roots.val[2] = roots.val[1];// SAME
 	}
 	return (roots);
 }

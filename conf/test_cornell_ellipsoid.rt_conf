@@ -2,8 +2,8 @@
 	<name(Bump mapping)	>
 	<size(800, 600)>
 //	<anti-alliasing (1)>
-//	<indirect_GI (on)>
-//	<Caustics_GI (on)>
+	<indirect_GI (on)>
+	<Caustics_GI (on)>
 	<Fog (5, 50)>
 	<camera
 		<origin (0, 0, -6)>

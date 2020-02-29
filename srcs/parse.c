@@ -103,7 +103,9 @@ int		pick_options(char **line, t_data *data)
 	else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 		ret = parse_color_filter(line, data);
 	else if (**line != '<')
+	{
 		return (error(UNKNOWSCENE, NULL));
+	}
 	return (ret);
 }
 

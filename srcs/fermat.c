@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 05:56:10 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/26 06:13:29 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:54:28 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,19 @@ t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_
 void	move_fermat(t_obj *fermat, t_3vecf dir, double fact)
 {
 	t_fermat	*param;
+	t_cut		*cuts;
 
 	param = (t_fermat *)fermat->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
 	param->origin.val[1] += dir.val[1] * fact;
 	param->origin.val[2] += dir.val[2] * fact;
+	cuts = fermat->cuts;
+	while (cuts)
+	{
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_fermat(t_obj *fermat)
