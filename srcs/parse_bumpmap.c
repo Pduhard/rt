@@ -2,11 +2,9 @@
 
 int		parse_bump_mapping(char **line, t_obj *obj)
 {
-//	t_text *text;
 	char	stripe;
 	int		ret;
 
-//	text = obj
 	ret = 1;
 	stripe = 0;
 	while (stripe != '>' && ret != 0)
@@ -56,8 +54,8 @@ void	set_bump_own(t_obj *obj)//t_text *text)
 
 int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index)
 {
-	int	i;
-	int	start;
+	int		i;
+	int		start;
 	char	*s;
 	char	*tmp;
 
@@ -72,12 +70,35 @@ int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index)
 		++i;
 	if (tmp[i] != ')')
 		return (0);
-	s =	ft_strsub(tmp, start, i - start);
+	s = ft_strsub(tmp, start, i - start);
 	set_bump_inde(s, obj);//text);
 	while (tmp[i] && tmp[i] != '(')
 		++i;
 	*line += i;
 	return (parse_double2(line, 0, &obj->text.bump_fact));
+}
+
+void	set_bump_inde_next(char *s, t_obj *obj)
+{
+	//		text->bump_type = BUMP_WOOD;
+	if (!(ft_strncmp_case(s, "IMAGE", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_image;
+		obj->text.bump_type = BUMP_IMAGE;
+	}
+
+	//	text->bump_type = BUMP_IMAGE;
+	else if (!(ft_strncmp_case(s, "SINUS", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_sinus;
+		obj->text.bump_type = BUMP_SINUS;
+	}
+	else if (!(ft_strncmp_case(s, "FBM", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_fbm;
+		obj->text.bump_type = BUMP_FBM;
+	}
+	//	text->bump_type = BUMP_SINUS;
 }
 
 void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
@@ -101,24 +122,5 @@ void	set_bump_inde(char *s, t_obj *obj)//t_text *text)
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
-
-//		text->bump_type = BUMP_WOOD;
-	else 	if (!(ft_strncmp_case(s, "IMAGE", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_image;
-		obj->text.bump_type = BUMP_IMAGE;
-	}
-
-	//	text->bump_type = BUMP_IMAGE;
-	else if (!(ft_strncmp_case(s, "SINUS", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_sinus;
-		obj->text.bump_type = BUMP_SINUS;
-	}
-	else if (!(ft_strncmp_case(s, "FBM", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_fbm;
-		obj->text.bump_type = BUMP_FBM;
-	}
-	//	text->bump_type = BUMP_SINUS;
+	set_bump_inde_next(s, obj);
 }

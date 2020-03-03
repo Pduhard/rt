@@ -125,20 +125,11 @@ int		parse_scene(char **line, t_data *data)
 		else if (!ft_strncmp_case(*line, "camera", 6))
 			ret = parse_camera(line, data);
 		else if (!ft_strncmp_case(*line, "objects", 7))
-		{
-			printf("TEST\n");
 			ret = parse_objects(line, data, NULL);
-		}
 		else if (!ft_strncmp_case(*line, "composed", 8))
-		{
 			ret = parse_composed_model(line, data);
-	//		exit(0);
-		}
 		else if (!ft_strncmp_case(*line, "lights", 6))
-		{
 			ret = parse_lights(line, data);
-			printf("Sortie light ==> %s\n", *line);
-		}
 		else if (**line != '>' && !(ret = pick_options(line, data)))
 			return (0);
 		/*else if (!ft_strncmp_case(*line, "MotionBlur", 10))
@@ -159,7 +150,6 @@ int		parse_scene(char **line, t_data *data)
 			ret = parse_color_filter(line, data);
 		else if (**line != '<')
 			return (error(UNKNOWSCENE, NULL));*/
-		printf("Fin Parse scene ==> %s\n", *line);
 	}
 	check_lights(data);
 	if (!data->camera)
@@ -167,7 +157,7 @@ int		parse_scene(char **line, t_data *data)
 //	t_obj *o = data->objs;
 //	while (o)
 ///	{
-//		printf("a %p %d\n", o->ray_intersect, o->obj_type);	
+//		printf("a %p %d\n", o->ray_intersect, o->obj_type);
 //		o = o->next;
 //	}
 	return (ret);
