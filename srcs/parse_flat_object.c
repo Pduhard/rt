@@ -466,7 +466,7 @@ int		parse_moebius(char **line, t_obj *moebius)
 	if ((moebius_param->radius <= 0.f || moebius_param->half_width <= 0.f) || ret == 0)
 		return (syn_error(SERROR, MOEBIUS, RADIUS, HALFWIDTH));
 	moebius->obj_param = moebius_param;
-	moebius->obj_type = OBJ_SPHERE;
+	moebius->obj_type = OBJ_MOEBIUS;
 	moebius->check_inside = &check_inside_moebius;
 	moebius->ray_intersect = &ray_intersect_moebius;
 	moebius->get_normal_inter = &get_normal_intersect_moebius;

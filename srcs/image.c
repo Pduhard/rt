@@ -6,12 +6,17 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 05:08:34 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/29 05:10:50 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 04:06:41 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+/*
+int		get_color_at_pixel(double row, double col, )
+{
 
+}
+*/
 void	*parse_img(char *name)
 {
 	SDL_Surface		*image_row;

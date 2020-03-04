@@ -135,7 +135,10 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 	clamp_val(&obj->refraction, 0, 3);
 	clamp_val(&obj->refraction, 0, 2.42);
 	if (obj->shininess > 0)
+	{
 		obj->shininess = exp(11 - 10 * obj->shininess);
+		printf("%f\n", obj->shininess);
+	}
 	if (composed)
 	{
 		//free object

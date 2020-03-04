@@ -19,7 +19,7 @@
 # define MAX_ANTI_AL 4
 # define MAX_ANTI_AL2 16
 
-# define MAX_VIEW 500
+# define MAX_VIEW 1000000
 
 /* TMP MACRO  */
 

@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 04:30:05 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/29 07:50:20 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 06:50:56 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,36 +60,48 @@ int		init_loading_screen(t_data *data)
 {
 	int		x;
 	int		y;
+	int		x_max;
+	int		y_max;
 	int		img_x;
 	int		img_y;
+	double	prop_x;
+	double	prop_y;
+
 	t_text_img *img = parse_img("img/global_illu.png");
 
 	x = data->size.val[0] / 4;
-	img_x = 0;
-	while (img_x < img->width)
+	x_max = 3 * x;
+	prop_x = (double)img->width / (double)(x_max - x);
+	while (x < x_max)
 	{
-		y = data->size.val[1] / 4;
-		img_y = 0;
-		while (img_y < img->height)
+		y = data->size.val[1] / 5;
+		y_max = y + data->size.val[1] / 5;
+		prop_y = (double)img->height / (double)(y_max - y);
+		while (y < y_max)
 		{
+			img_y = (y - data->size.val[1] / 5) * prop_y;
+			img_x = (x - data->size.val[0] / 4) * prop_x;
 			data->mlx->img_str[y * (int)data->size.val[0] + x] = (img->pixels[img_y * img->width + img_x] & 0xffffff00) >> 8;
 			y++;
-			img_y++;
 		}
-		img_x++;
 		x++;
 	}
 	//free img
 	x = data->size.val[0] / 4;
-	img_x = 0;
+	x_max = 3 * x;
+	prop_x = (double)img->width / (double)(x_max - x);
 	
 	img = parse_img("img/render.png");
 	while (img_x < img->width)
 	{
-		y = data->size.val[1] / 2;
+		y = 3 * data->size.val[1] / 5;
+		y_max = y + data->size.val[1] / 5;
+		prop_y = (double)img->height / (double)(y_max - y);
 		img_y = 0;
 		while (img_y < img->height)
 		{
+			img_y = (y - 3 * data->size.val[1] / 5) * prop_y;
+			img_x = (x - data->size.val[0] / 4) * prop_x;
 			data->mlx->img_str[y * (int)data->size.val[0] + x] = (img->pixels[img_y * img->width + img_x] & 0xffffff00) >> 8;
 			y++;
 			img_y++;
@@ -97,7 +109,8 @@ int		init_loading_screen(t_data *data)
 		img_x++;
 		x++;
 	}
-//	*data->load_mlx = *data->mlx;
+
+	//	*data->load_mlx = *data->mlx;
 
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);

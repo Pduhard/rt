@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 02:20:57 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 22:07:24 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 07:50:10 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -170,8 +170,8 @@ t_2vecf	solve_quadratic(double a, double b, double c)
 	delta = b * b - 4 * a * c;
 	if (delta < 0)
 	{
-		roots.val[0] = MAX_VIEW;
-		roots.val[1] = MAX_VIEW;
+		roots.val[0] = 0;//MAX_VIEW;
+		roots.val[1] = 0;//MAX_VIEW;
 		return (roots);
 	}
 	roots.val[0] = (-b - sqrt(delta)) / (2 * a);

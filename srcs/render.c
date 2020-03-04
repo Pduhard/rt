@@ -209,7 +209,7 @@ void	cel_shade(double *val)
 		*val = CEL_BOUND_6;
 }
 
-t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t_light *lights, t_obj *objs, int sp_id, t_data *data)
+t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t_light *lights, t_obj *objs, int sp_id, t_data *data, double shininess)
 {
 	t_3vecf	light_fact;
 	double	norm_dot_ldir;
@@ -252,6 +252,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 			normalize_3vecf(&light_dir);// same
 			shadow_inter_point = inter_point;
 			transp_fact = assign_3vecf(1, 1, 1);
+		//	printf("hallllllllllo %d %p == %p \n", objs->obj_type, objs->get_text_coordinate, get_text_coordinate_moebius);
 			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs, sp_id, data)))
 			{
 		//		printf("wefwef\n");
@@ -301,7 +302,10 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				light_fact.val[1] += global.val[1];
 				light_fact.val[2] += global.val[2];
 			}
-	*/		if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
+	*/		
+	//		if (objs->obj_type == OBJ_MOEBIUS)
+			//printf("hallllllllllo %d\n", objs->obj_type);
+			if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
 			{
 			//	printf("wefwef\n");
 				norm_dot_ldir = dot_product_3vecf(normal_inter, light_dir);
@@ -311,20 +315,20 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 					light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * norm_dot_ldir /  get_length_3vecf(light_dir);
 					light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * norm_dot_ldir /  get_length_3vecf(light_dir);
 				}
-
-				if (objs->shininess)
+				if (shininess)
 				{
 					spec_vec = reflect_ray(light_dir, normal_inter);
 				/*	spec_vec.val[0] = 2 * normal_inter.val[0] * norm_dot_ldir - light_dir.val[0];
 					spec_vec.val[1] = 2 * normal_inter.val[1] * norm_dot_ldir - light_dir.val[1];
 					spec_vec.val[2] = 2 * normal_inter.val[2] * norm_dot_ldir - light_dir.val[2];
-				*/	ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
+
+				*/	
+					ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
 					if (ref_dot_idir > 0)// && !CEL_SHADING)
 					{
-						light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
-						light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
-						light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), objs->shininess);
-			
+						light_fact.val[0] += lights->color.val[0] * transp_fact.val[0] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), shininess);
+						light_fact.val[1] += lights->color.val[1] * transp_fact.val[1] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), shininess);
+						light_fact.val[2] += lights->color.val[2] * transp_fact.val[2] * powf(ref_dot_idir / (get_length_3vecf(spec_vec) * get_length_3vecf(inv_dir)), shininess);
 					}
 				}
 			}
@@ -495,7 +499,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		normal_inter = closest_obj->get_bump_mapping(inter_point, normal_inter, closest_obj);
 	inside = 0;
 	obj_color = closest_obj->get_text_color(inter_point, tex_normal_inter, closest_obj);
-	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data);
+	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data, closest_obj->shininess);
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];
