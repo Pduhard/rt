@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:28:43 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/26 07:19:45 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/29 01:47:58 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int		check_inside_ellipsoid(t_3vecf point, t_obj *ellipsoid)
 {
 	t_ellipsoid	*param;
-	
+
 	param = (t_ellipsoid *)ellipsoid->obj_param;
 	point = sub_3vecf(point, param->origin);
 	point.val[0] = (point.val[0] * point.val[0]) / (param->x_fact * param->x_fact);
@@ -40,11 +40,19 @@ t_2vecf	get_text_coordinate_ellipsoid(t_3vecf inter_point, t_3vecf normal_inter,
 void	move_ellipsoid(t_obj *ellipsoid, t_3vecf dir, double fact)
 {
 	t_ellipsoid	*param;
+	t_cut		*cuts;
 
 	param = (t_ellipsoid *)ellipsoid->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
 	param->origin.val[1] += dir.val[1] * fact;
 	param->origin.val[2] += dir.val[2] * fact;
+	cuts = ellipsoid->cuts;
+	while (cuts)
+	{
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_ellipsoid(t_obj *ellipsoid)

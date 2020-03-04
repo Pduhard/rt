@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 03:46:18 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 04:38:08 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:42:20 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, 
 void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 {
 	t_triangle	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_triangle *)triangle->obj_param;
 	param->a.val[0] += dir.val[0] * fact;
@@ -49,7 +49,8 @@ void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 	cuts = triangle->cuts;
 	while (cuts)
 	{
-		cuts->move(cuts, dir, fact);
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
 		cuts = cuts->next;
 	}
 }
@@ -57,7 +58,7 @@ void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_triangle	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_triangle *)triangle->obj_param;
 	param->a = sub_3vecf(param->a, orig);
@@ -78,7 +79,8 @@ void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 	cuts = triangle->cuts;
 	while (cuts)
 	{
-		cuts->rotate(cuts, orig, rot_mat);
+		if (cuts->rotate && cuts->cut_type != CUT_STATIC)
+			cuts->rotate(cuts, orig, rot_mat);
 		cuts = cuts->next;
 	}
 }

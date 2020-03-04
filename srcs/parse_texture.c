@@ -71,7 +71,7 @@ int		compute_text(char **line, t_obj *obj)
 {
 	if (obj->text.text_type == TEXT_IMAGE && !(obj->text.text_param))
 	{
-		if (!(obj->text.text_param = parse_img(line/*, &obj->text*/)))
+		if (!(obj->text.text_param = parse_texture_img(line/*, &obj->text*/)))
 			return (syn_error(SERROR, TEXT, IMG, OFFSCALE));
 	}
 	else if (!(obj->text.text_param))
@@ -147,6 +147,19 @@ int		parse_texture2(char **line, t_obj *obj) //
 		else if (!(ft_strncmp_case(*line, "scale", 5)))
 			ret = parse_rotation(line, &obj->text.scale, 5);
 		else if (!(ft_strncmp_case(*line, "BumpMapping", 11)) && obj->text.text_param)
+			ret = parse_bump_mapping(line, obj);
+		else if (**line != '<' && **line != '>')
+			return (error(UNKNOWTEXT, NULL));
+		if (obj->text.text_type == TEXT_IMAGE && !(obj->text.text_param))
+		{
+			if (!(obj->text.text_param = parse_texture_img(line, &obj->text)))
+				return (syn_error(SERROR, TEXT, IMG, OFFSCALE));
+		}
+		else if (!(obj->text.text_param))
+		{
+			if (!(obj->text.text_param = parse_proc(line, &obj->text)))
+				return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
+		}
 			ret = parse_bump_mapping(line, obj);*/
 //		else if (**line != '<' && **line != '>')
 //			return (error(UNKNOWTEXT, NULL));
@@ -167,12 +180,9 @@ int		parse_texture2(char **line, t_obj *obj) //
 	return (ret);
 }
 
-void	*parse_img(char **line/*, t_text *text*/)
+void	*parse_texture_img(char **line)
 {
-	SDL_Surface		*image_bmp;
-	SDL_Surface		*image;
 	t_text_img		*param;
-	unsigned int	pixels_nb;
 	unsigned int	i;
 	int				name_len;
 	char			*image_name;
@@ -187,7 +197,7 @@ void	*parse_img(char **line/*, t_text *text*/)
 		return (NULL);
 	if (!(image_name = ft_strsub(*line, i, name_len)))
 		return (NULL);
-	if (!(param = malloc(sizeof(t_text_img))))
+/*	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
 	if (!(image_bmp = IMG_Load(image_name)))
 		return (NULL);
@@ -196,10 +206,6 @@ void	*parse_img(char **line/*, t_text *text*/)
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
 		return (NULL);
-//	i += name_len + 1;
-//	while (ft_isspace(*line[i]))
-//		++i;
-//	*index = i + 1;
 	param->width = image->w;
 	param->height = image->h;
 	SDL_LockSurface(image);
@@ -212,9 +218,11 @@ void	*parse_img(char **line/*, t_text *text*/)
 	SDL_UnlockSurface(image);
 	SDL_FreeSurface(image_bmp);
 	SDL_FreeSurface(image);
+*/
 	goto_next_element(line);
+	if (!(param = parse_img(image_name)))
+		ft_strdel(&image_name);
 	return ((void *)param);
-	(void)line;
 }
 
 void	*parse_proc(char **line/*, t_text *text*/)

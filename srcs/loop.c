@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 07:28:08 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/29 06:54:35 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -319,7 +319,15 @@ int		print_loop_image(void *param)
 //	printf("%x\n", data->hooks);
 //	loop_manage_speed(data);
 //	loop_manage_render(data);
+//	printf("eqwfwef\n");
+	if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && !(create_photon_map(data)))
+	{
+		//freeeeeee
+		printf("PB parsing global illu\n");
+		exit(0);
+	}
 	loop_manage_cam(data);
+//	printf("salut\n");
 //	loop_manage_rot_matrix(data);
 //	clock_t	start;
 //	clock_t	end;

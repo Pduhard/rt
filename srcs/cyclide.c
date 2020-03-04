@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/31 18:29:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/26 05:57:42 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:53:46 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,11 +59,19 @@ t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter, t
 void	move_cyclide(t_obj *cyclide, t_3vecf dir, double fact)
 {
 	t_cyclide	*param;
+	t_cut		*cuts;
 
 	param = (t_cyclide *)cyclide->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
 	param->origin.val[1] += dir.val[1] * fact;
 	param->origin.val[2] += dir.val[2] * fact;
+	cuts = cyclide->cuts;
+	while (cuts)
+	{
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
+		cuts = cuts->next;
+	}
 }
 
 t_3vecf	get_origin_cyclide(t_obj *cyclide)

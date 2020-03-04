@@ -13,16 +13,17 @@
 			<UNI
 				<color(0.92, 0.08, 0.23, 0)(0)>
 			>
+			<scale(0.28545, 0.1818)>
 		>
 		<plane
-			<origin(-4.5, 0, 0)>
+			<origin(-4.5, -0.5, 2.5)>
 			<normal(1, 0, 0)>
+			<xaxis(0, 0, 1)>
 		>
 		<cutting
-			<cube
-				<x_range (-5, -4)>
-		        <y_range (-4, 3)>
-				<z_range (-3, 8)>
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
 			>
 		>
 	>
@@ -116,6 +117,7 @@
 			<UNI
 				<color(0.9, 0.9, 0.9, 0.9)(0)>
 			>
+			<scale(1, 1)>
 		>
 		<sphere
 			<origin(2, 1.49, 3)>

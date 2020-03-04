@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 06:42:40 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/02/28 23:42:52 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -74,7 +74,7 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_o
 void	move_plane(t_obj *plane, t_3vecf dir, double fact)
 {
 	t_plane	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_plane *)plane->obj_param;
 	param->origin.val[0] += dir.val[0] * fact;
@@ -83,7 +83,8 @@ void	move_plane(t_obj *plane, t_3vecf dir, double fact)
 	cuts = plane->cuts;
 	while (cuts)
 	{
-		cuts->move(cuts, dir, fact);
+		if (cuts->move && cuts->cut_type != CUT_STATIC)
+			cuts->move(cuts, dir, fact);
 		cuts = cuts->next;
 	}
 }
@@ -91,7 +92,7 @@ void	move_plane(t_obj *plane, t_3vecf dir, double fact)
 void	rotate_plane(t_obj *plane, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_plane	*param;
-	t_obj	*cuts;
+	t_cut	*cuts;
 
 	param = (t_plane *)plane->obj_param;
 	param->origin = sub_3vecf(param->origin, orig);
@@ -105,10 +106,8 @@ void	rotate_plane(t_obj *plane, t_3vecf orig, t_33matf rot_mat[2])
 	cuts = plane->cuts;
 	while (cuts)
 	{
-		if (cuts->rotate)
-		cuts->rotate(cuts, orig, rot_mat);
-		else
-			printf("cut rotation ...\n");
+		if (cuts->rotate && cuts->cut_type != CUT_STATIC)
+			cuts->rotate(cuts, orig, rot_mat);
 		cuts = cuts->next;
 	}
 }

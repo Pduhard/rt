@@ -44,11 +44,18 @@ t_data			*init_data(char *file_name)
 		free(data);
 		return (NULL);
 	}
-	if ((data->caustics_gi || data->indirect_gi) && !(create_photon_map(data)))
+	if (!init_loading_screen(data)) 
 	{
-		//free all
+		free(data->objs);
+		free(data->mlx);
+		free(data);
 		return (NULL);
 	}
+//	if ((data->caustics_gi || data->indirect_gi) && !(create_photon_map(data)))
+//	{
+		//free all
+//		return (NULL);
+//	}
 	data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
 	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
 	data->f = 1;

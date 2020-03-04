@@ -5,6 +5,9 @@
 		<origin (0, -1, -9)>
 		<rotation (-10, 0)>
 	>
+	<Indirect_GI(off)>
+	<Caustics_GI(off)>
+	<fog (100, 200)>
 	<objects
 		<texture
 			<UNI

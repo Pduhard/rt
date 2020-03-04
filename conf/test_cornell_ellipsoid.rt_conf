@@ -1,9 +1,15 @@
 <scene
 	<name(Bump mapping)	>
 	<size(800, 600)>
+<<<<<<< HEAD
 	<anti-alliasing (1)>
 	<indirect_Gi (on)>
 //	<Caustics_GI (on)>
+=======
+//	<anti-alliasing (1)>
+	<indirect_GI (on)>
+	<Caustics_GI (on)>
+>>>>>>> 822b6ca21ae72180a3186f330e0162f8f9b195a9
 	<Fog (5, 50)>
 	<camera
 		<origin (0, 0, -6)>
