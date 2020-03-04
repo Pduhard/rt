@@ -95,5 +95,21 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 	push_object(obj, composed, data, from);
-	return (ret);
+/*<<<<<<< HEAD
+		printf("%f\n", obj->shininess);
+	}
+	if (composed)
+	{
+		//free object
+	}
+	else
+	{
+		if (!from)
+			add_object(obj, data);
+		else
+			add_component(obj, from);
+	}
+=======
+>>>>>>> b0898731e959f8ecbab2d453bf04aca59800752a
+*/	return (ret);
 }

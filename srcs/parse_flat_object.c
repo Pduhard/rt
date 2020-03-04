@@ -466,7 +466,7 @@ int		parse_moebius(char **line, t_obj *moebius)
 	if ((moebius_param->radius <= 0.f || moebius_param->half_width <= 0.f) || ret == 0)
 		return (syn_error(SERROR, MOEBIUS, RADIUS, HALFWIDTH));
 	moebius->obj_param = moebius_param;
-	moebius->obj_type = OBJ_SPHERE;
+	moebius->obj_type = OBJ_MOEBIUS;
 	moebius->check_inside = &check_inside_moebius;
 	moebius->ray_intersect = &ray_intersect_moebius;
 	moebius->get_normal_inter = &get_normal_intersect_moebius;
@@ -476,4 +476,39 @@ int		parse_moebius(char **line, t_obj *moebius)
 //	add_object(moebius, data);
 //	moebius->data = data;
 	return (ret);
+}
+
+int		check_skybox(t_data *data)
+{
+	t_sphere	*param;
+	t_text_img	*image;
+	t_obj		*sky;
+
+	if (!data->skybox_name)
+		return (0);
+	if (!(image = parse_img(data->skybox_name)))
+		return (0);
+	if (!(sky = ft_memalloc(sizeof(t_obj))))
+		return (0);
+	if (!(param = ft_memalloc(sizeof(t_sphere))))
+		return (0);
+	sky->text.text_type = TEXT_IMAGE;
+	sky->text.scale.val[0] = 1;
+	sky->text.scale.val[1] = 1;
+	sky->text.text_param = image;
+	param->origin = assign_3vecf(0, 0, 0);
+	param->radius = 10000;
+	sky->obj_param = param;
+	sky->obj_type = OBJ_SKYBOX;
+	sky->check_inside = &check_inside_sphere;
+	sky->ray_intersect = &ray_intersect_sphere;
+	sky->get_normal_inter = &get_normal_intersect_sphere;
+	sky->get_text_color = &get_image_color;
+	sky->get_origin = &get_origin_sphere;
+	sky->move = &move_sphere;
+	sky->rotate = &rotate_sphere;
+	sky->get_text_coordinate = &get_text_coordinate_sphere;
+	add_object(sky, data);
+	return (1);
+
 }

@@ -19,7 +19,7 @@
 # define MAX_ANTI_AL 4
 # define MAX_ANTI_AL2 16
 
-# define MAX_VIEW 500
+# define MAX_VIEW 1000000
 
 /* TMP MACRO  */
 
@@ -179,7 +179,8 @@ typedef	enum {
 	OBJ_MONKEY_SADDLE,
 	OBJ_CYCLIDE,
 	OBJ_FERMAT,
-	OBJ_RECT
+	OBJ_RECT,
+	OBJ_SKYBOX
 }	t_obj_type;
 
 typedef	enum {
@@ -501,6 +502,7 @@ typedef struct	s_data
 	t_kd_tree	*caustic_map;
 	t_cube		bbox_photon;
 	t_obj			*selected_obj;
+	char		*skybox_name;
 }				t_data;
 
 typedef struct	s_thread
@@ -584,7 +586,7 @@ int		parse_composed_model(char **line, t_data *data);
 int		is_composed_object(char **line, t_data *data, int *ret);
 int		parse(char **line, t_data *data);
 char	goto_next_element(char **line);
-int		parse_name(char **line, char **name);
+int		parse_name(char **line, char **name, int i);
 int		parse_objects(char **line, t_data *data, t_composed *from);
 int		parse_lights(char **line, t_data *data);
 int		parse_color_transp(char **line, int i, t_4vecf *t);
@@ -763,6 +765,7 @@ int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 
 int		check_lights_cam(t_data *data);
+int		check_skybox(t_data *data);
 void	open_info(t_data *data);
 int		init_loading_screen(t_data *data);
 void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);

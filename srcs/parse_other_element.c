@@ -1,12 +1,10 @@
 #include "rt.h"
 
-int		parse_name(char **line, char **name)
+int		parse_name(char **line, char **name, int i)
 {
-	int		i;
 	int		start;
 	char	*s;
 
-	i = 4;
 	s = *line;
 	while (ft_isspace(s[i]))
 		++i;

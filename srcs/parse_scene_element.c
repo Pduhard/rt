@@ -91,10 +91,13 @@ int		pick_options(char **line, t_data *data)
 		ret = parse_rotation(line, &data->fog, 3);
 	else if (!ft_strncmp_case(*line, "ColorFilter", 11))
 		ret = parse_color_filter(line, data);
-	else if (**line != '<')
+	else if (!ft_strncmp_case(*line, "Skybox", 6))
 	{
-		return (error(UNKNOWSCENE, NULL));
+		ret = parse_name(line, &data->skybox_name, 6);
+		printf("ewwefwef\n");
 	}
+	else if (**line != '<')
+		return (error(UNKNOWSCENE, NULL));
 	return (ret);
 }
 
@@ -109,7 +112,7 @@ int		parse_scene(char **line, t_data *data)
 	{
 		stripe = goto_next_element(line);
 		if (!ft_strncmp_case(*line, "name", 4))
-			ret = parse_name(line, &data->scene_name);
+			ret = parse_name(line, &data->scene_name, 4);
 		else if (!ft_strncmp_case(*line, "size", 4))
 			ret = parse_size(line, data);
 		else if (!ft_strncmp_case(*line, "camera", 6))
@@ -124,5 +127,10 @@ int		parse_scene(char **line, t_data *data)
 			return (0);
 	}
 	check_lights_cam(data);
+	if (!(check_skybox(data)))
+	{
+		ft_printf("Invalid skybox image\n");
+		return (0);
+	}
 	return (ret);
 }
