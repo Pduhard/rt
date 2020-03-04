@@ -15,7 +15,7 @@
 # include <time.h>
 # define WIN_WIDTH 600
 # define WIN_HEIGHT	600
-# define NB_THREADS	1
+# define NB_THREADS	8
 # define MAX_ANTI_AL 4
 # define MAX_ANTI_AL2 16
 

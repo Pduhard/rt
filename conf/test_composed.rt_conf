@@ -1,20 +1,20 @@
 <scene
-	<name(Bump mapping)	>
-	<size(800, 600)>
-	<camera
-		<origin (0, 0, -6)>
-		<rotation (0, 0)>
-	>
 	<objects
+		<plane
+			<origin(-4.5, 0, 0)>
+			<normal(1, 0, 0)>
+		>
 		<texture
 			<UNI
 				<color(0.92, 0.08, 0.23, 0)(0)>
 			>
 		>
-		<plane
-			<origin(-4.5, 0, 0)>
-			<normal(1, 0, 0)>
-		>
+	>
+	<name(Bump mapping)	>
+	<size(800, 600)>
+	<camera
+		<origin (0, 0, -6)>
+		<rotation (0, 0)>
 	>
 	<objects
 		<texture
@@ -279,17 +279,17 @@
 		>	
 		<name (rct)>
 	>
-	<objects
-		<rct
-			<origin(-2, 1, 5)>
-			<rotation (20, 20)>
-		>
-	>
 	<lights
 		<point (0, -2.6, 4.5)>
 		<color (0.8, 0.8, 0.8)>
 	>
 	<lights
 		<ambient (0.2, 0.2, 0.2)>
+	>
+	<objects
+		<rct
+			<origin(-2, 1, 5)>
+			<rotation (20, 20)>
+		>
 	>
 >

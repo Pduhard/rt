@@ -85,6 +85,10 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 			return (0);
 		else if (**line != '>' && !(ret = pick_attribute_object(line, obj)))
 			return (0);
+		else if (is_composed_object(line, data, &ret))
+			composed = 1;
+		else if (**line != '<' && **line != '>')
+			return (error(UNKNOWOBJECT, NULL));
 		/*if (!ft_strncmp_case(*line, "cone", 4))
 			ret = parse_cone(line, obj);//, data);
 		else if (!ft_strncmp_case(*line, "sphere", 6))
@@ -125,10 +129,6 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 			ret = parse_double2(line, 9, &obj->shininess);
 		else if (!ft_strncmp_case(*line, "material", 8))
 			ret = parse_material(line, 8, obj);*/
-		else if (is_composed_object(line, data, &ret))
-			composed = 1;
-		else if (**line != '<' && **line != '>')
-			return (error(UNKNOWOBJECT, NULL));
 	}
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);

@@ -388,9 +388,11 @@ int		ft_strncmp_case(const char *s1, const char *s2, size_t n)
 	cpt = 1;
 	while (ft_tolower(*s1) == ft_tolower(*s2) && cpt < n && *s1 != '\0')
 	{
+		printf("S1 ==> %d\nS2 ==> %d\n", *s1, *s2);
 		cpt++;
 		s1++;
 		s2++;
 	}
-	return ((unsigned char)*s1 - *s2);
+	printf("S1 ==> %s\nS2 ==> %s\nCPT ==> %zu\n", s1, s2, cpt);
+	return ((unsigned char)ft_tolower(*s1) - ft_tolower(*s2));
 }
