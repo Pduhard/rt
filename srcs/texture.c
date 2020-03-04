@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   texture.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:04:16 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/29 05:47:16 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 07:48:40 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,10 @@ double	marble_noise(t_3vecf inter_point, double scale)
 	return t;
 }
 
-double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale)
+double	compute_marble_factor(t_3vecf inter_point, double scale)
 {
 	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * marble_noise(inter_point, scale))));
 	return (t * t - .5);
-	(void)normal_inter;
-	(void)obj;
 }
 
 t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
@@ -113,7 +111,7 @@ t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	//perlin_f = compute_perlin_factor(inter_point);
 //	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	marble_f = compute_marble_factor(inter_point, normal_inter, obj, obj->text.scale.val[0]);
+	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0]);
 	//(1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);

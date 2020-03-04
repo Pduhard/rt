@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+         #
+#    By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 02:23:54 by pduhard-          #+#    #+#              #
-#    Updated: 2020/02/28 03:43:58 by pduhard-         ###   ########lyon.fr    #
+#    Updated: 2020/03/04 07:10:23 by aplat            ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRC			=	ft_putchar.c		\
 				ft_memalloc.c		\
 				ft_memdel.c			\
 				ft_strnew.c			\
+				ft_strncmp_case.c	\
 				ft_strfillnew.c		\
 				ft_strdel.c			\
 				ft_strclr.c			\

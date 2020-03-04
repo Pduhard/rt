@@ -3,17 +3,14 @@
 int		parse_cut_texture(char **line, t_cut *cut)
 {
 	char	stripe;
-//	t_plane	*param;
 
 	cut->cut_type = CUT_TEXTURE;
 	if (cut->cut_param)
 		return (error(ALREADYCUT, NULL));
-//	if (!(param = ft_memalloc(sizeof(t_plane))))
-//		return (0);
 	stripe = goto_next_element(line);
 	if (stripe != '>')
 		return (error(CUTTEXTURE, NULL));
-	cut->cut_param = NULL;//param;
+	cut->cut_param = NULL;
 	return (1);
 }
 
@@ -36,7 +33,7 @@ int		parse_cut_sphere(char **line, t_cut *cut)
 		if (!(ft_strncmp_case(*line, "origin", 6)))
 			ret = parse_origin(line, &param->origin, 6);
 		else if (!(ft_strncmp_case(*line, "radius", 6)))
-			ret = parse_double2(line, 6, &param->radius);	
+			ret = parse_double(line, 6, &param->radius);
 		else if (stripe == '<' || ret == 0)
 			return (syn_error(SERROR, SYNCUT, SPHERECUT, ""));
 	}
@@ -51,10 +48,9 @@ int		parse_cut_cube(char **line, t_cut *cut)
 	char		stripe;
 	int			ret;
 
-	stripe = 0;
 	ret = 1;
 	cut->cut_type = CUT_CUBE;
-	if (cut->cut_param)
+	if (!(stripe = 0) && cut->cut_param)
 		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_cube))))
 		return (0);
@@ -102,53 +98,6 @@ int		parse_cut_uv(char **line, t_cut *cut)
 	return (ret);
 }
 
-int		parse_cutting(char **line, t_obj *obj)
-{
-	char	stripe;
-	int		ret;
-	t_cut	*cut;
-
-	stripe = 0;
-	ret = 1;
-	if (!(cut = ft_memalloc(sizeof(t_cut))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "static", 6)))
-			ret = parse_cut_static_real(line, cut, CUT_REAL);
-		else if (!(ft_strncmp_case(*line, "real", 4)))
-			ret = parse_cut_static_real(line, cut, CUT_STATIC);
-		else if (!(ft_strncmp_case(*line, "texture", 7)))
-			ret = parse_cut_texture(line, cut);
-		else if (!(ft_strncmp_case(*line, "sphere", 6)))
-			ret = parse_cut_sphere(line, cut);
-		else if (!(ft_strncmp_case(*line, "cube", 4)))
-			ret = parse_cut_cube(line, cut);
-		else if (!(ft_strncmp_case(*line, "uv", 2)))
-			ret = parse_cut_uv(line, cut);
-		else if (stripe == '<')
-			return (error(UNKNOWCUT, NULL));
-	}
-/*	cut->ray_intersect = &ray_intersect_plane;
-	cut->get_normal_inter = &get_normal_intersect_plane;
-	cut->get_origin = &get_origin_plane;
-	cut->get_text_coordinate = &get_text_coordinate_plane;
-	cut->text = obj->text;
-	cut->get_text_color = obj->get_text_color;
-	cut->get_bump_mapping = obj->get_bump_mapping;
-	cut->reflection = obj->reflection;
-	cut->refraction = obj->refraction;
-	cut->shininess = obj->shininess;
-*/	if (obj->cuts)
-		cut->next = obj->cuts;
-	else
-		cut->next = NULL;
-	obj->cuts = cut;
-	return (ret);
-}
-
-
 int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type)
 {
 	char			stripe;
@@ -175,7 +124,49 @@ int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type)
 	cut->cut_param = param;
 	cut->move = &move_cut_plane;
 	cut->rotate = &rotate_cut_plane;
-	if (ret == 0)
-		return (syn_error(SERROR, SYNCUT, STATICCUT, ""));
+	return (ret ? ret : syn_error(SERROR, SYNCUT, STATICCUT, ""));
+}
+
+int		pick_type_cutting(char **line, t_cut *cut, int *ret)
+{
+	if (!(ft_strncmp_case(*line, "static", 6)))
+		*ret = parse_cut_static_real(line, cut, CUT_REAL);
+	else if (!(ft_strncmp_case(*line, "real", 4)))
+		*ret = parse_cut_static_real(line, cut, CUT_STATIC);
+	else if (!(ft_strncmp_case(*line, "texture", 7)))
+		*ret = parse_cut_texture(line, cut);
+	else if (!(ft_strncmp_case(*line, "sphere", 6)))
+		*ret = parse_cut_sphere(line, cut);
+	else if (!(ft_strncmp_case(*line, "cube", 4)))
+		*ret = parse_cut_cube(line, cut);
+	else if (!(ft_strncmp_case(*line, "uv", 2)))
+		*ret = parse_cut_uv(line, cut);
+	return (1);
+}
+
+int		parse_cutting(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+	t_cut	*cut;
+
+	stripe = 0;
+	ret = 1;
+	if (!(cut = ft_memalloc(sizeof(t_cut))))
+		return (0);
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (**line != '>' && !pick_type_cutting(line, cut, &ret))
+			return (0);
+		else if (**line != '<' && **line != '>')
+			return (error(UNKNOWCUT, NULL));
+	}
+	if (obj->cuts)
+		cut->next = obj->cuts;
+	else
+		cut->next = NULL;
+	obj->cuts = cut;
 	return (ret);
 }
+

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 20:52:29 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/29 03:45:17 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 05:11:49 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,6 @@
    return (1);
    }
    */
-void	open_info(t_data *data)
-{
-	if (!data->info)
-	{
-		if (!(data->info = malloc(sizeof(t_mlx))))
-			return ;
-		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr, 400, 500, "Informations");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 150, 10, 0xFFFFFF, "Controls");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 10, 60, 0xFFFFFF, "Cam Mode :");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 100, 0xFFFFFF, "ESC          ==> Quit Program");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 125, 0xFFFFFF, "W / S        ==> Forward / Backward");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 150, 0xFFFFFF, "A / D        ==> Left / Right");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 175, 0xFFFFFF, "UP / DOWN    ==> Rotate Verticaly");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 200, 0xFFFFFF, "LEFT / RIGHT ==> Rotate Horizontaly");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 225, 0xFFFFFF, "SPACE        ==> Up");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 250, 0xFFFFFF, "SHIFT        ==> Down");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 275, 0xFFFFFF, "LEFT CLICK   ==> Select Object");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 10, 325, 0xFFFFFF, "Mode Move_Object :");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 375, 0xFFFFFF, "W, A, S, D   ==> Translate Object");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 400, 0xFFFFFF, "ARROWS       ==> Rotate Object");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 425, 0xFFFFFF, "SPACE        ==> Up Object");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 450, 0xFFFFFF, "SHIFT        ==> Down Object");
-		mlx_string_put(data->mlx->mlx_ptr, data->info->win_ptr, 5, 475, 0xFFFFFF, "LEFT CLICK   ==> Unselect Object");
-	}
-}
 
 int		key_press(int keycode, void *param)
 {

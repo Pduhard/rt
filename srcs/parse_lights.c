@@ -1,6 +1,6 @@
 #include "rt.h"
 
-int			check_lights(t_data *data)
+int			check_lights_cam(t_data *data)
 {
 	t_light	*light;
 	t_light	*tmp;
@@ -21,6 +21,8 @@ int			check_lights(t_data *data)
 			light->next = NULL;
 		data->lights = light;
 	}
+	if (!data->camera)
+		return (error(ERRORCAM, NULL));
 	return (1);
 }
 

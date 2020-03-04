@@ -1,30 +1,24 @@
 #include "rt.h"
 
-int		parse_name(char **line, char **name)
+int		parse_onoff(char **line, int *onoff)
 {
-	int		i;
-	int		start;
 	char	*s;
 
-	i = 4;
 	s = *line;
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(')
-		return (error(SERROR, NAME));
-	if (*name)
-		ft_strdel(name);
-	start = ++i;
-	while (s[i] && (s[i] != ')' && s[i] != '>'))
-		++i;
-	if (s[i] != ')')
-		return (error(SERROR, NAME));
-	*name = ft_strsub(s, start, i - start);
-	++i;
-	while (ft_isspace(s[i]))
-		++i;
-	if (goto_next_element(line) != '>')
-		return (error(SERROR, NAME));
+
+	while (*s != '(' && *s)
+		++s;
+	if (!ft_strncmp_case(s, "(ON)", 4))
+		*onoff = 1;
+	else if (!ft_strncmp_case(s, "(OFF)", 5))
+		*onoff = 0;
+	else if (!ft_strncmp_case(s, "(1)", 3))
+		*onoff = 1;
+	else if (!ft_strncmp_case(s, "(0)", 3))
+		*onoff = 0;
+	else
+		return (error(ERRORON, NULL));
+	goto_next_element(line);
 	return (1);
 }
 
@@ -73,5 +67,62 @@ int		parse_camera(char **line, t_data *data)
 	data->camera = cam;
 	if (!data->camera || ret == 0)
 		return (syn_error(SERROR, CAM, ORIGIN, ROTATION));
+	return (ret);
+}
+
+int		pick_options(char **line, t_data *data)
+{
+	int ret;
+
+	ret = 1;
+	if (!ft_strncmp_case(*line, "MotionBlur", 10))
+		ret = parse_onoff(line, &data->motion_blur);
+	else if (!ft_strncmp_case(*line, "Stereoscopy", 11))
+		ret = parse_onoff(line, &data->stereoscopy);
+	else if (!ft_strncmp_case(*line, "Anti-Alliasing", 14))
+		ret = parse_onoff(line, &data->anti_al);
+	else if (!ft_strncmp_case(*line, "Cel_Shading", 11))
+		ret = parse_onoff(line, &data->cel_shading);
+	else if (!ft_strncmp_case(*line, "Indirect_GI", 11))
+		ret = parse_onoff(line, &data->indirect_gi);
+	else if (!ft_strncmp_case(*line, "Caustics_GI", 11))
+		ret = parse_onoff(line, &data->caustics_gi);
+	else if (!ft_strncmp_case(*line, "Fog", 3))
+		ret = parse_rotation(line, &data->fog, 3);
+	else if (!ft_strncmp_case(*line, "ColorFilter", 11))
+		ret = parse_color_filter(line, data);
+	else if (**line != '<')
+	{
+		return (error(UNKNOWSCENE, NULL));
+	}
+	return (ret);
+}
+
+int		parse_scene(char **line, t_data *data)
+{
+	char	stripe;
+	int		ret;
+
+	stripe = 0;
+	ret = 1;
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!ft_strncmp_case(*line, "name", 4))
+			ret = parse_name(line, &data->scene_name);
+		else if (!ft_strncmp_case(*line, "size", 4))
+			ret = parse_size(line, data);
+		else if (!ft_strncmp_case(*line, "camera", 6))
+			ret = parse_camera(line, data);
+		else if (!ft_strncmp_case(*line, "objects", 7))
+			ret = parse_objects(line, data, NULL);
+		else if (!ft_strncmp_case(*line, "composed", 8))
+			ret = parse_composed_model(line, data);
+		else if (!ft_strncmp_case(*line, "lights", 6))
+			ret = parse_lights(line, data);
+		else if (**line != '>' && !(ret = pick_options(line, data)))
+			return (0);
+	}
+	check_lights_cam(data);
 	return (ret);
 }

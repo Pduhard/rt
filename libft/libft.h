@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:23:49 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:23:49 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 07:10:54 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ char				*ft_strnstr(const char *haystack,
 char				*ft_strchr(const char *s, int c);
 int					ft_strichr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
+int					ft_strncmp_case(const char *s1, const char *s2, size_t n);
 size_t				ft_strlen(const char *s);
 char				*ft_strdup(const char *src);
 size_t				ft_strlcat(char *dst, const char *src, size_t size);
