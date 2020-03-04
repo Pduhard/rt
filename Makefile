@@ -29,6 +29,8 @@ SRC			=	main.c					\
 				conf.c					\
 				parse.c					\
 				parse_scene_element.c	\
+				parse_object.c			\
+				parse_lights.c			\
 				parse_composed_object.c	\
 				parse_flat_object.c		\
 				parse_bumpmap.c			\

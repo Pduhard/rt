@@ -275,12 +275,11 @@
 					<normal (0, -1, 0)>
 				>
 			>
-
 		>	
-		<name (rect)>
+		<name (rct)>
 	>
 	<objects
-		<rect
+		<rct
 			<origin(-2, 1, 5)>
 			<rotation (20, 20)>
 		>

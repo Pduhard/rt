@@ -3,17 +3,17 @@
 int		parse_cut_texture(char **line, t_cut *cut)
 {
 	char	stripe;
-	t_plane	*param;
+//	t_plane	*param;
 
 	cut->cut_type = CUT_TEXTURE;
 	if (cut->cut_param)
 		return (error(ALREADYCUT, NULL));
-	if (!(param = ft_memalloc(sizeof(t_plane))))
-		return (0);
+//	if (!(param = ft_memalloc(sizeof(t_plane))))
+//		return (0);
 	stripe = goto_next_element(line);
 	if (stripe != '>')
 		return (error(CUTTEXTURE, NULL));
-	cut->cut_param = param;
+	cut->cut_param = NULL;//param;
 	return (1);
 }
 

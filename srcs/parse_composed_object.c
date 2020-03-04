@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 21:55:11 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 23:38:31 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 01:26:34 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,20 @@ void	*copy_obj_param(void *obj_param, t_obj_type type)
 
 t_cut	*copy_cut(t_cut *src)
 {
-	return (ft_memcpy(ft_memalloc(sizeof(t_cut)), src, sizeof(t_cut)));
+	t_cut	*cut;
+
+	cut = ft_memcpy(ft_memalloc(sizeof(t_cut)), src, sizeof(t_cut));
+	if (src->cut_type == CUT_STATIC || src->cut_type == CUT_REAL)
+		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_classic)), src->cut_param, sizeof(t_cut_classic));
+	else if (src->cut_type == CUT_CUBE)
+		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cube)), src->cut_param, sizeof(t_cube));
+	else if (src->cut_type == CUT_SPHERE)
+		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_sphere)), src->cut_param, sizeof(t_sphere));
+	else if (src->cut_type == CUT_TEXTURE)
+		cut->cut_param = NULL;//ft_memcpy(ft_memalloc(sizeof(t_plane)), src->cut_param, sizeof(t_sphere));
+	else if (src->cut_type == CUT_UV)
+		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_uv)), src->cut_param, sizeof(t_cut_uv));
+	return (cut);
 }
 
 t_obj	*copy_object(t_obj *src)
@@ -203,6 +216,7 @@ int		is_composed_object(char **line, t_data *data, int *ret)
 	i = 0;
 	while (obj_tab[i])
 	{
+		//ft_putendl("icsfsdfsdfsdfi ???");
 		obj_tab[i]->composed_origin = origin;
 		obj_tab[i++]->composed_w = obj_tab;
 	}

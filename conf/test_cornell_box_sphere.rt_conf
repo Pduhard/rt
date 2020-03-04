@@ -1,10 +1,13 @@
 <scene
 	<name(Bump mapping)	>
 	<size(800, 600)>
+//	<Fog (5, 20)>
+	<Cel_Shading (1)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>
 	>
+//	<Stereoscopy (on)>
 	<objects
 		<texture
 			<UNI

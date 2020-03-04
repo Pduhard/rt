@@ -37,12 +37,7 @@
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
-//# define CEL_SHADING	0
-//# define ANTI_AL		0
 
-//# define FOG				0
-//# define FOG_NEAR			5.0
-//# define FOG_FAR			20.0
 /*ALTERABLE MACRO	*/
 
 # define RAY_DEPTH			6
