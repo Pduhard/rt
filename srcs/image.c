@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/29 05:08:34 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/04 04:06:41 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/04 09:39:40 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,16 @@ void	*parse_img(char *name)
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
 	if (!(image_row = IMG_Load(name)))
+	{
+		free(param);
 		return (NULL);
+	}
 	if (!(image = SDL_ConvertSurfaceFormat(image_row, SDL_PIXELFORMAT_RGBA8888, 0)))
+	{
+		SDL_FreeSurface(image_row);
+		free(param);
 		return (NULL);
+	}
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
 		return (NULL);

@@ -499,7 +499,10 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		normal_inter = closest_obj->get_bump_mapping(inter_point, normal_inter, closest_obj);
 	inside = 0;
 	obj_color = closest_obj->get_text_color(inter_point, tex_normal_inter, closest_obj);
-	light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data, closest_obj->shininess);
+	if (closest_obj->obj_type != OBJ_SKYBOX)
+		light_fact = compute_lights(inter_point, normal_inter, dir, data->lights, data->objs, sp_id, data, closest_obj->shininess);
+	else
+		light_fact = assign_3vecf(1, 1, 1);
 	lighted_color.val[0] = obj_color.val[0] * light_fact.val[0];
 	lighted_color.val[1] = obj_color.val[1] * light_fact.val[1];
 	lighted_color.val[2] = obj_color.val[2] * light_fact.val[2];

@@ -103,6 +103,7 @@
 # define CYCLIDE "<cyclide\n"
 # define FERMAT "<fermat\n"
 # define XYFACT "\t<x_fact (Value)>\n\t<y_fact (Value)>\n"
+# define COMPOSED "<objects\n\t<Name_object\n\t\t<origin (x, y, z)>\n\t"
 # define PARAM "\t<param (Value)>\n"
 # define ORIGIN "\t<origin (x, y, z)>\n"
 # define CENTER "\t<center (x, y, z)>\n"
@@ -178,7 +179,8 @@ typedef	enum {
 	OBJ_MONKEY_SADDLE,
 	OBJ_CYCLIDE,
 	OBJ_FERMAT,
-	OBJ_RECT
+	OBJ_RECT,
+	OBJ_SKYBOX
 }	t_obj_type;
 
 typedef	enum {
@@ -438,8 +440,8 @@ typedef struct	s_composed
 {
 	char		*name;
 	t_obj		**components;
-	t_3vecf		origin;
-	t_2vecf		rotation;
+//	t_3vecf		origin;
+//	t_2vecf		rotation;
 	struct s_composed	*next;
 }				t_composed;
 
@@ -500,6 +502,7 @@ typedef struct	s_data
 	t_kd_tree	*caustic_map;
 	t_cube		bbox_photon;
 	t_obj			*selected_obj;
+	char		*skybox_name;
 }				t_data;
 
 typedef struct	s_thread
@@ -524,9 +527,8 @@ void	render(t_data *data);
 int		parse_rt_conf(char *file_name, t_data *data);
 int		parse_3vecf(char *line, int i, t_3vecf *vec);
 int		parse_4vecf(char *line, int i, t_4vecf *vec);
-int		parse_double(char *line, int i, double *val);
+int		parse_double(char **line, int i, double *val);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
-int		parse_double2(char **line, int i, double *val);
 int		parse_int(char **line, int i, int *val);
 
 //int		parse_sphere(char *line, t_data *data);
@@ -557,7 +559,7 @@ double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
 double	compute_3dfbm_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
-double	compute_marble_factor(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj, double scale);
+double	compute_marble_factor(t_3vecf inter_point, double scale);
 
 t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, double max_radius, int nn_photon);
 
@@ -584,9 +586,7 @@ int		parse_composed_model(char **line, t_data *data);
 int		is_composed_object(char **line, t_data *data, int *ret);
 int		parse(char **line, t_data *data);
 char	goto_next_element(char **line);
-int		parse_name(char **line, char **name);
-int		parse_size(char **line, t_data *data);
-int		parse_camera(char **line, t_data *data);
+int		parse_name(char **line, char **name, int i);
 int		parse_objects(char **line, t_data *data, t_composed *from);
 int		parse_lights(char **line, t_data *data);
 int		parse_color_transp(char **line, int i, t_4vecf *t);
@@ -740,17 +740,14 @@ t_3vecf	get_bump_mapping_fbm(t_3vecf inter_point, t_3vecf normal_inter, t_obj *o
 t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_wood(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_image(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
-t_3vecf	get_bump_mapping_sinus(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
 int		parse_cutting(char **line, t_obj *obj);
-int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type);
 void	move_cut_plane(t_cut *cut, t_3vecf dir, double fact);
 void	move_cut_sphere(t_cut *cut, t_3vecf dir, double fact);
 void	move_cut_cube(t_cut *cut, t_3vecf dir, double fact);
 
 void	rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2]);
 
-int		parse_onoff(char **line, int *onoff);
 int		parse_color_filter(char **line, t_data *data);
 int		parse_material(char **line, int i, t_obj *obj);
 
@@ -759,18 +756,20 @@ int		clamp_val(double *val, double min, double max);
 
 t_3vecf	apply_color_filter_sepia(t_3vecf color);
 
-int		ft_strncmp_case(const char *s1, const char *s2, size_t n);
 void	add_object(t_obj *obj, t_data *data);
-void	add_component(t_obj *obj, t_composed *composed);
+//void	add_component(t_obj *obj, t_composed *composed);
 
 int			create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 
-int		check_lights(t_data *data);
+int		check_lights_cam(t_data *data);
+int		check_skybox(t_data *data);
 void	open_info(t_data *data);
 int		init_loading_screen(t_data *data);
 void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);
+
+void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from);
 
 #endif
