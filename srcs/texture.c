@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:04:16 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/05 12:21:32 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 16:15:58 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -365,3 +365,20 @@ int		parse_texture(char *line, int i, t_obj *obj)
 	//bj->text.color[0];
 	return (i);
 }*/
+
+t_text	generate_random_texture(void)
+{
+	t_text		text;
+	t_text_proc	*param;
+
+	text.scale.val[0] = get_random_number(time(NULL) << 6) * get_random_number(time(NULL) >> 4) * 10;
+	text.scale.val[1] = get_random_number(time(NULL) >> 6) * get_random_number(time(NULL) << 3) * 10;
+	param = ft_memalloc(sizeof(t_text_proc));
+	param->color[0].val[0] = 1;
+	param->color[0].val[1] = 1;
+	param->color[0].val[2] = 1;
+	param->color[0].val[3] = 0;
+	text.text_type = TEXT_UNI;
+	text.text_param = param;
+	return (text);
+}

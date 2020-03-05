@@ -172,14 +172,14 @@ typedef	enum {
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
 	OBJ_TRIANGLE,
-	OBJ_CUBE,
+//	OBJ_CUBE,
 	OBJ_ELLIPSOID,
 	OBJ_HYPERBOLOID,
 	OBJ_HORSE_SADDLE,
 	OBJ_MONKEY_SADDLE,
 	OBJ_CYCLIDE,
 	OBJ_FERMAT,
-	OBJ_RECT,
+//	OBJ_RECT,
 	OBJ_SKYBOX
 }	t_obj_type;
 
@@ -212,7 +212,7 @@ typedef enum {
 	BUMP_WOOD,
 	BUMP_FBM,
 	BUMP_IMAGE,
-	BUMP_SINUS
+//	BUMP_SINUS
 }	t_bump_type;
 
 typedef enum {
@@ -520,6 +520,8 @@ typedef struct	s_data_cont
 	t_data		*data_lst;
 }				t_data_cont;
 
+void	generate_new_sphere(t_data *data);
+t_text	generate_random_texture(void);
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);
 void	init_camera_to_world_matrix(double mat[4][4]);

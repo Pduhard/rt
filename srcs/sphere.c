@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/04 04:25:17 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 16:18:35 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -124,6 +124,37 @@ int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist,
 	}
 	return (check);
 }
+
+void	generate_new_sphere(t_data *data)
+{
+	t_obj		*sphere;
+	t_sphere	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(sphere = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_sphere))))
+		return ;
+	param->origin = add_3vecf(data->camera->origin, dir);
+	param->radius = 1;
+	sphere->obj_param = param;
+	sphere->obj_type = OBJ_SPHERE;
+	sphere->check_inside = &check_inside_sphere;
+	sphere->ray_intersect = &ray_intersect_sphere;
+	sphere->get_normal_inter = &get_normal_intersect_sphere;
+	sphere->get_origin = &get_origin_sphere;
+	sphere->move = &move_sphere;
+	sphere->rotate = &rotate_sphere;
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;
+	sphere->get_text_color = &get_uni_color;
+	sphere->get_bump_mapping = NULL;
+	sphere->text = generate_random_texture();
+	//texture needed
+	add_object(sphere, data);
+}
+
 
 /*int		parse_sphere(char *line, t_data *data)
   {

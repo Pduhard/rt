@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 14:33:44 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 16:19:35 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -330,7 +330,6 @@ int		print_loop_image(void *param)
 	data_addr = (t_data **)param;
 	if ((*data_addr)->to_next && (*data_addr)->next)
 	{
-		
 		(*data_addr)->to_next = 0;
 		*data_addr = (*data_addr)->next;
 		data = *data_addr;
