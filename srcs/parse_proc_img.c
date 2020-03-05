@@ -1,5 +1,34 @@
 #include "rt.h"
 
+void	*parse_img(char *name)
+{
+	SDL_Surface		*row;
+	SDL_Surface		*image;
+	t_text_img		*param;
+	unsigned int	pixels_nb;
+	unsigned int	i;
+
+	if (!(param = malloc(sizeof(t_text_img))))
+		return (NULL);
+	if (!(row = IMG_Load(name)))
+		return (NULL);
+	if (!(image = SDL_ConvertSurfaceFormat(row, SDL_PIXELFORMAT_RGBA8888, 0)))
+		return (NULL);
+	pixels_nb = image->w * image->h;
+	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
+		return (NULL);
+	param->width = image->w;
+	param->height = image->h;
+	SDL_LockSurface(image);
+	i = -1;
+	while (++i < pixels_nb)
+		param->pixels[i] = ((unsigned int *)image->pixels)[i];
+	SDL_UnlockSurface(image);
+	SDL_FreeSurface(row);
+	SDL_FreeSurface(image);
+	return ((void *)param);
+}
+
 void	*parse_texture_img(char **line)
 {
 	t_text_img		*param;

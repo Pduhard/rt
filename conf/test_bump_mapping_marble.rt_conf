@@ -1,7 +1,6 @@
 <scene
 	<name(Bump mapping)	>
 	<size(600, 600)>
-	<ColorFilter (SEPIA)>
 	<camera
 		<origin (0, -2, 0)>
 		<rotation (0, 0)>

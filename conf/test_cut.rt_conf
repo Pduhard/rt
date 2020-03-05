@@ -23,7 +23,7 @@
         <cutting
             <real
                 <origin (0, 0, 0)>
-                <nomal (0, 1, 0)>
+                <normal (0, 1, 0)>
             >
         >
         <cutting

@@ -20,7 +20,6 @@ MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
 SRC			=	main.c					\
 				init.c					\
 				loading.c				\
-				image.c					\
 				matrix.c				\
 				vector.c				\
 				render.c				\
