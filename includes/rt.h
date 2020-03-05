@@ -505,6 +505,7 @@ typedef struct	s_data
 	t_obj			*selected_obj;
 	char		*skybox_name;
 	int			to_next;
+	int			new_obj;
 	struct s_data	*next;
 }				t_data;
 
@@ -521,7 +522,10 @@ typedef struct	s_data_cont
 }				t_data_cont;
 
 void	generate_new_sphere(t_data *data);
+void	generate_new_plane(t_data *data);
 t_text	generate_random_texture(void);
+void	delete_object(t_data *data);
+
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);
 void	init_camera_to_world_matrix(double mat[4][4]);

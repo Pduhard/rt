@@ -66,6 +66,7 @@ SRC			=	main.c					\
 				photon_map.c			\
 				global_illumination.c	\
 				random.c				\
+				free.c					\
 
 BIN			=	$(SRC:.c=.o)
 

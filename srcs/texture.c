@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:04:16 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/05 16:15:58 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 19:43:59 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,10 +374,20 @@ t_text	generate_random_texture(void)
 	text.scale.val[0] = get_random_number(time(NULL) << 6) * get_random_number(time(NULL) >> 4) * 10;
 	text.scale.val[1] = get_random_number(time(NULL) >> 6) * get_random_number(time(NULL) << 3) * 10;
 	param = ft_memalloc(sizeof(t_text_proc));
-	param->color[0].val[0] = 1;
-	param->color[0].val[1] = 1;
-	param->color[0].val[2] = 1;
-	param->color[0].val[3] = 0;
+	param->color[0].val[0] = get_random_number(time(NULL) << 6);
+	param->color[0].val[1] = get_random_number(time(NULL) >> 4);
+	param->color[0].val[2] = get_random_number(time(NULL) << 7);
+	param->color[0].val[3] = get_random_number(time(NULL) >> 7) / 2.;
+	
+	param->color[1].val[0] = get_random_number(time(NULL) >> 2);
+	param->color[1].val[1] = get_random_number(time(NULL) << 8);
+	param->color[1].val[2] = get_random_number(time(NULL) >> 3);
+	param->color[1].val[3] = get_random_number(time(NULL) << 4) / 2.;
+	
+	param->color[2].val[0] = get_random_number(time(NULL) >> 6);
+	param->color[2].val[1] = get_random_number(time(NULL) << 1);
+	param->color[2].val[2] = get_random_number(time(NULL) >> 3);
+	param->color[2].val[3] = get_random_number(time(NULL) << 7) / 2.;
 	text.text_type = TEXT_UNI;
 	text.text_param = param;
 	return (text);

@@ -98,6 +98,10 @@ int		key_press(int keycode, void *param)
 		data->to_next = 1;
 	else if (keycode == 18)
 		generate_new_sphere(data);
+//	else if (keycode == 19)
+//		generate_new_plane(data);
+	else if (keycode == 117 && data->selected_obj)
+		delete_object(data);
 	else if (keycode == 105)
 	{
 		SDL_Surface	*img_save = SDL_CreateRGBSurfaceFrom((void *)data->mlx->img_str, (int)data->size.val[0], (int)data->size.val[1], 32, 4 * (int)data->size.val[0], 0xff << 16, 0xff << 8, 0xff << 0, 0x0);

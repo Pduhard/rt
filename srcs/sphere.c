@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 16:18:35 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 19:36:22 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -137,8 +137,10 @@ void	generate_new_sphere(t_data *data)
 		return ;
 	if (!(param = ft_memalloc(sizeof(t_sphere))))
 		return ;
-	param->origin = add_3vecf(data->camera->origin, dir);
-	param->radius = 1;
+	param->radius = get_random_number(time(NULL)) * 2.5;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * param->radius * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * param->radius * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * param->radius * 2;
 	sphere->obj_param = param;
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->check_inside = &check_inside_sphere;
@@ -153,6 +155,7 @@ void	generate_new_sphere(t_data *data)
 	sphere->text = generate_random_texture();
 	//texture needed
 	add_object(sphere, data);
+	data->new_obj = 1;
 }
 
 

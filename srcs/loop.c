@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 16:19:35 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 16:42:49 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -360,7 +360,7 @@ int		print_loop_image(void *param)
 		printf("PB parsing global illu\n");
 		exit(0);
 	}
-	if (loop_manage_cam(data))
+	if (loop_manage_cam(data) || data->new_obj)
 		data->aa_adapt = MIN_ANTI_AL;
 	else if (!is_null(data->aa_adapt - MAX_ANTI_AL))
 		data->aa_adapt *= 2;
@@ -381,6 +381,7 @@ int		print_loop_image(void *param)
 //	start = clock();
 	if (rendering)
 		render(data);
+	data->new_obj = 0;
 //	end = clock();
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
