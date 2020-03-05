@@ -64,7 +64,7 @@ int		key_press(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	//printf("button %d\n", keycode);
+	printf("button %d\n", keycode);
 	if (keycode == 0) //
 		data->hooks |= A_KEY;
 	//data->cam.origin[0] -= 0.2;
@@ -94,6 +94,8 @@ int		key_press(int keycode, void *param)
 		data->hooks |= SPACE_KEY;
 	else if (keycode == 257)
 		data->hooks |= SHIFT_KEY;
+	else if (keycode == 48)
+		data->to_next = 1;
 	else if (keycode == 105)
 	{
 		SDL_Surface	*img_save = SDL_CreateRGBSurfaceFrom((void *)data->mlx->img_str, (int)data->size.val[0], (int)data->size.val[1], 32, 4 * (int)data->size.val[0], 0xff << 16, 0xff << 8, 0xff << 0, 0x0);

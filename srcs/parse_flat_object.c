@@ -485,7 +485,7 @@ int		check_skybox(t_data *data)
 	t_obj		*sky;
 
 	if (!data->skybox_name)
-		return (0);
+		return (1);
 	if (!(image = parse_img(data->skybox_name)))
 		return (0);
 	if (!(sky = ft_memalloc(sizeof(t_obj))))

@@ -690,6 +690,7 @@ void	*render_thread(void *param)
 
 	i = thread->start;
 	orig = data->camera->origin;
+//	printf("salut thread\n");
 	while (i < thread->end)
 	{
 		j = -data->size.val[1] / 2;
@@ -728,7 +729,7 @@ void	*render_thread(void *param)
 				color.val[2] = colors[0].val[2];
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
-			else if (!data->anti_al)
+		/*	else if (!data->anti_al)
 			{
 
 				dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
@@ -746,6 +747,7 @@ void	*render_thread(void *param)
 				int		offset;
 
 				offset = 0;
+				data->anti_al = 4;
 				anti_all_iter = data->anti_al * data->anti_al;
 				color = assign_3vecf(0, 0, 0);
 				while (offset < anti_all_iter)
@@ -762,9 +764,59 @@ void	*render_thread(void *param)
 				color.val[2] /= (double)anti_all_iter;
 				ray_put_pixel(i, j, data->mlx->img_str, color, data);
 			}
-			++j;
+			*/
+			else
+			{
+				t_3vecf	clr;
+				int		anti_all_iter;
+				int		offset;
+				int		aa;
+
+				aa = data->aa_adapt;
+				offset = 0;
+				anti_all_iter = data->aa_adapt * data->aa_adapt;
+				if (anti_all_iter < 1)
+				{
+					aa = 1;
+					anti_all_iter = 1;
+				}
+				color = assign_3vecf(0, 0, 0);
+				while (offset < anti_all_iter)
+				{
+					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * aa + offset / aa, j * aa + offset % aa, (int)data->size.val[0] * aa, (int)data->size.val[1] * aa), data->rot_mat[1]), data->rot_mat[0]);
+					normalize_3vecf(&dir);
+					clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					color.val[0] += clr.val[0];
+					color.val[1] += clr.val[1];
+					color.val[2] += clr.val[2];
+					offset++;
+				}
+			//	printf("wefwef\n");
+				color.val[0] /= (double)anti_all_iter;
+				color.val[1] /= (double)anti_all_iter;
+				color.val[2] /= (double)anti_all_iter;
+			//	printf("wefwef\n");
+				ray_put_pixel(i, j, data->mlx->img_str, color, data);
+				if (data->aa_adapt < 1)
+				{
+					if ((i + 1) * 2 != data->size.val[0])
+						ray_put_pixel(i + 1, j, data->mlx->img_str, color, data);
+					if ((j + 1) * 2 != data->size.val[1])
+						ray_put_pixel(i, j + 1, data->mlx->img_str, color, data);
+					if ((j + 1) * 2 != data->size.val[1] && (i + 1) * 2 != data->size.val[0])
+						ray_put_pixel(i + 1, j + 1, data->mlx->img_str, color, data);
+				}
+			}
+			
+			if (data->aa_adapt == MIN_ANTI_AL)
+				j += 2;
+			else
+				++j;
 		}
-		++i;
+		if (data->aa_adapt == MIN_ANTI_AL)
+			i += 2;
+		else
+			++i;
 	}
 	pthread_exit(NULL);
 	return (NULL);

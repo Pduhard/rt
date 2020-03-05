@@ -44,14 +44,14 @@ static t_mlx	*init_mlx(t_data *data)
 	return (mlx);
 }
 
-t_data			*init_data(char *file_name)
+t_data			*init_data(char *file_name, t_mlx *mlx)
 {
 	t_data		*data;
 
 	(void)file_name;
-	if (!(data = (t_data *)malloc(sizeof(t_data))))
+	if (!(data = (t_data *)ft_memalloc(sizeof(t_data))))
 		return (NULL);
-	ft_bzero(data, sizeof(t_data));
+	//ft_bzero(data, sizeof(t_data));
 	if (NB_THREADS < 1 || NB_THREADS > 16)
 	{
 		error(ERRORTHREAD, NULL);
@@ -64,12 +64,14 @@ t_data			*init_data(char *file_name)
 		error(ERRORSIZE, NULL);
 		return (NULL);
 	}
-	if (!(data->mlx = init_mlx(data)))
+	if (!mlx && !(data->mlx = init_mlx(data)))
 	{
 		free(data->objs);
 		free(data);
 		return (NULL);
 	}
+	else if (mlx)
+		data->mlx = mlx;
 	if (!init_loading_screen(data)) 
 	{
 		free(data->objs);
@@ -88,5 +90,6 @@ t_data			*init_data(char *file_name)
 	data->hooks = 0;
 	data->fps = 0;
 	data->delta_time = 0;
+	data->aa_adapt = MIN_ANTI_AL;
 	return (data);
 }

@@ -13,11 +13,11 @@
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
-# define WIN_WIDTH 600
-# define WIN_HEIGHT	600
+//# define WIN_WIDTH 600
+//# define WIN_HEIGHT	600
 # define NB_THREADS	8
-# define MAX_ANTI_AL 4
-# define MAX_ANTI_AL2 16
+# define MIN_ANTI_AL 0.5
+# define MAX_ANTI_AL 2.
 
 # define MAX_VIEW 1000000
 
@@ -26,7 +26,7 @@
 //# define INDIRECT_GI			0
 //# define CAUSTIC_GI				0
 //# define GLOBAL_ILLUMINATION	0
-# define GL_RADIUS				0.2
+//# define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
 # define NN_CAUSTIC_PHOTON_MAX	50
 # define NN_INDIRECT_PHOTON_MAX	20
@@ -41,7 +41,7 @@
 /*ALTERABLE MACRO	*/
 
 # define RAY_DEPTH			6
-# define PERLIN_TRANSP_ADD	0.5
+# define PERLIN_TRANSP_ADD	1
 
 # define FBM_LACUNARITY		2.
 # define FBM_GAIN			0.5
@@ -491,6 +491,7 @@ typedef struct	s_data
 	Uint32		fps;
 	Uint32		delta_time;
 	int			anti_al;
+	double		aa_adapt;
 	int			cel_shading;
 	int			motion_blur;
 	int			stereoscopy;
@@ -503,6 +504,8 @@ typedef struct	s_data
 	t_cube		bbox_photon;
 	t_obj			*selected_obj;
 	char		*skybox_name;
+	int			to_next;
+	struct s_data	*next;
 }				t_data;
 
 typedef struct	s_thread
@@ -512,7 +515,13 @@ typedef struct	s_thread
 	int			end;
 }				t_thread;
 
-t_data	*init_data(char *file_name);
+typedef struct	s_data_cont
+{
+	t_data		*data_lst;
+}				t_data_cont;
+
+int		close_cross(t_data *data);
+t_data	*init_data(char *file_name, t_mlx *mlx);
 void	init_camera_to_world_matrix(double mat[4][4]);
 void	init_light_to_world_matrix(double mat[4][4]);
 t_33matf	init_rotation_matrix_x(double theta);

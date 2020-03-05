@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/04 06:47:08 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 14:33:44 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -52,14 +52,16 @@ void	translate_and_rotate(t_data *data)
 	}
 }
 
-void	loop_manage_cam(t_data *data)
+int	loop_manage_cam(t_data *data)
 {
 //	if (data->hooks & F_KEY)
 //	{
 	t_33matf	rot_mat[2];
-
+	int	ret = 0;
 	if (data->selected_obj && data->selected_obj->rotate)
 	{
+		if (data->hooks & ((ARR_LEFT_KEY | ARR_RIGHT_KEY | ARR_DOWN_KEY | ARR_UP_KEY)))
+			ret = 1;
 		rot_mat[1]	= init_rotation_matrix_y(degree_to_radian(data->hooks & ARR_LEFT_KEY ? -5 : (data->hooks & ARR_RIGHT_KEY ? 5 : 0)));
 	t_3vecf	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
 	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_KEY ? 5 : (data->hooks & ARR_UP_KEY ? -5 : 0)));
@@ -87,6 +89,7 @@ void	loop_manage_cam(t_data *data)
 				data->camera->rotation.val[1] += 3;
 		//4 * data->mouse_x;
 			data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
+			ret = 1;
 		}
 	}
 	if (data->hooks & (ARR_UP_KEY | ARR_DOWN_KEY))
@@ -100,6 +103,7 @@ void	loop_manage_cam(t_data *data)
 				data->camera->rotation.val[0] += 3;
 			if (data->hooks & ARR_DOWN_KEY && data->camera->rotation.val[0] > -90)
 				data->camera->rotation.val[0] -= 3;
+			ret = 1;
 		}
 		//4 * data->mouse_x;
 	//	data->rot_mat[0] = init_rotation_matrix_vec(mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]), degree_to_radian(data->camera->rotation.val[0]));
@@ -144,6 +148,7 @@ void	loop_manage_cam(t_data *data)
 				data->camera->origin.val[1] += dir.val[1];
 				data->camera->origin.val[2] += dir.val[2];
 			}
+			ret = 1;
 		}
 		if (data->hooks & S_KEY)
 		{
@@ -167,6 +172,7 @@ void	loop_manage_cam(t_data *data)
 				data->camera->origin.val[1] -= dir.val[1];
 				data->camera->origin.val[2] -= dir.val[2];
 			}
+			ret = 1;
 		}
 
 		//	data->camera->origin.val[2] -= 0.2;
@@ -223,6 +229,7 @@ void	loop_manage_cam(t_data *data)
 				data->camera->origin.val[2] += dir.val[2];
 			}
 		}
+		ret = 1;
 
 		//	data->camera->origin.val[0] += 0.2;
 	}
@@ -246,6 +253,7 @@ void	loop_manage_cam(t_data *data)
 			}
 			else
 				data->camera->origin.val[1] -= 0.2;
+			ret = 1;
 		}
 		if (data->hooks & SHIFT_KEY)
 		{
@@ -265,6 +273,7 @@ void	loop_manage_cam(t_data *data)
 			}
 			else
 				data->camera->origin.val[1] += 0.2;
+			ret = 1;
 		}
 /*		{
 			data->camera->origin.val[0] -= dir.val[0];
@@ -282,6 +291,7 @@ void	loop_manage_cam(t_data *data)
 */
 		//	data->camera->origin.val[0] += 0.2;
 //		translate_and_rotate(data);
+		return (ret);
 }
 /*
 void	loop_manage_rot_matrix(t_data *data)
@@ -311,11 +321,36 @@ void	loop_manage_rot_matrix(t_data *data)
 int		print_loop_image(void *param)
 {
 	t_data *data;
-	data = (t_data *)param;
-	Uint32	frame_start;
+	t_data **data_addr;
+	t_mlx	*mlx;
 
+	Uint32	frame_start;
+	int		rendering = 1;
 	frame_start = SDL_GetTicks();
+	data_addr = (t_data **)param;
+	if ((*data_addr)->to_next && (*data_addr)->next)
+	{
+		
+		(*data_addr)->to_next = 0;
+		*data_addr = (*data_addr)->next;
+		data = *data_addr;
+		data->aa_adapt = MIN_ANTI_AL;
+		mlx = data->mlx;
+		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+		mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
+		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, data->size.val[0], data->size.val[1], data->scene_name);
+		mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, data->size.val[0], data->size.val[1]);
+		mlx->img_str = (int *)mlx_get_data_addr(mlx->img_ptr, &(mlx->bpp), &(mlx->s_l), &(mlx->endian));
+		mlx_hook(data->mlx->win_ptr, 2, 0, key_press, (void *)data);
+		mlx_hook(data->mlx->win_ptr, 3, 0, key_release, (void *)data);
+		mlx_hook(data->mlx->win_ptr, 4, 0, mouse_hook, (void *)data);
+		mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross, (void *)data);
+
+	}
+	else
+		data = *data_addr;
 	data->f += 0.01;
+
 //	printf("%x\n", data->hooks);
 //	loop_manage_speed(data);
 //	loop_manage_render(data);
@@ -326,12 +361,18 @@ int		print_loop_image(void *param)
 		printf("PB parsing global illu\n");
 		exit(0);
 	}
-	loop_manage_cam(data);
+	if (loop_manage_cam(data))
+		data->aa_adapt = MIN_ANTI_AL;
+	else if (!is_null(data->aa_adapt - MAX_ANTI_AL))
+		data->aa_adapt *= 2;
+	else
+		rendering = 0;
 //	printf("salut\n");
 //	loop_manage_rot_matrix(data);
 //	clock_t	start;
 //	clock_t	end;
-	mlx_clear_window(data->mlx->mlx_ptr, data->mlx->win_ptr);
+
+//	mlx_clear_window(data->mlx->mlx_ptr, data->mlx->win_ptr);
 //	data->mlx->img_ptr = mlx_new_image(data->mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 //	data->mlx->img_str = (int *)mlx_get_data_addr(data->mlx->img_ptr,
 //			&(data->mlx->bpp), &(data->mlx->s_l), &(data->mlx->endian));
@@ -339,7 +380,8 @@ int		print_loop_image(void *param)
 //	link_pixels(data->pix_map, data);
 	//write(1, "lol\n", 4);
 //	start = clock();
-	render(data);
+	if (rendering)
+		render(data);
 //	end = clock();
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
@@ -349,7 +391,7 @@ int		print_loop_image(void *param)
 	data->fps++;
 	if (data->delta_time >= 1000)
 	{
-		ft_printf("camera position : x %f y %f z %f\nfps: %d\n", data->camera->origin.val[0], data->camera->origin.val[1], data->camera->origin.val[2], data->fps);
+		ft_printf("camera position : x %f y %f z %f\nfps: %d aa %f \n", data->camera->origin.val[0], data->camera->origin.val[1], data->camera->origin.val[2], data->fps, data->aa_adapt);
 		data->fps = 0;
 		data->delta_time = 0;
 	}

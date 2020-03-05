@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/29 07:36:27 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/05 10:54:39 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -414,6 +414,8 @@ int		create_photon_map(t_data *data)
 	//[NB_PHOTON];
 //	t_kd_tree	*kd_tree;
 
+	if (!data->objs)
+		return (0);
 	if (!(photon_tab = malloc(sizeof(t_photon *) * 2)))
 		return (0);
 	if (!(photon_tab[0] = malloc(sizeof(t_photon) * NB_CAUSTIC_PHOTON)))
