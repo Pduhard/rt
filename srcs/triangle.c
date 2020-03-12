@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 03:46:18 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 23:42:20 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 20:55:45 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,40 @@ int		check_inside_triangle(t_3vecf point, t_obj *triangle)
 	(void)point;
 	(void)triangle;
 }
+/*
+void	generate_new_cylinder(t_data *data)
+{
+	t_obj		*cylinder;
+	t_cylinder		*param;
+	t_3vecf		dir;
 
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(cylinder = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_cylinder))))
+		return ;
+	param->radius = get_random_number(time(NULL)) * 1.5;
+	param->tip.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->tip.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->tip.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	param->center = add_3vecf(assign_3vecf(0, 1, 0), param->tip);
+	cylinder->obj_param = param;
+	cylinder->obj_type = OBJ_CYLINDER;
+	cylinder->check_inside = &check_inside_cylinder;
+	cylinder->ray_intersect = &ray_intersect_cylinder;
+	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
+	cylinder->get_origin = &get_origin_cylinder;
+	cylinder->move = &move_cylinder;
+	cylinder->rotate = &rotate_cylinder;
+	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
+	cylinder->get_text_color = &get_uni_color;
+	cylinder->text = generate_random_texture();
+	set_bump_own(cylinder);
+	add_object(cylinder, data);
+	data->new_obj = 1;
+}
+*/
 t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *triangle)
 {
 	t_2vecf	text_coord;
@@ -46,6 +79,10 @@ void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 	param->c.val[0] += dir.val[0] * fact;
 	param->c.val[1] += dir.val[1] * fact;
 	param->c.val[2] += dir.val[2] * fact;
+	param->origin.val[0] += dir.val[0] * fact;
+	param->origin.val[1] += dir.val[1] * fact;
+	param->origin.val[2] += dir.val[2] * fact;
+
 	cuts = triangle->cuts;
 	while (cuts)
 	{
@@ -64,7 +101,7 @@ void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 	param->a = sub_3vecf(param->a, orig);
 	param->b = sub_3vecf(param->b, orig);
 	param->c = sub_3vecf(param->c, orig);
-	
+
 	param->a = mult_3vecf_33matf(param->a, rot_mat[1]);
 	param->b = mult_3vecf_33matf(param->b, rot_mat[1]);
 	param->c = mult_3vecf_33matf(param->c, rot_mat[1]);

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 23:41:05 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 20:38:43 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,39 @@ int		check_inside_cylinder(t_3vecf inter_point, t_obj *cylinder)
 	if (get_length_3vecf(product_3vecf(sub_3vecf(inter_point, param->tip), sub_3vecf(inter_point, param->center))) / get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
 		return (0);
 	return (1);
+}
+
+void	generate_new_cylinder(t_data *data)
+{
+	t_obj		*cylinder;
+	t_cylinder		*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(cylinder = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_cylinder))))
+		return ;
+	param->radius = get_random_number(time(NULL)) * 1.5;
+	param->tip.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->tip.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->tip.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	param->center = add_3vecf(assign_3vecf(0, 1, 0), param->tip);
+	cylinder->obj_param = param;
+	cylinder->obj_type = OBJ_CYLINDER;
+	cylinder->check_inside = &check_inside_cylinder;
+	cylinder->ray_intersect = &ray_intersect_cylinder;
+	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
+	cylinder->get_origin = &get_origin_cylinder;
+	cylinder->move = &move_cylinder;
+	cylinder->rotate = &rotate_cylinder;
+	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
+	cylinder->get_text_color = &get_uni_color;
+	cylinder->text = generate_random_texture();
+	set_bump_own(cylinder);
+	add_object(cylinder, data);
+	data->new_obj = 1;
 }
 
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder)

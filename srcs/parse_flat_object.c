@@ -141,6 +141,10 @@ int		parse_triangle(char **line, t_obj *triangle)
 	}
 	if (ret == 0)
 		return (syn_error(SERROR, TRIANGLE, TRIBC, NULL));
+	triangle_param->origin = assign_3vecf(triangle_param->a.val[0] + triangle_param->a.val[0] + triangle_param->a.val[0], triangle_param->a.val[1] + triangle_param->a.val[1] + triangle_param->a.val[1], triangle_param->a.val[2] + triangle_param->a.val[2] + triangle_param->a.val[2]);
+	triangle_param->origin.val[0] /= 3.;
+	triangle_param->origin.val[1] /= 3.;
+	triangle_param->origin.val[2] /= 3.;
 	//if (ft_fabs(triangle_param->radius) == 0.f)
 	//	return (syn_error(SERROR, triangle, RADIUS, NULL));
 	triangle->obj_param = triangle_param;

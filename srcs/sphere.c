@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 19:36:22 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 18:20:55 by pduhard-         ###   ########lyon.fr   */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -151,8 +151,9 @@ void	generate_new_sphere(t_data *data)
 	sphere->rotate = &rotate_sphere;
 	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 	sphere->get_text_color = &get_uni_color;
-	sphere->get_bump_mapping = NULL;
 	sphere->text = generate_random_texture();
+	//sphere->get_bump_mapping = NULL;
+	set_bump_own(sphere);
 	//texture needed
 	add_object(sphere, data);
 	data->new_obj = 1;

@@ -172,14 +172,12 @@ typedef	enum {
 	OBJ_CYLINDER,
 	OBJ_MOEBIUS,
 	OBJ_TRIANGLE,
-//	OBJ_CUBE,
 	OBJ_ELLIPSOID,
 	OBJ_HYPERBOLOID,
 	OBJ_HORSE_SADDLE,
 	OBJ_MONKEY_SADDLE,
 	OBJ_CYCLIDE,
 	OBJ_FERMAT,
-//	OBJ_RECT,
 	OBJ_SKYBOX
 }	t_obj_type;
 
@@ -195,24 +193,20 @@ typedef	enum {
 }	t_light_type;
 
 typedef	enum {
-	TEXT_UNI,
-	TEXT_GRID,
 	TEXT_PERLIN,
 	TEXT_MARBLE,
 	TEXT_WOOD,
 	TEXT_FBM,
+	TEXT_UNI,
+	TEXT_GRID,
 	TEXT_IMAGE
 }	t_text_type;
 
 typedef enum {
-	BUMP_UNI,
-	BUMP_GRID,
 	BUMP_PERLIN,
 	BUMP_MARBLE,
 	BUMP_WOOD,
 	BUMP_FBM,
-	BUMP_IMAGE,
-//	BUMP_SINUS
 }	t_bump_type;
 
 typedef enum {
@@ -332,6 +326,7 @@ typedef struct	s_triangle
 	t_3vecf		a;
 	t_3vecf		b;
 	t_3vecf		c;
+	t_3vecf		origin;
 }				t_triangle;
 
 typedef struct	s_rect
@@ -523,8 +518,20 @@ typedef struct	s_data_cont
 
 void	generate_new_sphere(t_data *data);
 void	generate_new_plane(t_data *data);
+void	generate_new_cone(t_data *data);
+void	generate_new_cylinder(t_data *data);
+void	generate_new_triangle(t_data *data);
+void	generate_new_moebius(t_data *data);
+void	generate_new_ellipsoid(t_data *data);
+void	generate_new_hyperboloid(t_data *data);
+void	generate_new_horse_saddle(t_data *data);
+void	generate_new_monkey_saddle(t_data *data);
+void	generate_new_cyclide(t_data *data);
+void	generate_new_fermat(t_data *data);
 t_text	generate_random_texture(void);
-void	delete_object(t_data *data);
+t_4vecf	generate_random_color(unsigned int x, double transp_f);
+int		generate_random_enum(int e_max);
+void	delete_object(t_data *data, t_obj *obj);
 
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);

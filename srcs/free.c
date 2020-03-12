@@ -6,7 +6,7 @@
 /*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/05 16:55:10 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/05 19:34:33 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 17:44:59 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,40 +51,44 @@ void	free_object(t_obj *obj)
 	free(obj);
 }
 
-void	delete_object(t_data *data)
+int		rechain_list(t_obj **list, t_obj *obj)
 {
 	t_obj	*prev;
-	t_obj	*curr;
+
+	prev = *list;
+	if (*list == obj)
+		*list = obj->next;
+	else
+	{
+		while (prev && prev->next != obj)
+			prev = prev->next;
+		if (!prev)
+			return (0);
+		prev->next = obj->next;
+	}
+	return (1);
+}
+
+void	delete_object(t_data *data, t_obj *obj)
+{
 	int		i;
 
 	i = 0;
-	prev = data->objs;
-	curr = data->objs;
-	if (data->objs == data->selected_obj)
-		data->objs = data->objs->next;
-	else
+	if (!rechain_list(&data->objs, obj)
+		&& !rechain_list(&data->negative_objs, obj))
+		return ; //never happend
+	if (obj->composed_w)
 	{
-		while (prev && prev->next != data->selected_obj)
-			prev = prev->next;
-		prev->next = data->selected_obj->next;
-	}
-/*	if (data->selected_obj->composed_w)
-	{
-		while (data->selected_obj->composed_w[i])
+		while (obj->composed_w[i])
 		{
-			if (data->selected_obj->composed_w[i] != data->selected_obj)
+			if (obj->composed_w[i] != obj)
 			{
-				data->selected_obj->composed_w[i]->composed_w = NULL;
-				curr = data->selected_obj;
-				data->selected_obj = data->selected_obj->composed_w[i];
-				delete_object(data);
-				data->selected_obj = curr;
+				obj->composed_w[i]->composed_w = NULL;
+				delete_object(data, obj->composed_w[i]);
 			}
 			i++;
 		}
-		free(data->selected_obj->composed_w);
+		free(obj->composed_w);
 	}
-*/	free_object(data->selected_obj);
-	data->selected_obj = NULL;
-	data->new_obj = 1;
+	free_object(obj);
 }

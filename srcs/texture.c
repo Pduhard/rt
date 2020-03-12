@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:04:16 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/05 19:43:59 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 18:34:48 by pduhard-         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,22 +373,14 @@ t_text	generate_random_texture(void)
 
 	text.scale.val[0] = get_random_number(time(NULL) << 6) * get_random_number(time(NULL) >> 4) * 10;
 	text.scale.val[1] = get_random_number(time(NULL) >> 6) * get_random_number(time(NULL) << 3) * 10;
-	param = ft_memalloc(sizeof(t_text_proc));
-	param->color[0].val[0] = get_random_number(time(NULL) << 6);
-	param->color[0].val[1] = get_random_number(time(NULL) >> 4);
-	param->color[0].val[2] = get_random_number(time(NULL) << 7);
-	param->color[0].val[3] = get_random_number(time(NULL) >> 7) / 2.;
-	
-	param->color[1].val[0] = get_random_number(time(NULL) >> 2);
-	param->color[1].val[1] = get_random_number(time(NULL) << 8);
-	param->color[1].val[2] = get_random_number(time(NULL) >> 3);
-	param->color[1].val[3] = get_random_number(time(NULL) << 4) / 2.;
-	
-	param->color[2].val[0] = get_random_number(time(NULL) >> 6);
-	param->color[2].val[1] = get_random_number(time(NULL) << 1);
-	param->color[2].val[2] = get_random_number(time(NULL) >> 3);
-	param->color[2].val[3] = get_random_number(time(NULL) << 7) / 2.;
-	text.text_type = TEXT_UNI;
+	if (!(param = ft_memalloc(sizeof(t_text_proc))))
+		exit(EXIT_FAILURE);
+	param->color[0] = generate_random_color(time(NULL), 0.25);
+	param->color[1] = generate_random_color(time(NULL) & 0xfd9fd897, 0.5);
+	param->color[2] = generate_random_color(time(NULL) + 303, 0.55);
+	text.text_type = generate_random_enum(6);
+	if (text.text_type < 4)
+		text.bump_fact = 0.01 + get_random_number(time(NULL)) * 0.03;
 	text.text_param = param;
 	return (text);
 }
