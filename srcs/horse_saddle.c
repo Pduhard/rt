@@ -15,7 +15,7 @@
 int		check_inside_horse_saddle(t_3vecf point, t_obj *horse_saddle)
 {
 	t_horse_saddle	*param;
-	
+
 	param = (t_horse_saddle *)horse_saddle->obj_param;
 	point = sub_3vecf(point, param->origin);
 	if (point.val[0] < -param->x_fact || point.val[0] > param->x_fact || point.val[1] < -param->y_fact || point.val[1] > param->y_fact)
@@ -79,7 +79,7 @@ t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_sadd
 	normal_inter.val[1] = -1;// / (param->y_fact * param->y_fact);
 	normal_inter.val[2] = (-2 * z) / (param->y_fact * param->y_fact);
 	normalize_3vecf(&normal_inter);
-	return (normal_inter);	
+	return (normal_inter);
 }
 
 int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, double *dist, double min_dist, double max_dist, int sp_id)
@@ -158,6 +158,48 @@ int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, d
 	return (check);
 }
 
+void	generate_new_horse_saddle(t_data *data)
+{
+	t_obj		*horse_saddle;
+	t_horse_saddle	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(horse_saddle = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_horse_saddle))))
+		return ;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	param->x_fact = get_random_number((time(NULL) * 0xcacacaca) << 16) * 2.5;
+	param->y_fact = get_random_number((time(NULL) * 0xabcdef99) << 4) * 2.5;
+
+	//param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
+	// normalize_3vecf(&param->normal);
+/*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
+	{
+		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);
+		rd *= time(NULL);
+		normalize_3vecf(&param->x2d_axis);
+		printf("asad\n");
+	} */
+	horse_saddle->obj_param = param;
+	horse_saddle->obj_type = OBJ_HORSE_SADDLE;
+	horse_saddle->check_inside = &check_inside_horse_saddle;
+	horse_saddle->ray_intersect = &ray_intersect_horse_saddle;
+	horse_saddle->get_normal_inter = &get_normal_intersect_horse_saddle;
+	horse_saddle->get_origin = &get_origin_horse_saddle;
+	horse_saddle->move = &move_horse_saddle;
+	horse_saddle->rotate = NULL;
+	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;
+	horse_saddle->get_text_color = &get_uni_color;
+	horse_saddle->text = generate_random_texture();
+	set_bump_own(horse_saddle);
+	add_object(horse_saddle, data);
+	data->new_obj = 1;
+}
 /*int		parse_horse_saddle(char *line, t_data *data)
   {
   int			i;

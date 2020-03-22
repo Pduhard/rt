@@ -155,6 +155,48 @@ int	ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist,
 	return (check);
 }
 
+void	generate_new_fermat(t_data *data)
+{
+	t_obj		*fermat;
+	t_fermat	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(fermat = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_fermat))))
+		return ;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+
+	//param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
+	// normalize_3vecf(&param->normal);
+
+/*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
+	{
+		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);
+		rd *= time(NULL);
+		normalize_3vecf(&param->x2d_axis);
+		printf("asad\n");
+	} */
+	fermat->obj_param = param;
+	fermat->obj_type = OBJ_FERMAT;
+	fermat->check_inside = &check_inside_fermat;
+	fermat->ray_intersect = &ray_intersect_fermat;
+	fermat->get_normal_inter = &get_normal_intersect_fermat;
+	fermat->get_origin = &get_origin_fermat;
+	fermat->move = &move_fermat;
+	fermat->rotate = NULL;
+	fermat->get_text_coordinate = &get_text_coordinate_fermat;
+	fermat->get_text_color = &get_uni_color;
+	fermat->text = generate_random_texture();
+	set_bump_own(fermat);
+	add_object(fermat, data);
+	data->new_obj = 1;
+}
+
 /*int		parse_fermat(char *line, t_data *data)
 {
 	int			i;

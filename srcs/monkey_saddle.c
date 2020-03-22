@@ -147,10 +147,10 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 		z = oz + dz * roots.val[i];
 		if (x > -1 && x < 1 && y > -1 && y < 1 && z > -1 && z < 1 && roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
 		{
-			
+
 				check = 1;
 				*dist = roots.val[i];
-			
+
 	/*		double	v;
 			double	u;
 			double	sin_v_2;
@@ -187,14 +187,14 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 		//	{
 			//	printf("type B coord %f %f %f u %f v %f\n", coord.val[0], coord.val[1], coord.val[2], u, v);
 			//	check = 1;
-			//	*dist = roots.val[i];	
+			//	*dist = roots.val[i];
 		//	}
 				//			if (v > 0 && v < 2 * M_PI)
 		//	printf("%f\n",coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2] );
 		//	if (monkey_saddle->check_inside(coord, monkey_saddle))
 		//	if (is_null(coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2]) && u < param->half_width && u > -param->half_width)
 		//	{
-				
+
 		//		check = 1;
 		//		*dist = roots.val[i];
 		//	}
@@ -203,6 +203,46 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 	return (check);
 }
 
+void	generate_new_monkey_saddle(t_data *data)
+{
+	t_obj		*monkey_saddle;
+	t_monkey_saddle	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(monkey_saddle = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_monkey_saddle))))
+		return ;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+
+	//param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
+	// normalize_3vecf(&param->normal);
+/*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
+	{
+		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);
+		rd *= time(NULL);
+		normalize_3vecf(&param->x2d_axis);
+		printf("asad\n");
+	} */
+	monkey_saddle->obj_param = param;
+	monkey_saddle->obj_type = OBJ_MONKEY_SADDLE;
+	monkey_saddle->check_inside = &check_inside_monkey_saddle;
+	monkey_saddle->ray_intersect = &ray_intersect_monkey_saddle;
+	monkey_saddle->get_normal_inter = &get_normal_intersect_monkey_saddle;
+	monkey_saddle->get_origin = &get_origin_monkey_saddle;
+	monkey_saddle->move = &move_monkey_saddle;
+	monkey_saddle->rotate = NULL;
+	monkey_saddle->get_text_coordinate = &get_text_coordinate_monkey_saddle;
+	monkey_saddle->get_text_color = &get_uni_color;
+	monkey_saddle->text = generate_random_texture();
+	set_bump_own(monkey_saddle);
+	add_object(monkey_saddle, data);
+	data->new_obj = 1;
+}
 /*int		parse_monkey_saddle(char *line, t_data *data)
 {
 	int			i;

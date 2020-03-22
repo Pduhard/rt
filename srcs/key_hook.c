@@ -82,11 +82,11 @@ int		key_press(int keycode, void *param)
 		data->hooks |= F_KEY;
 	else if (keycode == 5) //w
 		data->hooks |= G_KEY;
-	else if (keycode == 123) //left 
+	else if (keycode == 123) //left
 		data->hooks |= ARR_LEFT_KEY;
 	else if (keycode == 124) // right
 		data->hooks |= ARR_RIGHT_KEY;
-	else if (keycode == 125) // down 
+	else if (keycode == 125) // down
 		data->hooks |= ARR_DOWN_KEY;
 	else if (keycode == 126) // up
 		data->hooks |= ARR_UP_KEY;
@@ -104,6 +104,22 @@ int		key_press(int keycode, void *param)
 		generate_new_cone(data);
 	else if (keycode == 21)
 		generate_new_cylinder(data);
+	else if (keycode == 23)
+		generate_new_triangle(data);
+	else if (keycode == 22)
+		generate_new_ellipsoid(data);
+	else if (keycode == 26)
+		generate_new_hyperboloid(data);
+	else if (keycode == 28)
+		generate_new_horse_saddle(data);
+	else if (keycode == 25)
+		generate_new_monkey_saddle(data);
+	else if (keycode == 29)
+		generate_new_cyclide(data);
+	else if (keycode == 27)
+		generate_new_fermat(data);
+	else if (keycode == 24)
+		generate_new_moebius(data);
 //	else if (keycode == 19)
 //		generate_new_plane(data);
 	else if (keycode == 117 && data->selected_obj && data->selected_obj->obj_type != OBJ_SKYBOX)
@@ -192,11 +208,11 @@ int		key_release(int keycode, void *param)
 		data->hooks -= F_KEY;
 	else if (keycode == 5) //w
 		data->hooks -= G_KEY;
-	else if (keycode == 123) //left 
+	else if (keycode == 123) //left
 		data->hooks -= ARR_LEFT_KEY;
 	else if (keycode == 124) // right
 		data->hooks -= ARR_RIGHT_KEY;
-	else if (keycode == 125) // down 
+	else if (keycode == 125) // down
 		data->hooks -= ARR_DOWN_KEY;
 	else if (keycode == 126) // up
 		data->hooks -= ARR_UP_KEY;

@@ -124,8 +124,15 @@ void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 
 t_3vecf	get_origin_triangle(t_obj *triangle)
 {
-	//FALLLLLLLLSE
-	return (((t_triangle *)triangle->obj_param)->a);
+	// t_triangle *param;
+	// t_3vecf			origin;
+	//
+	// param = (t_triangle *)triangle->obj_param;
+	// origin.val[0] = (param->a.val[0] + param->b.val[0] + param->c.val[0]) / 3;
+	// origin.val[1] = (param->a.val[1] + param->b.val[1] + param->c.val[1]) / 3;
+	// origin.val[2] = (param->a.val[2] + param->b.val[2] + param->c.val[2]) / 3;
+	// return (origin);
+	return (((t_triangle *)triangle->obj_param)->origin);
 }
 
 t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int sp_id)
@@ -184,6 +191,54 @@ int	ray_intersect_triangle(t_3vecf orig, t_3vecf dir, t_obj *triangle, double *d
 	return (0);
 }
 
+void	generate_new_triangle(t_data *data)
+{
+	t_obj		*triangle;
+	t_triangle	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(triangle = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_triangle))))
+		return ;
+//	param->radius = get_random_number(time(NULL)) * 2.5;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	dir = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 12) - 0.5);
+	normalize_3vecf(&dir);
+	param->a = add_3vecf(dir, param->origin);
+	dir = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 13) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 9) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 3) - 0.5);
+	normalize_3vecf(&dir);
+	param->b = add_3vecf(dir, param->origin);
+	dir = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 12) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 6) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 0) - 0.5);
+	normalize_3vecf(&dir);
+	param->c = add_3vecf(dir, param->origin);
+	param->origin.val[0] = (param->a.val[0] + param->b.val[0] + param->c.val[0]) / 3.;
+	param->origin.val[1] = (param->a.val[1] + param->b.val[1] + param->c.val[1]) / 3;
+	param->origin.val[2] = (param->a.val[2] + param->b.val[2] + param->c.val[2]) / 3;
+	// param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	// param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+
+	triangle->obj_param = param;
+	triangle->obj_type = OBJ_TRIANGLE;
+	triangle->check_inside = &check_inside_triangle;
+	triangle->ray_intersect = &ray_intersect_triangle;
+	triangle->get_normal_inter = &get_normal_intersect_triangle;
+	triangle->get_origin = &get_origin_triangle;
+	triangle->move = &move_triangle;
+	triangle->rotate = &rotate_triangle;
+	triangle->get_text_coordinate = &get_text_coordinate_triangle;
+	triangle->get_text_color = &get_uni_color;
+	triangle->text = generate_random_texture();
+	//triangle->get_bump_mapping = NULL;
+	set_bump_own(triangle);
+	//texture needed
+	add_object(triangle, data);
+	data->new_obj = 1;
+}
 /*int		parse_triangle(char *line, t_data *data)
   {
   int			i;

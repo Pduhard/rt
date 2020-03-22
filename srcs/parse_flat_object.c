@@ -42,7 +42,7 @@ int		parse_cylinder(char **line, t_obj *cylinder)
 int		parse_plane(char **line, t_obj *plane)
 {
 	char	stripe;
-	int		ret; 
+	int		ret;
 	t_plane	*plane_param;
 
 	stripe = 0;
@@ -110,7 +110,7 @@ int		parse_sphere(char **line, t_obj *sphere)
 	sphere->get_origin = &get_origin_sphere;
 	sphere->move = &move_sphere;
 	sphere->rotate = &rotate_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;	
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 //	add_object(sphere, data);
 	return (ret);
 }
@@ -141,7 +141,7 @@ int		parse_triangle(char **line, t_obj *triangle)
 	}
 	if (ret == 0)
 		return (syn_error(SERROR, TRIANGLE, TRIBC, NULL));
-	triangle_param->origin = assign_3vecf(triangle_param->a.val[0] + triangle_param->a.val[0] + triangle_param->a.val[0], triangle_param->a.val[1] + triangle_param->a.val[1] + triangle_param->a.val[1], triangle_param->a.val[2] + triangle_param->a.val[2] + triangle_param->a.val[2]);
+	triangle_param->origin = assign_3vecf(triangle_param->a.val[0] + triangle_param->b.val[0] + triangle_param->c.val[0], triangle_param->a.val[1] + triangle_param->b.val[1] + triangle_param->c.val[1], triangle_param->a.val[2] + triangle_param->a.val[2] + triangle_param->a.val[2]);
 	triangle_param->origin.val[0] /= 3.;
 	triangle_param->origin.val[1] /= 3.;
 	triangle_param->origin.val[2] /= 3.;
@@ -155,7 +155,7 @@ int		parse_triangle(char **line, t_obj *triangle)
 	triangle->get_origin = &get_origin_triangle;
 	triangle->move = &move_triangle;
 	triangle->rotate = &rotate_triangle;
-	triangle->get_text_coordinate = &get_text_coordinate_triangle;	
+	triangle->get_text_coordinate = &get_text_coordinate_triangle;
 //	add_object(triangle, data);
 	return (ret);
 }
@@ -194,7 +194,7 @@ int		parse_horse_saddle(char **line, t_obj *horse_saddle)
 	horse_saddle->get_normal_inter = &get_normal_intersect_horse_saddle;
 	horse_saddle->get_origin = &get_origin_horse_saddle;
 	horse_saddle->move = &move_horse_saddle;
-	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;	
+	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;
 //	add_object(horse_saddle, data);
 	return (ret);
 }
@@ -231,7 +231,7 @@ int		parse_monkey_saddle(char **line, t_obj *monkey_saddle)
 	monkey_saddle->get_normal_inter = &get_normal_intersect_monkey_saddle;
 	monkey_saddle->get_origin = &get_origin_monkey_saddle;
 	monkey_saddle->move = &move_monkey_saddle;
-	monkey_saddle->get_text_coordinate = &get_text_coordinate_monkey_saddle;	
+	monkey_saddle->get_text_coordinate = &get_text_coordinate_monkey_saddle;
 //	add_object(monkey_saddle, data);
 	return (ret);
 }
@@ -270,7 +270,7 @@ int		parse_cyclide(char **line, t_obj *cyclide)
 	cyclide->get_normal_inter = &get_normal_intersect_cyclide;
 	cyclide->get_origin = &get_origin_cyclide;
 	cyclide->move = &move_cyclide;
-	cyclide->get_text_coordinate = &get_text_coordinate_cyclide;	
+	cyclide->get_text_coordinate = &get_text_coordinate_cyclide;
 //	add_object(cyclide, data);
 	return (ret);
 }
@@ -307,7 +307,7 @@ int		parse_fermat(char **line, t_obj *fermat)
 	fermat->get_normal_inter = &get_normal_intersect_fermat;
 	fermat->get_origin = &get_origin_fermat;
 	fermat->move = &move_fermat;
-	fermat->get_text_coordinate = &get_text_coordinate_fermat;	
+	fermat->get_text_coordinate = &get_text_coordinate_fermat;
 //	add_object(fermat, data);
 	return (ret);
 }
@@ -350,7 +350,7 @@ int		parse_ellipsoid(char **line, t_obj *ellipsoid)
 	ellipsoid->get_normal_inter = &get_normal_intersect_ellipsoid;
 	ellipsoid->get_origin = &get_origin_ellipsoid;
 	ellipsoid->move = &move_ellipsoid;
-	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;	
+	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;
 //	add_object(ellipsoid, data);
 	return (ret);
 }
@@ -399,7 +399,7 @@ int		parse_hyperboloid(char **line, t_obj *hyperboloid)
 	hyperboloid->get_normal_inter = &get_normal_intersect_hyperboloid;
 	hyperboloid->get_origin = &get_origin_hyperboloid;
 	hyperboloid->move = &move_hyperboloid;
-	hyperboloid->get_text_coordinate = &get_text_coordinate_hyperboloid;	
+	hyperboloid->get_text_coordinate = &get_text_coordinate_hyperboloid;
 //	add_object(hyperboloid, data);
 	return (ret);
 }

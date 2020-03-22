@@ -189,7 +189,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			//	{
 			//	printf("type B coord %f %f %f u %f v %f\n", coord.val[0], coord.val[1], coord.val[2], u, v);
 			//	check = 1;
-			//	*dist = roots.val[i];	
+			//	*dist = roots.val[i];
 			//	}
 			//			if (v > 0 && v < 2 * M_PI)
 			//	printf("%f\n",coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2] );
@@ -203,6 +203,51 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	}
 	}
 	return (check);
+}
+
+void	generate_new_moebius(t_data *data)
+{
+	t_obj		*moebius;
+	t_moebius	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(moebius = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_moebius))))
+		return ;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	param->radius = get_random_number((time(NULL) * 0xcacacaca) << 16) * 3;
+	param->half_width = get_random_number((time(NULL) * 0xabcdef99) << 4) * param->radius + 0.1;
+	// param->z_fact = get_random_number((time(NULL) * 0xff3672ff) << 3) * 2.5;
+
+	//param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
+	// normalize_3vecf(&param->normal);
+
+/*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
+	{
+		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);
+		rd *= time(NULL);
+		normalize_3vecf(&param->x2d_axis);
+		printf("asad\n");
+	} */
+	moebius->obj_param = param;
+	moebius->obj_type = OBJ_MOEBIUS;
+	moebius->check_inside = &check_inside_moebius;
+	moebius->ray_intersect = &ray_intersect_moebius;
+	moebius->get_normal_inter = &get_normal_intersect_moebius;
+	moebius->get_origin = &get_origin_moebius;
+	moebius->move = &move_moebius;
+	moebius->rotate = NULL;
+	moebius->get_text_coordinate = &get_text_coordinate_moebius;
+	moebius->get_text_color = &get_uni_color;
+	moebius->text = generate_random_texture();
+	set_bump_own(moebius);
+	add_object(moebius, data);
+	data->new_obj = 1;
 }
 
 /*int		parse_moebius(char *line, t_data *data)

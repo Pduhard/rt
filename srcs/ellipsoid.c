@@ -78,7 +78,7 @@ t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, in
 	normal_inter.val[1] = (2 * y) / (param->y_fact * param->y_fact);
 	normal_inter.val[2] = (2 * z) / (param->z_fact * param->z_fact);
 	normalize_3vecf(&normal_inter);
-	return (normal_inter);	
+	return (normal_inter);
 }
 
 int	ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double *dist, double min_dist, double max_dist, int sp_id)
@@ -133,6 +133,51 @@ int	ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double 
 		*dist = roots.val[1];
 	}
 	return (check);
+}
+
+void	generate_new_ellipsoid(t_data *data)
+{
+	t_obj		*ellipsoid;
+	t_ellipsoid	*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(ellipsoid = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_ellipsoid))))
+		return ;
+	param->origin.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
+	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
+	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
+	param->x_fact = get_random_number((time(NULL) * 0xcacacaca) << 16) * 2.5;
+	param->y_fact = get_random_number((time(NULL) * 0xabcdef99) << 4) * 2.5;
+	param->z_fact = get_random_number((time(NULL) * 0xff3672ff) << 3) * 2.5;
+
+	//param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
+	// normalize_3vecf(&param->normal);
+
+/*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
+	{
+		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);
+		rd *= time(NULL);
+		normalize_3vecf(&param->x2d_axis);
+		printf("asad\n");
+	} */
+	ellipsoid->obj_param = param;
+	ellipsoid->obj_type = OBJ_ELLIPSOID;
+	ellipsoid->check_inside = &check_inside_ellipsoid;
+	ellipsoid->ray_intersect = &ray_intersect_ellipsoid;
+	ellipsoid->get_normal_inter = &get_normal_intersect_ellipsoid;
+	ellipsoid->get_origin = &get_origin_ellipsoid;
+	ellipsoid->move = &move_ellipsoid;
+	ellipsoid->rotate = NULL;
+	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;
+	ellipsoid->get_text_color = &get_uni_color;
+	ellipsoid->text = generate_random_texture();
+	set_bump_own(ellipsoid);
+	add_object(ellipsoid, data);
+	data->new_obj = 1;
 }
 
 /*int		parse_ellipsoid(char *line, t_data *data)
