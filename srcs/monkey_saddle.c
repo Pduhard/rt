@@ -14,17 +14,18 @@
 
 int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle)
 {
-	t_monkey_saddle	*param;
+	(void)monkey_saddle;
+//	t_monkey_saddle	*param;
 	double	v;
 	double	u;
 	double	sin_v_2;
 
 	return (0);
-	param = (t_monkey_saddle *)monkey_saddle->obj_param;
+//	param = (t_monkey_saddle *)monkey_saddle->obj_param;
 	v = atan2(point.val[1], point.val[0]);
 	if (!is_null((sin_v_2 = sin(v / 2))))
 		u = point.val[2] / sin_v_2;
-		u = (point.val[0] - 1);
+	u = (point.val[0] - 1);
 	point.val[0] -= (1 + u * cos(v / 2)) * cos(v);
 	point.val[1] -= (1 + u * cos(v / 2)) * sin(v);
 	point.val[2] -= u * sin_v_2;
@@ -36,11 +37,12 @@ int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle)
 
 t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *monkey_saddle)
 {
+	(void)monkey_saddle;
 	t_2vecf	text_coord;
 	double	sin_v_2;
-	t_monkey_saddle	*param;
+//	t_monkey_saddle	*param;
 
-	param = (t_monkey_saddle *)monkey_saddle->obj_param;
+//	param = (t_monkey_saddle *)monkey_saddle->obj_param;
 	text_coord.val[1] = atan2(inter_point.val[1], inter_point.val[0]);
 	if (!is_null((sin_v_2 = sin(text_coord.val[1] / 2))))
 		text_coord.val[0] = inter_point.val[2] / sin_v_2;
@@ -86,14 +88,14 @@ t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_sa
 	t_monkey_saddle	*param;
 	t_3vecf		normal_inter;
 	double		x;
-	double		y;
+//	double		y;
 	double		z;
 	t_3vecf		monkey_saddle_origin;
 
 	param = (t_monkey_saddle *)monkey_saddle->obj_param;
 	monkey_saddle_origin = sp_id ? move_3vecf(param->origin, monkey_saddle->motions, sp_id) : param->origin;
 	x = inter_point.val[0] - monkey_saddle_origin.val[0];
-	y = inter_point.val[1] - monkey_saddle_origin.val[1];
+//	y = inter_point.val[1] - monkey_saddle_origin.val[1];
 	z = inter_point.val[2] - monkey_saddle_origin.val[2];
 	normal_inter.val[0] = 3 * x * x - 3 * z * z;
 	normal_inter.val[1] = -1;
@@ -137,10 +139,10 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 //	printf("%f %f %f\n", roots.val[0], roots.val[1], roots.val[2]);
 	while (++i < 3)
 	{
-		t_3vecf	coord;
-		coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - monkey_saddle_origin.val[0];
-		coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - monkey_saddle_origin.val[1];
-		coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - monkey_saddle_origin.val[2];
+		//t_3vecf	coord;
+	//	coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - monkey_saddle_origin.val[0];
+	//	coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - monkey_saddle_origin.val[1];
+	//	coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - monkey_saddle_origin.val[2];
 		double	x, y, z;
 		x = ox + dx * roots.val[i];
 		y = oy + dy * roots.val[i];

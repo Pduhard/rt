@@ -66,14 +66,14 @@ t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_sadd
 	t_horse_saddle	*param;
 	t_3vecf		normal_inter;
 	double		x;
-	double		y;
+//	double		y;
 	double		z;
 	t_3vecf		horse_saddle_origin;
 
 	param = (t_horse_saddle *)horse_saddle->obj_param;
 	horse_saddle_origin = sp_id ? move_3vecf(param->origin, horse_saddle->motions, sp_id) : param->origin;
 	x = inter_point.val[0] - horse_saddle_origin.val[0];
-	y = inter_point.val[1] - horse_saddle_origin.val[1];
+//	y = inter_point.val[1] - horse_saddle_origin.val[1];
 	z = inter_point.val[2] - horse_saddle_origin.val[2];
 	normal_inter.val[0] = (2 * x) / (param->x_fact * param->x_fact);
 	normal_inter.val[1] = -1;// / (param->y_fact * param->y_fact);

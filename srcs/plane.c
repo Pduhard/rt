@@ -163,9 +163,9 @@ void	generate_new_plane(t_data *data)
 	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
 	param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
 	normalize_3vecf(&param->normal);
-	int		rd;
+	//int		rd;
 
-	rd = time(NULL);
+//	rd = time(NULL);
 /*	while (!is_null(dot_product_3vecf(param->normal, param->x2d_axis)))
 	{
 		param->x2d_axis = assign_3vecf(get_random_number(rd * 0xcacacaca << 16) - 0.5, get_random_number(rd * 0xfeabcdef << 8) - 0.5, get_random_number(rd * 0x1056ffe << 4) - 0.5);

@@ -65,6 +65,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, 
 	t_3vecf	cyl_axis[3];
 	t_cylinder	*param;
 
+	cyl_axis[0] = assign_3vecf(0, 0, 0);
 	param = (t_cylinder *)cylinder->obj_param;
 	cp = sub_3vecf(inter_point, param->center);
 	cyl_axis[1] = sub_3vecf(param->tip, param->center);

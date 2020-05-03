@@ -70,10 +70,8 @@ void	eof_inften_conv(int j, char **sci, char *src, t_conv *data)
 
 void	inf_ten_conv(char *src, char **sci, t_conv *data)
 {
-	int		i;
 	int		j;
 
-	i = 0;
 	j = 0;
 	while (src[j] && ft_strchr("123456789", src[j]) == NULL)
 		j++;
@@ -91,20 +89,14 @@ int		display_sci(char **converted, t_conv *data)
 {
 	char	*sci;
 	int		point;
-	int		pow;
-	int		i;
-	int		j;
-
-	i = 0;
-	pow = 0;
-	j = 0;
+	
 	if (!(sci = (char *)malloc(2 + data->prec + 2 + 1)))
 		return (-1);
 	point = ft_strichr(*converted, '.');
 	sci[0] = '\0';
 	if (point == -1 || point != 1)
 		supp_ten_conv(*converted, &sci, point == -1 ?
-				ft_strlen(*converted) - 1 : point - 1, data);
+				(int)ft_strlen(*converted) - 1 : point - 1, data);
 	else
 		inf_ten_conv(*converted, &sci, data);
 	ft_strdel(converted);

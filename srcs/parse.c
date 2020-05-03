@@ -21,7 +21,7 @@ int		parse_rt_conf(char *file_name, t_data *data)
 	char	*line;
 	int		ret;
 	char	*result;
-	char	*result_cpy;
+	//char	*result_cpy;
 
 	line = NULL;
 	if ((fd = open(file_name, O_RDONLY)) == -1)
@@ -37,7 +37,7 @@ int		parse_rt_conf(char *file_name, t_data *data)
 		free(result);
 		return (error(ERRORFILE, NULL));
 	}
-	result_cpy = result;
+//	result_cpy = result;
 	if (!parse(&result, data))
 		return (error(ERRORFILE, NULL));
 	return (1);
@@ -71,9 +71,10 @@ int		brackets_rt(char *line)
 
 int		parse(char **line, t_data *data)
 {
-	char	stripe;
+	//char	stripe;
 
-	stripe = goto_next_element(line);
+	//stripe = goto_next_element(line);
+	goto_next_element(line);
 	if (!(ft_strncmp_case(*line, "scene", 5)))
 		return (parse_scene(line, data));
 	else

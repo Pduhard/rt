@@ -15,14 +15,12 @@
 int		display_separator(char **converted)
 {
 	int		len;
-	int		new_len;
 	char	*new;
 	int		i;
 	int		j;
 
 	i = 0;
 	len = (int)ft_strlen(*converted);
-	new_len = len + len / 3 - (len % 2 == 0 ? 1 : 0);
 	if (!(new = (char *)malloc(len + 1)))
 		return (0);
 	j = 0;

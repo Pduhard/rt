@@ -52,6 +52,7 @@ t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_ob
 	t_3vecf	cone_axis[3];
 	t_cone	*param;
 
+	cone_axis[0] = assign_3vecf(0, 0, 0);
 	param = (t_cone *)cone->obj_param;
 	cp = sub_3vecf(inter_point, param->center);
 	cone_axis[1] = sub_3vecf(param->tip, param->center);

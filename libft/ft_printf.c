@@ -92,8 +92,8 @@ int		print_chain(t_part *wlst, int fd)
 		else if ((wlst->next != NULL && wlst->next->res == NULL
 			&& wlst->next->conv->type != 'n') || wlst->res == NULL)
 			dead = 1;
-		if (dead != 1)
-			write(fd, wlst->res, retsum);
+		if (dead != 1 && write(fd, wlst->res, retsum) == -1)
+			return (-1);
 		ret += retsum;
 		tmp = wlst->next;
 		free_struct(wlst);

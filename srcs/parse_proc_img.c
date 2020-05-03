@@ -2,6 +2,9 @@
 
 void	*parse_img(char *name)
 {
+	if (name)
+		return (NULL);
+	/*
 	SDL_Surface		*row;
 	SDL_Surface		*image;
 	t_text_img		*param;
@@ -26,7 +29,8 @@ void	*parse_img(char *name)
 	SDL_UnlockSurface(image);
 	SDL_FreeSurface(row);
 	SDL_FreeSurface(image);
-	return ((void *)param);
+	return ((void *)param); */
+	return (NULL);
 }
 
 void	*parse_texture_img(char **line)
@@ -54,12 +58,12 @@ void	*parse_texture_img(char **line)
 
 void	*parse_proc(char **line)
 {
-	char		stripe;
+//	char		stripe;
 	int			cmp;
 	int			ret;
 	t_text_proc	*param;
 
-	stripe = 0;
+//	stripe = 0;
 	cmp = -1;
 	ret = 1;
 	if (!(param = ft_memalloc(sizeof(t_text_proc))))

@@ -62,10 +62,8 @@ int		get_prec(char *str, int i, va_list ap)
 
 int		get_width(char *str, int j, va_list ap, char **flags)
 {
-	int		check;
 	int		n;
 
-	check = 0;
 	while (str[j] && ft_strchr(FLAGS, str[j]))
 		j++;
 	n = j;

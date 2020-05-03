@@ -15,7 +15,6 @@
 int		ft_strcmp(const char *s1, const char *s2)
 {
 	int cpt;
-	int	res;
 
 	cpt = 0;
 	while (s1[cpt] == s2[cpt] && s1[cpt] != '\0' && s2[cpt] != '\0')
@@ -26,6 +25,5 @@ int		ft_strcmp(const char *s1, const char *s2)
 		if (s1[cpt] == '\0' || s2[cpt] == '\0')
 			break ;
 	}
-	res = s1[cpt] - s2[cpt];
 	return ((unsigned char)s1[cpt] - (unsigned char)s2[cpt]);
 }

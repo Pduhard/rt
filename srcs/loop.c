@@ -324,9 +324,9 @@ int		print_loop_image(void *param)
 	t_data **data_addr;
 	t_mlx	*mlx;
 
-	Uint32	frame_start;
+//	unsigned int 	frame_start;
 	int		rendering = 1;
-	frame_start = SDL_GetTicks();
+//	frame_start = 1;//SDL_GetTicks();
 	data_addr = (t_data **)param;
 	if ((*data_addr)->to_next && (*data_addr)->next)
 	{
@@ -386,7 +386,7 @@ int		print_loop_image(void *param)
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
 //	printf("%d %d, %d\n", frame_start, SDL_GetTicks(), (SDL_GetTicks() - frame_start));
-	data->delta_time += (SDL_GetTicks() - frame_start);
+	data->delta_time += 0;//(SDL_GetTicks() - frame_start);
 	//printf("%lu \n", data->delta_time);
 	data->fps++;
 	if (data->delta_time >= 1000)

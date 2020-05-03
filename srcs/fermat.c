@@ -22,6 +22,8 @@ int		check_inside_fermat(t_3vecf point, t_obj *fermat)
 	return (0);
 	/* ne need to do*/
 	param = (t_fermat *)fermat->obj_param;
+	if (param)
+		param++;
 	v = atan2(point.val[1], point.val[0]);
 	u = (point.val[0]);
 	point.val[2] -= u + v;
@@ -38,6 +40,8 @@ t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_
 	t_fermat	*param;
 
 	param = (t_fermat *)fermat->obj_param;
+	if (param)
+		param++;
 	text_coord.val[1] = atan2(inter_point.val[1], inter_point.val[0]);
 /*	if (!is_null((sin_v_2 = sin(text_coord.val[1] / 2))))
 		text_coord.val[0] = inter_point.val[2] / sin_v_2;
@@ -134,20 +138,20 @@ int	ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist,
 //	printf("%f %f %f\n", roots.val[0], roots.val[1], roots.val[2]);
 	while (++i < 3)
 	{
-		t_3vecf	coord;
 	//	t_3vecf	coord;
-		coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - fermat_origin.val[0];
-		coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - fermat_origin.val[1];
-		coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - fermat_origin.val[2];
+	//	t_3vecf	coord;
+	//	coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - fermat_origin.val[0];
+	//	coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - fermat_origin.val[1];
+	//	coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - fermat_origin.val[2];
 		double	x, y, z;
 		x = ox + dx * roots.val[i];
 		y = oy + dy * roots.val[i];
 		z = oz + dz * roots.val[i];
 		if (x > -3 && x < 3 && y > -3 && y < 3 && z > -3 && z < 3 && roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
 		{
-			coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - fermat_origin.val[0];
-			coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - fermat_origin.val[1];
-			coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - fermat_origin.val[2];
+		//	coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - fermat_origin.val[0];
+		//	coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - fermat_origin.val[1];
+		//	coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - fermat_origin.val[2];
 			check = 1;
 			*dist = roots.val[i];
 		}

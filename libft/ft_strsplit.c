@@ -14,14 +14,12 @@
 
 static char	*get_next_word(char const *s, int *j, char c)
 {
-	int		len;
 	int		k;
 	char	*word;
 
 	while (s[*j] == c)
 		*j += 1;
 	k = *j;
-	len = 0;
 	while (s[k] != c && s[k] != '\0')
 		k++;
 	if (!(word = (char*)malloc(sizeof(char) * (k - *j + 1))))

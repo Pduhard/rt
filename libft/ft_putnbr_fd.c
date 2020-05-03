@@ -20,18 +20,20 @@ void	ft_putnbr_fd(int n, int fd)
 	neg = 0;
 	if (n == -2147483648)
 	{
-		(write(fd, "-214748364", 10));
+		if (write(fd, "-214748364", 10) == -1)
+			return ;
 		n = 8;
 	}
 	if (n < 0)
 	{
 		neg = 1;
-		write(fd, "-", 1);
+		if (write(fd, "-", 1) == -1)
+			return ;
 		ft_putnbr_fd(-n, fd);
 	}
 	if (n > 9)
 		ft_putnbr_fd(n / 10, fd);
 	nb = (n % 10) + '0';
-	if (neg != 1)
-		write(fd, &nb, 1);
+	if (neg != 1 && write(fd, &nb, 1) == -1)
+		return ;
 }

@@ -98,7 +98,7 @@ char	*wchart_conv(unsigned int c, t_conv *data, int *ln)
 		ft_intfjoin(c, &converted, 0);
 	else
 		len = get_unicode_len(c);
-	if (len > MB_CUR_MAX || len == -1)
+	if ((unsigned int)len > MB_CUR_MAX || len == -1)
 	{
 		ft_strdel(&converted);
 		return (NULL);
@@ -110,6 +110,6 @@ char	*wchart_conv(unsigned int c, t_conv *data, int *ln)
 	if (len == -1)
 		ft_strdel(&converted);
 	*ln = len;
-	data->size = (len == -1 ? len : data->size + len);
+	data->size = (len == -1 ? (int)len : (int)data->size + len);
 	return (converted);
 }

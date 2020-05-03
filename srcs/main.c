@@ -22,9 +22,7 @@ int			main(int argc, char **argv)
 	t_data		*first;
 	t_data_cont	*data_cont;
 	t_data		*data_lst;
-	int			check;
 
-	check = 0;
 	int		i = 0;
 	data_lst = NULL;
 	first = NULL;
@@ -40,7 +38,6 @@ int			main(int argc, char **argv)
 				;
 			else
 			{
-				check = 1;
 				//data->next = data_lst;
 				if (!first)
 				{

@@ -4,15 +4,21 @@
 
 
 # include "../libft/libft.h"
-# include "../external_libs/minilibx_macos/mlx.h"
-# include "../external_libs/sdl/SDL.h"
-# include "../frameworks/SDL2.framework/Headers/SDL.h"
-# include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
+# if defined(__linux)
+#  include "../external_libs/minilibx/mlx.h"
+#else
+#  include "../external_libs/minilibx_macos/mlx.h"
+#endif
+//# include "../external_libs/sdl/SDL.h"
+//# include "../frameworks/SDL2.framework/Headers/SDL.h"
+//# include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
 # include <math.h>
 # include <pthread.h>
 # include <fcntl.h>
 # include <float.h>
 # include <time.h>
+# include <stdio.h>
+
 //# define WIN_WIDTH 600
 //# define WIN_HEIGHT	600
 # define NB_THREADS	8
@@ -483,8 +489,8 @@ typedef struct	s_data
 	t_2vecf		size;
 	int			hooks;
 	t_33matf	rot_mat[3];
-	Uint32		fps;
-	Uint32		delta_time;
+	unsigned int		fps;
+	unsigned int		delta_time;
 	int			anti_al;
 	double		aa_adapt;
 	int			cel_shading;

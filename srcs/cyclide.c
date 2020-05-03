@@ -23,6 +23,8 @@ int		check_inside_cyclide(t_3vecf point, t_obj *cyclide)
 	return (0);
 	/* ne need to do*/
 	param = (t_cyclide *)cyclide->obj_param;
+	if (param)
+		param++;
 	v = atan2(point.val[1], point.val[0]);
 	u = (point.val[0]);
 	point.val[2] -= u + v;
@@ -39,6 +41,8 @@ t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter, t
 	t_cyclide	*param;
 
 	param = (t_cyclide *)cyclide->obj_param;
+	if (param)
+		param++;
 	text_coord.val[1] = atan2(inter_point.val[1], inter_point.val[0]);
 /*	if (!is_null((sin_v_2 = sin(text_coord.val[1] / 2))))
 		text_coord.val[0] = inter_point.val[2] / sin_v_2;

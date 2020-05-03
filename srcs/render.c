@@ -222,7 +222,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 	t_3vecf	spec_vec;
 	t_obj	*shadow_obj;
 	t_3vecf	inv_dir = assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]);
-
+	light_len = 0;
 	light_fact = assign_3vecf(0, 0, 0);
 	while (lights)
 	{
@@ -253,6 +253,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 			shadow_inter_point = inter_point;
 			transp_fact = assign_3vecf(1, 1, 1);
 		//	printf("hallllllllllo %d %p == %p \n", objs->obj_type, objs->get_text_coordinate, get_text_coordinate_moebius);
+			shadow_dist = MAX_VIEW;
 			while ((shadow_obj = ray_first_intersect(shadow_inter_point, light_dir, BIAS, light_len, &shadow_dist, objs, sp_id, data)))
 			{
 		//		printf("wefwef\n");
@@ -399,18 +400,19 @@ t_3vecf		compute_glare(t_3vecf orig, t_3vecf dir, t_light *lights, t_3vecf *inte
 	double	light_dist;
 
 	obj_dist = inter_point ? get_length_3vecf(sub_3vecf(*inter_point, orig)) : MAX_VIEW;
+	light_pos = assign_3vecf(0, 0, 0);
 	glare = assign_3vecf(0, 0, 0);
 	while (lights)
 	{
-		if (lights->light_type != LIGHT_AMBIENT)
+	//	if (lights->light_type != LIGHT_AMBIENT)
+	//	{
+		if (lights->light_type == LIGHT_POINT)
 		{
-			if (lights->light_type == LIGHT_POINT)
-			{
-				light_dir = sub_3vecf(lights->param, orig);
-				light_dist = get_length_3vecf(light_dir);
-				normalize_3vecf(&light_dir);
-				light_pos = lights->param;
-			}	
+			light_dir = sub_3vecf(lights->param, orig);
+			light_dist = get_length_3vecf(light_dir);
+			normalize_3vecf(&light_dir);
+			light_pos = lights->param;
+	
 			if (light_dist < obj_dist)
 			{
 				double fact;

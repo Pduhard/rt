@@ -12,11 +12,11 @@
 
 #__________CONFIG__________#
 
-CC			= gcc
+CC			= clang
 NAME		= libft.a
 
-FLAGS		= -Wall -Werror -Wextra -O3 
-INCLUDES	= -I ./libft.h
+FLAGS		= -fPIC -Wall -Werror -Wextra -O3 
+INCLUDES	= -I ./
 
 SRCDIR		= ./
 BINDIR		= ./
