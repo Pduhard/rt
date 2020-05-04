@@ -57,8 +57,10 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 		error(ERRORTHREAD, NULL);
 		return (NULL);
 	}
+	printf("before conf\n");
 	if (!(parse_rt_conf(file_name, data)))
 		return (NULL); //free all
+	printf("after conf\n");
 	if (data->size.val[0] < 400 || data->size.val[0] > 2560 || data->size.val[1] < 400 || data->size.val[1] > 1420)
 	{
 		error(ERRORSIZE, NULL);
@@ -72,13 +74,13 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	}
 	else if (mlx)
 		data->mlx = mlx;
-	if (!init_loading_screen(data)) 
+/*	if (!init_loading_screen(data)) 
 	{
 		free(data->objs);
 		free(data->mlx);
 		free(data);
 		return (NULL);
-	}
+	} */
 //	if ((data->caustics_gi || data->indirect_gi) && !(create_photon_map(data)))
 //	{
 		//free all
@@ -91,5 +93,6 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	data->fps = 0;
 	data->delta_time = 0;
 	data->aa_adapt = MIN_ANTI_AL;
+	printf("init ended\n");
 	return (data);
 }

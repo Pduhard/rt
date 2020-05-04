@@ -453,6 +453,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 
 	lighted_color = assign_3vecf(0, 0, 0);
 	closest_obj = ray_first_intersect(orig, dir, min_dist, max_dist, &closest_dist, data->objs, sp_id, data);
+	//printf("rtrace\n");
 	if (!closest_obj)
 	{
 		light_fact = compute_glare(orig, dir, data->lights, NULL);

@@ -6,12 +6,15 @@
 # include "../libft/libft.h"
 # if defined(__linux)
 #  include "../external_libs/minilibx/mlx.h"
+#  include "/usr/include/SDL2/SDL.h"
+#  include "/usr/include/SDL2/SDL_image.h"
 #else
 #  include "../external_libs/minilibx_macos/mlx.h"
+# include "../external_libs/sdl/SDL.h"
+# include "../frameworks/SDL2.framework/Headers/SDL.h"
+# include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
 #endif
-//# include "../external_libs/sdl/SDL.h"
-//# include "../frameworks/SDL2.framework/Headers/SDL.h"
-//# include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
+
 # include <math.h>
 # include <pthread.h>
 # include <fcntl.h>
@@ -21,7 +24,7 @@
 
 //# define WIN_WIDTH 600
 //# define WIN_HEIGHT	600
-# define NB_THREADS	8
+# define NB_THREADS	1
 # define MIN_ANTI_AL 0.5
 # define MAX_ANTI_AL 2.
 

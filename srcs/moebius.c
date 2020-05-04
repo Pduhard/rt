@@ -126,6 +126,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	t_3vecf		moebius_origin;
 
 	(void)sp_id;
+//	printf("moebius ray intersect start\n");
 	check = 0;
 	param = (t_moebius *)moebius->obj_param;
 	moebius_origin = sp_id ? move_3vecf(param->origin, moebius->motions, sp_id) : param->origin;
@@ -202,6 +203,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			}
 	}
 	}
+//	printf("moebius ray intersect end\n");
 	return (check);
 }
 

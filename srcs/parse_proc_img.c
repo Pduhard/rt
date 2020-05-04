@@ -2,21 +2,25 @@
 
 void	*parse_img(char *name)
 {
-	if (name)
-		return (NULL);
-	/*
 	SDL_Surface		*row;
 	SDL_Surface		*image;
 	t_text_img		*param;
 	unsigned int	pixels_nb;
 	unsigned int	i;
 
+	printf("parse img start\n");
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
+	printf("parse img malloc ok name : %s\n", name);
 	if (!(row = IMG_Load(name)))
+	{
+		printf("error :%s\n", SDL_GetError());
 		return (NULL);
+	}
+	printf("parse img IMG_MLOAD ok\n");
 	if (!(image = SDL_ConvertSurfaceFormat(row, SDL_PIXELFORMAT_RGBA8888, 0)))
 		return (NULL);
+	printf("parse img IMG_CONVERT ok\n");
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
 		return (NULL);
@@ -29,7 +33,7 @@ void	*parse_img(char *name)
 	SDL_UnlockSurface(image);
 	SDL_FreeSurface(row);
 	SDL_FreeSurface(image);
-	return ((void *)param); */
+	return ((void *)param);
 	return (NULL);
 }
 

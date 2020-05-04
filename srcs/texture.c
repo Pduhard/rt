@@ -164,6 +164,7 @@ t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 //	int		offset_col;
 	int		pixel_addr;
 
+//	printf("halloooo\n");
 	text = (t_text_img *)obj->text.text_param;
 	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
 	text_coord.val[1] *= obj->text.scale.val[1];

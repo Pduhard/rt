@@ -2,7 +2,7 @@
 	<name(Moebius stripe)	>
 	<size(400, 400)>
 	<camera
-		<origin (0, 0, -5)>
+		<origin (0, 0, -10)>
 		<rotation (0, 0)>
 	>
 	<objects

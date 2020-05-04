@@ -34,6 +34,7 @@ int			main(int argc, char **argv)
 			return (0);
 		while (argv[++i])
 		{
+			printf("hallo\n");
 			if (!(data = init_data(argv[i], data_lst ? data_lst->mlx : NULL)))
 				;
 			else
@@ -57,6 +58,9 @@ int			main(int argc, char **argv)
 			}
 		}
 	}
+
+	if (!data_lst)
+		return (0);
 	data_lst->next = first;
 	//first->next = data_
 	data_cont->data_lst = data;

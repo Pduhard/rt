@@ -1,11 +1,12 @@
 #__________CONFIG__________#
 
+
 NAME		=	rt
 
-CC			=	clang
-FLAGS		=	-Wall -fPIC -Wextra -Werror -O3 -march=native -flto -ffast-math
-FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
+FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
+
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
+
 INCLUDES	=	rt.h \
 
 SRC_PATH	=	./srcs/
@@ -13,11 +14,17 @@ BIN_PATH	=	./bins/
 INC_PATH	=	./includes/
 LIB_PATH	=	./libft/
 EXT_LIB		=	./external_libs
+
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
+	FLAGS		+=	-fPIC
+	FRAMEWORK	=	-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image -lSDL -lSDLmain
+	CC		=	clang
 	MLX_PATH	=	$(EXT_LIB)/minilibx/
-	MLX_FLAGS	=	-L$(MLX_PATH) -lX11 -lXext -lm -lbsd -lmlx
+	MLX_FLAGS	=	-L$(MLX_PATH) -lX11 -lXext -lm -lbsd $(MLX_FLAG)
 else
+	CC		=	gcc
+	FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
 	MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
 	MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
 endif
@@ -102,7 +109,7 @@ N			=	\33[0m
 all: make_libft $(NAME)
 
 $(NAME): $(LIBS) $(MLXS) $(BINS)
-	@$(CC) $(FLAGS) -o $@ $(BINS) $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS)
+	@$(CC) $(FLAGS) -o $@ $(BINS) $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS) $(FRAMEWORK)
 #	@$(CC) -I $(INC_PATH) $(FLAGS) -lpthread $(LIB_FLAGS) $(MLX_FLAGS) -o $@ $^
 	@echo "\n\n$(B)[EXECUTABLE \"$(NAME)\" READY]\n"
 
