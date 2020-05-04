@@ -47,7 +47,6 @@ void	free_object(t_obj *obj)
 		free(((t_text_img *)(obj->text.text_param))->pixels);
 	if (obj->text.text_param)
 		free(obj->text.text_param);
-	//free composed with
 	free(obj);
 }
 
@@ -91,4 +90,55 @@ void	delete_object(t_data *data, t_obj *obj)
 		free(obj->composed_w);
 	}
 	free_object(obj);
+}
+
+void unchain_list(t_data *data)
+{
+	t_data *start;
+
+	start = data;
+	while (data->next != start)
+		data = data->next;
+	data->next = NULL;
+}
+
+void free_all_objects(t_obj *objs)
+{
+	t_obj *next;
+	int   i;
+
+	while (objs)
+	{
+		next = objs->next;
+		i = 0;
+		if (objs->composed_w)
+		{
+			while (objs->composed_w[i])
+				objs->composed_w[i++]->composed_w = NULL;
+			free(objs->composed_w);
+		}
+		free_object(objs);
+		objs = next;
+	}
+}
+
+void free_data(t_data *data)
+{
+	free_all_objects(data->objs);
+
+}
+
+void free_all(t_data *data)
+{
+	t_data	*next;
+	t_mlx		*mlx;
+
+	mlx = data->mlx;
+	unchain_list(data);
+	while (data)
+	{
+		next = data->next;
+		free_data(data);
+		data = data->next;
+	}
 }

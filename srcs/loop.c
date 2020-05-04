@@ -321,6 +321,7 @@ void	loop_manage_rot_matrix(t_data *data)
 int		print_loop_image(void *param)
 {
 	t_data *data;
+	// int    first_loop;
 	t_data **data_addr;
 	t_mlx	*mlx;
 	int	frame_start;
@@ -355,18 +356,24 @@ int		print_loop_image(void *param)
 //	loop_manage_speed(data);
 //	loop_manage_render(data);
 //	printf("eqwfwef\n");
-	if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && !(create_photon_map(data)))
+
+
+	if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && data->first_loop && !(create_photon_map(data)))
 	{
 		//freeeeeee
 		printf("PB parsing global illu\n");
 		exit(0);
 	}
-	if (loop_manage_cam(data) || data->new_obj)
+
+
+	if (loop_manage_cam(data) || data->new_obj || data->first_loop == 1)
 		data->aa_adapt = MIN_ANTI_AL;
 	else if (!is_null(data->aa_adapt - MAX_ANTI_AL))
 		data->aa_adapt *= 2;
 	else
 		rendering = 0;
+	//if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && !data->first_loop)
+	data->first_loop++;
 //	printf("salut\n");
 //	loop_manage_rot_matrix(data);
 //	clock_t	start;

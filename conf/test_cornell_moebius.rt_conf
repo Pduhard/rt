@@ -71,7 +71,7 @@
 			<normal(0, 1, 0)>
 		>
 		<cutting
-			<cube	
+			<cube
 				<x_range (-4.52, 4.52)>
 		        <y_range (-4.02, 3.98)>
 				<z_range (-3, 8)>
@@ -109,8 +109,8 @@
 			<radius(2.5)>
 			<half_width(1)>
 		>
-		<refraction (1.2)>
-	>	
+		<refraction (1.6)>
+	>
 	<lights
 		<point (0, 0, 6)>
 		<color (0.8, 0.8, 0.8)>

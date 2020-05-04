@@ -3,7 +3,7 @@
 int			close_cross(t_data *data)
 {
 	(void)data;
-//	free_all(data);
+	free_all(data);
 	exit(0);
 	return (0);
 }
@@ -20,9 +20,9 @@ int			main(int argc, char **argv)
 {
 	t_data		*data;
 	t_data		*first;
-	t_data_cont	*data_cont;
+//	t_data_cont	*data_cont;
 	t_data		*data_lst;
-
+// azdazd
 	int		i = 0;
 	data_lst = NULL;
 	first = NULL;
@@ -30,11 +30,11 @@ int			main(int argc, char **argv)
 		return (error(ERRORARG, NULL));
 	else
 	{
-		if (!(data_cont = ft_memalloc(sizeof(t_data_cont))))
-			return (0);
+	//	if (!(data_cont = ft_memalloc(sizeof(t_data_cont))))
+		//	return (0);
 		while (argv[++i])
 		{
-			printf("hallo\n");
+			// printf("hallo\n");
 			if (!(data = init_data(argv[i], data_lst ? data_lst->mlx : NULL)))
 				;
 			else
@@ -63,7 +63,7 @@ int			main(int argc, char **argv)
 		return (0);
 	data_lst->next = first;
 	//first->next = data_
-	data_cont->data_lst = data;
+	// data_cont->data_lst = data;
 	data = first;
 	mlx_hook(data->mlx->win_ptr, 2, 0, key_press, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 3, 0, key_release, (void *)data);

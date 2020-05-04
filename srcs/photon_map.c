@@ -113,7 +113,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 			}
 			else // reflect diffuse
 			{
-				
+
 				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 				while (dot_product_3vecf(dir, normal_inter) < 0)
 				{
@@ -196,7 +196,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 					dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 					rand_iter ^= rand_iter >> 4;
 					rand_iter ^= rand_iter << 6;
-				}	
+				}
 					// !! danger ^ ^ ^
 
 			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
@@ -224,14 +224,14 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 	//photon
 }
 
-void		scatter_photon(t_photon **photon_tab, t_data *data, t_text_img *img)
+void		scatter_photon(t_photon **photon_tab, t_data *data)
 {
 	t_light	*light;
 	int		ind_i;
 	int		caus_i;
 	t_3vecf	orig;
 	t_3vecf	dir;
-	double	pc;
+	// double	pc;
 	int		pct;
 	double	div;
 
@@ -241,7 +241,7 @@ void		scatter_photon(t_photon **photon_tab, t_data *data, t_text_img *img)
 		div += NB_CAUSTIC_PHOTON;
 	if (data->indirect_gi)
 		div += NB_INDIRECT_PHOTON;
-	pc = 0;
+	// pc = 0;
 	if (!check_light_type(data->lights))
 		return ;
 	ind_i = 0;
@@ -262,19 +262,19 @@ void		scatter_photon(t_photon **photon_tab, t_data *data, t_text_img *img)
 			if (light->light_type == LIGHT_DIRECTIONAL)
 			{
 				dir = light->param;
-				orig = assign_3vecf((get_random_number(rand_iter * 0xcacacaca << ((rand_iter + 23) % 23)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0xfeabcdef << ((rand_iter + 5) % 16)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0x1056ffe << ((rand_iter + 8) % 24)) - 0.5) * MAX_VIEW);	
+				orig = assign_3vecf((get_random_number(rand_iter * 0xcacacaca << ((rand_iter + 23) % 23)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0xfeabcdef << ((rand_iter + 5) % 16)) - 0.5) * MAX_VIEW, (get_random_number(rand_iter * 0x1056ffe << ((rand_iter + 8) % 24)) - 0.5) * MAX_VIEW);
 				normalize_3vecf(&dir);
 
 			}
 			cast_photon(orig, dir, light, data, &ind_i, &caus_i, photon_tab, PHOTON_DEPTH, rand_iter++, assign_3vecf(light->color.val[0] * 100, light->color.val[1] * 100, light->color.val[2] * 100), 0);
 	//		i++;
 		}
-		pc = (double)(ind_i + caus_i) / div;
-		if ((int)(pc * (double)img->width) > pct)
-		{
-			update_loading_screen_gi(pct, img, data);
-			pct++;
-		}
+		// pc = (double)(ind_i + caus_i) / div;
+		// if ((int)(pc * (double)img->width) > pct)
+		// {
+		// 	update_loading_screen_gi(pct, img, data);
+		// 	pct++;
+		// }
 		light = light->next ? light->next : data->lights;
 		if ((ind_i == NB_INDIRECT_PHOTON && !caus_i)
 			|| (caus_i == NB_CAUSTIC_PHOTON && ind_i == NB_INDIRECT_PHOTON))
@@ -410,7 +410,7 @@ t_kd_tree	*build_kd_tree(t_photon *photon_tab, int low, int high, int axis, t_cu
 int		create_photon_map(t_data *data)
 {
 	t_photon	**photon_tab;
-	t_text_img	*img = parse_img("img/global_illu_green.png");
+	// t_text_img	*img = parse_img("img/global_illu_green.png");
 	//[NB_PHOTON];
 //	t_kd_tree	*kd_tree;
 
@@ -423,7 +423,7 @@ int		create_photon_map(t_data *data)
 	if (!(photon_tab[1] = malloc(sizeof(t_photon) * NB_INDIRECT_PHOTON)))
 		return (0);
 	printf("before scattering\n");
-	scatter_photon(photon_tab, data, img);
+	scatter_photon(photon_tab, data);
 	printf("after scattering\n");
 //	data->bbox_photon.x_range.val[0] = MAX_VIEW;
 //	data->bbox_photon.y_range.val[0] = MAX_VIEW;

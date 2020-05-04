@@ -29,10 +29,9 @@ else
 	MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
 endif
 #MLX_PATH	=	$(EXT_LIB)/minilibx_mms_20191207_beta/ //new lib in beta
-
+ #	loading.c
 SRC			=	main.c					\
 				init.c					\
-				loading.c				\
 				matrix.c				\
 				vector.c				\
 				render.c				\
@@ -109,7 +108,7 @@ N			=	\33[0m
 all: make_libft $(NAME)
 
 $(NAME): $(LIBS) $(MLXS) $(BINS)
-	@$(CC) $(FLAGS) -o $@ $(BINS) $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS) $(FRAMEWORK)
+	@$(CC) $(FLAGS) $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS) $(FRAMEWORK) $^ -o $@
 #	@$(CC) -I $(INC_PATH) $(FLAGS) -lpthread $(LIB_FLAGS) $(MLX_FLAGS) -o $@ $^
 	@echo "\n\n$(B)[EXECUTABLE \"$(NAME)\" READY]\n"
 

@@ -24,7 +24,7 @@
 
 //# define WIN_WIDTH 600
 //# define WIN_HEIGHT	600
-# define NB_THREADS	1
+# define NB_THREADS	 8
 # define MIN_ANTI_AL 0.5
 # define MAX_ANTI_AL 2.
 
@@ -481,7 +481,7 @@ typedef struct	s_data
 {
 	double			f;
 	t_mlx		*mlx;
-	t_mlx		*loading_mlx;
+//	t_mlx		*loading_mlx;
 	t_mlx		*info;
 	t_cam		*camera;
 	t_obj		*objs;
@@ -510,6 +510,7 @@ typedef struct	s_data
 	char		*skybox_name;
 	int			to_next;
 	int			new_obj;
+	int     first_loop;
 	struct s_data	*next;
 }				t_data;
 
@@ -541,7 +542,7 @@ t_text	generate_random_texture(void);
 t_4vecf	generate_random_color(unsigned int x, double transp_f);
 int		generate_random_enum(int e_max);
 void	delete_object(t_data *data, t_obj *obj);
-
+void  free_all(t_data *data);
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);
 void	init_camera_to_world_matrix(double mat[4][4]);
