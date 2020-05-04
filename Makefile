@@ -108,7 +108,7 @@ N			=	\33[0m
 all: make_libft $(NAME)
 
 $(NAME): $(LIBS) $(MLXS) $(BINS)
-	@$(CC) $(FLAGS) $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS) $(FRAMEWORK) $^ -o $@
+	@$(CC) $(FLAGS) -o $@ $^ $(LIB_FLAGS) -lpthread -I $(INC_PATH) $(MLX_FLAGS) $(FRAMEWORK)
 #	@$(CC) -I $(INC_PATH) $(FLAGS) -lpthread $(LIB_FLAGS) $(MLX_FLAGS) -o $@ $^
 	@echo "\n\n$(B)[EXECUTABLE \"$(NAME)\" READY]\n"
 
