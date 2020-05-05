@@ -44,11 +44,7 @@ void	add_component(t_obj *obj, t_composed *composed)
 
 void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from)
 {
-	if (composed)
-	{
-		//free object
-	}
-	else
+	if (!composed)
 	{
 		if (!from)
 			add_object(obj, data);

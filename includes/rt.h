@@ -414,6 +414,19 @@ typedef	struct	s_motion
 typedef struct	s_data		t_data;
 typedef struct	s_composed	t_composed;
 
+typedef struct	s_leq
+{
+	t_3vecf				orig;
+	t_3vecf				dir;
+}								t_leq;
+
+typedef struct	s_dist
+{
+		double			*dist;
+		double			min_dist;
+		double			max_dist;
+}								t_dist;
+
 typedef struct	s_obj
 {
 	t_obj_type		obj_type;
@@ -421,7 +434,7 @@ typedef struct	s_obj
 	void			*obj_param;
 	t_cut			*cuts;
 	t_motion		*motions;
-	int				(*ray_intersect)(t_3vecf, t_3vecf, struct s_obj *, double *, double, double, int);
+	int				(*ray_intersect)(t_leq, struct s_obj *, t_dist, int);
 	int				(*check_inside)(t_3vecf, struct s_obj *);
 	t_3vecf			(*get_origin)(struct s_obj *);
 	t_3vecf			(*get_normal_inter)(t_3vecf, struct s_obj *i, int);
@@ -653,7 +666,7 @@ int		parse_ambient(char **line, t_light *light, t_data *data);
 t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t_data *data, int depth, int sp_id);
 t_3vecf	motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
 
-int		ray_intersect_cone(t_3vecf orig, t_3vecf dir, t_obj *cone, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id);
 int		check_inside_cone(t_3vecf point, t_obj *cone);
 t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id);
 t_3vecf	get_origin_cone(t_obj *cone);
@@ -661,14 +674,14 @@ void	move_cone(t_obj *cone, t_3vecf, double);
 void	rotate_cone(t_obj *cone, t_3vecf, t_33matf *);
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
 
-int		ray_intersect_rect(t_3vecf orig, t_3vecf dir, t_obj *rect, double *dist, double min_dist, double max_dist, int sp_id);
-int		check_inside_rect(t_3vecf point, t_obj *rect);
-t_3vecf	get_normal_intersect_rect(t_3vecf inter_point, t_obj *rect, int sp_id);
-t_3vecf	get_origin_rect(t_obj *rect);
-void	move_rect(t_obj *rect, t_3vecf, double);
-t_2vecf	get_text_coordinate_rect(t_3vecf inter_point, t_3vecf normal_inter, t_obj *rect);
+// int		ray_intersect_rect(t_leq l, t_obj *rect, t_dist dist, int sp_id);
+// int		check_inside_rect(t_3vecf point, t_obj *rect);
+// t_3vecf	get_normal_intersect_rect(t_3vecf inter_point, t_obj *rect, int sp_id);
+// t_3vecf	get_origin_rect(t_obj *rect);
+// void	move_rect(t_obj *rect, t_3vecf, double);
+// t_2vecf	get_text_coordinate_rect(t_3vecf inter_point, t_3vecf normal_inter, t_obj *rect);
 
-int 	ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist, int sp_id);
+int 	ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id);
 int		check_inside_cylinder(t_3vecf point, t_obj *cylinder);
 t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinderi, int sp_id);
 t_3vecf	get_origin_cylinder(t_obj *);
@@ -676,7 +689,7 @@ void	move_cylinder(t_obj *, t_3vecf, double);
 void	rotate_cylinder(t_obj *cone, t_3vecf, t_33matf *);
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder);
 
-int		ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id);
 int		check_inside_sphere(t_3vecf point, t_obj *sphere);
 t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int);
 t_3vecf	get_origin_sphere(t_obj *);
@@ -684,14 +697,14 @@ void	move_sphere(t_obj *, t_3vecf, double);
 void	rotate_sphere(t_obj *cone, t_3vecf, t_33matf *);
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere);
 
-int		ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id);
 int		check_inside_fermat(t_3vecf point, t_obj *fermat);
 t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int);
 t_3vecf	get_origin_fermat(t_obj *);
 void	move_fermat(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_obj *fermat);
 
-int		ray_intersect_triangle(t_3vecf orig, t_3vecf dir, t_obj *triangle, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_triangle(t_leq l, t_obj *triangle, t_dist dist, int sp_id);
 int		check_inside_triangle(t_3vecf point, t_obj *triangle);
 t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int);
 t_3vecf	get_origin_triangle(t_obj *);
@@ -699,42 +712,42 @@ void	move_triangle(t_obj *, t_3vecf, double);
 void	rotate_triangle(t_obj *cone, t_3vecf, t_33matf *);
 t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *triangle);
 
-int		ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid, t_dist dist, int sp_id);
 int		check_inside_ellipsoid(t_3vecf point, t_obj *ellipsoid);
 t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, int);
 t_3vecf	get_origin_ellipsoid(t_obj *);
 void	move_ellipsoid(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_ellipsoid(t_3vecf inter_point, t_3vecf normal_inter, t_obj *ellipsoid);
 
-int		ray_intersect_hyperboloid(t_3vecf orig, t_3vecf dir, t_obj *hyperboloid, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_hyperboloid(t_leq l, t_obj *hyperboloid, t_dist dist, int sp_id);
 int		check_inside_hyperboloid(t_3vecf point, t_obj *hyperboloid);
 t_3vecf	get_normal_intersect_hyperboloid(t_3vecf inter_point, t_obj *hyperboloid, int);
 t_3vecf	get_origin_hyperboloid(t_obj *);
 void	move_hyperboloid(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_hyperboloid(t_3vecf inter_point, t_3vecf normal_inter, t_obj *hyperboloid);
 
-int		ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_horse_saddle(t_leq l, t_obj *horse_saddle, t_dist dist, int sp_id);
 int		check_inside_horse_saddle(t_3vecf point, t_obj *horse_saddle);
 t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_saddle, int);
 t_3vecf	get_origin_horse_saddle(t_obj *);
 void	move_horse_saddle(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_horse_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *horse_saddle);
 
-int		ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle, t_dist dist, int sp_id);
 int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle);
 t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_saddle, int);
 t_3vecf	get_origin_monkey_saddle(t_obj *);
 void	move_monkey_saddle(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *monkey_saddle);
 
-int		ray_intersect_cyclide(t_3vecf orig, t_3vecf dir, t_obj *cyclide, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_cyclide(t_leq l, t_obj *cyclide, t_dist dist, int sp_id);
 int		check_inside_cyclide(t_3vecf point, t_obj *cyclide);
 t_3vecf	get_normal_intersect_cyclide(t_3vecf inter_point, t_obj *cyclide, int sp_id);
 t_3vecf	get_origin_cyclide(t_obj *cyclide);
 void	move_cyclide(t_obj *cyclide, t_3vecf, double);
 t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cyclide);
 
-int		ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id);
 int		check_inside_plane(t_3vecf point, t_obj *plane);
 t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane, int sp_id);
 t_3vecf	get_origin_plane(t_obj *);
@@ -742,7 +755,7 @@ void	move_plane(t_obj *, t_3vecf, double);
 void	rotate_plane(t_obj *cone, t_3vecf, t_33matf *);
 t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane);
 
-int		ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist, int sp_id);
+int		ray_intersect_moebius(t_leq l, t_obj *moebius, t_dist dist, int sp_id);
 int		check_inside_moebius(t_3vecf point, t_obj *moebius);
 t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius, int sp_id);
 t_3vecf	get_origin_moebius(t_obj *);

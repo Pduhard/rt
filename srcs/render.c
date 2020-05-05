@@ -13,7 +13,7 @@ void	print_vec(double vec[3])
 t_3vecf	window_to_view(double x, double y, double win_w, double win_h)
 {
 	t_3vecf	vec;
-	
+
 	vec.val[0] = x / win_w;
 	vec.val[1] = y / win_h;
 	if (win_w > win_h)
@@ -54,7 +54,7 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	while (objs)
 	{
 //	printf("%p wefwef\n", objs->ray_intersect);
-		if (objs->ray_intersect(orig, dir, objs, closest_dist, min_dist, max_dist, sp_id))
+		if (objs->ray_intersect((t_leq){orig, dir}, objs, (t_dist){closest_dist, min_dist, max_dist}, sp_id))
 			closest_obj = objs;
 //	printf("wefwef\n");
 		objs = objs->next;
@@ -128,7 +128,7 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter, double refraction_index, 
 	etai = 1;
 	etat = refraction_index;
 	eta = etai / etat;
-	sin_sq_theta = eta * eta * 
+	sin_sq_theta = eta * eta *
 */
 //	ref.val[0] = k * normal_inter.val[0] - eta * -ray.val[0];
 //	ref.val[1] = k * normal_inter.val[1] - eta * -ray.val[1];
@@ -178,7 +178,7 @@ double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refractio
 */
 	/*	SCHLICK approximation	3 times faster*/
 	//	R0 + (1 - R0)(1 - cos(theta))^5;
-	
+
 	double	r0;
 	t_3vecf	inv_dir;
 	double	cos_theta;
@@ -189,7 +189,7 @@ double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refractio
 	r0 = inside ? (refraction_index - 1) / (refraction_index + 1) : (1 - refraction_index) / (1 + refraction_index);
 	r0 *= r0;
 	n_cos_theta = 1 - cos_theta;
-	n_cos_theta = n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta; 
+	n_cos_theta = n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta * n_cos_theta;
 	return (r0 + (1 - r0) * (1 - cos_theta) * n_cos_theta);
 }
 
@@ -260,7 +260,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				shadow_inter_point.val[0] += (light_dir.val[0] * shadow_dist);
 				shadow_inter_point.val[1] += (light_dir.val[1] * shadow_dist);
 				shadow_inter_point.val[2] += (light_dir.val[2] * shadow_dist);
-				light_len -= shadow_dist;	
+				light_len -= shadow_dist;
 				t_3vecf tex_normal_inter = shadow_obj->get_normal_inter(shadow_inter_point, shadow_obj, sp_id);
 				normalize_3vecf(&tex_normal_inter);
 		//		if (dot_product_3vecf(tex_normal_inter, light_dir) < 0)
@@ -270,7 +270,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 				{
 		//			break ; //!!!!!!!!!!!!!!!!!!!! need to manage shadow
 	/*				t_3vecf	trans;
-					
+
 					trans.val[0] = ((1 - obj_color.val[3]) * (1 - obj_color.val[0]));
 					trans.val[1] = ((1 - obj_color.val[3]) * (1 - obj_color.val[1]));
 					trans.val[2] = ((1 - obj_color.val[3]) * (1 - obj_color.val[2]));
@@ -296,14 +296,14 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 			if (transp_fact.val[2] <= 0)
 				transp_fact.val[2] = 0;
 	/*		if (transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] < 3 || shadow_obj)
-			{	
+			{
 				t_3vecf	global;
 				global = compute_global_illumination(inter_point, normal_inter, data);
 				light_fact.val[0] += global.val[0];
 				light_fact.val[1] += global.val[1];
 				light_fact.val[2] += global.val[2];
 			}
-	*/		
+	*/
 	//		if (objs->obj_type == OBJ_MOEBIUS)
 			//printf("hallllllllllo %d\n", objs->obj_type);
 			if (!shadow_obj && transp_fact.val[0] + transp_fact.val[1] + transp_fact.val[2] > 0)// || shadow_dist > get_length_3vecf(light_dir))
@@ -323,7 +323,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 					spec_vec.val[1] = 2 * normal_inter.val[1] * norm_dot_ldir - light_dir.val[1];
 					spec_vec.val[2] = 2 * normal_inter.val[2] * norm_dot_ldir - light_dir.val[2];
 
-				*/	
+				*/
 					ref_dot_idir = dot_product_3vecf(spec_vec, inv_dir);
 					if (ref_dot_idir > 0)// && !CEL_SHADING)
 					{
@@ -343,7 +343,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		}
 		lights = lights->next;
 	}
-	
+
 	if (data->caustics_gi)
 	{
 		t_3vecf	global;
@@ -386,7 +386,7 @@ int		is_on_cell_boundary(t_3vecf origin, t_3vecf inter_point, t_3vecf normal_int
 	new_dir = sub_3vecf(new_inter_point, origin);
 	normalize_3vecf(&new_dir);
 	dist = MAX_VIEW;
-	if (closest_obj->ray_intersect(origin, new_dir, closest_obj, &dist, 2 * CEL_BOUNDARY, MAX_VIEW, sp_id))
+	if (closest_obj->ray_intersect((t_leq){origin, new_dir}, closest_obj, (t_dist){&dist, 2 * CEL_BOUNDARY, MAX_VIEW}, sp_id))
 		return (0);
 	return (1);
 }
@@ -412,7 +412,7 @@ t_3vecf		compute_glare(t_3vecf orig, t_3vecf dir, t_light *lights, t_3vecf *inte
 			light_dist = get_length_3vecf(light_dir);
 			normalize_3vecf(&light_dir);
 			light_pos = lights->param;
-	
+
 			if (light_dist < obj_dist)
 			{
 				double fact;
@@ -466,7 +466,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	*/	return (light_fact);
 		if (data->fog.val[0] || data->fog.val[1])
 		{
-		
+
 			double	fog_fact;
 
 			if (closest_dist < data->fog.val[0])
@@ -536,7 +536,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 			normalize_3vecf(&refl_ray);
 			refl_color = ray_trace(inter_point, refl_ray, BIAS, MAX_VIEW, data, depth - 1, sp_id);
 		}
-		/*	not sure */	
+		/*	not sure */
 /*		light_fact = compute_lights(inter_point, normal_inter, inv_dir, data->lights, data->objs);
 		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;
 		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
@@ -551,7 +551,7 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 	//	lighted_color.val[2] = lighted_color.val[2] * (1 - obj_color.val[3]) + refr_color.val[2] * obj_color.val[3];
 
 		/*	-------- */
-		
+
 		lighted_color.val[0] = refr_color.val[0] * (1 - fresnel_ratio) + refl_color.val[0] * fresnel_ratio;
 		lighted_color.val[1] = refr_color.val[1] * (1 - fresnel_ratio) + refl_color.val[1] * fresnel_ratio;
 		lighted_color.val[2] = refr_color.val[2] * (1 - fresnel_ratio) + refl_color.val[2] * fresnel_ratio;
@@ -562,13 +562,13 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[0] = closest_obj->color.val[0] * light_fact;
 		lighted_color.val[1] = closest_obj->color.val[1] * light_fact;
 		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;
-	*/	
+	*/
 		if (!depth)
 			return (lighted_color);
 		t_3vecf	refl_ray = reflect_ray(inv_dir, normal_inter);
 		normalize_3vecf(&refl_ray);
 		t_3vecf	refl_color = ray_trace(inter_point, refl_ray, BIAS, MAX_VIEW, data, depth - 1, sp_id);
-	
+
 		lighted_color.val[0] = lighted_color.val[0] * (1 - closest_obj->reflection) + refl_color.val[0] * closest_obj->reflection;
 		lighted_color.val[1] = lighted_color.val[1] * (1 - closest_obj->reflection) + refl_color.val[1] * closest_obj->reflection;
 		lighted_color.val[2] = lighted_color.val[2] * (1 - closest_obj->reflection) + refl_color.val[2] * closest_obj->reflection;
@@ -609,10 +609,10 @@ t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t
 		lighted_color.val[2] = closest_obj->color.val[2] * light_fact;
 	//	return (lighted_color);
 	}
-*/	
+*/
 	if (data->fog.val[0] || data->fog.val[1])
 	{
-		
+
 		double	fog_fact;
 
 		if (closest_dist < data->fog.val[0])
@@ -810,7 +810,7 @@ void	*render_thread(void *param)
 						ray_put_pixel(i + 1, j + 1, data->mlx->img_str, color, data);
 				}
 			}
-			
+
 			if (data->aa_adapt == MIN_ANTI_AL)
 				j += 2;
 			else
@@ -844,7 +844,7 @@ void	render(t_data *data)
 	//data->rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[0]) * tm.val[2]);
 	//rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
 	//rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[2]));
-	
+
 	i = 0;
 	while (i < NB_THREADS)
 	{

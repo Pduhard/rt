@@ -105,7 +105,7 @@ t_3vecf	get_normal_intersect_cyclide(t_3vecf inter_point, t_obj *cyclide, int sp
 	return (normal_inter);
 }
 
-int	ray_intersect_cyclide(t_3vecf orig, t_3vecf dir, t_obj *cyclide, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_cyclide(t_leq l, t_obj *cyclide, t_dist dist, int sp_id)
 {
 	t_cyclide	*param;
 	double		ox;
@@ -123,12 +123,12 @@ int	ray_intersect_cyclide(t_3vecf orig, t_3vecf dir, t_obj *cyclide, double *dis
 	check = 0;
 	param = (t_cyclide *)cyclide->obj_param;
 	cyclide_origin = sp_id ? move_3vecf(param->origin, cyclide->motions, sp_id) : param->origin;
-	ox = orig.val[0] - cyclide_origin.val[0];
-	oy = orig.val[1] - cyclide_origin.val[1];
-	oz = orig.val[2] - cyclide_origin.val[2];
-	dx = dir.val[0];
-	dy = dir.val[1];
-	dz = dir.val[2];
+	ox = l.orig.val[0] - cyclide_origin.val[0];
+	oy = l.orig.val[1] - cyclide_origin.val[1];
+	oz = l.orig.val[2] - cyclide_origin.val[2];
+	dx = l.dir.val[0];
+	dy = l.dir.val[1];
+	dz = l.dir.val[2];
 
 	double	a = param->param;
 	t_fact.val[0] = (dx * dx * dz) + (dy * dy * dz) + (dz * dz * dz);//a
@@ -150,10 +150,10 @@ int	ray_intersect_cyclide(t_3vecf orig, t_3vecf dir, t_obj *cyclide, double *dis
 		x = ox + dx * roots.val[i];
 		y = oy + dy * roots.val[i];
 		z = oz + dz * roots.val[i];
-		if (x > -1.5 && x < 1.5 && y > -2 && y < 2 && z > -1 && z < 1 && roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
+		if (x > -1.5 && x < 1.5 && y > -2 && y < 2 && z > -1 && z < 1 && roots.val[i] < *(dist.dist) && roots.val[i] > dist.min_dist && roots.val[i] < dist.max_dist)
 		{
 			check = 1;
-			*dist = roots.val[i];
+			*(dist.dist) = roots.val[i];
 		}
 	}
 	return (check);

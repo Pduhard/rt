@@ -148,7 +148,7 @@ t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int 
 	(void)sp_id;
 }
 
-int	ray_intersect_triangle(t_3vecf orig, t_3vecf dir, t_obj *triangle, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_triangle(t_leq l, t_obj *triangle, t_dist dist, int sp_id)
 {
 	t_3vecf	ab;
 	t_3vecf	ac;
@@ -169,23 +169,23 @@ int	ray_intersect_triangle(t_3vecf orig, t_3vecf dir, t_obj *triangle, double *d
 	c = sp_id ? move_3vecf(param->c, triangle->motions, sp_id) : param->c;
 	ab = sub_3vecf(b, a);
 	ac = sub_3vecf(c, a);
-	dir_ac = product_3vecf(dir, ac);
+	dir_ac = product_3vecf(l.dir, ac);
 	delta = dot_product_3vecf(ab, dir_ac);
 	if (is_null(delta))
 		return (0);
 	inv_delta = 1. / delta;
-	t_vec = sub_3vecf(orig, a);
+	t_vec = sub_3vecf(l.orig, a);
 	u = dot_product_3vecf(t_vec, dir_ac) * inv_delta;
 	if (u < 0 || u > 1)
 		return (0);
 	q_vec = product_3vecf(t_vec, ab);
-	v = dot_product_3vecf(dir, q_vec) * inv_delta;
+	v = dot_product_3vecf(l.dir, q_vec) * inv_delta;
 	if (v < 0 || u + v > 1)
 		return (0);
 	tdist = dot_product_3vecf(ac, q_vec) * inv_delta;
-	if (tdist < *dist && tdist > min_dist && tdist < max_dist)
+	if (tdist < *(dist.dist) && tdist > dist.min_dist && tdist < dist.max_dist)
 	{
-		*dist = tdist;
+		*(dist.dist) = tdist;
 		return (1);
 	}
 	return (0);

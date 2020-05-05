@@ -82,7 +82,7 @@ t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_sadd
 	return (normal_inter);
 }
 
-int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_horse_saddle(t_leq l, t_obj *horse_saddle, t_dist dist, int sp_id)
 {
 	t_horse_saddle	*param;
 	double		ox;
@@ -100,14 +100,14 @@ int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, d
 	check = 0;
 	param = (t_horse_saddle *)horse_saddle->obj_param;
 	horse_saddle_origin = sp_id ? move_3vecf(param->origin, horse_saddle->motions, sp_id) : param->origin;
-	ox = orig.val[0] - horse_saddle_origin.val[0];
-	oy = orig.val[1] - horse_saddle_origin.val[1];
-	oz = orig.val[2] - horse_saddle_origin.val[2];
+	ox = l.orig.val[0] - horse_saddle_origin.val[0];
+	oy = l.orig.val[1] - horse_saddle_origin.val[1];
+	oz = l.orig.val[2] - horse_saddle_origin.val[2];
 //	if (ox < -1 || ox > 1 || oy < -1 || oy > 1)
 //		return (0);
-	dx = dir.val[0];
-	dy = dir.val[1];
-	dz = dir.val[2];
+	dx = l.dir.val[0];
+	dy = l.dir.val[1];
+	dz = l.dir.val[2];
 	double	a;
 	double	b;
 
@@ -132,7 +132,7 @@ int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, d
 		roots.val[0] = (-t_fact.val[1] + sqrtf(delta)) / (2 * t_fact.val[0]);
 		roots.val[1] = (-t_fact.val[1] - sqrtf(delta)) / (2 * t_fact.val[0]);
 	}
-	if (roots.val[0] < *dist && roots.val[0] > min_dist && roots.val[0] < max_dist)
+	if (roots.val[0] < *(dist.dist) && roots.val[0] > dist.min_dist && roots.val[0] < dist.max_dist)
 	{
 		double x, z;
 		x = ox + dx * roots.val[0];
@@ -141,10 +141,10 @@ int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, d
 		//if (x > -1 && x < 1 && z > -1 && z < 1)
 		{
 			check = 1;
-			*dist = roots.val[0];
+			*(dist.dist) = roots.val[0];
 		}
 	}
-	if (roots.val[1] < *dist && roots.val[1] > min_dist && roots.val[1] < max_dist)
+	if (roots.val[1] < *(dist.dist) && roots.val[1] > dist.min_dist && roots.val[1] < dist.max_dist)
 	{
 		double x, z;
 		x = ox + dx * roots.val[1];
@@ -152,7 +152,7 @@ int	ray_intersect_horse_saddle(t_3vecf orig, t_3vecf dir, t_obj *horse_saddle, d
 		if (x > -param->x_fact && x < param->x_fact && z > -param->y_fact && z < param->y_fact)
 		{
 			check = 1;
-			*dist = roots.val[1];
+			*(dist.dist) = roots.val[1];
 		}
 	}
 	return (check);

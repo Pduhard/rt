@@ -81,7 +81,7 @@ t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, in
 	return (normal_inter);
 }
 
-int	ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid, t_dist dist, int sp_id)
 {
 	t_ellipsoid	*param;
 	double		ox;
@@ -99,12 +99,12 @@ int	ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double 
 	check = 0;
 	param = (t_ellipsoid *)ellipsoid->obj_param;
 	ellipsoid_origin = sp_id ? move_3vecf(param->origin, ellipsoid->motions, sp_id) : param->origin;
-	ox = orig.val[0] - ellipsoid_origin.val[0];
-	oy = orig.val[1] - ellipsoid_origin.val[1];
-	oz = orig.val[2] - ellipsoid_origin.val[2];
-	dx = dir.val[0];
-	dy = dir.val[1];
-	dz = dir.val[2];
+	ox = l.orig.val[0] - ellipsoid_origin.val[0];
+	oy = l.orig.val[1] - ellipsoid_origin.val[1];
+	oz = l.orig.val[2] - ellipsoid_origin.val[2];
+	dx = l.dir.val[0];
+	dy = l.dir.val[1];
+	dz = l.dir.val[2];
 	double	a;
 	double	b;
 	double	c;
@@ -122,15 +122,15 @@ int	ray_intersect_ellipsoid(t_3vecf orig, t_3vecf dir, t_obj *ellipsoid, double 
 		return (0);
 	roots.val[0] = (-t_fact.val[1] + sqrtf(delta)) / (2 * t_fact.val[0]);
 	roots.val[1] = (-t_fact.val[1] - sqrtf(delta)) / (2 * t_fact.val[0]);
-	if (roots.val[0] < *dist && roots.val[0] > min_dist && roots.val[0] < max_dist)
+	if (roots.val[0] < *(dist.dist) && roots.val[0] > dist.min_dist && roots.val[0] < dist.max_dist)
 	{
 		check = 1;
-		*dist = roots.val[0];
+		*(dist.dist) = roots.val[0];
 	}
-	if (roots.val[1] < *dist && roots.val[1] > min_dist && roots.val[1] < max_dist)
+	if (roots.val[1] < *(dist.dist) && roots.val[1] > dist.min_dist && roots.val[1] < dist.max_dist)
 	{
 		check = 1;
-		*dist = roots.val[1];
+		*(dist.dist) = roots.val[1];
 	}
 	return (check);
 }

@@ -125,7 +125,7 @@ t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane, int sp_id)
 	(void)sp_id;
 }
 
-int	ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
 {
 	t_plane	*plane_param;
 	double	div;
@@ -134,13 +134,13 @@ int	ray_intersect_plane(t_3vecf orig, t_3vecf dir, t_obj *plane, double *dist, d
 
 	plane_param = (t_plane *)plane->obj_param;
 	plane_origin = sp_id ? move_3vecf(plane_param->origin, plane->motions, sp_id) : plane_param->origin;
-	div = dot_product_3vecf(dir, plane_param->normal);
+	div = dot_product_3vecf(l.dir, plane_param->normal);
 	if (div == 0)//> -0.00000001 && div < 0.00000001)
 		return (0);
-	inter_dist = dot_product_3vecf(sub_3vecf(plane_origin, orig), plane_param->normal) / div;
-	if (inter_dist < *dist && inter_dist > min_dist && inter_dist < max_dist)
+	inter_dist = dot_product_3vecf(sub_3vecf(plane_origin, l.orig), plane_param->normal) / div;
+	if (inter_dist < *(dist.dist) && inter_dist > dist.min_dist && inter_dist < dist.max_dist)
 	{
-		*dist = inter_dist;
+		*(dist.dist) = inter_dist;
 		return (1);
 	}
 	return (0);
