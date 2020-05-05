@@ -67,9 +67,7 @@ int			main(int argc, char **argv)
 	// data_cont->data_lst = data;
 	data = first;
 	mlx_hook(data->mlx->win_ptr, 2, (1L << 0), key_press, (void *)data);
-//	mlx_key_hook(data->mlx->win_ptr, key_press, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 3, (1 << 1), key_release, (void *)data);
-//	mlx_key_hook(data->mlx->win_ptr, key_release, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 4, 0, mouse_hook, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross, (void *)data);
 	if (data->info)
