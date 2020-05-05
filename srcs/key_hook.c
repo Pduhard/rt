@@ -65,73 +65,73 @@ int		key_press(int keycode, void *param)
 
 	data = (t_data *)param;
 	printf("button %d\n", keycode);
-	if (keycode == 0) //
-		data->hooks |= A_KEY;
+	if (keycode == A_KEY) //
+		data->hooks |= A_HOOK;
 	//data->cam.origin[0] -= 0.2;
 	else if (keycode == ESC_KEY)
 	{
 		free_all(data);
 		exit(0);
 	}
-	else if (keycode == 1) //s
-		data->hooks |= S_KEY;
+	else if (keycode == S_KEY) //s
+		data->hooks |= S_HOOK;
 	//data->cam.origin[2] -= 0.2;
-	else if (keycode == 2) //d
-		data->hooks |= D_KEY;
+	else if (keycode == D_KEY) //d
+		data->hooks |= D_HOOK;
 	//data->cam.origin[0] += 0.2;
-	else if (keycode == 13) //w
-		data->hooks |= W_KEY;
-	else if (keycode == 3) //w
-		data->hooks |= F_KEY;
-	else if (keycode == 5) //w
-		data->hooks |= G_KEY;
-	else if (keycode == 123) //left
-		data->hooks |= ARR_LEFT_KEY;
-	else if (keycode == 124) // right
-		data->hooks |= ARR_RIGHT_KEY;
-	else if (keycode == 125) // down
-		data->hooks |= ARR_DOWN_KEY;
-	else if (keycode == 126) // up
-		data->hooks |= ARR_UP_KEY;
-	else if (keycode == 49)
-		data->hooks |= SPACE_KEY;
-	else if (keycode == 257)
-		data->hooks |= SHIFT_KEY;
-	else if (keycode == 48)
+	else if (keycode == W_KEY) //w
+		data->hooks |= W_HOOK;
+	else if (keycode == F_KEY) //w
+		data->hooks |= F_HOOK;
+	else if (keycode == G_KEY) //w
+		data->hooks |= G_HOOK;
+	else if (keycode == ARR_LEFT_KEY) //left
+		data->hooks |= ARR_LEFT_HOOK;
+	else if (keycode == ARR_RIGHT_KEY) // right
+		data->hooks |= ARR_RIGHT_HOOK;
+	else if (keycode == ARR_DOWN_KEY) // down
+		data->hooks |= ARR_DOWN_HOOK;
+	else if (keycode == ARR_UP_KEY) // up
+		data->hooks |= ARR_UP_HOOK;
+	else if (keycode == SPACE_KEY)
+		data->hooks |= SPACE_HOOK;
+	else if (keycode == SHIFT_KEY)
+		data->hooks |= SHIFT_HOOK;
+	else if (keycode == TAB_KEY)
 		data->to_next = 1;
-	else if (keycode == 18)
+	else if (keycode == ALPHA_ONE_KEY)
 		generate_new_sphere(data);
-	else if (keycode == 19)
+	else if (keycode == ALPHA_TWO_KEY)
 		generate_new_plane(data);
-	else if (keycode == 20)
+	else if (keycode == ALPHA_THREE_KEY)
 		generate_new_cone(data);
-	else if (keycode == 21)
+	else if (keycode == ALPHA_FOUR_KEY)
 		generate_new_cylinder(data);
-	else if (keycode == 23)
+	else if (keycode == ALPHA_FIVE_KEY)
 		generate_new_triangle(data);
-	else if (keycode == 22)
+	else if (keycode == ALPHA_SIX_KEY)
 		generate_new_ellipsoid(data);
-	else if (keycode == 26)
+	else if (keycode == ALPHA_SEVEN_KEY)
 		generate_new_hyperboloid(data);
-	else if (keycode == 28)
+	else if (keycode == ALPHA_EIGHT_KEY)
 		generate_new_horse_saddle(data);
-	else if (keycode == 25)
+	else if (keycode == ALPHA_NINE_KEY)
 		generate_new_monkey_saddle(data);
-	else if (keycode == 29)
+	else if (keycode == ALPHA_ZERO_KEY)
 		generate_new_cyclide(data);
-	else if (keycode == 27)
+	else if (keycode == ALPHA_MINUS_KEY)
 		generate_new_fermat(data);
-	else if (keycode == 24)
+	else if (keycode == ALPHA_PLUS_KEY)
 		generate_new_moebius(data);
 //	else if (keycode == 19)
 //		generate_new_plane(data);
-	else if ((keycode == 117 || keycode == 51) && data->selected_obj && data->selected_obj->obj_type != OBJ_SKYBOX)
+	else if ((keycode == SUPPR_KEY || keycode == DELETE_KEY) && data->selected_obj && data->selected_obj->obj_type != OBJ_SKYBOX)
 	{
 		delete_object(data, data->selected_obj);
 		data->selected_obj = NULL;
 		data->new_obj = 1;
 	}
-	else if (keycode == 105)
+	else if (keycode == IMPR_KEY)
 	{
 	/*	SDL_Surface	*img_save = SDL_CreateRGBSurfaceFrom((void *)data->mlx->img_str, (int)data->size.val[0], (int)data->size.val[1], 32, 4 * (int)data->size.val[0], 0xff << 16, 0xff << 8, 0xff << 0, 0x0);
 		char	*image_file_name;
@@ -197,33 +197,33 @@ int		key_release(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	if (keycode == 0) //
-		data->hooks -= A_KEY;
+	if (keycode == A_KEY) //
+		data->hooks -= A_HOOK;
 	//data->cam.origin[0] -= 0.2;
-	else if (keycode == 1) //s
-		data->hooks -= S_KEY;
+	else if (keycode == S_KEY) //s
+		data->hooks -= S_HOOK;
 	//data->cam.origin[2] -= 0.2;
-	else if (keycode == 2) //d
-		data->hooks -= D_KEY;
+	else if (keycode == D_KEY) //d
+		data->hooks -= D_HOOK;
 	//data->cam.origin[0] += 0.2;
-	else if (keycode == 13) //w
-		data->hooks -= W_KEY;
-	else if (keycode == 3) //w
-		data->hooks -= F_KEY;
-	else if (keycode == 5) //w
-		data->hooks -= G_KEY;
-	else if (keycode == 123) //left
-		data->hooks -= ARR_LEFT_KEY;
-	else if (keycode == 124) // right
-		data->hooks -= ARR_RIGHT_KEY;
-	else if (keycode == 125) // down
-		data->hooks -= ARR_DOWN_KEY;
-	else if (keycode == 126) // up
-		data->hooks -= ARR_UP_KEY;
-	else if (keycode == 49)
-		data->hooks -= SPACE_KEY;
-	else if (keycode == 257)
-		data->hooks -= SHIFT_KEY;
+	else if (keycode == W_KEY) //w
+		data->hooks -= W_HOOK;
+	else if (keycode == F_KEY) //w
+		data->hooks -= F_HOOK;
+	else if (keycode == G_KEY) //w
+		data->hooks -= G_HOOK;
+	else if (keycode == ARR_LEFT_KEY) //left
+		data->hooks -= ARR_LEFT_HOOK;
+	else if (keycode == ARR_RIGHT_KEY) // right
+		data->hooks -= ARR_RIGHT_HOOK;
+	else if (keycode == ARR_DOWN_KEY) // down
+		data->hooks -= ARR_DOWN_HOOK;
+	else if (keycode == ARR_UP_KEY) // up
+		data->hooks -= ARR_UP_HOOK;
+	else if (keycode == SPACE_KEY)
+		data->hooks -= SPACE_HOOK;
+	else if (keycode == SHIFT_KEY)
+		data->hooks -= SHIFT_HOOK;
 
 //	if (keycode == 2)
 		/*	data->params.xp_from = 0;
