@@ -318,6 +318,7 @@ void	loop_manage_rot_matrix(t_data *data)
 		data->mats.proj_mat = get_ortho_matrix(data);
 }
 */
+// extern double i;
 int		print_loop_image(void *param)
 {
 	t_data *data;
@@ -325,7 +326,7 @@ int		print_loop_image(void *param)
 	t_data **data_addr;
 	t_mlx	*mlx;
 	int	frame_start;
-	printf("ah\n");
+	// printf("ah\n");
 //	unsigned int 	frame_start;
 	int		rendering = 1;
 	frame_start = SDL_GetTicks();
@@ -388,7 +389,7 @@ int		print_loop_image(void *param)
 //	start = clock();
 	if (rendering)
 		render(data);
-	write(1, "lol\n", 4);
+	// write(1, "lol\n", 4);
 	data->new_obj = 0;
 //	end = clock();
 	mlx_put_image_to_window(data->mlx->mlx_ptr,

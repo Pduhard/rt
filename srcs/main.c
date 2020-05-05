@@ -3,6 +3,7 @@
 int			close_cross(t_data *data)
 {
 	(void)data;
+	// printf("Close cross\n");
 	free_all(data);
 	exit(0);
 	return (0);
@@ -10,9 +11,10 @@ int			close_cross(t_data *data)
 
 int			close_info(t_data *data)
 {
-	mlx_destroy_window(data->mlx->mlx_ptr, data->info->win_ptr);
-	data->info = NULL;
-	free(data->info);
+
+	// mlx_destroy_window(data->mlx->mlx_ptr, data->info->win_ptr);
+	free_info(data);
+	// (void)data;
 	return (0);
 }
 
@@ -20,10 +22,9 @@ int			main(int argc, char **argv)
 {
 	t_data		*data;
 	t_data		*first;
-//	t_data_cont	*data_cont;
 	t_data		*data_lst;
-// azdazd
-	int		i = 0;
+
+	int				i = 0;
 	data_lst = NULL;
 	first = NULL;
 	if (argc < 2)

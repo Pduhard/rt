@@ -96,7 +96,10 @@ int		parse_texture2(char **line, t_obj *obj)
 	stripe = 0;
 	ret = 1;
 	if (obj->text.text_param)
+	{
+		// exit(1);
 		return (error(ALREADYTEXTURE, NULL));
+	}
 	while (stripe != '>' && ret != 0)
 	{
 		stripe = goto_next_element(line);

@@ -112,7 +112,39 @@ t_cut	*copy_cut(t_cut *src)
 	else if (src->cut_type == CUT_UV)
 		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_uv)),
 			src->cut_param, sizeof(t_cut_uv));
+	// else
+	// 	return (NULL);
+	cut->next = NULL;
 	return (cut);
+}
+
+t_text copy_text(t_text src)
+{
+	t_text cpy;
+	t_text_img *p;
+
+	cpy = src;
+	if (src.text_type == TEXT_IMAGE)
+	{
+		if (!(cpy.text_param = malloc(sizeof(t_text_img))))
+		{
+			ft_fdprintf(2, "Malloc error: exit\n");
+			exit(0);
+		}
+		p = (t_text_img *)src.text_param;
+		((t_text_img *)cpy.text_param)->pixels = ft_memcpy(ft_memalloc(p->width * p->height * sizeof(int)),
+			p->pixels, p->width * p->height * sizeof(int));
+	}
+	else
+	{
+		if (!(cpy.text_param = malloc(sizeof(t_text_proc))))
+		{
+			ft_fdprintf(2, "Malloc error: exit\n");
+			exit(0);
+		}
+		*((t_text_proc *)cpy.text_param) = *((t_text_proc *)src.text_param);
+	}
+	return (cpy);
 }
 
 t_obj	*copy_object(t_obj *src)
@@ -140,6 +172,7 @@ t_obj	*copy_object(t_obj *src)
 		cuts = cuts->next;
 	}
 	obj->obj_param = copy_obj_param(src->obj_param, src->obj_type);
+	obj->text = copy_text(src->text);
 	obj->next = NULL;
 	return (obj);
 }

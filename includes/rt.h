@@ -521,10 +521,10 @@ typedef struct	s_thread
 	int			end;
 }				t_thread;
 
-typedef struct	s_data_cont
-{
-	t_data		*data_lst;
-}				t_data_cont;
+// typedef struct	s_data_cont
+// {
+// 	t_data		*data_lst;
+// }				t_data_cont;
 
 void	generate_new_sphere(t_data *data);
 void	generate_new_plane(t_data *data);
@@ -803,5 +803,5 @@ int		init_loading_screen(t_data *data);
 void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);
 
 void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from);
-
+void  free_info(t_data *data);
 #endif

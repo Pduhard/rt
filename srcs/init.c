@@ -74,7 +74,7 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	}
 	else if (mlx)
 		data->mlx = mlx;
-/*	if (!init_loading_screen(data)) 
+/*	if (!init_loading_screen(data))
 	{
 		free(data->objs);
 		free(data->mlx);
