@@ -4,12 +4,13 @@
 
 
 # include "../libft/libft.h"
+# include "./key_linux.h"
 # if defined(__linux)
 #  include "../external_libs/minilibx/mlx.h"
 #  include "/usr/include/SDL2/SDL.h"
 #  include "/usr/include/SDL2/SDL_image.h"
 #else
-#  include "../external_libs/minilibx_macos/mlx.h"
+# include "../external_libs/minilibx_macos/mlx.h"
 # include "../external_libs/sdl/SDL.h"
 # include "../frameworks/SDL2.framework/Headers/SDL.h"
 # include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
@@ -76,23 +77,20 @@
 # define BIAS				0.01
 
 /* HOOKS MACRO */
-# define A_KEY	0b1
-# define D_KEY	0b10
-# define W_KEY	0b100
-# define S_KEY	0b1000
-# define F_KEY	0b10000
-# define G_KEY	0b100000
+# define A_HOOK	0b1
+# define D_HOOK	0b10
+# define W_HOOK	0b100
+# define S_HOOK	0b1000
+# define F_HOOK	0b10000
+# define G_HOOK	0b100000
 
-# define ARR_LEFT_KEY	0b1000000
-# define ARR_RIGHT_KEY	0b10000000
-# define ARR_DOWN_KEY	0b100000000
-# define ARR_UP_KEY		0b1000000000
+# define ARR_LEFT_HOOK	0b1000000
+# define ARR_RIGHT_HOOK 0b10000000
+# define ARR_DOWN_HOOK	0b100000000
+# define ARR_UP_HOOK		0b1000000000
 
-# define SPACE_KEY	0b10000000000
-# define SHIFT_KEY	0b100000000000
-
-# define ESC_KEY 0x0035
-# define K_H	 0x0004
+# define SPACE_HOOK	0b10000000000
+# define SHIFT_HOOK	0b100000000000
 
 /* Conf Mess */
 
