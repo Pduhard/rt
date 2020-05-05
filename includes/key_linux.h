@@ -32,10 +32,10 @@
 #  define ALPHA_PLUS_KEY 61
 #  define DELETE_KEY 65288
 #  define SUPPR_KEY 65535
-#  define IMPR_KEY 105 
+#  define IMPR_KEY 105
 #  define ESC_KEY 65307
 # else
-#  define A_KEY 0#d
+#  define A_KEY 0
 #  define S_KEY 1
 #  define D_KEY 2
 #  define W_KEY 13

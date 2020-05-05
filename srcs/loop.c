@@ -54,17 +54,17 @@ void	translate_and_rotate(t_data *data)
 
 int	loop_manage_cam(t_data *data)
 {
-//	if (data->hooks & F_KEY)
+//	if (data->hooks & F_HOOK)
 //	{
 	t_33matf	rot_mat[2];
 	int	ret = 0;
 	if (data->selected_obj && data->selected_obj->rotate)
 	{
-		if (data->hooks & ((ARR_LEFT_KEY | ARR_RIGHT_KEY | ARR_DOWN_KEY | ARR_UP_KEY)))
+		if (data->hooks & ((ARR_LEFT_HOOK | ARR_RIGHT_HOOK | ARR_DOWN_HOOK | ARR_UP_HOOK)))
 			ret = 1;
-		rot_mat[1]	= init_rotation_matrix_y(degree_to_radian(data->hooks & ARR_LEFT_KEY ? -5 : (data->hooks & ARR_RIGHT_KEY ? 5 : 0)));
+		rot_mat[1]	= init_rotation_matrix_y(degree_to_radian(data->hooks & ARR_LEFT_HOOK ? -5 : (data->hooks & ARR_RIGHT_HOOK ? 5 : 0)));
 	t_3vecf	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_KEY ? 5 : (data->hooks & ARR_UP_KEY ? -5 : 0)));
+	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_HOOK ? 5 : (data->hooks & ARR_UP_HOOK ? -5 : 0)));
 		if (data->selected_obj->composed_w)
 		{
 			int i = -1;
@@ -74,7 +74,7 @@ int	loop_manage_cam(t_data *data)
 		else
 			data->selected_obj->rotate(data->selected_obj, data->selected_obj->get_origin(data->selected_obj), rot_mat);
 	}
-	if (data->hooks & (ARR_LEFT_KEY | ARR_RIGHT_KEY))
+	if (data->hooks & (ARR_LEFT_HOOK | ARR_RIGHT_HOOK))
 	{
 		/*double	add_y = 4 * data->mouse_x;
 		if (add_y > 1 || add_y < -1)
@@ -83,25 +83,25 @@ int	loop_manage_cam(t_data *data)
 	//		data->selected_obj->rotate(data->selected_obj->get_origin(data->selected_obj), rot_mat[]);
 		if (!data->selected_obj)
 		{
-			if (data->hooks & ARR_LEFT_KEY)
+			if (data->hooks & ARR_LEFT_HOOK)
 				data->camera->rotation.val[1] -= 3;
-			if (data->hooks & ARR_RIGHT_KEY)
+			if (data->hooks & ARR_RIGHT_HOOK)
 				data->camera->rotation.val[1] += 3;
 		//4 * data->mouse_x;
 			data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
 			ret = 1;
 		}
 	}
-	if (data->hooks & (ARR_UP_KEY | ARR_DOWN_KEY))
+	if (data->hooks & (ARR_UP_HOOK | ARR_DOWN_HOOK))
 	{
 		/*double	add_y = 4 * data->mouse_x;
 		if (add_y > 1 || add_y < -1)
 		{*/
 		if (!data->selected_obj)
 		{
-			if (data->hooks & ARR_UP_KEY && data->camera->rotation.val[0] < 90)
+			if (data->hooks & ARR_UP_HOOK && data->camera->rotation.val[0] < 90)
 				data->camera->rotation.val[0] += 3;
-			if (data->hooks & ARR_DOWN_KEY && data->camera->rotation.val[0] > -90)
+			if (data->hooks & ARR_DOWN_HOOK && data->camera->rotation.val[0] > -90)
 				data->camera->rotation.val[0] -= 3;
 			ret = 1;
 		}
@@ -117,16 +117,16 @@ int	loop_manage_cam(t_data *data)
 		//4 * data->mouse_x;
 			data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
 		}
-*///	if (data->hooks & G_KEY)
+*///	if (data->hooks & G_HOOK)
 //	{
 		//data->camera->rotation.val[1] -= 2;
 		//data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
 //	}
-	if (data->hooks & (W_KEY | S_KEY))
+	if (data->hooks & (W_HOOK | S_HOOK))
 	{
 		t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
 //		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & W_KEY)
+		if (data->hooks & W_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -150,7 +150,7 @@ int	loop_manage_cam(t_data *data)
 			}
 			ret = 1;
 		}
-		if (data->hooks & S_KEY)
+		if (data->hooks & S_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -177,11 +177,11 @@ int	loop_manage_cam(t_data *data)
 
 		//	data->camera->origin.val[2] -= 0.2;
 	}
-	if (data->hooks & (A_KEY | D_KEY))
+	if (data->hooks & (A_HOOK | D_HOOK))
 	{
 		t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
 //		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & A_KEY)
+		if (data->hooks & A_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -206,7 +206,7 @@ int	loop_manage_cam(t_data *data)
 		}
 
 		//	data->camera->origin.val[0] -= 0.2;
-		if (data->hooks & D_KEY)
+		if (data->hooks & D_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -235,7 +235,7 @@ int	loop_manage_cam(t_data *data)
 	}
 	//	t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
 //		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & SPACE_KEY)
+		if (data->hooks & SPACE_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -255,7 +255,7 @@ int	loop_manage_cam(t_data *data)
 				data->camera->origin.val[1] -= 0.2;
 			ret = 1;
 		}
-		if (data->hooks & SHIFT_KEY)
+		if (data->hooks & SHIFT_HOOK)
 		{
 			if (data->selected_obj)
 			{
@@ -282,7 +282,7 @@ int	loop_manage_cam(t_data *data)
 		}
 */
 		//	data->camera->origin.val[0] -= 0.2;
-	/*	if (data->hooks & D_KEY)
+	/*	if (data->hooks & D_HOOK)
 		{
 			data->camera->origin.val[0] += dir.val[0];
 			data->camera->origin.val[1] += dir.val[1];
@@ -326,7 +326,7 @@ int		print_loop_image(void *param)
 	t_data **data_addr;
 	t_mlx	*mlx;
 	int	frame_start;
-	// printf("ah\n");
+	 printf("ah\n");
 //	unsigned int 	frame_start;
 	int		rendering = 1;
 	frame_start = SDL_GetTicks();

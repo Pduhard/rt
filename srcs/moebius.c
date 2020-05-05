@@ -111,7 +111,7 @@ t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius, int sp
 	return (normal_inter);
 }
 
-int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_moebius(t_leq l, t_obj *moebius, t_dist dist, int sp_id)
 {
 	t_moebius	*param;
 	double		ox;
@@ -130,12 +130,12 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	check = 0;
 	param = (t_moebius *)moebius->obj_param;
 	moebius_origin = sp_id ? move_3vecf(param->origin, moebius->motions, sp_id) : param->origin;
-	ox = orig.val[0] - moebius_origin.val[0];
-	oy = orig.val[1] - moebius_origin.val[1];
-	oz = orig.val[2] - moebius_origin.val[2];
-	vx = dir.val[0];
-	vy = dir.val[1];
-	vz = dir.val[2];
+	ox = l.orig.val[0] - moebius_origin.val[0];
+	oy = l.orig.val[1] - moebius_origin.val[1];
+	oz = l.orig.val[2] - moebius_origin.val[2];
+	vx = l.dir.val[0];
+	vy = l.dir.val[1];
+	vz = l.dir.val[2];
 
 	t_fact.val[3] = (-param->radius * param->radius * oy) + (ox * ox * oy) + (oy * oy * oy) - (2 * param->radius * ox * oz) - (2 * ox * ox * oz) - (2 * oy * oy * oz) + (oy * oz * oz);//d
 	t_fact.val[2] = (-param->radius * param->radius * vy) + (ox * ox * vy) + (2 * ox * oy * vx) + (oy * oy * vy) + (2 * oy * oy * vy)  - (2 * param->radius * ox * vz) - (2 * param->radius * oz * vx) - (2 * ox * ox * vz) - (4 * ox * oz * vx) - (2 * oy * oy * vz) - (4 * oy * oz * vy) + (2 * oy * oz * vz) + (oz * oz * vy);//c
@@ -148,11 +148,11 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 	while (++i < 3)
 	{
 		t_3vecf	coord;
-		if (roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
+		if (roots.val[i] < *(dist.dist) && roots.val[i] > dist.min_dist && roots.val[i] < dist.max_dist)
 		{
-			coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - moebius_origin.val[0];
-			coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - moebius_origin.val[1];
-			coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - moebius_origin.val[2];
+			coord.val[0] = l.orig.val[0] + l.dir.val[0] * roots.val[i] - moebius_origin.val[0];
+			coord.val[1] = l.orig.val[1] + l.dir.val[1] * roots.val[i] - moebius_origin.val[1];
+			coord.val[2] = l.orig.val[2] + l.dir.val[2] * roots.val[i] - moebius_origin.val[2];
 
 			/*		double	v;
 					double	u;
@@ -184,13 +184,13 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			{
 			printf("type A coord %f %f %f y / x : %f u %f v %f\n", coord.val[0], coord.val[1], coord.val[2], coord.val[1] / coord.val[0],  u, v);
 			//	check = 1;
-			//	*dist = roots.val[i];
+			//	*(dist.dist) = roots.val[i];
 			}
 			*///	if (coord.val[0] > 0 && u > -1 && u < 1)// && coord.val[0] < 2.01 && coord.val[1] > 0.5 && coord.val[1] < 1 && coord.val[2] < 1 && coord.val[2] > 0.5)
 			//	{
 			//	printf("type B coord %f %f %f u %f v %f\n", coord.val[0], coord.val[1], coord.val[2], u, v);
 			//	check = 1;
-			//	*dist = roots.val[i];
+			//	*(dist.dist) = roots.val[i];
 			//	}
 			//			if (v > 0 && v < 2 * M_PI)
 			//	printf("%f\n",coord.val[0] * coord.val[0] + coord.val[1] * coord.val[1] + coord.val[2] * coord.val[2] );
@@ -199,7 +199,7 @@ int	ray_intersect_moebius(t_3vecf orig, t_3vecf dir, t_obj *moebius, double *dis
 			{
 
 				check = 1;
-				*dist = roots.val[i];
+				*(dist.dist) = roots.val[i];
 			}
 	}
 	}

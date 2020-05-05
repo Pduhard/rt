@@ -91,7 +91,7 @@ t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int sp_i
 	return (normal);
 }
 
-int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id)
 {
 	t_3vecf	dist_vec;
 	double	a, b, c;
@@ -103,24 +103,24 @@ int	ray_intersect_sphere(t_3vecf orig, t_3vecf dir, t_obj *sphere, double *dist,
 
 	sphere_param = (t_sphere *)sphere->obj_param;
 	sph_origin = sp_id ? move_3vecf(sphere_param->origin, sphere->motions, sp_id) : sphere_param->origin;
-	dist_vec = sub_3vecf(orig, sph_origin);
-	a = dot_product_3vecf(dir, dir);
-	b = 2.f * dot_product_3vecf(dist_vec, dir);
+	dist_vec = sub_3vecf(l.orig, sph_origin);
+	a = dot_product_3vecf(l.dir, l.dir);
+	b = 2.f * dot_product_3vecf(dist_vec, l.dir);
 	c = dot_product_3vecf(dist_vec, dist_vec) - sphere_param->radius * sphere_param->radius;
 	delta = b * b - 4.f * a * c;
 	if (delta < 0)
 		return (0);
 	hit_point.val[0] = (-b + sqrtf(delta)) / (2 * a);
 	hit_point.val[1] = (-b - sqrtf(delta)) / (2 * a);
-	if (hit_point.val[0] < *dist && hit_point.val[0] > min_dist && hit_point.val[0] < max_dist)
+	if (hit_point.val[0] < *(dist.dist) && hit_point.val[0] > dist.min_dist && hit_point.val[0] < dist.max_dist)
 	{
 		check = 1;
-		*dist = hit_point.val[0];
+		*(dist.dist) = hit_point.val[0];
 	}
-	if (hit_point.val[1] < *dist && hit_point.val[1] > min_dist && hit_point.val[1] < max_dist)
+	if (hit_point.val[1] < *(dist.dist) && hit_point.val[1] > dist.min_dist && hit_point.val[1] < dist.max_dist)
 	{
 		check = 1;
-		*dist = hit_point.val[1];
+		*(dist.dist) = hit_point.val[1];
 	}
 	return (check);
 }

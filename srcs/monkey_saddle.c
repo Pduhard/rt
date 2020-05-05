@@ -104,7 +104,7 @@ t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_sa
 	return (normal_inter);
 }
 
-int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle, t_dist dist, int sp_id)
 {
 	t_monkey_saddle	*param;
 	double		ox;
@@ -122,12 +122,12 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 	check = 0;
 	param = (t_monkey_saddle *)monkey_saddle->obj_param;
 	monkey_saddle_origin = sp_id ? move_3vecf(param->origin, monkey_saddle->motions, sp_id) : param->origin;
-	ox = orig.val[0] - monkey_saddle_origin.val[0];
-	oy = orig.val[1] - monkey_saddle_origin.val[1];
-	oz = orig.val[2] - monkey_saddle_origin.val[2];
-	dx = dir.val[0];
-	dy = dir.val[1];
-	dz = dir.val[2];
+	ox = l.orig.val[0] - monkey_saddle_origin.val[0];
+	oy = l.orig.val[1] - monkey_saddle_origin.val[1];
+	oz = l.orig.val[2] - monkey_saddle_origin.val[2];
+	dx = l.dir.val[0];
+	dy = l.dir.val[1];
+	dz = l.dir.val[2];
 
 	t_fact.val[0] = (-3 * dx * dz * dz) + (dx * dx * dx);//a
 	t_fact.val[1] = (-3 * ox * dz * dz) - (6 * oz * dz * dx) + (dx * dx * ox) + (2 * ox * dx * dx);//b
@@ -147,11 +147,11 @@ int	ray_intersect_monkey_saddle(t_3vecf orig, t_3vecf dir, t_obj *monkey_saddle,
 		x = ox + dx * roots.val[i];
 		y = oy + dy * roots.val[i];
 		z = oz + dz * roots.val[i];
-		if (x > -1 && x < 1 && y > -1 && y < 1 && z > -1 && z < 1 && roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
+		if (x > -1 && x < 1 && y > -1 && y < 1 && z > -1 && z < 1 && roots.val[i] < *(dist.dist) && roots.val[i] > dist.min_dist && roots.val[i] < dist.max_dist)
 		{
 
 				check = 1;
-				*dist = roots.val[i];
+				*(dist.dist) = roots.val[i];
 
 	/*		double	v;
 			double	u;

@@ -103,7 +103,7 @@ t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int sp_i
 	return (normal_inter);
 }
 
-int	ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist, double min_dist, double max_dist, int sp_id)
+int	ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id)
 {
 	t_fermat	*param;
 	double		ox;
@@ -121,12 +121,12 @@ int	ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist,
 	check = 0;
 	param = (t_fermat *)fermat->obj_param;
 	fermat_origin = sp_id ? move_3vecf(param->origin, fermat->motions, sp_id) : param->origin;
-	ox = orig.val[0] - fermat_origin.val[0];
-	oy = orig.val[1] - fermat_origin.val[1];
-	oz = orig.val[2] - fermat_origin.val[2];
-	dx = dir.val[0];
-	dy = dir.val[1];
-	dz = dir.val[2];
+	ox = l.orig.val[0] - fermat_origin.val[0];
+	oy = l.orig.val[1] - fermat_origin.val[1];
+	oz = l.orig.val[2] - fermat_origin.val[2];
+	dx = l.dir.val[0];
+	dy = l.dir.val[1];
+	dz = l.dir.val[2];
 
 	t_fact.val[0] = dz * dz * dz + dx * dx * dx + dy * dy * dy;//a
 	t_fact.val[1] = 3 * oz * dz * dz + 3 * ox * dx * dx + 3 * oy * dy * dy;//b
@@ -147,13 +147,13 @@ int	ray_intersect_fermat(t_3vecf orig, t_3vecf dir, t_obj *fermat, double *dist,
 		x = ox + dx * roots.val[i];
 		y = oy + dy * roots.val[i];
 		z = oz + dz * roots.val[i];
-		if (x > -3 && x < 3 && y > -3 && y < 3 && z > -3 && z < 3 && roots.val[i] < *dist && roots.val[i] > min_dist && roots.val[i] < max_dist)
+		if (x > -3 && x < 3 && y > -3 && y < 3 && z > -3 && z < 3 && roots.val[i] < *(dist.dist) && roots.val[i] > dist.min_dist && roots.val[i] < dist.max_dist)
 		{
 		//	coord.val[0] = orig.val[0] + dir.val[0] * roots.val[i] - fermat_origin.val[0];
 		//	coord.val[1] = orig.val[1] + dir.val[1] * roots.val[i] - fermat_origin.val[1];
 		//	coord.val[2] = orig.val[2] + dir.val[2] * roots.val[i] - fermat_origin.val[2];
 			check = 1;
-			*dist = roots.val[i];
+			*(dist.dist) = roots.val[i];
 		}
 	}
 	return (check);

@@ -180,7 +180,7 @@ t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder, int 
 	return (sub_3vecf(inter_proj, inter_point));
 }
 
-int ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *dist, double min_dist, double max_dist, int sp_id)
+int ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id)
 {
 	t_3vecf	h;
 	t_3vecf	norm_h;
@@ -206,12 +206,12 @@ int ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *d
 	double	dp_w_norm_h;
 	t_3vecf	w;
 
-	w = sub_3vecf(orig, cylinder_origin);
-	dp_dir_norm_h = dot_product_3vecf(dir, norm_h);
+	w = sub_3vecf(l.orig, cylinder_origin);
+	dp_dir_norm_h = dot_product_3vecf(l.dir, norm_h);
 	dp_w_norm_h = dot_product_3vecf(w, norm_h);
 
-	a = dot_product_3vecf(dir, dir) - dp_dir_norm_h * dp_dir_norm_h;
-	b = 2 * (dot_product_3vecf(dir, w) - dp_dir_norm_h * dp_w_norm_h);
+	a = dot_product_3vecf(l.dir, l.dir) - dp_dir_norm_h * dp_dir_norm_h;
+	b = 2 * (dot_product_3vecf(l.dir, w) - dp_dir_norm_h * dp_w_norm_h);
 	c = dot_product_3vecf(w, w) - dp_w_norm_h * dp_w_norm_h - cylinder_param->radius * cylinder_param->radius;
 
 	double	delta;
@@ -222,15 +222,15 @@ int ray_intersect_cylinder(t_3vecf orig, t_3vecf dir, t_obj *cylinder, double *d
 	{
 		hit_point.val[0] = (-b + sqrtf(delta)) / (2 * a);
 		hit_point.val[1] = (-b - sqrtf(delta)) / (2 * a);
-		if (hit_point.val[0] < *dist && hit_point.val[0] > min_dist && hit_point.val[0] < max_dist)
+		if (hit_point.val[0] < *(dist.dist) && hit_point.val[0] > dist.min_dist && hit_point.val[0] < dist.max_dist)
 		{
 			check = 1;
-			*dist = hit_point.val[0];
+			*(dist.dist) = hit_point.val[0];
 		}
-		if (hit_point.val[1] < *dist && hit_point.val[1] > min_dist && hit_point.val[1] < max_dist)
+		if (hit_point.val[1] < *(dist.dist) && hit_point.val[1] > dist.min_dist && hit_point.val[1] < dist.max_dist)
 		{
 			check = 1;
-			*dist = hit_point.val[1];
+			*(dist.dist) = hit_point.val[1];
 		}
 		return (check);
 	}
