@@ -18,6 +18,8 @@ t_3vecf		get_bump_mapping_perlin(t_3vecf inter_point,
 	bump_z = compute_3dperlin_factor(assign_3vecf(
 			inter_point.val[0], inter_point.val[1], inter_point.val[2] +
 				obj->text.bump_fact), obj->text.scale.val[0]) - perlin_f;
+			// printf("ha\n");
+	// i += 0.001;
 	return (assign_3vecf(normal_inter.val[0] - bump_x,
 		normal_inter.val[1] - bump_y, normal_inter.val[2] - bump_z));
 }

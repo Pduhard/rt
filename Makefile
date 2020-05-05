@@ -18,7 +18,7 @@ EXT_LIB		=	./external_libs
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
 	FLAGS		+=	-fPIC
-	FRAMEWORK	=	-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image -lSDL -lSDLmain
+	FRAMEWORK	=	-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image
 	CC		=	clang
 	MLX_PATH	=	$(EXT_LIB)/minilibx/
 	MLX_FLAGS	=	-L$(MLX_PATH) -lX11 -lXext -lm -lbsd $(MLX_FLAG)

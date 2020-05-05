@@ -463,6 +463,9 @@ int		create_photon_map(t_data *data)
 		add_object(sphere, data);
 	}
 */	printf("wefwefwefw\n");
+	free(photon_tab[0]);
+	free(photon_tab[1]);
+	free(photon_tab);
 	(void)data;
 //	return (malloc(123));
 	return (data->caustic_map || data->indirect_map ? 1 : 0);

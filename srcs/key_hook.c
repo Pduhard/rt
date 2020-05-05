@@ -69,7 +69,10 @@ int		key_press(int keycode, void *param)
 		data->hooks |= A_KEY;
 	//data->cam.origin[0] -= 0.2;
 	else if (keycode == ESC_KEY)
+	{
+		free_all(data);
 		exit(0);
+	}
 	else if (keycode == 1) //s
 		data->hooks |= S_KEY;
 	//data->cam.origin[2] -= 0.2;
@@ -122,7 +125,7 @@ int		key_press(int keycode, void *param)
 		generate_new_moebius(data);
 //	else if (keycode == 19)
 //		generate_new_plane(data);
-	else if (keycode == 117 && data->selected_obj && data->selected_obj->obj_type != OBJ_SKYBOX)
+	else if ((keycode == 117 || keycode == 51) && data->selected_obj && data->selected_obj->obj_type != OBJ_SKYBOX)
 	{
 		delete_object(data, data->selected_obj);
 		data->selected_obj = NULL;
