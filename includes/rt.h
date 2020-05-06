@@ -548,6 +548,7 @@ typedef struct	s_cut_fparam
 // {
 // 	t_data		*data_lst;
 // }				t_data_cont;
+int	is_closest_intersect(t_dist dist, double root); // in main.c for instance
 
 void	generate_new_sphere(t_data *data);
 void	generate_new_plane(t_data *data);

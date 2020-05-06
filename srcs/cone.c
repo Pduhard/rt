@@ -161,6 +161,7 @@ t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id)
 	hp = sub_3vecf(cone_tip, inter_point);
 	normal = product_3vecf(hp, product_3vecf(hp,
 			sub_3vecf(cone_origin, inter_point)));
+	normalize_3vecf(&normal);
 	return (normal);
 }
 
@@ -186,22 +187,12 @@ t_3vecf get_cone_quadratic_cst(t_cone *cone_param, t_3vecf cone_origin,
 			dot_product_3vecf(w, w) - m * dp_wh * dp_wh - dp_wh * dp_wh}});
 }
 
-int	is_closest_intersect(t_dist dist, double root)
-{
-	if (root < *(dist.dist) && root > dist.min_dist && root < dist.max_dist)
-	{
-		*(dist.dist) = root;
-		return (1);
-	}
-	return (0);
-}
-
 int	ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id)
 {
 	t_3vecf cst;
 	int			check;
 	t_cone	*cone_param;
-	t_2vecf root;
+	t_2vecf roots;
 
 	check = 0;
 	cone_param = (t_cone *)cone->obj_param;
@@ -210,9 +201,9 @@ int	ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id)
 					get_cone_origin(cone, cone_param, sp_id),
 					get_cone_tip(cone, cone_param, sp_id),
 					l);
-	root = solve_quadratic(cst.val[0], cst.val[1], cst.val[2]);
-	check |= is_closest_intersect(dist, root.val[0]);
-	check |= is_closest_intersect(dist, root.val[1]);
+	roots = solve_quadratic(cst.val[0], cst.val[1], cst.val[2]);
+	check |= is_closest_intersect(dist, roots.val[0]);
+	check |= is_closest_intersect(dist, roots.val[1]);
 	return (check);
 }
 
@@ -226,7 +217,6 @@ void  assign_cone_function(t_obj *cone)
 	cone->move = &move_cone;
 	cone->rotate = &rotate_cone;
 	cone->get_text_coordinate = &get_text_coordinate_cone;
-	cone->get_text_color = &get_uni_color;
 }
 
 void	generate_new_cone(t_data *data)

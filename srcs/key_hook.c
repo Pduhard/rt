@@ -197,32 +197,32 @@ int		key_release(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	if (keycode == A_KEY) //
+	if (keycode == A_KEY && (data->hooks & A_HOOK)) //
 		data->hooks -= A_HOOK;
 	//data->cam.origin[0] -= 0.2;
-	else if (keycode == S_KEY) //s
+	else if (keycode == S_KEY && (data->hooks & S_HOOK)) //s
 		data->hooks -= S_HOOK;
 	//data->cam.origin[2] -= 0.2;
-	else if (keycode == D_KEY) //d
+	else if (keycode == D_KEY && (data->hooks & D_HOOK)) //d
 		data->hooks -= D_HOOK;
 	//data->cam.origin[0] += 0.2;
-	else if (keycode == W_KEY) //w
+	else if (keycode == W_KEY && (data->hooks & W_HOOK)) //w
 		data->hooks -= W_HOOK;
-	else if (keycode == F_KEY) //w
+	else if (keycode == F_KEY && (data->hooks & F_HOOK)) //w
 		data->hooks -= F_HOOK;
-	else if (keycode == G_KEY) //w
+	else if (keycode == G_KEY && (data->hooks & G_HOOK)) //w
 		data->hooks -= G_HOOK;
-	else if (keycode == ARR_LEFT_KEY) //left
+	else if (keycode == ARR_LEFT_KEY && (data->hooks & ARR_LEFT_HOOK)) //left
 		data->hooks -= ARR_LEFT_HOOK;
-	else if (keycode == ARR_RIGHT_KEY) // right
+	else if (keycode == ARR_RIGHT_KEY && (data->hooks & ARR_RIGHT_HOOK)) // right
 		data->hooks -= ARR_RIGHT_HOOK;
-	else if (keycode == ARR_DOWN_KEY) // down
+	else if (keycode == ARR_DOWN_KEY && (data->hooks & ARR_DOWN_HOOK)) // down
 		data->hooks -= ARR_DOWN_HOOK;
-	else if (keycode == ARR_UP_KEY) // up
+	else if (keycode == ARR_UP_KEY && (data->hooks & ARR_UP_HOOK)) // up
 		data->hooks -= ARR_UP_HOOK;
-	else if (keycode == SPACE_KEY)
+	else if (keycode == SPACE_KEY  && (data->hooks & SPACE_HOOK))
 		data->hooks -= SPACE_HOOK;
-	else if (keycode == SHIFT_KEY)
+	else if (keycode == SHIFT_KEY && (data->hooks & SHIFT_HOOK))
 		data->hooks -= SHIFT_HOOK;
 
 //	if (keycode == 2)
