@@ -246,7 +246,7 @@ void	generate_new_moebius(t_data *data)
 	moebius->rotate = NULL;
 	moebius->get_text_coordinate = &get_text_coordinate_moebius;
 	moebius->get_text_color = &get_uni_color;
-	moebius->text = generate_random_texture();
+	moebius->text = generate_random_texture(moebius);
 	set_bump_own(moebius);
 	add_object(moebius, data);
 	data->new_obj = 1;

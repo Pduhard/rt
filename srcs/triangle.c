@@ -232,7 +232,7 @@ void	generate_new_triangle(t_data *data)
 	triangle->rotate = &rotate_triangle;
 	triangle->get_text_coordinate = &get_text_coordinate_triangle;
 	triangle->get_text_color = &get_uni_color;
-	triangle->text = generate_random_texture();
+	triangle->text = generate_random_texture(triangle);
 	//triangle->get_bump_mapping = NULL;
 	set_bump_own(triangle);
 	//texture needed

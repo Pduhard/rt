@@ -174,7 +174,7 @@ void	generate_new_ellipsoid(t_data *data)
 	ellipsoid->rotate = NULL;
 	ellipsoid->get_text_coordinate = &get_text_coordinate_ellipsoid;
 	ellipsoid->get_text_color = &get_uni_color;
-	ellipsoid->text = generate_random_texture();
+	ellipsoid->text = generate_random_texture(ellipsoid);
 	set_bump_own(ellipsoid);
 	add_object(ellipsoid, data);
 	data->new_obj = 1;

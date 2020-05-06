@@ -174,7 +174,7 @@ void	generate_new_hyperboloid(t_data *data)
 	hyperboloid->rotate = NULL;
 	hyperboloid->get_text_coordinate = &get_text_coordinate_hyperboloid;
 	hyperboloid->get_text_color = &get_uni_color;
-	hyperboloid->text = generate_random_texture();
+	hyperboloid->text = generate_random_texture(hyperboloid);
 	set_bump_own(hyperboloid);
 	add_object(hyperboloid, data);
 	data->new_obj = 1;

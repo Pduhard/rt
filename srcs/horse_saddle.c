@@ -195,7 +195,7 @@ void	generate_new_horse_saddle(t_data *data)
 	horse_saddle->rotate = NULL;
 	horse_saddle->get_text_coordinate = &get_text_coordinate_horse_saddle;
 	horse_saddle->get_text_color = &get_uni_color;
-	horse_saddle->text = generate_random_texture();
+	horse_saddle->text = generate_random_texture(horse_saddle);
 	set_bump_own(horse_saddle);
 	add_object(horse_saddle, data);
 	data->new_obj = 1;

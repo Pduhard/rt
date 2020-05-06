@@ -31,12 +31,15 @@ else
 endif
 #MLX_PATH	=	$(EXT_LIB)/minilibx_mms_20191207_beta/ //new lib in beta
  #	loading.c
+
+
 SRC			=	main.c					\
 				init.c					\
 				matrix.c				\
 				vector.c				\
 				render.c				\
 				cut.c					\
+				cone.c				\
 				angles_utils.c			\
 				conf.c					\
 				parse.c					\
@@ -59,8 +62,6 @@ SRC			=	main.c					\
 				fbm.c					\
 				sphere.c				\
 				plane.c					\
-				cone.c					\
-				cube.c					\
 				triangle.c				\
 				moebius.c				\
 				loop.c					\
@@ -80,6 +81,8 @@ SRC			=	main.c					\
 				global_illumination.c	\
 				random.c				\
 				free.c					\
+				# $(addprefix $(SRC_SHAPES_PATH), $(SHAPES))
+				# shapes/cone.c		\
 
 BIN			=	$(SRC:.c=.o)
 

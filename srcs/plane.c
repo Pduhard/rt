@@ -183,7 +183,7 @@ void	generate_new_plane(t_data *data)
 	plane->rotate = &rotate_plane;
 	plane->get_text_coordinate = &get_text_coordinate_plane;
 	plane->get_text_color = &get_uni_color;
-	plane->text = generate_random_texture();
+	plane->text = generate_random_texture(plane);
 	set_bump_own(plane);
 	add_object(plane, data);
 	data->new_obj = 1;

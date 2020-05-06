@@ -52,7 +52,7 @@ void	generate_new_cylinder(t_data *data)
 	cylinder->rotate = &rotate_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
 	cylinder->get_text_color = &get_uni_color;
-	cylinder->text = generate_random_texture();
+	cylinder->text = generate_random_texture(cylinder);
 	set_bump_own(cylinder);
 	add_object(cylinder, data);
 	data->new_obj = 1;

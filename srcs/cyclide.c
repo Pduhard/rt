@@ -198,7 +198,7 @@ void	generate_new_cyclide(t_data *data)
 	cyclide->rotate = NULL;
 	cyclide->get_text_coordinate = &get_text_coordinate_cyclide;
 	cyclide->get_text_color = &get_uni_color;
-	cyclide->text = generate_random_texture();
+	cyclide->text = generate_random_texture(cyclide);
 	set_bump_own(cyclide);
 	add_object(cyclide, data);
 	data->new_obj = 1;

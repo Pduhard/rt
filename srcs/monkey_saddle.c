@@ -240,7 +240,7 @@ void	generate_new_monkey_saddle(t_data *data)
 	monkey_saddle->rotate = NULL;
 	monkey_saddle->get_text_coordinate = &get_text_coordinate_monkey_saddle;
 	monkey_saddle->get_text_color = &get_uni_color;
-	monkey_saddle->text = generate_random_texture();
+	monkey_saddle->text = generate_random_texture(monkey_saddle);
 	set_bump_own(monkey_saddle);
 	add_object(monkey_saddle, data);
 	data->new_obj = 1;

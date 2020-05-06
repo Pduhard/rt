@@ -25,10 +25,14 @@
 
 //# define WIN_WIDTH 600
 //# define WIN_HEIGHT	600
+# define Q_LOW	1
+# define Q_HIGH 2
+
+# define QUALITY			Q_LOW
+
 # define NB_THREADS	 8
 # define MIN_ANTI_AL 0.5
-# define MAX_ANTI_AL 2.
-
+# define MAX_ANTI_AL 1.
 # define MAX_VIEW 1000000
 
 /* TMP MACRO  */
@@ -532,6 +536,14 @@ typedef struct	s_thread
 	int			end;
 }				t_thread;
 
+typedef struct	s_cut_fparam
+{
+	t_obj					*closest_obj;
+	t_obj					*objs;
+	int						sp_id;
+	int						negative;
+}								t_cut_fparam;
+
 // typedef struct	s_data_cont
 // {
 // 	t_data		*data_lst;
@@ -549,7 +561,7 @@ void	generate_new_horse_saddle(t_data *data);
 void	generate_new_monkey_saddle(t_data *data);
 void	generate_new_cyclide(t_data *data);
 void	generate_new_fermat(t_data *data);
-t_text	generate_random_texture(void);
+t_text	generate_random_texture(t_obj *obj);
 t_4vecf	generate_random_color(unsigned int x, double transp_f);
 int		generate_random_enum(int e_max);
 void	delete_object(t_data *data, t_obj *obj);
@@ -585,10 +597,13 @@ void	normalize_3vecf(t_3vecf *vec);
 double	get_length_3vecf(t_3vecf vec);
 t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b);
 t_3vecf	add_3vecf(t_3vecf a, t_3vecf b);
+t_3vecf	add_c3vecf(t_3vecf a, double c);
 t_3vecf	product_3vecf(t_3vecf a, t_3vecf b);
+t_3vecf	product_c3vecf(t_3vecf a, double c);
 double	dot_product_3vecf(t_3vecf a, t_3vecf b);
 double	dot_product_2vecf(t_2vecf a, t_2vecf b);
 int		is_null_3vecf(t_3vecf vec);
+t_3vecf neg_3vecf(t_3vecf vec);
 
 t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
 t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
@@ -617,6 +632,7 @@ int		is_null_3vecf(t_3vecf t);
 double	degree_to_radian(double degree);
 
 t_3vecf	solve_cubic(double a, double b, double c, double d);
+t_2vecf	solve_quadratic(double a, double b, double c);
 int		key_press(int keycode, void *param);
 int		key_release(int keycode, void *param);
 //int		moov_hook(int x, int y, void *param);
@@ -760,7 +776,8 @@ t_3vecf	get_origin_moebius(t_obj *);
 void	move_moebius(t_obj *, t_3vecf, double);
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius);
 
-t_obj	*check_cuts(t_3vecf orig, t_3vecf dir, t_obj *closest_obj, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data, int negative);
+
+t_obj *check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data);
 t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
 
 void	print_conf(t_data *data);

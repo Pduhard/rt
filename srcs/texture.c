@@ -367,7 +367,24 @@ int		parse_texture(char *line, int i, t_obj *obj)
 	return (i);
 }*/
 
-t_text	generate_random_texture(void)
+t_4vecf			(*assign_text_color_function(t_text_type type))(t_3vecf, t_3vecf, struct s_obj *)
+{
+		if (type == TEXT_PERLIN)
+			return (&get_perlin_color);
+		if (type == TEXT_MARBLE)
+			return (&get_marble_color);
+		if (type == TEXT_WOOD)
+			return (&get_wood_color);
+		if (type == TEXT_FBM)
+			return (&get_fbm_color);
+		if (type == TEXT_UNI)
+			return (&get_uni_color);
+		if (type == TEXT_GRID)
+			return (&get_grid_color);
+		return (&get_uni_color);
+}
+
+t_text	generate_random_texture(t_obj *obj)
 {
 	t_text		text;
 	t_text_proc	*param;
@@ -383,5 +400,6 @@ t_text	generate_random_texture(void)
 	if (text.text_type < 4)
 		text.bump_fact = 0.01 + get_random_number(time(NULL)) * 0.03;
 	text.text_param = param;
+	obj->get_text_color = assign_text_color_function(text.text_type);
 	return (text);
 }

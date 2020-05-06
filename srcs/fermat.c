@@ -195,7 +195,7 @@ void	generate_new_fermat(t_data *data)
 	fermat->rotate = NULL;
 	fermat->get_text_coordinate = &get_text_coordinate_fermat;
 	fermat->get_text_color = &get_uni_color;
-	fermat->text = generate_random_texture();
+	fermat->text = generate_random_texture(fermat);
 	set_bump_own(fermat);
 	add_object(fermat, data);
 	data->new_obj = 1;

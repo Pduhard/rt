@@ -36,7 +36,10 @@ int		check_inside_negative(t_3vecf orig, t_3vecf dir, double *closest_dist, t_da
 	while (negative_objs)
 	{
 		if (negative_objs->check_inside(inter_point, negative_objs))
-			return (check_cuts(orig, dir, negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
+			return (check_cuts((t_leq){orig, dir}, (t_dist){closest_dist, min_dist, max_dist}, (t_cut_fparam){negative_objs, NULL, sp_id, 1}, data) ? 1 : 0);
+		// negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
+
+		//	return (check_cuts(orig, dir, negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
 		negative_objs = negative_objs->next;
 	}
 	return (0);
@@ -80,7 +83,9 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	}
 	//	return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
 	if (closest_obj && closest_obj->cuts)
-		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data, 0));
+		// return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data, 0));
+		return (check_cuts((t_leq){orig, dir}, (t_dist){closest_dist, min_dist, max_dist}, (t_cut_fparam){closest_obj, objs_save, sp_id, 0}, data));
+
 	return (closest_obj);
 	(void)data;
 }

@@ -151,7 +151,7 @@ void	generate_new_sphere(t_data *data)
 	sphere->rotate = &rotate_sphere;
 	sphere->get_text_coordinate = &get_text_coordinate_sphere;
 	sphere->get_text_color = &get_uni_color;
-	sphere->text = generate_random_texture();
+	sphere->text = generate_random_texture(sphere);
 	//sphere->get_bump_mapping = NULL;
 	set_bump_own(sphere);
 	//texture needed
