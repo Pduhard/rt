@@ -46,8 +46,8 @@
 # define NN_INDIRECT_PHOTON_MAX	20
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		1000
-# define NB_CAUSTIC_PHOTON		10000
+# define NB_INDIRECT_PHOTON		10000
+# define NB_CAUSTIC_PHOTON		100000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
@@ -81,20 +81,20 @@
 # define BIAS				0.01
 
 /* HOOKS MACRO */
-# define A_HOOK	0b1
-# define D_HOOK	0b10
-# define W_HOOK	0b100
-# define S_HOOK	0b1000
-# define F_HOOK	0b10000
-# define G_HOOK	0b100000
+# define A_HOOK					0b1
+# define D_HOOK					0b10
+# define W_HOOK					0b100
+# define S_HOOK					0b1000
+# define F_HOOK					0b10000
+# define G_HOOK					0b100000
 
 # define ARR_LEFT_HOOK	0b1000000
 # define ARR_RIGHT_HOOK 0b10000000
 # define ARR_DOWN_HOOK	0b100000000
 # define ARR_UP_HOOK		0b1000000000
 
-# define SPACE_HOOK	0b10000000000
-# define SHIFT_HOOK	0b100000000000
+# define SPACE_HOOK			0b10000000000
+# define SHIFT_HOOK			0b100000000000
 
 /* Conf Mess */
 
@@ -544,10 +544,28 @@ typedef struct	s_cut_fparam
 	int						negative;
 }								t_cut_fparam;
 
+typedef struct	s_add_pht_p
+{
+	double				dist;
+	int						nn_photon;
+}								t_add_pht_p;
+
+typedef struct	s_nn_param
+{
+	t_3vecf 			inter_point;
+	t_3vecf				normal_inter;
+	t_photon			**tab;
+	double				*closest;
+	double				*farest;
+	int						nn_photon;
+}								t_nn_param;
 // typedef struct	s_data_cont
 // {
 // 	t_data		*data_lst;
 // }				t_data_cont;
+
+void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis); // in cone.c for instance
+
 int	is_closest_intersect(t_dist dist, double root); // in main.c for instance
 
 void	generate_new_sphere(t_data *data);
@@ -620,7 +638,7 @@ double	compute_3dfbm_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale);
 double	compute_marble_factor(t_3vecf inter_point, double scale);
 
-t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, double max_radius, int nn_photon);
+t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, int nn_photon);
 
 t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
 t_3vecf	reflect_ray(t_3vecf dir, t_3vecf normal_inter);

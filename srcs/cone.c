@@ -38,31 +38,31 @@ int		check_inside_cone(t_3vecf inter_point, t_obj *obj)
 	return (1);
 }
 
-void	get_cone_axis(t_cone *param, t_3vecf cone_axis[3])
+void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis)
 {
-		cone_axis[0] = assign_3vecf(0, 0, 0);
-		cone_axis[1] = sub_3vecf(param->tip, param->center);
-		normalize_3vecf(&(cone_axis[1]));
-		if (cone_axis[1].val[0] != 0)
+		axis[0] = assign_3vecf(0, 0, 0);
+		axis[1] = first_axis;
+		normalize_3vecf(&(axis[1]));
+		if (axis[1].val[0] != 0)
 		{
-			cone_axis[0] = assign_3vecf(0, 1, 1);
-			cone_axis[0].val[0] = (-cone_axis[1].val[1] - cone_axis[1].val[2])
-				/ cone_axis[1].val[0];
+			axis[0] = assign_3vecf(0, 1, 1);
+			axis[0].val[0] = (-axis[1].val[1] - axis[1].val[2])
+				/ axis[1].val[0];
 		}
-		else if (cone_axis[1].val[1] != 0)
+		else if (axis[1].val[1] != 0)
 		{
-			cone_axis[0] = assign_3vecf(1, 0, 1);
-			cone_axis[0].val[1] = (-cone_axis[1].val[0] - cone_axis[1].val[2])
-				/ cone_axis[1].val[1];
+			axis[0] = assign_3vecf(1, 0, 1);
+			axis[0].val[1] = (-axis[1].val[0] - axis[1].val[2])
+				/ axis[1].val[1];
 		}
-		else if (cone_axis[1].val[2] != 0)
+		else if (axis[1].val[2] != 0)
 		{
-			cone_axis[0] = assign_3vecf(1, 1, 0);
-			cone_axis[0].val[2] = (-cone_axis[1].val[0] - cone_axis[1].val[1])
-				/ cone_axis[1].val[2];
+			axis[0] = assign_3vecf(1, 1, 0);
+			axis[0].val[2] = (-axis[1].val[0] - axis[1].val[1])
+				/ axis[1].val[2];
 		}
-		normalize_3vecf(&(cone_axis[0]));
-		cone_axis[2] = product_3vecf(cone_axis[0], cone_axis[1]);
+		normalize_3vecf(&(axis[0]));
+		axis[2] = product_3vecf(axis[0], axis[1]);
 }
 
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point,
@@ -74,7 +74,7 @@ t_2vecf	get_text_coordinate_cone(t_3vecf inter_point,
 	t_cone	*param;
 
 	param = (t_cone *)cone->obj_param;
-	get_cone_axis(param, cone_axis);
+	get_uv_axis(cone_axis, sub_3vecf(param->tip, param->center));
 	cp = sub_3vecf(inter_point, param->center);
 	text_coord.val[0] = -dot_product_3vecf(cone_axis[1], cp) / (M_PI * 2);
 	text_coord.val[1] = atan2(dot_product_3vecf(cone_axis[0], cp),

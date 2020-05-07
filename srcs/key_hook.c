@@ -131,22 +131,22 @@ int		key_press(int keycode, void *param)
 		data->selected_obj = NULL;
 		data->new_obj = 1;
 	}
-	else if (keycode == IMPR_KEY)
+	else if (keycode == IMPR_KEY || keycode == P_KEY)
 	{
-	/*	SDL_Surface	*img_save = SDL_CreateRGBSurfaceFrom((void *)data->mlx->img_str, (int)data->size.val[0], (int)data->size.val[1], 32, 4 * (int)data->size.val[0], 0xff << 16, 0xff << 8, 0xff << 0, 0x0);
+		SDL_Surface	*img_save = SDL_CreateRGBSurfaceFrom((void *)data->mlx->img_str, (int)data->size.val[0], (int)data->size.val[1], 32, 4 * (int)data->size.val[0], 0xff << 16, 0xff << 8, 0xff << 0, 0x0);
 		char	*image_file_name;
 
 		image_file_name = get_image_file_name(data->scene_name);
-*/	/*	image_file_name = ft_strjoin(tmp, ".png");
+	/*	image_file_name = ft_strjoin(tmp, ".png");
 		free(tmp);
 		while ((img_fd  = open(image_file_name, O_RDWR)) != -1)
 		{
 			image_file_name = ft_strfjoin(image_file_)
 		}
-	*/ /* IMG_SavePNG(img_save, image_file_name);
+	*/
+		IMG_SavePNG(img_save, image_file_name);
 		free(image_file_name);
 		SDL_FreeSurface(img_save);
-	*/
 	}
 	//	else if (keycode == 69 && data->anti_al < MAX_ANTI_AL)
 	//		data->anti_al++;

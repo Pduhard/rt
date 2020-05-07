@@ -326,7 +326,7 @@ int		print_loop_image(void *param)
 	t_data **data_addr;
 	t_mlx	*mlx;
 	int	frame_start;
-	 printf("ah\n");
+	 // printf("ah\n");
 //	unsigned int 	frame_start;
 	int		rendering = 1;
 	frame_start = SDL_GetTicks();

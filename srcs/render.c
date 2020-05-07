@@ -354,7 +354,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		t_3vecf	global;
 
 	//	return (compute_global_illumination(inter_point, normal_inter, data));
-		global = compute_global_illumination(inter_point, normal_inter, data->caustic_map, MAX_CAUSTIC_RADIUS, NN_CAUSTIC_PHOTON_MAX);
+		global = compute_global_illumination(inter_point, normal_inter, data->caustic_map, NN_CAUSTIC_PHOTON_MAX);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];
@@ -364,7 +364,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		t_3vecf	global;
 
 	//	return (compute_global_illumination(inter_point, normal_inter, data));
-		global = compute_global_illumination(inter_point, normal_inter, data->indirect_map, MAX_INDIRECT_RADIUS, NN_INDIRECT_PHOTON_MAX);
+		global = compute_global_illumination(inter_point, normal_inter, data->indirect_map, NN_INDIRECT_PHOTON_MAX);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];

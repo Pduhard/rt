@@ -2,11 +2,11 @@
 	<name(Bump mapping)	>
 	<size(800, 600)>
 	<camera
-		<origin (0, -1, -9)>
+		<origin (0, -1, -13)>
 		<rotation (-10, 0)>
 	>
-	<Indirect_GI(off)>
-	<Caustics_GI(off)>
+	<Indirect_GI(on)>
+	<Caustics_GI(on)>
 	<fog (100, 200)>
 	<objects
 		<texture
