@@ -793,7 +793,10 @@ void	*render_thread(void *param)
 				{
 					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * aa + offset / aa, j * aa + offset % aa, (int)data->size.val[0] * aa, (int)data->size.val[1] * aa), data->rot_mat[1]), data->rot_mat[0]);
 					normalize_3vecf(&dir);
-					clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					if (!data->motion_blur)
+						clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					else
+						clr = motion_trace(orig, dir, data);
 					color.val[0] += clr.val[0];
 					color.val[1] += clr.val[1];
 					color.val[2] += clr.val[2];
@@ -816,12 +819,12 @@ void	*render_thread(void *param)
 				}
 			}
 
-			if (data->aa_adapt == MIN_ANTI_AL)
+			if (data->aa_adapt == MIN_AA)
 				j += 2;
 			else
 				++j;
 		}
-		if (data->aa_adapt == MIN_ANTI_AL)
+		if (data->aa_adapt == MIN_AA)
 			i += 2;
 		else
 			++i;

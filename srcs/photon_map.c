@@ -44,7 +44,7 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 		photon.position.val[0] = orig.val[0] + dir.val[0] * dist;
 		photon.position.val[1] = orig.val[1] + dir.val[1] * dist;
 		photon.position.val[2] = orig.val[2] + dir.val[2] * dist;
-//	printf("rusian %f\n", rr_f);
+	// printf("rusian %f\n", rr_f);
 		if (obj->refraction)
 		{
 			t_3vecf	normal_inter = obj->get_normal_inter(photon.position, obj, 0);
@@ -117,9 +117,12 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 				while (dot_product_3vecf(dir, normal_inter) < 0)
 				{
+					// printf("%f %f %f dp %f %f %f == %f\n", dir.val[0], dir.val[1], dir.val[2]
+					// , normal_inter.val[0], normal_inter.val[1], normal_inter.val[2], dot_product_3vecf(dir, normal_inter));
 					dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 					rand_iter ^= rand_iter >> 4;
-					rand_iter ^= rand_iter << 6;
+					rand_iter ^= rand_iter << 7;
+					rand_iter ^= rand_iter >> 8;
 				}
 			// !! danger ^ ^ ^
 			//	dir = reflect_ray(assign_3vecf(-dir.val[0], -dir.val[1], -dir.val[2]), normal_inter);
@@ -193,9 +196,12 @@ void	cast_photon(t_3vecf orig, t_3vecf dir, t_light *light, t_data *data, int *i
 				dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 				while (dot_product_3vecf(dir, normal_inter) < 0)
 				{
+					// printf("%f %f %f dp %f %f %f == %f\n", dir.val[0], dir.val[1], dir.val[2]
+					// , normal_inter.val[0], normal_inter.val[1], normal_inter.val[2], dot_product_3vecf(dir, normal_inter));
 					dir = assign_3vecf(get_random_number(rand_iter * 0xcac00aca << ((rand_iter + 23) % 23)) - 0.5, get_random_number(rand_iter * 0x123fddef << ((rand_iter + 5) % 16)) - 0.5, get_random_number(rand_iter * 0x81056aae << ((rand_iter + 8) % 24)) - 0.5);
 					rand_iter ^= rand_iter >> 4;
-					rand_iter ^= rand_iter << 6;
+					rand_iter ^= rand_iter << 7;
+					rand_iter ^= rand_iter >> 8;
 				}
 					// !! danger ^ ^ ^
 
@@ -287,8 +293,9 @@ void		scatter_photon(t_photon **photon_tab, t_data *data)
 			}
 			return ;
 		}
+		// printf("i %d\n ", caus_i);
+
 	}
-//	printf("i %d\n ", i);
 	(void)photon_tab;
 }
 

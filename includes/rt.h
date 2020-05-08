@@ -25,14 +25,17 @@
 
 //# define WIN_WIDTH 600
 //# define WIN_HEIGHT	600
-# define Q_LOW	1
-# define Q_HIGH 2
+# define Q_VERY_LOW		1 // subsampling
+# define Q_LOW				2 // subsampling when move (1/4) then no aa
+# define Q_MED    		4 // no aa
+# define Q_HIGH 			8 // no aa when move then aa x4
 
 # define QUALITY			Q_LOW
 
 # define NB_THREADS	 8
-# define MIN_ANTI_AL 0.5
-# define MAX_ANTI_AL 1.
+# define MIN_AA 		0.5
+# define NO_AA      1.
+# define MAX_AA 		2.
 # define MAX_VIEW 1000000
 
 /* TMP MACRO  */
@@ -42,7 +45,7 @@
 //# define GLOBAL_ILLUMINATION	0
 //# define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX	50
+# define NN_CAUSTIC_PHOTON_MAX  50
 # define NN_INDIRECT_PHOTON_MAX	20
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
@@ -494,7 +497,6 @@ typedef	struct	s_kd_tree
 
 typedef struct	s_data
 {
-	double			f;
 	t_mlx		*mlx;
 //	t_mlx		*loading_mlx;
 	t_mlx		*info;
@@ -507,8 +509,6 @@ typedef struct	s_data
 	t_2vecf		size;
 	int			hooks;
 	t_33matf	rot_mat[3];
-	unsigned int		fps;
-	unsigned int		delta_time;
 	int			anti_al;
 	double		aa_adapt;
 	int			cel_shading;
