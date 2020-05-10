@@ -7,21 +7,19 @@
     >
     <objects
         <texture
-		<IMAGE (img/vitral.png)>
-           // <UNI
-           //     <color (1, 0, 1, 1)>
-           //     <color (1, 1, 1, 1)>
-           // >
+            <UNI
+                <color (1, 0, 1, 1)>
+                <color (1, 1, 1, 1)>
+            >
             <BumpMapping
                 <independent (PERLIN)(0.5)>
             >
             <offset (1, 0)>
-            <scale (1, 1)>
+            <scale (0, 0)>
         >
-        <plane
+        <sphere
             <origin (0, 0, 0)>
-            <normal (0, 0, 0)>
-		<xaxis (-1, 0, 0) >
+            <radius (-2)>
         >
         <cutting
             <static
@@ -52,7 +50,7 @@
         <reflection(0.3)>
     >
     <lights
-        <point (0, -5, -5)>
+        <point (0, 0, -5)>
         <color (1, 0, 1)>
     >
     <lights

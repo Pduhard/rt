@@ -45,11 +45,6 @@ void	set_bump_own(t_obj *obj)
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
-//	else if (obj->text.text_type == TEXT_IMAGE)
-//	{
-//		obj->get_bump_mapping = &get_bump_mapping_image;
-//		obj->text.bump_type = BUMP_IMAGE;
-//	}
 }
 
 int		parse_bump_inde(char **line, t_obj *obj, int index)
@@ -95,12 +90,7 @@ void	set_bump_inde(char *s, t_obj *obj)
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
-/*	else if (!(ft_strncmp_case(s, "IMAGE", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_image;
-		obj->text.bump_type = BUMP_IMAGE;
-	}
-*/	else if (!(ft_strncmp_case(s, "FBM", 5)))
+	else if (!(ft_strncmp_case(s, "FBM", 5)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_fbm;
 		obj->text.bump_type = BUMP_FBM;

@@ -458,6 +458,12 @@ typedef struct	s_obj
 	struct s_obj	**composed_w;
 }				t_obj;
 
+typedef struct  s_comp_param
+{
+		t_3vecf 		origin;
+		t_2vecf 		rotation;
+}								t_comp_param;
+
 typedef struct	s_composed
 {
 	char		*name;
@@ -684,7 +690,7 @@ int		parse_origin(char **line, t_3vecf *t, int i);
 int		parse_cone(char **line, t_obj *cone);
 int		parse_cylinder(char **line, t_obj *cylinder);
 int		parse_plane(char **line, t_obj *plane);
-int		parse_rect(char **line, t_obj *rect);
+//int		parse_rect(char **line, t_obj *rect);
 int		parse_triangle(char **line, t_obj *triangle);
 int		parse_sphere(char **line, t_obj *sphere);
 int		parse_ellipsoid(char **line, t_obj *ellipsoid);
@@ -694,6 +700,20 @@ int		parse_monkey_saddle(char **line, t_obj *monkey_saddle);
 int		parse_cyclide(char **line, t_obj *cyclide);
 int		parse_fermat(char **line, t_obj *fermat);
 int		parse_moebius(char **line, t_obj *moebius);
+
+void  assign_cone_function(t_obj *cone);
+void  assign_cylinder_function(t_obj *cylinder);
+void  assign_plane_function(t_obj *plane);
+//void  assign_rect_function(t_obj *rect);
+void  assign_triangle_function(t_obj *triangle);
+void  assign_sphere_function(t_obj *sphere);
+void  assign_ellipsoid_function(t_obj *ellipsoid);
+void  assign_hyperboloid_function(t_obj *hyperboloid);
+void  assign_horse_saddle_function(t_obj *horse_saddle);
+void  assign_monkey_saddle_function(t_obj *monkey_saddle);
+void  assign_cyclide_function(t_obj *cyclide);
+void  assign_fermat_function(t_obj *fermat);
+void  assign_moebius_function(t_obj *moebius);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
 t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t_data *data, int depth, int sp_id);
@@ -842,6 +862,7 @@ int			create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
+void    ft_throw_error(char *message, ...);
 
 int		check_lights_cam(t_data *data);
 int		check_skybox(t_data *data);

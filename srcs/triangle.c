@@ -191,6 +191,18 @@ int	ray_intersect_triangle(t_leq l, t_obj *triangle, t_dist dist, int sp_id)
 	return (0);
 }
 
+void  assign_triangle_function(t_obj *triangle)
+{
+	triangle->obj_type = OBJ_TRIANGLE;
+	triangle->check_inside = &check_inside_triangle;
+	triangle->ray_intersect = &ray_intersect_triangle;
+	triangle->get_normal_inter = &get_normal_intersect_triangle;
+	triangle->get_origin = &get_origin_triangle;
+	triangle->move = &move_triangle;
+	triangle->rotate = &rotate_triangle;
+	triangle->get_text_coordinate = &get_text_coordinate_triangle;
+}
+
 void	generate_new_triangle(t_data *data)
 {
 	t_obj		*triangle;
@@ -223,15 +235,7 @@ void	generate_new_triangle(t_data *data)
 	// param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
 
 	triangle->obj_param = param;
-	triangle->obj_type = OBJ_TRIANGLE;
-	triangle->check_inside = &check_inside_triangle;
-	triangle->ray_intersect = &ray_intersect_triangle;
-	triangle->get_normal_inter = &get_normal_intersect_triangle;
-	triangle->get_origin = &get_origin_triangle;
-	triangle->move = &move_triangle;
-	triangle->rotate = &rotate_triangle;
-	triangle->get_text_coordinate = &get_text_coordinate_triangle;
-	triangle->get_text_color = &get_uni_color;
+	assign_triangle_function(triangle);
 	triangle->text = generate_random_texture(triangle);
 	//triangle->get_bump_mapping = NULL;
 	set_bump_own(triangle);

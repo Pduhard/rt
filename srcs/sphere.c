@@ -125,6 +125,18 @@ int	ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id)
 	return (check);
 }
 
+void  assign_sphere_function(t_obj *sphere)
+{
+	sphere->obj_type = OBJ_SPHERE;
+	sphere->check_inside = &check_inside_sphere;
+	sphere->ray_intersect = &ray_intersect_sphere;
+	sphere->get_normal_inter = &get_normal_intersect_sphere;
+	sphere->get_origin = &get_origin_sphere;
+	sphere->move = &move_sphere;
+	sphere->rotate = &rotate_sphere;
+	sphere->get_text_coordinate = &get_text_coordinate_sphere;
+}
+
 void	generate_new_sphere(t_data *data)
 {
 	t_obj		*sphere;
@@ -142,17 +154,9 @@ void	generate_new_sphere(t_data *data)
 	param->origin.val[1] = data->camera->origin.val[1] + dir.val[1] * param->radius * 2;
 	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * param->radius * 2;
 	sphere->obj_param = param;
-	sphere->obj_type = OBJ_SPHERE;
-	sphere->check_inside = &check_inside_sphere;
-	sphere->ray_intersect = &ray_intersect_sphere;
-	sphere->get_normal_inter = &get_normal_intersect_sphere;
-	sphere->get_origin = &get_origin_sphere;
-	sphere->move = &move_sphere;
-	sphere->rotate = &rotate_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;
-	sphere->get_text_color = &get_uni_color;
+	assign_sphere_function(sphere);
+	// sphere->get_text_color = &get_uni_color;
 	sphere->text = generate_random_texture(sphere);
-	//sphere->get_bump_mapping = NULL;
 	set_bump_own(sphere);
 	//texture needed
 	add_object(sphere, data);
