@@ -8,7 +8,7 @@ FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 
 INCLUDES	=	rt.h \
-						key_linux.h
+				key_linux.h\
 
 SRC_PATH	=	./srcs/
 BIN_PATH	=	./bins/
