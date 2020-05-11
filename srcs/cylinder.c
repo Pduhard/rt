@@ -18,31 +18,20 @@
 int		check_inside_cylinder(t_3vecf inter_point, t_obj *cylinder)
 {
 	t_cylinder	*param;
+	t_3vecf			tp;
+	t_3vecf			cp;
 
 	param = (t_cylinder *)cylinder->obj_param;
-	if (get_length_3vecf(product_3vecf(sub_3vecf(inter_point, param->tip), sub_3vecf(inter_point, param->center))) / get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
+	tp = sub_3vecf(inter_point, param->tip);
+	cp = sub_3vecf(inter_point, param->center);
+	if (get_length_3vecf(product_3vecf(tp, cp))
+		/ get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
 		return (0);
 	return (1);
 }
 
-void	generate_new_cylinder(t_data *data)
+void  assign_cylinder_function(t_obj *cylinder)
 {
-	t_obj		*cylinder;
-	t_cylinder		*param;
-	t_3vecf		dir;
-
-	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0, data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-	normalize_3vecf(&dir);
-	if (!(cylinder = ft_memalloc(sizeof(t_obj))))
-		return ;
-	if (!(param = ft_memalloc(sizeof(t_cylinder))))
-		return ;
-	param->radius = get_random_number(time(NULL)) * 1.5;
-	param->tip.val[0] = data->camera->origin.val[0] + dir.val[0] * 2;
-	param->tip.val[1] = data->camera->origin.val[1] + dir.val[1] * 2;
-	param->tip.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
-	param->center = add_3vecf(assign_3vecf(0, 1, 0), param->tip);
-	cylinder->obj_param = param;
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->check_inside = &check_inside_cylinder;
 	cylinder->ray_intersect = &ray_intersect_cylinder;
@@ -51,50 +40,48 @@ void	generate_new_cylinder(t_data *data)
 	cylinder->move = &move_cylinder;
 	cylinder->rotate = &rotate_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	cylinder->get_text_color = &get_uni_color;
-	cylinder->text = generate_random_texture();
+	// cylinder->get_text_color = &get_uni_color;
+}
+
+void	generate_new_cylinder(t_data *data)
+{
+	t_obj		*cylinder;
+	t_cylinder		*param;
+	t_3vecf		dir;
+
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	if (!(cylinder = ft_memalloc(sizeof(t_obj))))
+		return ;
+	if (!(param = ft_memalloc(sizeof(t_cylinder))))
+		return ;
+	param->radius = get_random_number(time(NULL)) * 1.5;
+	param->tip = add_3vecf(data->camera->origin, product_c3vecf(dir, 2));
+	param->center = add_3vecf(assign_3vecf(0, 1, 0), param->tip);
+	cylinder->obj_param = param;
+	assign_cylinder_function(cylinder);
+	cylinder->text = generate_random_texture(cylinder);
 	set_bump_own(cylinder);
 	add_object(cylinder, data);
 	data->new_obj = 1;
 }
 
-t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder)
+t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter,
+	t_obj *cylinder)
 {
 	t_2vecf	text_coord;
 	t_3vecf	cp;
 	t_3vecf	cyl_axis[3];
 	t_cylinder	*param;
 
-	cyl_axis[0] = assign_3vecf(0, 0, 0);
 	param = (t_cylinder *)cylinder->obj_param;
+	get_uv_axis(cyl_axis, sub_3vecf(param->tip, param->center));
 	cp = sub_3vecf(inter_point, param->center);
-	cyl_axis[1] = sub_3vecf(param->tip, param->center);
-	normalize_3vecf(&(cyl_axis[1]));
-	if (cyl_axis[1].val[0] != 0)
-	{
-		cyl_axis[0] = assign_3vecf(0, 1, 1);
-		cyl_axis[0].val[0] = (-cyl_axis[1].val[1] - cyl_axis[1].val[2]) / cyl_axis[1].val[0];
-	}
-	else if (cyl_axis[1].val[1] != 0)
-	{
-		cyl_axis[0] = assign_3vecf(1, 0, 1);
-		cyl_axis[0].val[1] = (-cyl_axis[1].val[0] - cyl_axis[1].val[2]) / cyl_axis[1].val[1];
-	}
-	else if (cyl_axis[1].val[2] != 0)
-	{
-		cyl_axis[0] = assign_3vecf(1, 1, 0);
-		cyl_axis[0].val[2] = (-cyl_axis[1].val[0] - cyl_axis[1].val[1]) / cyl_axis[1].val[2];
-	}
-	normalize_3vecf(&(cyl_axis[0]));
-	cyl_axis[2] = product_3vecf(cyl_axis[0], cyl_axis[1]);
-	text_coord.val[0] = (1 - dot_product_3vecf(cyl_axis[1], cp)) / ((2 * M_PI) * param->radius);
-	//	if (dot_product_3vecf(cyl_axis[0], cp) < 0 && dot_product_3vecf(cyl_axis[2], cp) < 0)
-	text_coord.val[1] = (atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp))) / (2 * M_PI);
-	//	else
-	//		text_coord.val[1] = 1 - (1 - atan2(dot_product_3vecf(cyl_axis[0], cp), dot_product_3vecf(cyl_axis[2], cp))) / (2 * M_PI);
-	//	printf("%f %f\n", text_coord.val[0], text_coord.val[1]);
-	//	inter_point.val[2], inter_point.val[0]);
-	//text_coord.val[1] = inter_point.val[1] * M_PI;
+	text_coord.val[0] = (1 - dot_product_3vecf(cyl_axis[1], cp))
+		/ ((2 * M_PI) * param->radius);
+	text_coord.val[1] = (atan2(dot_product_3vecf(cyl_axis[0], cp),
+		dot_product_3vecf(cyl_axis[2], cp))) / (2 * M_PI);
 	return (text_coord);
 	(void)normal_inter;
 }
@@ -143,162 +130,82 @@ void   rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
 	}
 }
 
-t_3vecf	get_origin_cylinder(t_obj *cylinder)
+t_3vecf	get_origin_cylinder(t_obj *cylinder) // a degager
 {
 	return (((t_cylinder *)cylinder->obj_param)->center);
 }
 
-t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinder, int sp_id)
+t_3vecf get_cylinder_origin(t_obj *cylinder, t_cylinder *cylinder_param, int sp_id)
 {
-	//	double	intersect;
-	//t_3vecf	h;
+	if (sp_id)
+		return (move_3vecf(cylinder_param->center, cylinder->motions, sp_id));
+	return (cylinder_param->center);
+}
 
-	t_cylinder	*cylinder_param;
-	//	t_3vecf	hp;
+t_3vecf get_cylinder_tip(t_obj *cylinder, t_cylinder *cylinder_param, int sp_id)
+{
+	if (sp_id)
+		return (move_3vecf(cylinder_param->tip, cylinder->motions, sp_id));
+	return (cylinder_param->tip);
+}
+
+t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point,
+		t_obj *cylinder, int sp_id)
+{
 	t_3vecf	ch;
-	t_3vecf	cp;
 	t_3vecf	inter_proj;
 	double	length_ch;
 	double	step_inter_proj;
 	t_3vecf	cylinder_origin;
-	t_3vecf	cylinder_tip;
 
-
-	//return (assign_3vecf(1, 0, 0));
-	cylinder_param = (t_cylinder *)cylinder->obj_param;
-	cylinder_origin = sp_id ? move_3vecf(cylinder_param->center, cylinder->motions, sp_id) : cylinder_param->center;
-	cylinder_tip = sp_id ? move_3vecf(cylinder_param->tip, cylinder->motions, sp_id) : cylinder_param->tip;
-	//	hp = sub_3vecf(inter_point, cylinder_param->tip);
-	cp = sub_3vecf(inter_point, cylinder_origin);
-	ch = sub_3vecf(cylinder_tip, cylinder_origin);
+	cylinder_origin = get_cylinder_origin(cylinder, cylinder->obj_param, sp_id);
+	ch = sub_3vecf(get_cylinder_tip(cylinder, cylinder->obj_param, sp_id),
+		cylinder_origin);
 	length_ch = get_length_3vecf(ch);
-	step_inter_proj = dot_product_3vecf(ch, cp) / (length_ch * length_ch);
-	inter_proj = assign_3vecf(	cylinder_origin.val[0] + ch.val[0] * step_inter_proj,
-			cylinder_origin.val[1] + ch.val[1] * step_inter_proj,
-			cylinder_origin.val[2] + ch.val[2] * step_inter_proj);
-
+	length_ch *= length_ch;
+	step_inter_proj = dot_product_3vecf(ch,
+			sub_3vecf(inter_point, cylinder_origin)) / length_ch;
+	inter_proj = add_3vecf(cylinder_origin, product_c3vecf(ch, step_inter_proj));
 	return (sub_3vecf(inter_proj, inter_point));
+}
+
+t_3vecf get_cylinder_quadratic_cst(t_cylinder *cylinder_param, t_3vecf cylinder_origin,
+	t_3vecf cylinder_tip, t_leq l)
+{
+	t_3vecf	h;
+	double	dp_dh;
+	double	dp_wh;
+	t_3vecf	w;
+	t_3vecf cst;
+
+	h = sub_3vecf(cylinder_origin, cylinder_tip);
+	normalize_3vecf(&h);
+	w = sub_3vecf(l.orig, cylinder_origin);
+	dp_dh = dot_product_3vecf(l.dir, h);
+	dp_wh = dot_product_3vecf(w, h);
+	cst.val[0] = dot_product_3vecf(l.dir, l.dir) - dp_dh * dp_dh;
+	cst.val[1] = 2 * (dot_product_3vecf(l.dir, w) - dp_dh * dp_wh);
+	cst.val[2] = dot_product_3vecf(w, w) - dp_wh * dp_wh
+						 - cylinder_param->radius * cylinder_param->radius;
+	return (cst);
 }
 
 int ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id)
 {
-	t_3vecf	h;
-	t_3vecf	norm_h;
-	//	double	h_length;
-	double	a;
-	double	b;
-	double	c;
-	int		check = 0;
+	t_3vecf 		cst;
+	int					check;
 	t_cylinder	*cylinder_param;
-	t_3vecf	cylinder_origin;
-	t_3vecf	cylinder_tip;
+	t_2vecf			roots;
 
+ 	check = 0;
 	cylinder_param = (t_cylinder *)cylinder->obj_param;
-	cylinder_origin = sp_id ? move_3vecf(cylinder_param->center, cylinder->motions, sp_id) : cylinder_param->center;
-	cylinder_tip = sp_id ? move_3vecf(cylinder_param->tip, cylinder->motions, sp_id) : cylinder_param->tip;
-	h = sub_3vecf(cylinder_origin, cylinder_tip);
-	norm_h = h;
-	normalize_3vecf(&norm_h);
-	//	h_length = get_lenght_3vecf(h);
-
-	(void)sp_id;
-	double	dp_dir_norm_h;
-	double	dp_w_norm_h;
-	t_3vecf	w;
-
-	w = sub_3vecf(l.orig, cylinder_origin);
-	dp_dir_norm_h = dot_product_3vecf(l.dir, norm_h);
-	dp_w_norm_h = dot_product_3vecf(w, norm_h);
-
-	a = dot_product_3vecf(l.dir, l.dir) - dp_dir_norm_h * dp_dir_norm_h;
-	b = 2 * (dot_product_3vecf(l.dir, w) - dp_dir_norm_h * dp_w_norm_h);
-	c = dot_product_3vecf(w, w) - dp_w_norm_h * dp_w_norm_h - cylinder_param->radius * cylinder_param->radius;
-
-	double	delta;
-	delta = b * b - 4 * a * c;
-	t_2vecf	hit_point;
-
-	if (delta > 0)
-	{
-		hit_point.val[0] = (-b + sqrtf(delta)) / (2 * a);
-		hit_point.val[1] = (-b - sqrtf(delta)) / (2 * a);
-		if (hit_point.val[0] < *(dist.dist) && hit_point.val[0] > dist.min_dist && hit_point.val[0] < dist.max_dist)
-		{
-			check = 1;
-			*(dist.dist) = hit_point.val[0];
-		}
-		if (hit_point.val[1] < *(dist.dist) && hit_point.val[1] > dist.min_dist && hit_point.val[1] < dist.max_dist)
-		{
-			check = 1;
-			*(dist.dist) = hit_point.val[1];
-		}
-		return (check);
-	}
-	return (0);
+	cst = get_cylinder_quadratic_cst(
+		cylinder_param,
+		get_cylinder_origin(cylinder, cylinder->obj_param, sp_id),
+		get_cylinder_tip(cylinder, cylinder->obj_param, sp_id),
+		l);
+	roots = solve_quadratic(cst.val[0], cst.val[1], cst.val[2]);
+	check |= is_closest_intersect(dist, roots.val[0]);
+	check |= is_closest_intersect(dist, roots.val[1]);
+	return (check);
 }
-
-/*int			parse_cylinder(char *line, t_data *data)
-  {
-  int			i;
-  t_obj		*cylinder;
-  t_cylinder	*cylinder_param;
-
-  if (!(cylinder = malloc(sizeof(t_obj))) || !(cylinder_param = malloc(sizeof(t_cylinder))))
-  return (0);
-  i = 8;
-  while (ft_isspace(line[i]))
-  i++;
-  if (line[i] != '(' || (i = parse_3vecf(line, i, &cylinder_param->center)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-  while (ft_isspace(line[i]))
-  ++i;
-  if (line[i] != '(' || (i = parse_3vecf(line, i, &cylinder_param->tip)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-  while (ft_isspace(line[i]))
-  ++i;
-  if (line[i] != '(' || (i = parse_double(line, i, &cylinder_param->radius)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-  while (ft_isspace(line[i]))
-  ++i;
-  if (line[i] != '(' || (i = parse_texture(line, i, cylinder)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-  while (ft_isspace(line[i]))
-  ++i;
-  if (line[i] != '(' || (i = parse_double(line, i, &cylinder->reflection)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-  while (ft_isspace(line[i]))
-  ++i;
-  if (line[i] != '(' || (i = parse_double(line, i, &cylinder->refraction)) == -1)
-  {
-  ft_printf("Syntax error: cylinder syntax: cylinder(center)(tip)(radius)(reflection)\n");
-  return (0);
-  }
-
-  cylinder->obj_param = cylinder_param;
-  cylinder->obj_type = OBJ_CYLINDER;
-  cylinder->ray_intersect = &ray_intersect_cylinder;
-  cylinder->get_normal_inter = &get_normal_intersect_cylinder;
-  cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-  if (data->objs)
-  cylinder->next = data->objs;
-  else
-  cylinder->next = NULL;
-  data->objs = cylinder;
-  return (1);
-  }
-  */

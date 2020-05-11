@@ -12,331 +12,194 @@
 /* ************************************************************************** */
 
 #include "rt.h"
-/*
-void	loop_manage_speed(t_data *data)
+
+// void	translate_and_rotate(t_data *data)
+// {
+// 	t_obj *obj;
+//
+// 	obj = data->objs;
+// 	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(3));
+// 	while (obj)
+// 	{
+// 		t_sphere *param = (t_sphere *)obj->obj_param;
+// 		param->origin = mult_3vecf_33matf(param->origin, data->rot_mat[1]);
+// 		obj = obj->next;
+// 	}
+// }
+
+static void init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
 {
-	if (data->params.p_speed)
-		data->speed += 0.01;
-	else if (data->params.m_speed)
-		data->speed -= 0.01;
-	if (data->speed < 0.01)
-		data->speed = 0.01;
-	if (data->params.p_cam_speed)
-		data->cam_speed += 0.1;
-	else if (data->params.m_cam_speed)
-		data->cam_speed -= 0.1;
-	if (data->cam_speed < 0.1)
-		data->cam_speed = 0.1;
+	int				deg_y;
+	int				deg_x;
+	t_3vecf		tm;
+
+	deg_x = 0;
+	deg_y = 0;
+	if ((data->hooks & ARR_LEFT_HOOK))
+		deg_y = -5;
+	else if ((data->hooks & ARR_RIGHT_HOOK))
+		deg_y = 5;
+	if ((data->hooks & ARR_DOWN_HOOK))
+		deg_x = 5;
+	else if ((data->hooks & ARR_UP_HOOK))
+		deg_x = -5;
+	rot_mat[1] = init_rotation_matrix_y(degree_to_radian(deg_y));
+	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
+	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(deg_x));
 }
 
-void	loop_manage_render(t_data *data)
+void manage_obj_rotation(t_data *data, int *ret)
 {
-	if (get_magnitude(sub_points(data->cam.from, set_new_point(0, 0, 0)))
-		< (data->line_size + data->line_nbr) / 2)
-		data->fill = 0;
-	data->fun_factor += data->params.fun_on ? 0.1 : -data->fun_factor + 1.0;
-}
-*/
+	t_33matf	rot_mat[2];
+	int				i;
 
-void	translate_and_rotate(t_data *data)
-{
-	t_obj *obj;
-
-	obj = data->objs;
-	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(3));
-	while (obj)
+	if (data->hooks & ((ARR_LEFT_HOOK | ARR_RIGHT_HOOK
+		| ARR_DOWN_HOOK | ARR_UP_HOOK)))
+		*ret = 1;
+	init_obj_rot_mat(data, rot_mat);
+	if (data->selected_obj->composed_w)
 	{
-		t_sphere *param = (t_sphere *)obj->obj_param;
-		param->origin = mult_3vecf_33matf(param->origin, data->rot_mat[1]);
-		obj = obj->next;
+		i = -1;
+		while (data->selected_obj->composed_w[++i])
+			data->selected_obj->composed_w[i]->rotate(
+				data->selected_obj->composed_w[i],
+				data->selected_obj->composed_w[i]->composed_origin,
+				rot_mat);
 	}
+	else
+		data->selected_obj->rotate(
+			data->selected_obj,
+			data->selected_obj->get_origin(data->selected_obj),
+			rot_mat);
+}
+
+void manage_cam_rotation(t_data *data, int *ret)
+{
+	double radian;
+
+	if (data->hooks & (ARR_LEFT_HOOK | ARR_RIGHT_HOOK))
+	{
+		if (data->hooks & ARR_LEFT_HOOK)
+			data->camera->rotation.val[1] -= 3;
+		if (data->hooks & ARR_RIGHT_HOOK)
+			data->camera->rotation.val[1] += 3;
+		radian = degree_to_radian(data->camera->rotation.val[1]);
+		data->rot_mat[1] = init_rotation_matrix_y(radian);
+		*ret = 1;
+	}
+	if (data->hooks & (ARR_UP_HOOK | ARR_DOWN_HOOK))
+	{
+		if (data->hooks & ARR_UP_HOOK && data->camera->rotation.val[0] < 90)
+			data->camera->rotation.val[0] += 3;
+		if (data->hooks & ARR_DOWN_HOOK && data->camera->rotation.val[0] > -90)
+			data->camera->rotation.val[0] -= 3;
+		*ret = 1;
+	}
+}
+
+void obj_move(t_obj *obj, int way, t_3vecf dir)
+{
+	int i;
+
+ 	i = -1;
+	if (obj->composed_w)
+	{
+		while (obj->composed_w[++i])
+		{
+			obj->composed_w[i]->move(obj->composed_w[i], dir, way);
+			if (way == 1)
+				obj->composed_w[i]->composed_origin = add_3vecf(obj->composed_w[i]->composed_origin, dir);
+			else
+				obj->composed_w[i]->composed_origin = sub_3vecf(obj->composed_w[i]->composed_origin, dir);
+		}
+	}
+	else
+		obj->move(obj, dir, way);
+}
+
+void manage_obj_move(t_data *data, int *ret)
+{
+	t_3vecf dir;
+
+	if ((data->hooks & (W_HOOK | S_HOOK)) && (*ret = 1))
+	{
+		 dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
+		if (data->hooks & W_HOOK)
+			obj_move(data->selected_obj, 1, dir);
+		if (data->hooks & S_HOOK)
+			obj_move(data->selected_obj, -1, dir);
+	}
+	if ((data->hooks & (A_HOOK | D_HOOK)) && (*ret = 1))
+	{
+		dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
+		if (data->hooks & A_HOOK)
+			obj_move(data->selected_obj, -1, dir);
+		if (data->hooks & D_HOOK)
+			obj_move(data->selected_obj, 1, dir);
+	}
+	if ((data->hooks & SPACE_HOOK) && (*ret = 1))
+		obj_move(data->selected_obj, -1, assign_3vecf(0, 0.2, 0));
+	if ((data->hooks & SHIFT_HOOK) && (*ret = 1))
+		obj_move(data->selected_obj, 1, assign_3vecf(0, 0.2, 0));
+}
+
+void manage_cam_move(t_data *data, int *ret)
+{
+	t_3vecf dir;
+
+	if ((data->hooks & (W_HOOK | S_HOOK)) && (*ret = 1))
+	{
+		dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
+		if ((data->hooks & W_HOOK))
+			data->camera->origin = add_3vecf(data->camera->origin, dir);
+		if ((data->hooks & S_HOOK))
+			data->camera->origin = sub_3vecf(data->camera->origin, dir);
+	}
+	if ((data->hooks & (A_HOOK | D_HOOK)) && (*ret = 1))
+	{
+		dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
+		if (data->hooks & A_HOOK)
+			data->camera->origin = sub_3vecf(data->camera->origin, dir);
+		if (data->hooks & D_HOOK)
+			data->camera->origin = add_3vecf(data->camera->origin, dir);
+	}
+	if ((data->hooks & SPACE_HOOK) && (*ret = 1))
+		data->camera->origin.val[1] -= 0.2;
+	if ((data->hooks & SHIFT_HOOK) && (*ret = 1))
+		data->camera->origin.val[1] += 0.2;
 }
 
 int	loop_manage_cam(t_data *data)
 {
-//	if (data->hooks & F_HOOK)
-//	{
-	t_33matf	rot_mat[2];
-	int	ret = 0;
-	if (data->selected_obj && data->selected_obj->rotate)
-	{
-		if (data->hooks & ((ARR_LEFT_HOOK | ARR_RIGHT_HOOK | ARR_DOWN_HOOK | ARR_UP_HOOK)))
-			ret = 1;
-		rot_mat[1]	= init_rotation_matrix_y(degree_to_radian(data->hooks & ARR_LEFT_HOOK ? -5 : (data->hooks & ARR_RIGHT_HOOK ? 5 : 0)));
-	t_3vecf	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->hooks & ARR_DOWN_HOOK ? 5 : (data->hooks & ARR_UP_HOOK ? -5 : 0)));
-		if (data->selected_obj->composed_w)
-		{
-			int i = -1;
-			while (data->selected_obj->composed_w[++i])
-				data->selected_obj->composed_w[i]->rotate(data->selected_obj->composed_w[i], data->selected_obj->composed_w[i]->composed_origin, rot_mat);
-		}
-		else
-			data->selected_obj->rotate(data->selected_obj, data->selected_obj->get_origin(data->selected_obj), rot_mat);
-	}
-	if (data->hooks & (ARR_LEFT_HOOK | ARR_RIGHT_HOOK))
-	{
-		/*double	add_y = 4 * data->mouse_x;
-		if (add_y > 1 || add_y < -1)
-		{*/
-	//	if (data->selected_obj && data->selected_obj->rotate)
-	//		data->selected_obj->rotate(data->selected_obj->get_origin(data->selected_obj), rot_mat[]);
-		if (!data->selected_obj)
-		{
-			if (data->hooks & ARR_LEFT_HOOK)
-				data->camera->rotation.val[1] -= 3;
-			if (data->hooks & ARR_RIGHT_HOOK)
-				data->camera->rotation.val[1] += 3;
-		//4 * data->mouse_x;
-			data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
-			ret = 1;
-		}
-	}
-	if (data->hooks & (ARR_UP_HOOK | ARR_DOWN_HOOK))
-	{
-		/*double	add_y = 4 * data->mouse_x;
-		if (add_y > 1 || add_y < -1)
-		{*/
-		if (!data->selected_obj)
-		{
-			if (data->hooks & ARR_UP_HOOK && data->camera->rotation.val[0] < 90)
-				data->camera->rotation.val[0] += 3;
-			if (data->hooks & ARR_DOWN_HOOK && data->camera->rotation.val[0] > -90)
-				data->camera->rotation.val[0] -= 3;
-			ret = 1;
-		}
-		//4 * data->mouse_x;
-	//	data->rot_mat[0] = init_rotation_matrix_vec(mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]), degree_to_radian(data->camera->rotation.val[0]));
-	}
-//	t_3vecf tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-//	printf("initial : 1, 0, 0 => after rot y: %f %f %f\n", tm.val[0], tm.val[1], tm.val[2]);
-	/*	double	add_x = -4 * data->mouse_y;
-		if (add_x > 1 || add_x < -1)
-		{
-			data->camera->rotation.val[0] += add_x;
-		//4 * data->mouse_x;
-			data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
-		}
-*///	if (data->hooks & G_HOOK)
-//	{
-		//data->camera->rotation.val[1] -= 2;
-		//data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
-//	}
-	if (data->hooks & (W_HOOK | S_HOOK))
-	{
-		t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
-//		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & W_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, 1);
-						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, dir, 1);
-			}
-			else
-			{
-				data->camera->origin.val[0] += dir.val[0];
-				data->camera->origin.val[1] += dir.val[1];
-				data->camera->origin.val[2] += dir.val[2];
-			}
-			ret = 1;
-		}
-		if (data->hooks & S_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, -1);
-						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, dir, -1);
-			}
-			else
-			{
-				data->camera->origin.val[0] -= dir.val[0];
-				data->camera->origin.val[1] -= dir.val[1];
-				data->camera->origin.val[2] -= dir.val[2];
-			}
-			ret = 1;
-		}
+	int	ret;
 
-		//	data->camera->origin.val[2] -= 0.2;
-	}
-	if (data->hooks & (A_HOOK | D_HOOK))
+ 	ret = 0;
+	if (data->selected_obj)
 	{
-		t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
-//		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & A_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, -1);
-						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, dir, -1);
-			}
-			else
-			{
-				data->camera->origin.val[0] -= dir.val[0];
-				data->camera->origin.val[1] -= dir.val[1];
-				data->camera->origin.val[2] -= dir.val[2];
-			}
-		}
-
-		//	data->camera->origin.val[0] -= 0.2;
-		if (data->hooks & D_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], dir, 1);
-						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, dir);
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, dir, 1);
-			}
-			else
-			{
-				data->camera->origin.val[0] += dir.val[0];
-				data->camera->origin.val[1] += dir.val[1];
-				data->camera->origin.val[2] += dir.val[2];
-			}
-		}
-		ret = 1;
-
-		//	data->camera->origin.val[0] += 0.2;
+		if (data->selected_obj->rotate)
+			manage_obj_rotation(data, &ret);
+		manage_obj_move(data, &ret);
 	}
-	//	t_3vecf dir = mult_3vecf_33matf(assign_3vecf(0.2, 0, 0), data->rot_mat[1]);
-//		printf("%f %f %f\n", dir.val[0], dir.val[1], dir.val[2]);
-		if (data->hooks & SPACE_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], assign_3vecf(0, 0.2, 0), -1);
-						data->selected_obj->composed_w[i]->composed_origin = sub_3vecf(data->selected_obj->composed_w[i]->composed_origin, assign_3vecf(0, 0.2, 0));
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), -1);
-			}
-			else
-				data->camera->origin.val[1] -= 0.2;
-			ret = 1;
-		}
-		if (data->hooks & SHIFT_HOOK)
-		{
-			if (data->selected_obj)
-			{
-				if (data->selected_obj->composed_w)
-				{
-					int i = -1;
-					while (data->selected_obj->composed_w[++i])
-					{
-						data->selected_obj->composed_w[i]->move(data->selected_obj->composed_w[i], assign_3vecf(0, 0.2, 0), 1);
-						data->selected_obj->composed_w[i]->composed_origin = add_3vecf(data->selected_obj->composed_w[i]->composed_origin, assign_3vecf(0, 0.2, 0));
-					}
-				}
-				else
-					data->selected_obj->move(data->selected_obj, assign_3vecf(0, 0.2, 0), 1);
-			}
-			else
-				data->camera->origin.val[1] += 0.2;
-			ret = 1;
-		}
-/*		{
-			data->camera->origin.val[0] -= dir.val[0];
-			dir.val[1];
-			data->camera->origin.val[2] -= dir.val[2];
-		}
-*/
-		//	data->camera->origin.val[0] -= 0.2;
-	/*	if (data->hooks & D_HOOK)
-		{
-			data->camera->origin.val[0] += dir.val[0];
-			data->camera->origin.val[1] += dir.val[1];
-			data->camera->origin.val[2] += dir.val[2];
-		}
-*/
-		//	data->camera->origin.val[0] += 0.2;
-//		translate_and_rotate(data);
-		return (ret);
+	else
+	{
+		manage_cam_rotation(data, &ret);
+		manage_cam_move(data, &ret);
+	}
+	return (ret);
 }
-/*
-void	loop_manage_rot_matrix(t_data *data)
-{
-	if (data->params.p_rotcam_z && !data->params.m_rotcam_z)
-		data->mats.teta_z += data->speed;
-	else if (data->params.m_rotcam_z && !data->params.p_rotcam_z)
-		data->mats.teta_z -= data->speed;
-	if (data->params.p_rotcam_x && !data->params.m_rotcam_x)
-		data->mats.teta_x += data->speed;
-	else if (data->params.m_rotcam_x && !data->params.p_rotcam_x)
-		data->mats.teta_x -= data->speed;
-	free_matrix(&data->mats.rot_x);
-	free_matrix(&data->mats.rot_z);
-	free_matrix(&data->mats.world_mat);
-	free_matrix(&data->mats.proj_mat);
-	data->mats.rot_x = get_rot_x(data->mats.teta_x);
-	data->mats.rot_z = get_rot_z(data->mats.teta_z);
-	data->mats.world_mat = get_world_matrix(data->cam.from, data);
-	if (data->proj == PERSP)
-		data->mats.proj_mat = get_projection_matrix(data->cam.fov,
-			data->cam.near, data->cam.far);
-	else if (data->proj == ORTO)
-		data->mats.proj_mat = get_ortho_matrix(data);
-}
-*/
-// extern double i;
-int		print_loop_image(void *param)
+
+t_data	*get_curr_scene(t_data **data_addr)
 {
 	t_data *data;
-	// int    first_loop;
-	t_data **data_addr;
-	t_mlx	*mlx;
-	int	frame_start;
-	 printf("ah\n");
-//	unsigned int 	frame_start;
-	int		rendering = 1;
-	frame_start = SDL_GetTicks();
-	data_addr = (t_data **)param;
+	t_mlx		*mlx;
+
 	if ((*data_addr)->to_next && (*data_addr)->next)
 	{
 		(*data_addr)->to_next = 0;
-		*data_addr = (*data_addr)->next;
-		data = *data_addr;
-		data->aa_adapt = MIN_ANTI_AL;
+		data = (*data_addr)->next;
+		data->hooks = (*data_addr)->hooks;
+		*data_addr = data;
+		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
 		mlx = data->mlx;
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 		mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
@@ -347,62 +210,52 @@ int		print_loop_image(void *param)
 		mlx_hook(data->mlx->win_ptr, 3, 0, key_release, (void *)data);
 		mlx_hook(data->mlx->win_ptr, 4, 0, mouse_hook, (void *)data);
 		mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross, (void *)data);
-
+		return(data);
 	}
-	else
-		data = *data_addr;
-	data->f += 0.01;
+	return (*data_addr);
+}
 
-//	printf("%x\n", data->hooks);
-//	loop_manage_speed(data);
-//	loop_manage_render(data);
-//	printf("eqwfwef\n");
-
-
-	if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && data->first_loop && !(create_photon_map(data)))
+void  check_photon_map(t_data *data)
+{
+	if ((((data->caustics_gi && !data->caustic_map)
+		|| (data->indirect_gi && !data->indirect_map)))
+			&& data->first_loop && !(create_photon_map(data)))
 	{
-		//freeeeeee
-		printf("PB parsing global illu\n");
+		ft_fdprintf(2, "Internal error: Global Illumination\n");
+		free_all(data);
 		exit(0);
 	}
+}
 
+int   check_for_scene_change(t_data *data)
+{
+	int rendering;
 
+	rendering = 1;
 	if (loop_manage_cam(data) || data->new_obj || data->first_loop == 1)
-		data->aa_adapt = MIN_ANTI_AL;
-	else if (!is_null(data->aa_adapt - MAX_ANTI_AL))
-		data->aa_adapt *= 2;
+		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
+	else if (data->aa_adapt < NO_AA && QUALITY != Q_VERY_LOW)
+		data->aa_adapt = NO_AA;
+	else if (data->aa_adapt < MAX_AA && QUALITY == Q_HIGH)
+		data->aa_adapt = MAX_AA;
 	else
 		rendering = 0;
-	//if ((((data->caustics_gi && !data->caustic_map) || (data->indirect_gi && !data->indirect_map))) && !data->first_loop)
-	data->first_loop++;
-//	printf("salut\n");
-//	loop_manage_rot_matrix(data);
-//	clock_t	start;
-//	clock_t	end;
+	return (rendering);
+}
 
-//	mlx_clear_window(data->mlx->mlx_ptr, data->mlx->win_ptr);
-//	data->mlx->img_ptr = mlx_new_image(data->mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-//	data->mlx->img_str = (int *)mlx_get_data_addr(data->mlx->img_ptr,
-//			&(data->mlx->bpp), &(data->mlx->s_l), &(data->mlx->endian));
-//	display_points(data->pix_map, data->map, data);
-//	link_pixels(data->pix_map, data);
-//	start = clock();
-	if (rendering)
+int		print_loop_image(void *param)
+{
+	t_data	*data;
+	int			rendering;
+
+ 	rendering = 1;
+	data = get_curr_scene((t_data **)param);
+	check_photon_map(data);
+	if (check_for_scene_change(data))
 		render(data);
-	// write(1, "lol\n", 4);
 	data->new_obj = 0;
-//	end = clock();
+	data->first_loop++;
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
-//	printf("%d %d, %d\n", frame_start, SDL_GetTicks(), (SDL_GetTicks() - frame_start));
-	data->delta_time += (SDL_GetTicks() - frame_start);
-	//printf("%lu \n", data->delta_time);
-	data->fps++;
-	if (data->delta_time >= 1000)
-	{
-		ft_printf("camera position : x %f y %f z %f\nfps: %d aa %f \n", data->camera->origin.val[0], data->camera->origin.val[1], data->camera->origin.val[2], data->fps, data->aa_adapt);
-		data->fps = 0;
-		data->delta_time = 0;
-	}
 	return (1);
 }

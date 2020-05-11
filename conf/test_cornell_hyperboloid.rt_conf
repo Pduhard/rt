@@ -71,7 +71,7 @@
 			<normal(0, 1, 0)>
 		>
 		<cutting
-			<cube	
+			<cube
 				<x_range (-4.52, 4.52)>
 		        <y_range (-4.02, 3.98)>
 				<z_range (-3, 8)>
@@ -95,7 +95,7 @@
 				<z_range (-3, 8.02)>
 			>
 		>
-	>	
+	>
 	<objects
 		<texture
 			<UNI

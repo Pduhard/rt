@@ -56,6 +56,16 @@ t_3vecf	sub_3vecf(t_3vecf a, t_3vecf b)
 	return (vec);
 }
 
+t_3vecf	add_c3vecf(t_3vecf a, double c)
+{
+	t_3vecf	vec;
+
+	vec.val[0] = a.val[0] + c;
+	vec.val[1] = a.val[1] + c;
+	vec.val[2] = a.val[2] + c;
+	return (vec);
+}
+
 t_3vecf	add_3vecf(t_3vecf a, t_3vecf b)
 {
 	t_3vecf	vec;
@@ -95,3 +105,17 @@ t_3vecf	product_3vecf(t_3vecf a, t_3vecf b)
 	return (vec);
 }
 
+t_3vecf	product_c3vecf(t_3vecf a, double c)
+{
+	t_3vecf	vec;
+
+	vec.val[0] = a.val[0] * c;
+	vec.val[1] = a.val[1] * c;
+	vec.val[2] = a.val[2] * c;
+	return (vec);
+}
+
+t_3vecf	neg_3vecf(t_3vecf vec)
+{
+	return ((t_3vecf){{-vec.val[0], -vec.val[1], -vec.val[2]}});
+}

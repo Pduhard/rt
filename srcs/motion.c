@@ -15,43 +15,25 @@
 
 t_3vecf		move_3vecf(t_3vecf vec, t_motion *moves, int sp_id)
 {
-//	int	spf;
-
 	if (!moves)
 		return (vec);
-//	spf = moves->spf;
 	while (moves && sp_id > 0)
 	{
-//		printf("%d %d\n", moves->spf, sp_id);
 		if (moves->spf > sp_id)
 		{
-			vec.val[0] += moves->dir.val[0] * (double)sp_id * moves->speed_fact * (double)MOTION_STEP;
-			vec.val[1] += moves->dir.val[1] * (double)sp_id * moves->speed_fact * (double)MOTION_STEP;
-			vec.val[2] += moves->dir.val[2] * (double)sp_id * moves->speed_fact * (double)MOTION_STEP;
+			vec = add_3vecf(vec, product_c3vecf(moves->dir, (double)sp_id
+					* moves->speed_fact * (double)MOTION_STEP));
 			return (vec);
 		}
 		else
 		{
-			vec.val[0] += moves->dir.val[0] * (double)moves->spf * moves->speed_fact * (double)MOTION_STEP;
-			vec.val[1] += moves->dir.val[1] * (double)moves->spf * moves->speed_fact * (double)MOTION_STEP;
-			vec.val[2] += moves->dir.val[2] * (double)moves->spf * moves->speed_fact * (double)MOTION_STEP;
+			vec = add_3vecf(vec, product_c3vecf(moves->dir, (double)moves->spf
+					* moves->speed_fact * (double)MOTION_STEP));
 			sp_id -= moves->spf;
 		}
 		moves = moves->next;
 	}
 	return (vec);
-}
-
-void		save_origin(t_obj *objs)
-{
-	while (objs)
-	{
-		if (objs->motions)
-		{
-			//objs->get_origin(objs);
-		}
-		objs = objs->next;
-	}
 }
 
 void		move_objects(t_obj *objs)
@@ -63,16 +45,6 @@ void		move_objects(t_obj *objs)
 		objs = objs->next;
 	}
 }
-
-/*void		reset_objs_position(t_obj *objs)
-{
-	while (objs)
-	{
-		if (objs->motions)
-			objs->move(objs, assign_3vecf(-objs->motions->dir.val[0], -objs->motions->dir.val[1], -objs->motions->dir.val[2]), objs->motions->speed_fact * MOTION_STEP * MOTION_SPP);
-		objs = objs->next;	
-	}
-}*/
 
 t_3vecf		motion_trace(t_3vecf orig, t_3vecf dir, t_data *data)
 {

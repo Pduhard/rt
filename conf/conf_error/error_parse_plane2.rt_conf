@@ -20,8 +20,8 @@
         >
         <plane
             <origin (0, 0, 0)>
-            <normal (0, 0, 0)>
-		<xaxis (-1, 0, 0) >
+            <normal (0, 0, 1)>
+		<xaxis (0, 0, 1) >
         >
         <cutting
             <static

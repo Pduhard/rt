@@ -39,6 +39,16 @@ t_data *init_all_scene(char **argv)
 	return (first);
 }
 
+int	is_closest_intersect(t_dist dist, double root)
+{
+	if (root < *(dist.dist) && root > dist.min_dist && root < dist.max_dist)
+	{
+		*(dist.dist) = root;
+		return (1);
+	}
+	return (0);
+}
+
 
 int			main(int argc, char **argv)
 {

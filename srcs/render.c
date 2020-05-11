@@ -36,7 +36,10 @@ int		check_inside_negative(t_3vecf orig, t_3vecf dir, double *closest_dist, t_da
 	while (negative_objs)
 	{
 		if (negative_objs->check_inside(inter_point, negative_objs))
-			return (check_cuts(orig, dir, negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
+			return (check_cuts((t_leq){orig, dir}, (t_dist){closest_dist, min_dist, max_dist}, (t_cut_fparam){negative_objs, NULL, sp_id, 1}, data) ? 1 : 0);
+		// negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
+
+		//	return (check_cuts(orig, dir, negative_objs, min_dist, max_dist, closest_dist, NULL, sp_id, data, 1) ? 1 : 0);
 		negative_objs = negative_objs->next;
 	}
 	return (0);
@@ -80,7 +83,9 @@ t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double ma
 	}
 	//	return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id));
 	if (closest_obj && closest_obj->cuts)
-		return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data, 0));
+		// return (check_cuts(orig, dir, closest_obj, min_dist, max_dist, closest_dist, objs_save, sp_id, data, 0));
+		return (check_cuts((t_leq){orig, dir}, (t_dist){closest_dist, min_dist, max_dist}, (t_cut_fparam){closest_obj, objs_save, sp_id, 0}, data));
+
 	return (closest_obj);
 	(void)data;
 }
@@ -349,7 +354,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		t_3vecf	global;
 
 	//	return (compute_global_illumination(inter_point, normal_inter, data));
-		global = compute_global_illumination(inter_point, normal_inter, data->caustic_map, MAX_CAUSTIC_RADIUS, NN_CAUSTIC_PHOTON_MAX);
+		global = compute_global_illumination(inter_point, normal_inter, data->caustic_map, NN_CAUSTIC_PHOTON_MAX);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];
@@ -359,7 +364,7 @@ t_3vecf	compute_lights(t_3vecf inter_point, t_3vecf normal_inter, t_3vecf dir, t
 		t_3vecf	global;
 
 	//	return (compute_global_illumination(inter_point, normal_inter, data));
-		global = compute_global_illumination(inter_point, normal_inter, data->indirect_map, MAX_INDIRECT_RADIUS, NN_INDIRECT_PHOTON_MAX);
+		global = compute_global_illumination(inter_point, normal_inter, data->indirect_map, NN_INDIRECT_PHOTON_MAX);
 		light_fact.val[0] += global.val[0];
 		light_fact.val[1] += global.val[1];
 		light_fact.val[2] += global.val[2];
@@ -788,7 +793,10 @@ void	*render_thread(void *param)
 				{
 					dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * aa + offset / aa, j * aa + offset % aa, (int)data->size.val[0] * aa, (int)data->size.val[1] * aa), data->rot_mat[1]), data->rot_mat[0]);
 					normalize_3vecf(&dir);
-					clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					if (!data->motion_blur)
+						clr = ray_trace(orig, dir, BIAS, MAX_VIEW, data, RAY_DEPTH, 0);
+					else
+						clr = motion_trace(orig, dir, data);
 					color.val[0] += clr.val[0];
 					color.val[1] += clr.val[1];
 					color.val[2] += clr.val[2];
@@ -811,12 +819,12 @@ void	*render_thread(void *param)
 				}
 			}
 
-			if (data->aa_adapt == MIN_ANTI_AL)
+			if (data->aa_adapt == MIN_AA)
 				j += 2;
 			else
 				++j;
 		}
-		if (data->aa_adapt == MIN_ANTI_AL)
+		if (data->aa_adapt == MIN_AA)
 			i += 2;
 		else
 			++i;

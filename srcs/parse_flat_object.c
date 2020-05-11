@@ -1,14 +1,23 @@
 #include "rt.h"
 
+int   check_cylinder_param(t_cylinder *cylinder_param, int ret)
+{
+	if (cylinder_param->radius <= 0. || is_null(cylinder_param->radius))
+		ft_fdprintf(2, "Parse error: Cylinder: radius must be greater than 0\n");
+	else if (is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip)))
+		ft_fdprintf(2, "Parse error: Cylinder: center and tip are confused (must be different)\n");
+	else if (ret != 0)
+		return (1);
+	return (0);
+}
+
 int		parse_cylinder(char **line, t_obj *cylinder)
 {
 	char		stripe;
 	int			ret;
 	t_cylinder	*cylinder_param;
 
-	stripe = 0;
-	ret = 1;
-	if (cylinder->obj_param)
+	if (!(stripe = 0) && (ret = 1) && cylinder->obj_param)
 		return (error(ALREADYOBJ, NULL));
 	if (!(cylinder_param = ft_memalloc(sizeof(t_cylinder))))
 		return (0);
@@ -24,19 +33,22 @@ int		parse_cylinder(char **line, t_obj *cylinder)
 		else if (stripe == '<')
 			return (syn_error(SERROR, CYLINDER, TIP, RADIUS));
 	}
-	if ((ft_fabs(cylinder_param->radius) == 0.f || is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip))) || ret == 0)
+	if (!check_cylinder_param(cylinder_param, ret))
 		return (syn_error(SERROR, CYLINDER, TIP, RADIUS));
 	cylinder->obj_param = cylinder_param;
-	cylinder->obj_type = OBJ_CYLINDER;
-	cylinder->check_inside = &check_inside_cylinder;
-	cylinder->ray_intersect = &ray_intersect_cylinder;
-	cylinder->get_normal_inter = &get_normal_intersect_cylinder;
-	cylinder->get_origin = &get_origin_cylinder;
-	cylinder->move = &move_cylinder;
-	cylinder->rotate = &rotate_cylinder;
-	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	//add_object(cylinder, data);
+	assign_cylinder_function(cylinder);
 	return (ret);
+}
+
+int   check_plane_param(t_plane *plane_param, int ret)
+{
+	if (is_null(get_length_3vecf(plane_param->normal)))
+		ft_fdprintf(2, "Parse error: Plane: normal vector must not be null\n");
+	else if (!is_null(dot_product_3vecf(plane_param->x2d_axis, plane_param->normal)))
+	 	ft_fdprintf(2, "Parse error: Plane: specified x2d axis vector must be orthogonal to normal vector\n");
+	else if (ret != 0)
+		return (1);
+	return (0);
 }
 
 int		parse_plane(char **line, t_obj *plane)
@@ -45,9 +57,7 @@ int		parse_plane(char **line, t_obj *plane)
 	int		ret;
 	t_plane	*plane_param;
 
-	stripe = 0;
-	ret = 1;
-	if (plane->obj_param)
+	if (!(stripe = 0) && (ret = 1) && plane->obj_param)
 		return (error(ALREADYOBJ, NULL));
 	if (!(plane_param = ft_memalloc(sizeof(t_plane))))
 		return (0);
@@ -63,19 +73,20 @@ int		parse_plane(char **line, t_obj *plane)
 		else if (stripe == '<')
 			return (syn_error(SERROR, PLANE, NORMAL, XAXIS));
 	}
-	if (is_null(plane_param->normal.val[0] * plane_param->normal.val[0] + plane_param->normal.val[1] * plane_param->normal.val[1] + plane_param->normal.val[2] * plane_param->normal.val[2]) || !is_null(dot_product_3vecf(plane_param->x2d_axis, plane_param->normal)) || ret == 0)
+	if (!check_plane_param(plane_param, ret))
 		return (syn_error(SERROR, PLANE, NORMAL, XAXIS));
 	plane->obj_param = plane_param;
-	plane->obj_type = OBJ_PLANE;
-	plane->check_inside = &check_inside_plane;
-	plane->ray_intersect = &ray_intersect_plane;
-	plane->get_normal_inter = &get_normal_intersect_plane;
-	plane->get_origin = &get_origin_plane;
-	plane->move = &move_plane;
-	plane->rotate = &rotate_plane;
-	plane->get_text_coordinate = &get_text_coordinate_plane;
-//	add_object(plane, data);
+	assign_plane_function(plane);
 	return (ret);
+}
+
+int   check_sphere_param(t_sphere *sphere_param, int ret)
+{
+	if (sphere_param->radius <= 0 || is_null(sphere_param->radius))
+		ft_fdprintf(2, "Parse error: Sphere: radius must be greater than 0\n");
+	else if (ret != 0)
+		return (1);
+	return (0);
 }
 
 int		parse_sphere(char **line, t_obj *sphere)
@@ -100,18 +111,10 @@ int		parse_sphere(char **line, t_obj *sphere)
 		else if (stripe == '<')
 			return (syn_error(SERROR, SPHERE, RADIUS, NULL));
 	}
-	if (ft_fabs(sphere_param->radius) == 0.f || ret == 0)
+	if (!check_sphere_param(sphere_param, ret))
 		return (syn_error(SERROR, SPHERE, RADIUS, NULL));
 	sphere->obj_param = sphere_param;
-	sphere->obj_type = OBJ_SPHERE;
-	sphere->check_inside = &check_inside_sphere;
-	sphere->ray_intersect = &ray_intersect_sphere;
-	sphere->get_normal_inter = &get_normal_intersect_sphere;
-	sphere->get_origin = &get_origin_sphere;
-	sphere->move = &move_sphere;
-	sphere->rotate = &rotate_sphere;
-	sphere->get_text_coordinate = &get_text_coordinate_sphere;
-//	add_object(sphere, data);
+	assign_sphere_function(sphere);
 	return (ret);
 }
 
@@ -148,14 +151,15 @@ int		parse_triangle(char **line, t_obj *triangle)
 	//if (ft_fabs(triangle_param->radius) == 0.f)
 	//	return (syn_error(SERROR, triangle, RADIUS, NULL));
 	triangle->obj_param = triangle_param;
-	triangle->obj_type = OBJ_TRIANGLE;
-	triangle->check_inside = &check_inside_triangle;
-	triangle->ray_intersect = &ray_intersect_triangle;
-	triangle->get_normal_inter = &get_normal_intersect_triangle;
-	triangle->get_origin = &get_origin_triangle;
-	triangle->move = &move_triangle;
-	triangle->rotate = &rotate_triangle;
-	triangle->get_text_coordinate = &get_text_coordinate_triangle;
+	assign_triangle_function(triangle);
+	// triangle->obj_type = OBJ_TRIANGLE;
+	// triangle->check_inside = &check_inside_triangle;
+	// triangle->ray_intersect = &ray_intersect_triangle;
+	// triangle->get_normal_inter = &get_normal_intersect_triangle;
+	// triangle->get_origin = &get_origin_triangle;
+	// triangle->move = &move_triangle;
+	// triangle->rotate = &rotate_triangle;
+	// triangle->get_text_coordinate = &get_text_coordinate_triangle;
 //	add_object(triangle, data);
 	return (ret);
 }

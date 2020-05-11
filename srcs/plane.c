@@ -146,6 +146,18 @@ int	ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
 	return (0);
 }
 
+void  assign_plane_function(t_obj *plane)
+{
+	plane->obj_type = OBJ_PLANE;
+	plane->check_inside = &check_inside_plane;
+	plane->ray_intersect = &ray_intersect_plane;
+	plane->get_normal_inter = &get_normal_intersect_plane;
+	plane->get_origin = &get_origin_plane;
+	plane->move = &move_plane;
+	plane->rotate = &rotate_plane;
+	plane->get_text_coordinate = &get_text_coordinate_plane;
+}
+
 void	generate_new_plane(t_data *data)
 {
 	t_obj		*plane;
@@ -163,6 +175,8 @@ void	generate_new_plane(t_data *data)
 	param->origin.val[2] = data->camera->origin.val[2] + dir.val[2] * 2;
 	param->normal = assign_3vecf(get_random_number((time(NULL) * 0xcacacaca) << 16) - 0.5, get_random_number((time(NULL) * 0xfeabcdef) << 8) - 0.5, get_random_number((time(NULL) * 0x1056ffe) << 4) - 0.5);
 	normalize_3vecf(&param->normal);
+	plane->obj_param = param;
+
 	//int		rd;
 
 //	rd = time(NULL);
@@ -173,17 +187,8 @@ void	generate_new_plane(t_data *data)
 		normalize_3vecf(&param->x2d_axis);
 		printf("asad\n");
 	} */
-	plane->obj_param = param;
-	plane->obj_type = OBJ_PLANE;
-	plane->check_inside = &check_inside_plane;
-	plane->ray_intersect = &ray_intersect_plane;
-	plane->get_normal_inter = &get_normal_intersect_plane;
-	plane->get_origin = &get_origin_plane;
-	plane->move = &move_plane;
-	plane->rotate = &rotate_plane;
-	plane->get_text_coordinate = &get_text_coordinate_plane;
-	plane->get_text_color = &get_uni_color;
-	plane->text = generate_random_texture();
+	assign_plane_function(plane);
+	plane->text = generate_random_texture(plane);
 	set_bump_own(plane);
 	add_object(plane, data);
 	data->new_obj = 1;
