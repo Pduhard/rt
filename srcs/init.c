@@ -92,6 +92,8 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	if (!check_macro() || !parse_rt_conf(file_name, data)
 		|| !check_file_setup(data) || !check_mlx(mlx, data))
 		return (NULL);
+	init_perlin(data);
+	data->water_f = 0.;
 	data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
 	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
 	data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;

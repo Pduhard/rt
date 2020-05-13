@@ -251,10 +251,16 @@ int		print_loop_image(void *param)
  	rendering = 1;
 	data = get_curr_scene((t_data **)param);
 	check_photon_map(data);
-	if (check_for_scene_change(data))
+	if (check_for_scene_change(data) || (WATER_ON))
+//	loop_manage_cam(data);
+//	data->aa_adapt = NO_AA;
+
 		render(data);
 	data->new_obj = 0;
-	data->first_loop++;
+	data->first_loop = 1;
+	if (WATER_ON)
+		data->water_f += 0.02;
+	// printf("%f\n", data->f);
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
 	return (1);

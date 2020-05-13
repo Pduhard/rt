@@ -12,6 +12,12 @@
 
 #include "rt.h"
 
+
+double	linear_interpolate(double a, double b, double val)
+{
+	return (a + (b - a) * val);
+}
+
 t_4vecf	get_uni_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 {
 	t_text_proc	*text;
@@ -29,7 +35,10 @@ t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	t_4vecf	color;
 	text = (t_text_proc *)obj->text.text_param;
 
-   	perlin_f = fabs(compute_3dperlin_factor(inter_point, obj->text.scale.val[0]));
+	// obj->data->new_obj = 1;
+	// inter_point.val[2] += obj->data->f;
+
+  perlin_f = fabs(compute_3dperlin_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient));
 /*	if (perlin_f > 0.8)
 		return (text->color[0]);
 	//	return (assign_3vecf(obj->text.color[0].val[0] * perlin_f, obj->text.color[0].val[1] * perlin_f, obj->text.color[0].val[2] * perlin_f));
@@ -49,33 +58,33 @@ t_4vecf	get_perlin_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	(void)normal_inter;
 }
 
-double	compute_wood_factor(t_3vecf inter_point, double scale)
+double	compute_wood_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16])
 {
 	double	perlin_f;
 	double	wood_f;
 
-	perlin_f = compute_3dperlin_factor(inter_point, scale);
+	perlin_f = compute_3dperlin_factor(inter_point, scale, permutation, gradient);
 	wood_f = (1. + sin((/*text_coord.val[1] + */perlin_f / 2.) * 150.)) / 2.;
 
 	return (wood_f);
 }
 
-double	marble_noise(t_3vecf inter_point, double scale)
+double	marble_noise(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16])
 {
 	double	t;
 
 	t = 0;
 	while (scale <= ROUGHCAST_LIMIT)
 	{
-		t += fabs(compute_3dperlin_factor(inter_point, scale) / scale);
+		t += fabs(compute_3dperlin_factor(inter_point, scale, permutation, gradient) / scale);
 	   	scale *= 2;
 	}
 	return t;
 }
 
-double	compute_marble_factor(t_3vecf inter_point, double scale)
+double	compute_marble_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16])
 {
-	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * marble_noise(inter_point, scale))));
+	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2 * marble_noise(inter_point, scale, permutation, gradient))));
 	return (t * t - .5);
 }
 
@@ -86,7 +95,7 @@ t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	t_text_proc	*text;
 
 	text = (t_text_proc *)obj->text.text_param;
-	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0]);
+	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient);
 //	color.val[0] = obj->text.color[0].val[0] * (1 - marble_f) + obj->text.color[1].val[0] * marble_f;
 //	color.val[1] = obj->text.color[0].val[1] * (1 - marble_f) + obj->text.color[1].val[1] * marble_f;
 //	color.val[2] = obj->text.color[0].val[2] * (1 - marble_f) + obj->text.color[1].val[2] * marble_f;
@@ -111,7 +120,7 @@ t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 	//perlin_f = compute_perlin_factor(inter_point);
 //	perlin_f = compute_3dperlin_factor(assign_3vecf(inter_point.val[0] * 5, inter_point.val[1] * 5, inter_point.val[2] * 5), obj->text.scale.val[0]);
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
-	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0]);
+	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient);
 	//(1. + sin((text_coord.val[1] + perlin_f / 2) * 3.)) / 2.;
 	//wood_f = inter_point.val[0] * inter_point.val[0] + inter_point.val[1] * inter_point.val[1] + perlin_f;
 //	text_coord = obj->get_text_coordinate(inter_point, normal_inter, obj);
@@ -177,23 +186,16 @@ t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 		row = (int)((1 - (-text_coord.val[0] - (int)-text_coord.val[0])) * (double)(text->height));
 	else
 		row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
-//	row = (int)((text_coord.val[0] - (int)text_coord.val[0]) * (double)(text->height));
-//	col = (int)((text_coord.val[1] - (int)text_coord.val[1]) * (double)(text->width));
 	row += obj->text.offset.val[0] * (double)(text->height);
 	col += (1 - obj->text.offset.val[1]) * (double)(text->width);
 
 	row %= text->height;
 	col %= text->width;
 	pixel_addr = row * text->width + col;
-	//pixel_addr = (((row + offset_row - 1) * text->width) % text->height) + ((col + offset_col) % text->width);
-//	pixel_addr = pixel_addr % (text->height * text->width);
 	color.val[0] = (double)(text->pixels[pixel_addr] >> 24 & 0xff) / 255.;
 	color.val[1] = (double)(text->pixels[pixel_addr] >> 16 & 0xff) / 255.;
 	color.val[2] = (double)(text->pixels[pixel_addr] >> 8 & 0xff) / 255.;
 	color.val[3] = (255. - (double)(text->pixels[pixel_addr] & 0xff)) / 255.;
-	//linear_interpolate(text->color[0].val[0], text->color[1].val[0], marble_f);
-	//color.val[1] = linear_interpolate(text->color[0].val[1], text->color[1].val[1], marble_f);
-	//color.val[2] = linear_interpolate(text->color[0].val[2], text->color[1].val[2], marble_f);
 	return (color);
 	(void)normal_inter;
 }
@@ -218,154 +220,6 @@ t_4vecf	get_grid_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 		return (text->color[0]);
 	return (text->color[1]);
 }
-
-/*void	*parse_procedural(char *line, int *index)
-{
-	int	i;
-	t_text_proc	*param;
-
-	if (!(param = malloc(sizeof(t_text_proc))))
-		return (NULL);
-	i = *index;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color[0]))) == -1)
-	{
-		return (NULL);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color[1]))) == -1)
-	{
-		return (NULL);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] != '(' || (i = parse_3vecf(line, i, &(param->color_3))) == -1)
-	{
-		return (NULL);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-	if (line[i] == ')')
-		++i;
-	*index = i;
-	return ((void *)param);
-}
-
-void	*parse_image(char *line, int *index)
-{
-	SDL_Surface		*image_bmp;
-	SDL_Surface		*image;
-	t_text_img		*param;
-	unsigned int	pixels_nb;
-	unsigned int	i;
-	int				name_len;
-	char			*image_name;
-
-	i = *index;
-	printf("%s\n", &(line[*index]));
-	if (line[i++] != '(')
-		return (NULL);
-	if ((name_len = ft_strichr(&(line[i]), ')')) == -1)
-		return (NULL);
-	if (!(image_name = ft_strsub(line, i, name_len)))
-		return (NULL);
-//	printf("%s %d\n", image_name, name_len);
-	if (!(param = malloc(sizeof(t_text_img))))
-		return (NULL);
-	if (!(image_bmp = IMG_Load(image_name)))
-		return (NULL);
-	if (!(image = SDL_ConvertSurfaceFormat(image_bmp, SDL_PIXELFORMAT_RGB888, 0)))
-		return (NULL);
-	pixels_nb = image->w * image->h;
-	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
-		return (NULL);
-	i += name_len + 1;
-	while (ft_isspace(line[i]))
-		++i;
-	*index = i + 1;
-	printf("%s\n", &(line[*index]));
-	param->width = image->w;
-	param->height = image->h;
-	printf("%d %d\n", image->w, image->h);
-	SDL_LockSurface(image);
-	i = 0;
-	while (i < pixels_nb)
-	{
-		param->pixels[i] = ((unsigned int *)image->pixels)[i];
-		++i;
-	}
-	printf("%s\n", &(line[*index]));
-	SDL_UnlockSurface(image);
-	SDL_FreeSurface(image_bmp);
-	SDL_FreeSurface(image);
-	return ((void *)param);
-	(void)line;
-	(void)index;
-}
-
-int		parse_texture(char *line, int i, t_obj *obj)
-{
-	if (line[i] == '(')
-		++i;
-	while (ft_isspace(line[i]))
-		++i;
-	if (!(ft_strncmp(&(line[i]), "UNI", 3)))
-	{
-		obj->get_text_color = &get_uni_color;
-		obj->text.text_type = TEXT_UNI;
-		i += 3;
-	}
-	else if (!(ft_strncmp(&(line[i]), "GRID", 4)))
-	{
-		obj->get_text_color = &get_grid_color;
-		obj->text.text_type = TEXT_GRID;
-		i += 4;
-	}
-	else if (!(ft_strncmp(&(line[i]), "PERLIN", 6)))
-	{
-		obj->get_text_color = &get_perlin_color;
-		obj->text.text_type = TEXT_PERLIN;
-		i += 6;
-	}
-	else if (!(ft_strncmp(&(line[i]), "MARBLE", 6)))
-	{
-		obj->get_text_color = &get_marble_color;
-		obj->text.text_type = TEXT_MARBLE;
-		i += 6;
-	}
-	else if (!(ft_strncmp(&(line[i]), "WOOD", 4)))
-	{
-		obj->get_text_color = &get_wood_color;
-		obj->text.text_type = TEXT_WOOD;
-		i += 4;
-	}
-	else if (!(ft_strncmp(&(line[i]), "IMAGE", 5)))
-	{
-		obj->get_text_color = &get_image_color;
-		obj->text.text_type = TEXT_IMAGE;
-		i += 5;
-	}
-	else
-	{
-		ft_printf("Unrecognized texture\n");
-		return (-1);
-	}
-	if (obj->text.text_type == TEXT_IMAGE)
-	{
-		if (!(obj->text.text_param = parse_image(line, &i)))
-			return (-1);
-	}
-	else
-	{
-		if (!(obj->text.text_param = parse_procedural(line, &i)))
-			return (-1);
-	}
-	while (ft_isspace(line[i]))
-		++i;
-//	obj->color = assign_3vecf(1, 1, 1);
-	//bj->text.color[0];
-	return (i);
-}*/
 
 t_4vecf			(*assign_text_color_function(t_text_type type))(t_3vecf, t_3vecf, struct s_obj *)
 {

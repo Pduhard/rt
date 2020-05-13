@@ -31,6 +31,8 @@
 # define Q_HIGH 			8 // no aa when move then aa x4
 
 # define QUALITY			Q_LOW
+# define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
+# define WATER_ON     0
 
 # define NB_THREADS	 8
 # define MIN_AA 		0.5
@@ -110,6 +112,7 @@
 # define TRIBC "\t<b (x, y, z)>\n\t<c (x, y, z)>\n"
 # define MOEBIUS "<moebius\n\t<origin (x, y, z)>\n"
 # define HORSE "<horse_saddle\n\t<origin (x, y, z)>\n"
+# define HORSEF "\t<x_fact (X)>\n\t<y_fact (X)>\n"
 # define MONKEY "<monkey_saddle\n"
 # define ELLIPSE "<ellipsoid\n\t<origin (x, y, z)>\n"
 # define HYPERBOL "<hyperboloid\n\t<origin (x, y, z)>\n"
@@ -221,6 +224,7 @@ typedef enum {
 	BUMP_MARBLE,
 	BUMP_WOOD,
 	BUMP_FBM,
+	BUMP_WATER
 }	t_bump_type;
 
 typedef enum {
@@ -532,6 +536,10 @@ typedef struct	s_data
 	int			to_next;
 	int			new_obj;
 	int     first_loop;
+	unsigned char     permutation[512];
+	t_3vecf gradient[16];
+	double  water_f;
+	int     water;
 	struct s_data	*next;
 }				t_data;
 
@@ -593,8 +601,9 @@ void	delete_object(t_data *data, t_obj *obj);
 void  free_all(t_data *data);
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);
-void	init_camera_to_world_matrix(double mat[4][4]);
-void	init_light_to_world_matrix(double mat[4][4]);
+void    init_perlin(t_data *data);
+// void	init_camera_to_world_matrix(double mat[4][4]);
+// void	init_light_to_world_matrix(double mat[4][4]);
 t_33matf	init_rotation_matrix_x(double theta);
 t_33matf	init_rotation_matrix_y(double theta);
 t_33matf	init_rotation_matrix_z(double theta);
@@ -638,11 +647,14 @@ t_44matf	build_translation_matrix(t_3vecf, t_3vecf, t_3vecf, t_3vecf);
 
 t_3vecf	move_3vecf(t_3vecf, t_motion *, int);
 
-double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
-double	compute_3dperlin_factor(t_3vecf inter_point, double scale);
+void    handle_perlin_inter_point(t_3vecf *int_part,
+  t_3vecf *floating_part, t_3vecf inter_point, double scale);
+void set_quintic_factors(double q[3], t_3vecf f);
+// double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
+double	compute_3dperlin_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16]);
 double	compute_3dfbm_factor(t_3vecf inter_point, double scale);
-double	compute_wood_factor(t_3vecf inter_point, double scale);
-double	compute_marble_factor(t_3vecf inter_point, double scale);
+double	compute_wood_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16]);
+double	compute_marble_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16]);
 
 t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, int nn_photon);
 
@@ -834,6 +846,7 @@ t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_4vecf	get_image_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 
+t_3vecf   get_bump_mapping_water(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_perlin(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_fbm(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
 t_3vecf	get_bump_mapping_marble(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj);
@@ -863,6 +876,7 @@ double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 void    ft_throw_error(char *message, ...);
+int     ft_memalloc_error(int ret, size_t size);
 
 int		check_lights_cam(t_data *data);
 int		check_skybox(t_data *data);

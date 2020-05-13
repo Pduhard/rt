@@ -64,6 +64,18 @@ int		pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
+void  clamp_and_set_dflt(t_obj *obj)
+{
+	clamp_val(&obj->reflection, 0, 1);
+	clamp_val(&obj->shininess, 0, 1);
+	clamp_val(&obj->refraction, 0, 3);
+	clamp_val(&obj->refraction, 0, 2.42);
+	if (obj->text.scale.val[0] == 0 && obj->text.scale.val[1] == 0)
+		obj->text.scale = (t_2vecf){{0, 0}};
+	if (obj->shininess > 0)
+		obj->shininess = exp(11 - 10 * obj->shininess);
+}
+
 int		parse_objects(char **line, t_data *data, t_composed *from)
 {
 	char	stripe;
@@ -88,28 +100,7 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 		else if (**line != '>' && !(ret = pick_attribute_object(line, obj)))
 			return (0);
 	}
-	clamp_val(&obj->reflection, 0, 1);
-	clamp_val(&obj->shininess, 0, 1);
-	clamp_val(&obj->refraction, 0, 3);
-	clamp_val(&obj->refraction, 0, 2.42);
-	if (obj->shininess > 0)
-		obj->shininess = exp(11 - 10 * obj->shininess);
+	clamp_and_set_dflt(obj);
 	push_object(obj, composed, data, from);
-/*<<<<<<< HEAD
-		printf("%f\n", obj->shininess);
-	}
-	if (composed)
-	{
-		//free object
-	}
-	else
-	{
-		if (!from)
-			add_object(obj, data);
-		else
-			add_component(obj, from);
-	}
-=======
->>>>>>> b0898731e959f8ecbab2d453bf04aca59800752a
-*/	return (ret);
+	return (ret);
 }

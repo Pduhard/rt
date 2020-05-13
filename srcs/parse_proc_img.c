@@ -1,29 +1,41 @@
 #include "rt.h"
 
-void	*parse_img(char *name)
+SDL_Surface *parse_sdl_image(char *name)
 {
 	SDL_Surface		*row;
+	SDL_Surface		*image;
+
+	if (!(row = IMG_Load(name)))
+	{
+		printf("SDL IMG load error: %s\n", SDL_GetError());
+		return (NULL);
+	}
+	if (!(image = SDL_ConvertSurfaceFormat(row, SDL_PIXELFORMAT_RGBA8888, 0)))
+	{
+		SDL_FreeSurface(row);
+		return (NULL);
+	}
+	SDL_FreeSurface(row);
+	return (image);
+}
+
+void	*parse_img(char *name)
+{
 	SDL_Surface		*image;
 	t_text_img		*param;
 	unsigned int	pixels_nb;
 	unsigned int	i;
 
-	printf("parse img start\n");
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
-	printf("parse img malloc ok name : %s\n", name);
-	if (!(row = IMG_Load(name)))
-	{
-		printf("error :%s\n", SDL_GetError());
+	if (!(image = parse_sdl_image(name)))
 		return (NULL);
-	}
-	printf("parse img IMG_MLOAD ok\n");
-	if (!(image = SDL_ConvertSurfaceFormat(row, SDL_PIXELFORMAT_RGBA8888, 0)))
-		return (NULL);
-	printf("parse img IMG_CONVERT ok\n");
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
+	{
+		SDL_FreeSurface(image);
 		return (NULL);
+	}
 	param->width = image->w;
 	param->height = image->h;
 	SDL_LockSurface(image);
@@ -31,10 +43,8 @@ void	*parse_img(char *name)
 	while (++i < pixels_nb)
 		param->pixels[i] = ((unsigned int *)image->pixels)[i];
 	SDL_UnlockSurface(image);
-	SDL_FreeSurface(row);
 	SDL_FreeSurface(image);
 	return ((void *)param);
-	return (NULL);
 }
 
 void	*parse_texture_img(char **line)
@@ -62,12 +72,10 @@ void	*parse_texture_img(char **line)
 
 void	*parse_proc(char **line)
 {
-//	char		stripe;
 	int			cmp;
 	int			ret;
 	t_text_proc	*param;
 
-//	stripe = 0;
 	cmp = -1;
 	ret = 1;
 	if (!(param = ft_memalloc(sizeof(t_text_proc))))
