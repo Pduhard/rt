@@ -9,6 +9,7 @@ void	add_object(t_obj *obj, t_data *data)
 		else
 			obj->next = NULL;
 		data->objs = obj;
+		data->objs->data = data;
 	}
 	else if (obj->material_type == MAT_NEGATIVE)
 	{
@@ -17,6 +18,7 @@ void	add_object(t_obj *obj, t_data *data)
 		else
 			obj->next = NULL;
 		data->negative_objs = obj;
+		data->negative_objs->data = data;
 	}
 }
 

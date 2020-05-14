@@ -30,7 +30,7 @@ t_4vecf		generate_random_color(unsigned int x, double transp_f)
 	color.val[0] = get_random_number(x << 6);
 	color.val[1] = get_random_number(x >> 4);
 	color.val[2] = get_random_number(x << 7);
-	color.val[3] = get_random_number(x << 7) * transp_f;
+	color.val[3] = get_random_number(x << 7) * transp_f * TRANSP_F;
 	return (color);
 }
 

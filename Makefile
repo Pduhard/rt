@@ -47,7 +47,6 @@ SRC			=	main.c					\
 				parse_object.c			\
 				parse_lights.c			\
 				parse_composed_object.c	\
-				parse_flat_object.c		\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
 				parse_texture.c			\
@@ -59,6 +58,8 @@ SRC			=	main.c					\
 				texture.c				\
 				bump_mapping.c			\
 				perlin.c				\
+				perlin_utils.c	\
+				init_perlin.c		\
 				fbm.c					\
 				sphere.c				\
 				plane.c					\
@@ -81,6 +82,19 @@ SRC			=	main.c					\
 				global_illumination.c	\
 				random.c				\
 				free.c					\
+				parse_cylinder.c	\
+				parse_cone.c			\
+				parse_sphere.c		\
+				parse_plane.c				\
+				parse_triangle.c		\
+				parse_horse_saddle.c \
+				parse_monkey_saddle.c	\
+				parse_cyclide.c			\
+				parse_fermat.c			\
+				parse_ellipsoid.c		\
+				parse_hyperboloid.c	\
+				parse_moebius.c			\
+				skybox.c						\
 				# $(addprefix $(SRC_SHAPES_PATH), $(SHAPES))
 				# shapes/cone.c		\
 

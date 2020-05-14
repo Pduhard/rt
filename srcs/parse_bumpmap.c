@@ -90,9 +90,14 @@ void	set_bump_inde(char *s, t_obj *obj)
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
-	else if (!(ft_strncmp_case(s, "FBM", 5)))
+	else if (!(ft_strncmp_case(s, "FBM", 3)))
 	{
 		obj->get_bump_mapping = &get_bump_mapping_fbm;
 		obj->text.bump_type = BUMP_FBM;
+	}
+	else if (!(ft_strncmp_case(s, "WATER", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_water;
+		obj->text.bump_type = BUMP_WATER;
 	}
 }

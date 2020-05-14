@@ -116,7 +116,6 @@
         <plane
             <origin (-4, 0, 0)>
             <normal (0, 0, -1)>
-			<xaxis (1, 0, 0) >
         >
         <cutting
             <texture
