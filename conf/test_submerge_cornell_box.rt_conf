@@ -2,11 +2,11 @@
 	<name(Bump mapping)	>
 	<size(800, 600)>
 	<camera
-		<origin (0, -1, -13)>
+		<origin (0, -1, -10)>
 		<rotation (-10, 0)>
 	>
-	<Indirect_GI(OFF)>
-	<Caustics_GI(off)>
+	<Indirect_GI(ON)>
+	<Caustics_GI(on)>
 	<fog (100, 200)>
 	<objects
 		<texture
@@ -139,10 +139,9 @@
 			<normal(0, 1, 0)>
 		>
 		<cutting
-			<cube
-				<x_range (-4.52, 4.52)>
-		        <y_range (-4.02, 3.98)>
-				<z_range (-3, 8)>
+			<static
+				<origin (0, -1, -5)>
+				<normal (0, 0, 1)>
 			>
 		>
 		<refraction (1.1)>

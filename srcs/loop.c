@@ -257,7 +257,7 @@ int		print_loop_image(void *param)
 
 		render(data);
 	data->new_obj = 0;
-	data->first_loop = 1;
+	data->first_loop++;
 	if (WATER_ON)
 		data->water_f += 0.02;
 	// printf("%f\n", data->f);
