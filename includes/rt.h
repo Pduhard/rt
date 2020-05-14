@@ -866,7 +866,7 @@ void    ft_throw_error(char *message, ...);
 
 int		check_lights_cam(t_data *data);
 int		check_skybox(t_data *data);
-void	open_info(t_data *data);
+int		open_info(t_data *data);
 int		init_loading_screen(t_data *data);
 void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);
 
