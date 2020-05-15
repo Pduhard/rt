@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   vector.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/21 23:02:40 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/28 03:51:40 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:09:55 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:10:00 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -40,7 +39,6 @@ void	normalize_3vecf(t_3vecf *vec)
 	double	length;
 
 	length = get_length_3vecf(*vec);
-	//sqrtf(vec->val[0] * vec->val[0] + vec->val[1] * vec->val[1] + vec->val[2] * vec->val[2]);
 	vec->val[0] = vec->val[0] / length;
 	vec->val[1] = vec->val[1] / length;
 	vec->val[2] = vec->val[2] / length;

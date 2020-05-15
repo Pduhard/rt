@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fermat.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/26 05:56:10 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 23:54:28 by pduhard-         ###   ########lyon.fr   */
+/*   Created: 2020/05/15 18:12:08 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 18:19:46 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int		check_inside_fermat(t_3vecf point, t_obj *fermat)
 	(void)fermat;
 }
 
-t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_obj *fermat)
+t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter,
+	t_obj *fermat)
 {
 	return ((t_2vecf){{0, 0}});
 	(void)normal_inter;
@@ -50,14 +51,15 @@ t_3vecf	get_origin_fermat(t_obj *fermat) // a degager
 	return (((t_fermat *)fermat->obj_param)->origin);
 }
 
-t_3vecf get_fermat_origin(t_obj *fermat, t_fermat *param, int sp_id)
+t_3vecf	get_fermat_origin(t_obj *fermat, t_fermat *param, int sp_id)
 {
-		if (sp_id)
-			return (move_3vecf(param->origin, fermat->motions, sp_id));
-		return (param->origin);
+	if (sp_id)
+		return (move_3vecf(param->origin, fermat->motions, sp_id));
+	return (param->origin);
 }
 
-t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int sp_id)
+t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat,
+	int sp_id)
 {
 	t_fermat	*param;
 	t_3vecf		normal_inter;
@@ -77,7 +79,7 @@ t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int sp_i
 	return (normal_inter);
 }
 
-t_4vecf get_fermat_cubic_cst(t_leq l, t_3vecf fermat_origin)
+t_4vecf	get_fermat_cubic_cst(t_leq l, t_3vecf fermat_origin)
 {
 	double		o[3];
 	double		d[3];
@@ -89,16 +91,18 @@ t_4vecf get_fermat_cubic_cst(t_leq l, t_3vecf fermat_origin)
 	d[0] = l.dir.val[0];
 	d[1] = l.dir.val[1];
 	d[2] = l.dir.val[2];
-
-	cst.val[0] = d[2] * d[2] * d[2] + d[0] * d[0] * d[0] + d[1] * d[1] * d[1];//a
-	cst.val[1] = 3 * o[2] * d[2] * d[2] + 3 * o[0] * d[0] * d[0] + 3 * o[1] * d[1] * d[1];//b
-	cst.val[2] = 3 * o[2] * o[2] * d[2] + 3 * o[1] * o[1] * d[1] + 3 * o[0] * o[0] *d[0];//c
-	cst.val[3] = o[2] * o[2] * o[2] + o[0] * o[0] * o[0] + o[1] * o[1] * o[1] - 1;//d
+	cst.val[0] = d[2] * d[2] * d[2] + d[0] * d[0] * d[0] + d[1]
+		* d[1] * d[1];
+	cst.val[1] = 3 * o[2] * d[2] * d[2] + 3 * o[0] * d[0] * d[0]
+		+ 3 * o[1] * d[1] * d[1];
+	cst.val[2] = 3 * o[2] * o[2] * d[2] + 3 * o[1] * o[1] * d[1]
+		+ 3 * o[0] * o[0] * d[0];
+	cst.val[3] = o[2] * o[2] * o[2] + o[0] * o[0] * o[0] + o[1]
+		* o[1] * o[1] - 1;
 	return (cst);
 }
 
-
-int check_fermat_bnd(t_leq l, t_3vecf fermat_origin, double root)
+int		check_fermat_bnd(t_leq l, t_3vecf fermat_origin, double root)
 {
 	double	x;
 	double	y;
@@ -112,17 +116,18 @@ int check_fermat_bnd(t_leq l, t_3vecf fermat_origin, double root)
 	return (0);
 }
 
-int	ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id)
+int		ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id)
 {
 	t_4vecf		cst;
 	t_3vecf		roots;
-	int				check;
+	int			check;
 	t_3vecf		fermat_origin;
-	int				i;
+	int			i;
 
- 	i = -1;
+	i = -1;
 	check = 0;
-	fermat_origin = get_fermat_origin(fermat, (t_fermat *)fermat->obj_param, sp_id);
+	fermat_origin = get_fermat_origin(fermat, (t_fermat *)fermat->obj_param,
+		sp_id);
 	cst = get_fermat_cubic_cst(l, fermat_origin);
 	roots = solve_cubic(cst.val[0], cst.val[1], cst.val[2], cst.val[3]);
 	while (++i < 3)
@@ -131,7 +136,7 @@ int	ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id)
 	return (check);
 }
 
-void  assign_fermat_function(t_obj *fermat)
+void	assign_fermat_function(t_obj *fermat)
 {
 	fermat->obj_type = OBJ_FERMAT;
 	fermat->check_inside = &check_inside_fermat;
@@ -150,7 +155,8 @@ void	generate_new_fermat(t_data *data)
 	t_3vecf		dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(fermat = ft_memalloc(sizeof(t_obj))))
 		return ;

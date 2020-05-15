@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bump_mapping.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:13:20 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:17:03 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_3vecf		get_bump_mapping_perlin(t_3vecf inter_point,
@@ -8,21 +20,25 @@ t_3vecf		get_bump_mapping_perlin(t_3vecf inter_point,
 	double	bump_z;
 	double	perlin_f;
 
-	perlin_f = compute_3dperlin_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient);
+	perlin_f = compute_3dperlin_factor(inter_point, obj->text.scale.val[0],
+		obj->data->permutation, obj->data->gradient);
 	bump_x = compute_3dperlin_factor(assign_3vecf(
 		inter_point.val[0] + obj->text.bump_fact, inter_point.val[1],
-			inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - perlin_f;
+			inter_point.val[2]), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - perlin_f;
 	bump_y = compute_3dperlin_factor(assign_3vecf(
 			inter_point.val[0], inter_point.val[1] + obj->text.bump_fact,
-				inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - perlin_f;
+				inter_point.val[2]), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - perlin_f;
 	bump_z = compute_3dperlin_factor(assign_3vecf(
 			inter_point.val[0], inter_point.val[1], inter_point.val[2] +
-				obj->text.bump_fact), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - perlin_f;
+				obj->text.bump_fact), obj->text.scale.val[0],
+					obj->data->permutation, obj->data->gradient) - perlin_f;
 	return (assign_3vecf(normal_inter.val[0] - bump_x,
 		normal_inter.val[1] - bump_y, normal_inter.val[2] - bump_z));
 }
 
-t_3vecf   get_bump_mapping_water(t_3vecf inter_point,
+t_3vecf		get_bump_mapping_water(t_3vecf inter_point,
 	t_3vecf normal_inter, t_obj *obj)
 {
 	inter_point = add_c3vecf(inter_point, obj->data->water_f);
@@ -59,16 +75,20 @@ t_3vecf		get_bump_mapping_marble(t_3vecf inter_point,
 	double	bump_z;
 	double	marble_f;
 
-	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient);
+	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0],
+		obj->data->permutation, obj->data->gradient);
 	bump_x = compute_marble_factor(assign_3vecf(
 		inter_point.val[0] + obj->text.bump_fact, inter_point.val[1],
-			inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - marble_f;
+			inter_point.val[2]), obj->text.scale.val[0],
+			obj->data->permutation, obj->data->gradient) - marble_f;
 	bump_y = compute_marble_factor(assign_3vecf(
 		inter_point.val[0], inter_point.val[1] + obj->text.bump_fact,
-			inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - marble_f;
+			inter_point.val[2]), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - marble_f;
 	bump_z = compute_marble_factor(assign_3vecf(
 		inter_point.val[0], inter_point.val[1], inter_point.val[2] +
-			obj->text.bump_fact), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - marble_f;
+			obj->text.bump_fact), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - marble_f;
 	return (assign_3vecf(normal_inter.val[0] - bump_x,
 		normal_inter.val[1] - bump_y, normal_inter.val[2] - bump_z));
 }
@@ -81,16 +101,20 @@ t_3vecf		get_bump_mapping_wood(t_3vecf inter_point,
 	double	bump_z;
 	double	wood_f;
 
-	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0], obj->data->permutation, obj->data->gradient);
+	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0],
+		obj->data->permutation, obj->data->gradient);
 	bump_x = compute_wood_factor(assign_3vecf(
 		inter_point.val[0] + obj->text.bump_fact, inter_point.val[1],
-			inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - wood_f;
+			inter_point.val[2]), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - wood_f;
 	bump_y = compute_wood_factor(assign_3vecf(
 		inter_point.val[0], inter_point.val[1] + obj->text.bump_fact,
-			inter_point.val[2]), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - wood_f;
+			inter_point.val[2]), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - wood_f;
 	bump_z = compute_wood_factor(assign_3vecf(
 		inter_point.val[0], inter_point.val[1], inter_point.val[2] +
-			obj->text.bump_fact), obj->text.scale.val[0], obj->data->permutation, obj->data->gradient) - wood_f;
+			obj->text.bump_fact), obj->text.scale.val[0],
+				obj->data->permutation, obj->data->gradient) - wood_f;
 	return (assign_3vecf(normal_inter.val[0] - bump_x,
 		normal_inter.val[1] - bump_y, normal_inter.val[2] - bump_z));
 }

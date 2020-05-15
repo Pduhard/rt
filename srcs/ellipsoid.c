@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ellipsoid.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/25 18:28:43 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/29 01:47:58 by pduhard-         ###   ########lyon.fr   */
+/*   Created: 2020/05/15 17:58:29 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 18:04:20 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,24 @@ int		check_inside_ellipsoid(t_3vecf point, t_obj *ellipsoid)
 
 	param = (t_ellipsoid *)ellipsoid->obj_param;
 	point = sub_3vecf(point, param->origin);
-	point.val[0] = (point.val[0] * point.val[0]) / (param->x_fact * param->x_fact);
-	point.val[1] = (point.val[1] * point.val[1]) / (param->y_fact * param->y_fact);
-	point.val[2] = (point.val[2] * point.val[2]) / (param->z_fact * param->z_fact);
+	point.val[0] = (point.val[0] * point.val[0])
+		/ (param->x_fact * param->x_fact);
+	point.val[1] = (point.val[1] * point.val[1])
+		/ (param->y_fact * param->y_fact);
+	point.val[2] = (point.val[2] * point.val[2])
+		/ (param->z_fact * param->z_fact);
 	if (point.val[0] + point.val[1] + point.val[2] > 1)
 		return (0);
 	return (1);
 }
 
-t_2vecf	get_text_coordinate_ellipsoid(t_3vecf inter_point, t_3vecf normal_inter, t_obj *ellipsoid)
+t_2vecf	get_text_coordinate_ellipsoid(t_3vecf inter_point,
+	t_3vecf normal_inter, t_obj *ellipsoid)
 {
 	t_2vecf	text_coord;
 
-	text_coord.val[1] = (1 - fmod((atan2(normal_inter.val[0], normal_inter.val[2])
+	text_coord.val[1] = (1 - fmod((atan2(normal_inter.val[0],
+		normal_inter.val[2])
 		/ (2 * M_PI) + 0.5), 1));
 	text_coord.val[0] = (normal_inter.val[1] * 0.5 + 0.5);
 	return (text_coord);
@@ -61,14 +66,16 @@ t_3vecf	get_origin_ellipsoid(t_obj *ellipsoid)
 	return (((t_ellipsoid *)ellipsoid->obj_param)->origin);
 }
 
-t_3vecf get_ellipsoid_origin(t_obj *ellipsoid, t_ellipsoid *ellipsoid_param, int sp_id)
+t_3vecf	get_ellipsoid_origin(t_obj *ellipsoid, t_ellipsoid *ellipsoid_param,
+	int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(ellipsoid_param->origin, ellipsoid->motions, sp_id));
 	return (ellipsoid_param->origin);
 }
 
-t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, int sp_id)
+t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point,
+	t_obj *ellipsoid, int sp_id)
 {
 	t_ellipsoid	*param;
 	t_3vecf		normal_inter;
@@ -85,8 +92,8 @@ t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, in
 	return (normal_inter);
 }
 
-t_3vecf get_ellipsoid_quadratic_cst(t_ellipsoid *param,
-		t_3vecf ellipsoid_origin, t_leq l)
+t_3vecf	get_ellipsoid_quadratic_cst(t_ellipsoid *param,
+	t_3vecf ellipsoid_origin, t_leq l)
 {
 	double		o[3];
 	double		d[3];
@@ -103,22 +110,23 @@ t_3vecf get_ellipsoid_quadratic_cst(t_ellipsoid *param,
 	f[1] = param->y_fact;
 	f[2] = param->z_fact;
 	cst.val[2] = (o[0] * o[0]) / (f[0] * f[0]) + (o[1] * o[1]) / (f[1] * f[1])
-						 + (o[2] * o[2]) / (f[2] * f[2]) - 1;//f[2]
+		+ (o[2] * o[2]) / (f[2] * f[2]) - 1;
 	cst.val[1] = (2 * o[0] * d[0]) / (f[0] * f[0])
-						 + (2 * o[1] * d[1]) / (f[1] * f[1]) + (2 * o[2] * d[2])
-						 / (f[2] * f[2]);//f[1]
+		+ (2 * o[1] * d[1]) / (f[1] * f[1]) + (2 * o[2] * d[2])
+			/ (f[2] * f[2]);
 	cst.val[0] = (d[0] * d[0]) / (f[0] * f[0]) + (d[1] * d[1]) / (f[1] * f[1])
-						 + (d[2] * d[2]) / (f[2] * f[2]);//f[0]
+		+ (d[2] * d[2]) / (f[2] * f[2]);
 	return (cst);
 }
 
-int	ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid, t_dist dist, int sp_id)
+int		ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid,
+	t_dist dist, int sp_id)
 {
 	t_ellipsoid	*param;
-	t_3vecf			cst;
-	t_2vecf			roots;
-	int					check;
-	t_3vecf			ellipsoid_origin;
+	t_3vecf		cst;
+	t_2vecf		roots;
+	int			check;
+	t_3vecf		ellipsoid_origin;
 
 	check = 0;
 	param = (t_ellipsoid *)ellipsoid->obj_param;
@@ -130,7 +138,7 @@ int	ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid, t_dist dist, int sp_id)
 	return (check);
 }
 
-void assign_ellipsoid_function(t_obj *ellipsoid)
+void	assign_ellipsoid_function(t_obj *ellipsoid)
 {
 	ellipsoid->obj_type = OBJ_ELLIPSOID;
 	ellipsoid->check_inside = &check_inside_ellipsoid;
@@ -149,7 +157,8 @@ void	generate_new_ellipsoid(t_data *data)
 	t_3vecf		dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(ellipsoid = ft_memalloc(sizeof(t_obj))))
 		return ;

@@ -150,6 +150,7 @@
 # define POINT "\t<point (x, y, z)>\n\t<color (r, g, b)>\n"
 
 /* Error Mess */
+# define ERRORMEM "internal error: too big allocation\n"
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
 # define ERRORTHREAD "Number Thread : Min 1, Max 16\n"

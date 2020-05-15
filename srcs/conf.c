@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   conf.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:26:51 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:28:02 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		return_update(char *error, int ret, int skip)
@@ -44,13 +56,13 @@ int		parse_int(char **line, int i, int *val)
 		i++;
 	*val = ft_atoi(&(s[i]));
 	while (s[i] && s[i] != ')')
-			++i;
+		++i;
 	if (!s[i])
 		return (0);
 	if (goto_next_element(line) != '>')
 	{
 		printf("Error parse_int\n");
-		return(0);
+		return (0);
 	}
 	return (1);
 }
@@ -66,7 +78,7 @@ int		parse_double(char **line, int i, double *val)
 		i++;
 	*val = ft_atold(&(s[i]));
 	while (s[i] && s[i] != ')' && s[i] != '>')
-			++i;
+		++i;
 	if (!s[i])
 		return (0);
 	if (goto_next_element(line) != '>')
@@ -83,7 +95,8 @@ int		check_normal(t_3vecf *t)
 
 int		isequal_3vecf(t_3vecf *t1, t_3vecf *t2)
 {
-	if (t1->val[0] == t2->val[0] && t1->val[1] == t2->val[1] && t1->val[2] == t2->val[2])
+	if (t1->val[0] == t2->val[0] && t1->val[1] == t2->val[1]
+		&& t1->val[2] == t2->val[2])
 		return (error("Same Origin and Tip\n", NULL));
 	return (1);
 }
