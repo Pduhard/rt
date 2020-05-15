@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_hook.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:17:03 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:21:34 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 char	*get_image_file_name(char *scene_name)
@@ -29,7 +41,7 @@ char	*get_image_file_name(char *scene_name)
 	return (image_name);
 }
 
-int	check_mov_key_press(int keycode, t_data *data)
+int		check_mov_key_press(int keycode, t_data *data)
 {
 	if (keycode == A_KEY)
 		data->hooks |= A_HOOK;
@@ -37,7 +49,7 @@ int	check_mov_key_press(int keycode, t_data *data)
 		data->hooks |= S_HOOK;
 	else if (keycode == D_KEY)
 		data->hooks |= D_HOOK;
-	else if (keycode == W_KEY) //w
+	else if (keycode == W_KEY)
 		data->hooks |= W_HOOK;
 	else if (keycode == SPACE_KEY)
 		data->hooks |= SPACE_HOOK;
@@ -47,27 +59,23 @@ int	check_mov_key_press(int keycode, t_data *data)
 		return (0);
 	return (1);
 }
-// else if (keycode == F_KEY) //w // useless ??????
-// 	data->hooks |= F_HOOK;
-	// else if (keycode == G_KEY) //w
-	// 	data->hooks |= G_HOOK;
 
-int	check_rot_key_press(int keycode, t_data *data)
+int		check_rot_key_press(int keycode, t_data *data)
 {
-	if (keycode == ARR_LEFT_KEY) //left
+	if (keycode == ARR_LEFT_KEY)
 		data->hooks |= ARR_LEFT_HOOK;
-	else if (keycode == ARR_RIGHT_KEY) // right
+	else if (keycode == ARR_RIGHT_KEY)
 		data->hooks |= ARR_RIGHT_HOOK;
-	else if (keycode == ARR_DOWN_KEY) // down
+	else if (keycode == ARR_DOWN_KEY)
 		data->hooks |= ARR_DOWN_HOOK;
-	else if (keycode == ARR_UP_KEY) // up
+	else if (keycode == ARR_UP_KEY)
 		data->hooks |= ARR_UP_HOOK;
 	else
 		return (0);
 	return (1);
 }
 
-int   check_gen_key_press2(int keycode, t_data *data)
+int		check_gen_key_press2(int keycode, t_data *data)
 {
 	if (keycode == ALPHA_ZERO_KEY)
 		generate_new_cyclide(data);
@@ -80,7 +88,7 @@ int   check_gen_key_press2(int keycode, t_data *data)
 	return (1);
 }
 
-int   check_gen_key_press(int keycode, t_data *data)
+int		check_gen_key_press(int keycode, t_data *data)
 {
 	if (keycode == ALPHA_ONE_KEY)
 		generate_new_sphere(data);
@@ -107,8 +115,9 @@ int   check_gen_key_press(int keycode, t_data *data)
 
 int		check_delete_key_press(int keycode, t_data *data)
 {
-	if ((keycode == SUPPR_KEY || keycode == DELETE_KEY) && data->selected_obj
-		&& data->selected_obj->obj_type != OBJ_SKYBOX)
+	if ((keycode == SUPPR_KEY || keycode == DELETE_KEY)
+		&& data->selected_obj
+			&& data->selected_obj->obj_type != OBJ_SKYBOX)
 	{
 		delete_object(data, data->selected_obj);
 		data->selected_obj = NULL;
@@ -118,10 +127,10 @@ int		check_delete_key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int   check_pscreen_key_press(int keycode, t_data *data)
+int		check_pscreen_key_press(int keycode, t_data *data)
 {
 	SDL_Surface	*img_save;
-	char				*image_file_name;
+	char		*image_file_name;
 
 	if (keycode == IMPR_KEY || keycode == P_KEY)
 	{
@@ -140,7 +149,7 @@ int   check_pscreen_key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int   check_switch_key_press(int keycode, t_data *data)
+int		check_switch_key_press(int keycode, t_data *data)
 {
 	if (keycode == TAB_KEY)
 	{
@@ -150,7 +159,7 @@ int   check_switch_key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int 	check_esc_key_press(int keycode, t_data *data)
+int		check_esc_key_press(int keycode, t_data *data)
 {
 	if (keycode == ESC_KEY)
 	{
@@ -182,29 +191,25 @@ int		key_release(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	if (keycode == A_KEY && (data->hooks & A_HOOK)) //
+	if (keycode == A_KEY && (data->hooks & A_HOOK))
 		data->hooks -= A_HOOK;
-	else if (keycode == S_KEY && (data->hooks & S_HOOK)) //s
+	else if (keycode == S_KEY && (data->hooks & S_HOOK))
 		data->hooks -= S_HOOK;
-	else if (keycode == D_KEY && (data->hooks & D_HOOK)) //d
+	else if (keycode == D_KEY && (data->hooks & D_HOOK))
 		data->hooks -= D_HOOK;
-	else if (keycode == W_KEY && (data->hooks & W_HOOK)) //w
+	else if (keycode == W_KEY && (data->hooks & W_HOOK))
 		data->hooks -= W_HOOK;
-	else if (keycode == SPACE_KEY  && (data->hooks & SPACE_HOOK))
+	else if (keycode == SPACE_KEY && (data->hooks & SPACE_HOOK))
 		data->hooks -= SPACE_HOOK;
 	else if (keycode == SHIFT_KEY && (data->hooks & SHIFT_HOOK))
 		data->hooks -= SHIFT_HOOK;
-	// else if (keycode == F_KEY && (data->hooks & F_HOOK)) //w
-	// 	data->hooks -= F_HOOK;
-	// else if (keycode == G_KEY && (data->hooks & G_HOOK)) //w
-	// 	data->hooks -= G_HOOK;
-	else if (keycode == ARR_LEFT_KEY && (data->hooks & ARR_LEFT_HOOK)) //left
+	else if (keycode == ARR_LEFT_KEY && (data->hooks & ARR_LEFT_HOOK))
 		data->hooks -= ARR_LEFT_HOOK;
-	else if (keycode == ARR_RIGHT_KEY && (data->hooks & ARR_RIGHT_HOOK)) // right
+	else if (keycode == ARR_RIGHT_KEY && (data->hooks & ARR_RIGHT_HOOK))
 		data->hooks -= ARR_RIGHT_HOOK;
-	else if (keycode == ARR_DOWN_KEY && (data->hooks & ARR_DOWN_HOOK)) // down
+	else if (keycode == ARR_DOWN_KEY && (data->hooks & ARR_DOWN_HOOK))
 		data->hooks -= ARR_DOWN_HOOK;
-	else if (keycode == ARR_UP_KEY && (data->hooks & ARR_UP_HOOK)) // up
+	else if (keycode == ARR_UP_KEY && (data->hooks & ARR_UP_HOOK))
 		data->hooks -= ARR_UP_HOOK;
 	return (1);
 }

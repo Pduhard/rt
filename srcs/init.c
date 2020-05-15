@@ -1,33 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:07:54 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:14:49 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-
-void  write_cmd_strings(void *mp, void *wp)
+void			write_cmd_strings(void *mp, void *wp)
 {
 	mlx_string_put(mp, wp, 150, 10, 0xFFFFFF, "Controls");
 	mlx_string_put(mp, wp, 10, 60, 0xFFFFFF, "Cam Mode :");
-	mlx_string_put(mp, wp, 5, 100, 0xFFFFFF, "ESC          ==> Quit Program");
-	mlx_string_put(mp, wp, 5, 125, 0xFFFFFF, "W / S        ==> Forward / Backward");
-	mlx_string_put(mp, wp, 5, 150, 0xFFFFFF, "A / D        ==> Left / Right");
-	mlx_string_put(mp, wp, 5, 175, 0xFFFFFF, "UP / DOWN    ==> Rotate Verticaly");
-	mlx_string_put(mp, wp, 5, 200, 0xFFFFFF, "LEFT / RIGHT ==> Rotate Horizontaly");
+	mlx_string_put(mp, wp, 5, 100, 0xFFFFFF, ESC);
+	mlx_string_put(mp, wp, 5, 125, 0xFFFFFF, WS);
+	mlx_string_put(mp, wp, 5, 150, 0xFFFFFF, AD);
+	mlx_string_put(mp, wp, 5, 175, 0xFFFFFF, UPDOWN);
+	mlx_string_put(mp, wp, 5, 200, 0xFFFFFF, LEFTRIGHT);
 	mlx_string_put(mp, wp, 5, 225, 0xFFFFFF, "SPACE        ==> Up");
 	mlx_string_put(mp, wp, 5, 250, 0xFFFFFF, "SHIFT        ==> Down");
 	mlx_string_put(mp, wp, 5, 275, 0xFFFFFF, "LEFT CLICK   ==> Select Object");
 	mlx_string_put(mp, wp, 10, 325, 0xFFFFFF, "Mode Move_Object :");
-	mlx_string_put(mp, wp, 5, 375, 0xFFFFFF, "W, A, S, D   ==> Translate Object");
+	mlx_string_put(mp, wp, 5, 375, 0xFFFFFF, WASD);
 	mlx_string_put(mp, wp, 5, 400, 0xFFFFFF, "ARROWS       ==> Rotate Object");
 	mlx_string_put(mp, wp, 5, 425, 0xFFFFFF, "SPACE        ==> Up Object");
 	mlx_string_put(mp, wp, 5, 450, 0xFFFFFF, "SHIFT        ==> Down Object");
-	mlx_string_put(mp, wp, 5, 475, 0xFFFFFF, "LEFT CLICK   ==> Unselect Object");
+	mlx_string_put(mp, wp, 5, 475, 0xFFFFFF, LEFTCLICK);
 }
 
-int		open_info(t_data *data)
+int				open_info(t_data *data)
 {
 	if (!data->info)
 	{
 		if (!(data->info = malloc(sizeof(t_mlx))))
 			return (0);
-		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr, 400, 500, "Informations");
+		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr,
+			400, 500, "Informations");
 		write_cmd_strings(data->mlx->mlx_ptr, data->info->win_ptr);
 	}
 	else
@@ -53,7 +65,7 @@ static t_mlx	*init_mlx(t_data *data)
 	return (mlx);
 }
 
-int					check_macro(void)
+int				check_macro(void)
 {
 	if (NB_THREADS < 1 || NB_THREADS > 16)
 	{
@@ -63,7 +75,7 @@ int					check_macro(void)
 	return (1);
 }
 
-int					check_file_setup(t_data *data)
+int				check_file_setup(t_data *data)
 {
 	if (data->size.val[0] < 400 || data->size.val[0] > 2560
 		|| data->size.val[1] < 400 || data->size.val[1] > 1420)
@@ -74,7 +86,7 @@ int					check_file_setup(t_data *data)
 	return (1);
 }
 
-int					check_mlx(t_mlx *mlx, t_data *data)
+int				check_mlx(t_mlx *mlx, t_data *data)
 {
 	if (!mlx && !(data->mlx = init_mlx(data)))
 	{
@@ -98,8 +110,10 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	init_perlin(data);
 	data->water_f = 0.;
 	data->first_loop = 0;
-	data->rot_mat[0] = init_rotation_matrix_x(degree_to_radian(data->camera->rotation.val[0]));
-	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
+	data->rot_mat[0] = init_rotation_matrix_x(
+		degree_to_radian(data->camera->rotation.val[0]));
+	data->rot_mat[1] = init_rotation_matrix_y(
+		degree_to_radian(data->camera->rotation.val[1]));
 	data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
 	return (data);
 }

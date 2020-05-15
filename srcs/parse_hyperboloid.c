@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_hyperboloid.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:29:40 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:30:20 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_hyperboloid_element(char **line, int *ret,
+static int	parse_hyperboloid_element(char **line, int *ret,
 	t_hyperboloid *hyperboloid_param)
 {
 	char stripe;
@@ -26,22 +38,27 @@ static int   parse_hyperboloid_element(char **line, int *ret,
 	return (1);
 }
 
-static int   check_hyperboloid_param(t_hyperboloid *hyperboloid_param, int ret)
+static int	check_hyperboloid_param(t_hyperboloid *hyperboloid_param, int ret)
 {
 	if (is_null(hyperboloid_param->x_fact) || hyperboloid_param->x_fact <= 0)
-		ft_fdprintf(2, "Parse error: Hyperboloid: x axis factor must be greater than 0\n");
-	else if (is_null(hyperboloid_param->y_fact) || hyperboloid_param->y_fact <= 0)
-		ft_fdprintf(2, "Parse error: Hyperboloid: y axis factor must be greater than 0\n");
-	else if (is_null(hyperboloid_param->z_fact) || hyperboloid_param->z_fact <= 0)
-		ft_fdprintf(2, "Parse error: Hyperboloid: z axis factor must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Hyperboloid: x axis factor must be greater than 0\n");
+	else if (is_null(hyperboloid_param->y_fact)
+		|| hyperboloid_param->y_fact <= 0)
+		ft_fdprintf(2,
+		"Parse error: Hyperboloid: y axis factor must be greater than 0\n");
+	else if (is_null(hyperboloid_param->z_fact)
+		|| hyperboloid_param->z_fact <= 0)
+		ft_fdprintf(2,
+		"Parse error: Hyperboloid: z axis factor must be greater than 0\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-int		parse_hyperboloid(char **line, t_obj *hyperboloid)
+int			parse_hyperboloid(char **line, t_obj *hyperboloid)
 {
-	int		ret;
+	int				ret;
 	t_hyperboloid	*hyperboloid_param;
 
 	if (hyperboloid->obj_param)

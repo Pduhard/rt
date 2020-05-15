@@ -1,35 +1,54 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 18:05:34 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:17:56 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-void    ft_throw_error(char *message, ...)
+void	ft_mem_error()
 {
-  va_list	ap;
-
-  va_start(ap, message);
-  vdprintf(2, message , ap);
-  va_end(ap);
+	ft_fdprintf(2, "Malloc error: exit\n");
+	exit(0);
 }
 
-int     ft_return_error(int ret, char *message, ...)
+void	ft_throw_error(char *message, ...)
 {
-  va_list	ap;
+	va_list	ap;
 
-  va_start(ap, message);
-  vdprintf(2, message , ap);
-  va_end(ap);
-  return (ret);
+	va_start(ap, message);
+	vdprintf(2, message, ap);
+	va_end(ap);
 }
 
-int     ft_memalloc_error(int ret, size_t size)
+int		ft_return_error(int ret, char *message, ...)
 {
-  dprintf(2, "internal error: too big allocation (try to allocate %zu bytes)\n",
-		size);
-  return (ret);
+	va_list	ap;
+
+	va_start(ap, message);
+	vdprintf(2, message, ap);
+	va_end(ap);
+	return (ret);
 }
 
-int     ft_usage_error(int ret, char *usage)
+int		ft_memalloc_error(int ret, size_t size)
 {
-  dprintf(2, "Usage: %s\n", usage);
-  return (ret);
+	dprintf(2,
+		"internal error: too big allocation (try to allocate %zu bytes)\n",
+			size);
+	return (ret);
+}
+
+int		ft_usage_error(int ret, char *usage)
+{
+	dprintf(2, "Usage: %s\n", usage);
+	return (ret);
 }
 
 int		syn_error(char *s1, char *s2, char *s3, char *s4)

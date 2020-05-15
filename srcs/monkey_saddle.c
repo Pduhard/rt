@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monkey_saddle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 02:40:58 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 23:51:52 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/15 19:51:03 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle)
 	(void)monkey_saddle;
 }
 
-t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *monkey_saddle)
+t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point,
+	t_3vecf normal_inter, t_obj *monkey_saddle)
 {
 	return ((t_2vecf){{0, 0}});
 	(void)normal_inter;
@@ -50,23 +51,26 @@ t_3vecf	get_origin_monkey_saddle(t_obj *monkey_saddle)
 	return (((t_monkey_saddle *)monkey_saddle->obj_param)->origin);
 }
 
-t_3vecf get_monkey_saddle_origin(t_obj *monkey_saddle, t_monkey_saddle *param, int sp_id)
+t_3vecf	get_monkey_saddle_origin(t_obj *monkey_saddle, t_monkey_saddle *param,
+	int sp_id)
 {
-		if (sp_id)
-			return (move_3vecf(param->origin, monkey_saddle->motions, sp_id));
-		return (param->origin);
+	if (sp_id)
+		return (move_3vecf(param->origin, monkey_saddle->motions, sp_id));
+	return (param->origin);
 }
 
-t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_saddle, int sp_id)
+t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point,
+	t_obj *monkey_saddle, int sp_id)
 {
 	t_monkey_saddle	*param;
-	t_3vecf		normal_inter;
-	double		x;
-	double		z;
-	t_3vecf		monkey_saddle_origin;
+	t_3vecf			normal_inter;
+	double			x;
+	double			z;
+	t_3vecf			monkey_saddle_origin;
 
 	param = (t_monkey_saddle *)monkey_saddle->obj_param;
-	monkey_saddle_origin = get_monkey_saddle_origin(monkey_saddle, param, sp_id);
+	monkey_saddle_origin = get_monkey_saddle_origin(monkey_saddle,
+		param, sp_id);
 	x = inter_point.val[0] - monkey_saddle_origin.val[0];
 	z = inter_point.val[2] - monkey_saddle_origin.val[2];
 	normal_inter.val[0] = 3 * x * x - 3 * z * z;
@@ -76,7 +80,7 @@ t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_sa
 	return (normal_inter);
 }
 
-t_4vecf get_monkey_saddle_cubis_cst(t_3vecf monkey_saddle_origin, t_leq l)
+t_4vecf	get_monkey_saddle_cubis_cst(t_3vecf monkey_saddle_origin, t_leq l)
 {
 	double		o[3];
 	double		d[3];
@@ -88,16 +92,17 @@ t_4vecf get_monkey_saddle_cubis_cst(t_3vecf monkey_saddle_origin, t_leq l)
 	d[0] = l.dir.val[0];
 	d[1] = l.dir.val[1];
 	d[2] = l.dir.val[2];
-	cst.val[0] = (-3 * d[0] * d[2] * d[2]) + (d[0] * d[0] * d[0]);//a
+	cst.val[0] = (-3 * d[0] * d[2] * d[2]) + (d[0] * d[0] * d[0]);
 	cst.val[1] = (-3 * o[0] * d[2] * d[2]) - (6 * o[2] * d[2] * d[0])
-						 + (d[0] * d[0] * o[0]) + (2 * o[0] * d[0] * d[0]);//b
+		+ (d[0] * d[0] * o[0]) + (2 * o[0] * d[0] * d[0]);
 	cst.val[2] = (-6 * o[0] * o[2] * d[2]) - (3 * o[2] * o[2] * d[0]) - d[1]
-						 + (2 * o[0] * o[0] * d[0]) + (o[0] * o[0] * d[0]);//c
-	cst.val[3] = (-3 * o[2] * o[2] * o[0]) + (o[0] * o[0] * o[0]) - o[1];//d
+		+ (2 * o[0] * o[0] * d[0]) + (o[0] * o[0] * d[0]);
+	cst.val[3] = (-3 * o[2] * o[2] * o[0]) + (o[0] * o[0] * o[0]) - o[1];
 	return (cst);
 }
 
-int check_monkey_saddle_bnd(t_leq l, t_3vecf monkey_saddle_origin, double root)
+int		check_monkey_saddle_bnd(t_leq l, t_3vecf monkey_saddle_origin,
+	double root)
 {
 	double	x;
 	double	y;
@@ -111,16 +116,16 @@ int check_monkey_saddle_bnd(t_leq l, t_3vecf monkey_saddle_origin, double root)
 	return (0);
 }
 
-int	ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle,
+int		ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle,
 	t_dist dist, int sp_id)
 {
 	t_4vecf	cst;
 	t_3vecf	roots;
-	int			check;
+	int		check;
 	t_3vecf	monkey_saddle_origin;
-	int			i;
+	int		i;
 
- 	i = -1;
+	i = -1;
 	check = 0;
 	monkey_saddle_origin = get_monkey_saddle_origin(monkey_saddle,
 		(t_monkey_saddle *)monkey_saddle->obj_param, sp_id);
@@ -132,7 +137,7 @@ int	ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle,
 	return (check);
 }
 
-void  assign_monkey_saddle_function(t_obj *monkey_saddle)
+void	assign_monkey_saddle_function(t_obj *monkey_saddle)
 {
 	monkey_saddle->obj_type = OBJ_MONKEY_SADDLE;
 	monkey_saddle->check_inside = &check_inside_monkey_saddle;
@@ -146,12 +151,13 @@ void  assign_monkey_saddle_function(t_obj *monkey_saddle)
 
 void	generate_new_monkey_saddle(t_data *data)
 {
-	t_obj		*monkey_saddle;
+	t_obj			*monkey_saddle;
 	t_monkey_saddle	*param;
-	t_3vecf		dir;
+	t_3vecf			dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(monkey_saddle = ft_memalloc(sizeof(t_obj))))
 		return ;

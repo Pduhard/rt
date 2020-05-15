@@ -1,18 +1,18 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   matrix.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/21 22:36:28 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/25 20:43:46 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:40:24 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:42:35 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
+
 #include "rt.h"
 
-t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat)
+t_3vecf		mult_3vecf_33matf(t_3vecf vect, t_33matf mat)
 {
 	t_3vecf	mult;
 
@@ -31,8 +31,8 @@ t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat)
 t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b)
 {
 	t_33matf	mult;
-	int		i;
-	int		j;
+	int			i;
+	int			j;
 
 	i = 0;
 	while (++i < 3)
@@ -40,9 +40,9 @@ t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b)
 		j = 0;
 		while (++j < 3)
 			mult.val[i][j] = a.val[i][0] * b.val[0][i]\
-										 + a.val[i][1] * b.val[1][i]\
-										 + a.val[i][2] * b.val[2][i];
-	  i++;
+				+ a.val[i][1] * b.val[1][i]\
+					+ a.val[i][2] * b.val[2][i];
+		i++;
 	}
 	return (mult);
 }
@@ -98,17 +98,17 @@ t_33matf	init_rotation_matrix_z(double theta)
 t_33matf	init_rotation_matrix_vec(t_3vecf vec, double theta)
 {
 	t_33matf	mat;
-	double		c = cos(theta);
-	double		s = sin(theta);
+	double		c;
+	double		s;
 
+	c = cos(theta);
+	s = sin(theta);
 	mat.val[0][0] = vec.val[0] * vec.val[0] * (1 - c) + c;
 	mat.val[0][1] = vec.val[0] * vec.val[1] * (1 - c) - vec.val[2] * s;
 	mat.val[0][2] = vec.val[0] * vec.val[2] * (1 - c) + vec.val[1] * s;
-
 	mat.val[1][0] = vec.val[0] * vec.val[1] * (1 - c) + vec.val[2] * s;
 	mat.val[1][1] = vec.val[1] * vec.val[1] * (1 - c) + c;
 	mat.val[1][2] = vec.val[1] * vec.val[2] * (1 - c) - vec.val[0] * s;
-
 	mat.val[2][0] = vec.val[0] * vec.val[2] * (1 - c) - vec.val[1] * s;
 	mat.val[2][1] = vec.val[1] * vec.val[2] * (1 - c) + vec.val[0] * s;
 	mat.val[2][2] = vec.val[2] * vec.val[2] * (1 - c) + c;

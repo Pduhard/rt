@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_perlin.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:03:51 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:06:52 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static void fl(t_data *data, char *src, int offset)
+static void	fl(t_data *data, char *src, int offset)
 {
-		ft_memcpy(data->permutation + offset, src, 14);
+	ft_memcpy(data->permutation + offset, src, 14);
 }
 
-static void    init_permutation(t_data *d, int i)
+static void	init_permutation(t_data *d, int i)
 {
 	while (i < 512)
 	{
@@ -34,7 +46,7 @@ static void    init_permutation(t_data *d, int i)
 	}
 }
 
-void    init_perlin(t_data *data)
+void		init_perlin(t_data *data)
 {
 	init_permutation(data, 0);
 	data->gradient[0] = assign_3vecf(1, 1, 0);

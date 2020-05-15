@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   cone.c                                           .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 18:21:18 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/12 20:35:39 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cone.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:18:53 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:26:23 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -30,9 +29,12 @@ int		check_inside_cone(t_3vecf inter_point, t_obj *obj)
 	c_dist = dot_product_3vecf(v[1], v[0]);
 	if (c_dist < 0 && (check_rev = 1))
 		c_dist *= -1;
-	v[2].val[0] = v[1].val[0] - c_dist * (check_rev ? -v[0].val[0] : v[0].val[0]);
-	v[2].val[1] = v[1].val[1] - c_dist * (check_rev ? -v[0].val[1] : v[0].val[1]);
-	v[2].val[2] = v[1].val[2] - c_dist * (check_rev ? -v[0].val[2] : v[0].val[2]);
+	v[2].val[0] =
+		v[1].val[0] - c_dist * (check_rev ? -v[0].val[0] : v[0].val[0]);
+	v[2].val[1] =
+		v[1].val[1] - c_dist * (check_rev ? -v[0].val[1] : v[0].val[1]);
+	v[2].val[2] =
+		v[1].val[2] - c_dist * (check_rev ? -v[0].val[2] : v[0].val[2]);
 	if (get_length_3vecf(v[2]) > (c_dist / height) * param->radius)
 		return (0);
 	return (1);
@@ -40,29 +42,29 @@ int		check_inside_cone(t_3vecf inter_point, t_obj *obj)
 
 void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis)
 {
-		axis[0] = assign_3vecf(0, 0, 0);
-		axis[1] = first_axis;
-		normalize_3vecf(&(axis[1]));
-		if (axis[1].val[0] != 0)
-		{
-			axis[0] = assign_3vecf(0, 1, 1);
-			axis[0].val[0] = (-axis[1].val[1] - axis[1].val[2])
-				/ axis[1].val[0];
-		}
-		else if (axis[1].val[1] != 0)
-		{
-			axis[0] = assign_3vecf(1, 0, 1);
-			axis[0].val[1] = (-axis[1].val[0] - axis[1].val[2])
-				/ axis[1].val[1];
-		}
-		else if (axis[1].val[2] != 0)
-		{
-			axis[0] = assign_3vecf(1, 1, 0);
-			axis[0].val[2] = (-axis[1].val[0] - axis[1].val[1])
-				/ axis[1].val[2];
-		}
-		normalize_3vecf(&(axis[0]));
-		axis[2] = product_3vecf(axis[0], axis[1]);
+	axis[0] = assign_3vecf(0, 0, 0);
+	axis[1] = first_axis;
+	normalize_3vecf(&(axis[1]));
+	if (axis[1].val[0] != 0)
+	{
+		axis[0] = assign_3vecf(0, 1, 1);
+		axis[0].val[0] = (-axis[1].val[1] - axis[1].val[2])
+			/ axis[1].val[0];
+	}
+	else if (axis[1].val[1] != 0)
+	{
+		axis[0] = assign_3vecf(1, 0, 1);
+		axis[0].val[1] = (-axis[1].val[0] - axis[1].val[2])
+			/ axis[1].val[1];
+	}
+	else if (axis[1].val[2] != 0)
+	{
+		axis[0] = assign_3vecf(1, 1, 0);
+		axis[0].val[2] = (-axis[1].val[0] - axis[1].val[1])
+			/ axis[1].val[2];
+	}
+	normalize_3vecf(&(axis[0]));
+	axis[2] = product_3vecf(axis[0], axis[1]);
 }
 
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point,
@@ -104,10 +106,10 @@ void	move_cone(t_obj *cone, t_3vecf dir, double fact)
 	}
 }
 
-void   rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
+void	rotate_cone(t_obj *cone, t_3vecf orig, t_33matf rot_mat[2])
 {
-	t_cone *param;
-	t_cut   *cuts;
+	t_cone	*param;
+	t_cut	*cuts;
 
 	param = (t_cone *)cone->obj_param;
 	param->center = sub_3vecf(param->center, orig);
@@ -132,15 +134,14 @@ t_3vecf	get_origin_cone(t_obj *cone) // a degager
 	return (((t_cone *)cone->obj_param)->tip);
 }
 
-
-t_3vecf get_cone_origin(t_obj *cone, t_cone *cone_param, int sp_id)
+t_3vecf	get_cone_origin(t_obj *cone, t_cone *cone_param, int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(cone_param->center, cone->motions, sp_id));
 	return (cone_param->center);
 }
 
-t_3vecf get_cone_tip(t_obj *cone, t_cone *cone_param, int sp_id)
+t_3vecf	get_cone_tip(t_obj *cone, t_cone *cone_param, int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(cone_param->tip, cone->motions, sp_id));
@@ -165,7 +166,7 @@ t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id)
 	return (normal);
 }
 
-t_3vecf get_cone_quadratic_cst(t_cone *cone_param, t_3vecf cone_origin,
+t_3vecf	get_cone_quadratic_cst(t_cone *cone_param, t_3vecf cone_origin,
 	t_3vecf cone_tip, t_leq l)
 {
 	double	m;
@@ -183,14 +184,15 @@ t_3vecf get_cone_quadratic_cst(t_cone *cone_param, t_3vecf cone_origin,
 	dp_wh = dot_product_3vecf(w, h);
 	return ((t_3vecf){{
 			dot_product_3vecf(l.dir, l.dir) - m * dp_dh * dp_dh - dp_dh * dp_dh,
-			2 * (dot_product_3vecf(l.dir, w) - m * dp_dh * dp_wh - dp_dh * dp_wh),
+			2 * (dot_product_3vecf(l.dir, w) - m * dp_dh
+				* dp_wh - dp_dh * dp_wh),
 			dot_product_3vecf(w, w) - m * dp_wh * dp_wh - dp_wh * dp_wh}});
 }
 
-int	ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id)
+int		ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id)
 {
 	t_3vecf cst;
-	int			check;
+	int		check;
 	t_cone	*cone_param;
 	t_2vecf roots;
 
@@ -207,7 +209,7 @@ int	ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id)
 	return (check);
 }
 
-void  assign_cone_function(t_obj *cone)
+void	assign_cone_function(t_obj *cone)
 {
 	cone->obj_type = OBJ_CONE;
 	cone->check_inside = &check_inside_cone;
@@ -226,7 +228,8 @@ void	generate_new_cone(t_data *data)
 	t_3vecf		dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(cone = ft_memalloc(sizeof(t_obj))))
 		return ;

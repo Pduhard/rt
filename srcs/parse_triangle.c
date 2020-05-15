@@ -1,17 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_triangle.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:38:40 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:48:44 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   check_triangle_param(t_triangle *triangle_param, int ret)
+static int	check_triangle_param(t_triangle *triangle_param, int ret)
 {
 	if (is_null_3vecf(sub_3vecf(triangle_param->a, triangle_param->b)) ||
 		is_null_3vecf(sub_3vecf(triangle_param->b, triangle_param->c)) ||
-			is_null_3vecf(sub_3vecf(triangle_param->c, triangle_param->a)))
-				ft_fdprintf(2, "Parse error: Triangle: at least 2 corners are confused (they must be different)\n");
+		is_null_3vecf(sub_3vecf(triangle_param->c, triangle_param->a)))
+		ft_fdprintf(2,
+			"Parse error: Triangle: at least 2 corners must be different\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-static int   parse_triangle_element(char **line, int *ret, t_triangle *triangle_param)
+static int	parse_triangle_element(char **line, int *ret,
+	t_triangle *triangle_param)
 {
 	char stripe;
 
@@ -32,9 +46,9 @@ static int   parse_triangle_element(char **line, int *ret, t_triangle *triangle_
 	return (1);
 }
 
-int		parse_triangle(char **line, t_obj *triangle)
+int			parse_triangle(char **line, t_obj *triangle)
 {
-	int		ret;
+	int			ret;
 	t_triangle	*triangle_param;
 
 	if (triangle->obj_param)

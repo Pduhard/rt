@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   motion.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/04 00:42:41 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/05 01:59:56 by pduhard-    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   motion.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:52:13 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:52:31 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -41,7 +40,8 @@ void		move_objects(t_obj *objs)
 	while (objs)
 	{
 		if (objs->motions)
-			objs->move(objs, objs->motions->dir, objs->motions->speed_fact * MOTION_STEP);
+			objs->move(objs, objs->motions->dir,
+				objs->motions->speed_fact * MOTION_STEP);
 		objs = objs->next;
 	}
 }
@@ -58,7 +58,6 @@ t_3vecf		motion_trace(t_3vecf orig, t_3vecf dir, t_data *data)
 	vel = 0;
 	tt_vel = 0;
 	color = assign_3vecf(0, 0, 0);
-
 	while (++i < MOTION_SPP)
 	{
 		ray_color = ray_trace((t_leq){orig, dir}, BIAS, MAX_VIEW, data, 6, i);

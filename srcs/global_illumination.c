@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   global_illumination.c                            .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/13 16:21:04 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/26 06:26:47 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   global_illumination.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 18:24:59 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 18:31:57 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -28,30 +27,32 @@ int	get_insertion_index(t_photon **tab, int i, int j, int *far)
 }
 
 double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_point,
-		t_add_pht_p param)
+	t_add_pht_p param)
 {
 	int		i;
 	int		j;
- 	int		far;
+	int		far;
 
- 	far = 0;
+	far = 0;
 	i = -1;
 	j = param.nn_photon - 1;
 	while (++i < param.nn_photon)
 	{
 		if (!tab[i] && (tab[i] = photon))
 			return (get_length_3vecf(sub_3vecf(tab[i]->position, inter_point)));
-		if (param.dist < get_length_3vecf(sub_3vecf(inter_point, tab[i]->position)))
+		if (param.dist < get_length_3vecf(sub_3vecf(inter_point,
+			tab[i]->position)))
 		{
 			tab[get_insertion_index(tab, i, j, &far)] = photon;
-			return (get_length_3vecf(sub_3vecf(tab[far]->position, inter_point)));
+			return (get_length_3vecf(sub_3vecf(tab[far]->position,
+				inter_point)));
 		}
 	}
 	return (get_length_3vecf(sub_3vecf(tab[param.nn_photon - 1]->position,
 			inter_point)));
 }
 
-void  add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
+void	add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
 {
 	// printf("farest %f dist %f\n", *p.farest, dist);
 	if (dist < *(p.closest))
@@ -61,7 +62,7 @@ void  add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
 				p.inter_point, (t_add_pht_p){dist, p.nn_photon});
 }
 
-void  get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
+void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
 {
 	double	dist;
 	t_3vecf	photon_pos;

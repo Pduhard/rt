@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_moebius.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:31:04 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:31:38 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_moebius_element(char **line, int *ret, t_moebius *moebius_param)
+static int	parse_moebius_element(char **line, int *ret,
+	t_moebius *moebius_param)
 {
 	char stripe;
 
@@ -21,21 +34,24 @@ static int   parse_moebius_element(char **line, int *ret, t_moebius *moebius_par
 	return (1);
 }
 
-static int   check_moebius_param(t_moebius *moebius_param, int ret)
+static int	check_moebius_param(t_moebius *moebius_param, int ret)
 {
 	if (moebius_param->radius <= 0. || is_null(moebius_param->radius))
-		ft_fdprintf(2, "Parse error: Moebius: radius must be greater than 0\n");
-	else if (moebius_param->half_width <= 0. || is_null(moebius_param->half_width))
-		ft_fdprintf(2, "Parse error: Moebius: half width must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Moebius: radius must be greater than 0\n");
+	else if (moebius_param->half_width <= 0.
+		|| is_null(moebius_param->half_width))
+		ft_fdprintf(2,
+		"Parse error: Moebius: half width must be greater than 0\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-int		parse_moebius(char **line, t_obj *moebius)
+int			parse_moebius(char **line, t_obj *moebius)
 {
-	char	stripe;
-	int		ret;
+	char		stripe;
+	int			ret;
 	t_moebius	*moebius_param;
 
 	stripe = 0;

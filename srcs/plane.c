@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   plane.c                                          .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 17:05:21 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/12 19:51:43 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:52:38 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:54:29 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -27,7 +26,7 @@ int		check_inside_plane(t_3vecf inter_point, t_obj *plane)
 	return (0);
 }
 
-int     init_plane_2daxis(t_plane *param, t_3vecf nrml,
+int		init_plane_2daxis(t_plane *param, t_3vecf nrml,
 	t_3vecf *u_axis, t_3vecf *v_axis)
 {
 	if (is_null_3vecf(param->x2d_axis) ||
@@ -125,8 +124,7 @@ t_3vecf	get_origin_plane(t_obj *plane) // a tej
 	return (((t_plane *)plane->obj_param)->origin);
 }
 
-
-t_3vecf get_plane_origin(t_obj *plane, t_plane *plane_param, int sp_id)
+t_3vecf	get_plane_origin(t_obj *plane, t_plane *plane_param, int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(plane_param->origin, plane->motions, sp_id));
@@ -140,7 +138,7 @@ t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane, int sp_id)
 	(void)sp_id;
 }
 
-int	ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
+int		ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
 {
 	t_plane	*plane_param;
 	double	div;
@@ -163,7 +161,7 @@ int	ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
 	return (0);
 }
 
-void  assign_plane_function(t_obj *plane)
+void	assign_plane_function(t_obj *plane)
 {
 	plane->obj_type = OBJ_PLANE;
 	plane->check_inside = &check_inside_plane;
@@ -177,12 +175,13 @@ void  assign_plane_function(t_obj *plane)
 
 void	generate_new_plane(t_data *data)
 {
-	t_obj		*plane;
+	t_obj	*plane;
 	t_plane	*param;
-	t_3vecf		dir;
+	t_3vecf	dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(plane = ft_memalloc(sizeof(t_obj))))
 		return ;

@@ -1,36 +1,39 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   cylinder.c                                       .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/13 20:10:21 by aplat        #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/12 20:38:43 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:45:12 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:53:52 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-// http://www.illusioncatalyst.com/notes_files/mathematics/line_cylinder_intersection.php
+/*
+** http://www.illusioncatalyst.com/notes_files/mathematics/
+**	line_cylinder_intersection.php
+*/
 
 int		check_inside_cylinder(t_3vecf inter_point, t_obj *cylinder)
 {
 	t_cylinder	*param;
-	t_3vecf			tp;
-	t_3vecf			cp;
+	t_3vecf		tp;
+	t_3vecf		cp;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	tp = sub_3vecf(inter_point, param->tip);
 	cp = sub_3vecf(inter_point, param->center);
 	if (get_length_3vecf(product_3vecf(tp, cp))
-		/ get_length_3vecf(sub_3vecf(param->tip, param->center)) > param->radius)
+		/ get_length_3vecf(sub_3vecf(param->tip, param->center))
+			> param->radius)
 		return (0);
 	return (1);
 }
 
-void  assign_cylinder_function(t_obj *cylinder)
+void	assign_cylinder_function(t_obj *cylinder)
 {
 	cylinder->obj_type = OBJ_CYLINDER;
 	cylinder->check_inside = &check_inside_cylinder;
@@ -46,11 +49,12 @@ void  assign_cylinder_function(t_obj *cylinder)
 void	generate_new_cylinder(t_data *data)
 {
 	t_obj		*cylinder;
-	t_cylinder		*param;
+	t_cylinder	*param;
 	t_3vecf		dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(cylinder = ft_memalloc(sizeof(t_obj))))
 		return ;
@@ -70,9 +74,9 @@ void	generate_new_cylinder(t_data *data)
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter,
 	t_obj *cylinder)
 {
-	t_2vecf	text_coord;
-	t_3vecf	cp;
-	t_3vecf	cyl_axis[3];
+	t_2vecf		text_coord;
+	t_3vecf		cp;
+	t_3vecf		cyl_axis[3];
 	t_cylinder	*param;
 
 	param = (t_cylinder *)cylinder->obj_param;
@@ -89,7 +93,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter,
 void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 {
 	t_cylinder	*param;
-	t_cut	*cuts;
+	t_cut		*cuts;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	param->center.val[0] += dir.val[0] * fact;
@@ -107,10 +111,10 @@ void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
 	}
 }
 
-void   rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
+void	rotate_cylinder(t_obj *cylinder, t_3vecf orig, t_33matf rot_mat[2])
 {
-	t_cylinder *param;
-	t_cut   *cuts;
+	t_cylinder	*param;
+	t_cut		*cuts;
 
 	param = (t_cylinder *)cylinder->obj_param;
 	param->center = sub_3vecf(param->center, orig);
@@ -135,14 +139,15 @@ t_3vecf	get_origin_cylinder(t_obj *cylinder) // a degager
 	return (((t_cylinder *)cylinder->obj_param)->center);
 }
 
-t_3vecf get_cylinder_origin(t_obj *cylinder, t_cylinder *cylinder_param, int sp_id)
+t_3vecf	get_cylinder_origin(t_obj *cylinder, t_cylinder *cylinder_param,
+	int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(cylinder_param->center, cylinder->motions, sp_id));
 	return (cylinder_param->center);
 }
 
-t_3vecf get_cylinder_tip(t_obj *cylinder, t_cylinder *cylinder_param, int sp_id)
+t_3vecf	get_cylinder_tip(t_obj *cylinder, t_cylinder *cylinder_param, int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(cylinder_param->tip, cylinder->motions, sp_id));
@@ -165,12 +170,13 @@ t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point,
 	length_ch *= length_ch;
 	step_inter_proj = dot_product_3vecf(ch,
 			sub_3vecf(inter_point, cylinder_origin)) / length_ch;
-	inter_proj = add_3vecf(cylinder_origin, product_c3vecf(ch, step_inter_proj));
+	inter_proj = add_3vecf(cylinder_origin,
+		product_c3vecf(ch, step_inter_proj));
 	return (sub_3vecf(inter_proj, inter_point));
 }
 
-t_3vecf get_cylinder_quadratic_cst(t_cylinder *cylinder_param, t_3vecf cylinder_origin,
-	t_3vecf cylinder_tip, t_leq l)
+t_3vecf	get_cylinder_quadratic_cst(t_cylinder *cylinder_param,
+	t_3vecf cylinder_origin, t_3vecf cylinder_tip, t_leq l)
 {
 	t_3vecf	h;
 	double	dp_dh;
@@ -186,18 +192,18 @@ t_3vecf get_cylinder_quadratic_cst(t_cylinder *cylinder_param, t_3vecf cylinder_
 	cst.val[0] = dot_product_3vecf(l.dir, l.dir) - dp_dh * dp_dh;
 	cst.val[1] = 2 * (dot_product_3vecf(l.dir, w) - dp_dh * dp_wh);
 	cst.val[2] = dot_product_3vecf(w, w) - dp_wh * dp_wh
-						 - cylinder_param->radius * cylinder_param->radius;
+		- cylinder_param->radius * cylinder_param->radius;
 	return (cst);
 }
 
-int ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id)
+int		ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id)
 {
-	t_3vecf 		cst;
-	int					check;
+	t_3vecf		cst;
+	int			check;
 	t_cylinder	*cylinder_param;
-	t_2vecf			roots;
+	t_2vecf		roots;
 
- 	check = 0;
+	check = 0;
 	cylinder_param = (t_cylinder *)cylinder->obj_param;
 	cst = get_cylinder_quadratic_cst(
 		cylinder_param,

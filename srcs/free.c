@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/05 16:55:10 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/12 17:44:59 by pduhard-         ###   ########lyon.fr   */
+/*   Created: 2020/05/15 18:20:53 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 18:23:49 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	delete_object(t_data *data, t_obj *obj)
 	free_object(obj);
 }
 
-void unchain_data_list(t_data *data)
+void	unchain_data_list(t_data *data)
 {
 	t_data *start;
 
@@ -102,10 +102,10 @@ void unchain_data_list(t_data *data)
 	data->next = NULL;
 }
 
-void free_all_objects(t_obj *objs)
+void	free_all_objects(t_obj *objs)
 {
-	t_obj *next;
-	int   i;
+	t_obj	*next;
+	int		i;
 
 	while (objs)
 	{
@@ -126,7 +126,7 @@ void free_all_objects(t_obj *objs)
 	}
 }
 
-void free_composed_objects(t_composed *composed)
+void	free_composed_objects(t_composed *composed)
 {
 	int i;
 
@@ -140,14 +140,14 @@ void free_composed_objects(t_composed *composed)
 	}
 }
 
-void free_mlx(t_mlx *mlx)
+void	free_mlx(t_mlx *mlx)
 {
 	mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 	free(mlx);
 }
 
-void free_lights(t_light *lights)
+void	free_lights(t_light *lights)
 {
 	t_light *next;
 
@@ -159,7 +159,7 @@ void free_lights(t_light *lights)
 	}
 }
 
-void free_photon_map(t_kd_tree *map)
+void	free_photon_map(t_kd_tree *map)
 {
 	if (!map)
 		return ;
@@ -168,7 +168,7 @@ void free_photon_map(t_kd_tree *map)
 	free_photon_map(map->right);
 }
 
-void free_data(t_data *data)
+void	free_data(t_data *data)
 {
 	free_composed_objects(data->composed_objs);
 	free(data->camera);
@@ -181,11 +181,11 @@ void free_data(t_data *data)
 	free_photon_map(data->caustic_map);
 }
 
-void free_info(t_data *data)
+void	free_info(t_data *data)
 {
 	t_data	*first;
-	int    	check;
-	t_mlx		*info;
+	int		check;
+	t_mlx	*info;
 
 	first = data;
 	check = 0;
@@ -204,13 +204,12 @@ void free_info(t_data *data)
 	// free(data->info);
 }
 
-void free_all(t_data *data)
+void	free_all(t_data *data)
 {
 	t_data	*next;
-	t_mlx		*mlx;
+	t_mlx	*mlx;
 
 	mlx = data->mlx;
-
 	free_info(data);
 	free_mlx(mlx);
 	unchain_data_list(data);

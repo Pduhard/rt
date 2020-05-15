@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cutting.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:22:28 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:22:58 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		parse_cut_texture(char **line, t_cut *cut)
@@ -41,35 +53,6 @@ int		parse_cut_sphere(char **line, t_cut *cut)
 	cut->move = &move_cut_sphere;
 	return (ret);
 }
-
-/*int		parse_cut_cube(char **line, t_cut *cut)
-{
-	t_cube		*param;
-	char		stripe;
-	int			ret;
-
-	ret = 1;
-	cut->cut_type = CUT_CUBE;
-	if (!(stripe = 0) && cut->cut_param)
-		return (error(ALREADYCUT, NULL));
-	if (!(param = ft_memalloc(sizeof(t_cube))))
-		return (0);
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "x_range", 7)))
-			ret = parse_rotation(line, &param->x_range, 7);
-		else if (!(ft_strncmp_case(*line, "y_range", 7)))
-			ret = parse_rotation(line, &param->y_range, 7);
-		else if (!(ft_strncmp_case(*line, "z_range", 7)))
-			ret = parse_rotation(line, &param->z_range, 7);
-		else if (stripe == '<' || ret == 0)
-			return (syn_error(SERROR, SYNCUT, CUBECUT, ZRANGE));
-	}
-	cut->cut_param = param;
-	cut->move = &move_cut_cube;
-	return (ret);
-}*/
 
 int		parse_cut_uv(char **line, t_cut *cut)
 {
@@ -137,8 +120,6 @@ int		pick_type_cutting(char **line, t_cut *cut, int *ret)
 		*ret = parse_cut_texture(line, cut);
 	else if (!(ft_strncmp_case(*line, "sphere", 6)))
 		*ret = parse_cut_sphere(line, cut);
-//	else if (!(ft_strncmp_case(*line, "cube", 4)))
-//		*ret = parse_cut_cube(line, cut);
 	else if (!(ft_strncmp_case(*line, "uv", 2)))
 		*ret = parse_cut_uv(line, cut);
 	return (1);
@@ -169,4 +150,3 @@ int		parse_cutting(char **line, t_obj *obj)
 	obj->cuts = cut;
 	return (ret);
 }
-

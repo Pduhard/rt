@@ -1,26 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:38:40 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:39:57 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-int			close_cross(t_data *data)
+int		close_cross(t_data *data)
 {
 	free_all(data);
 	exit(0);
 	return (0);
 }
 
-int			close_info(t_data *data)
+int		close_info(t_data *data)
 {
 	free_info(data);
 	return (0);
 }
 
-t_data *init_all_scene(char **argv)
+t_data	*init_all_scene(char **argv)
 {
 	t_data		*data;
 	t_data		*first;
 	t_data		*data_lst;
-	int				i;
+	int			i;
 
- 	i = 0;
+	i = 0;
 	data_lst = NULL;
 	first = NULL;
 	while (argv[++i])
@@ -39,7 +51,7 @@ t_data *init_all_scene(char **argv)
 	return (first);
 }
 
-int	is_closest_intersect(t_dist dist, double root)
+int		is_closest_intersect(t_dist dist, double root)
 {
 	if (root < *(dist.dist) && root > dist.min_dist && root < dist.max_dist)
 	{
@@ -49,8 +61,7 @@ int	is_closest_intersect(t_dist dist, double root)
 	return (0);
 }
 
-
-int			main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	t_data		*data;
 
@@ -58,7 +69,6 @@ int			main(int argc, char **argv)
 		return (error(ERRORARG, NULL));
 	else if (!(data = init_all_scene(argv)))
 		return (error(ERRORARG, NULL));
-
 	mlx_hook(data->mlx->win_ptr, 2, (1L << 0), key_press, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 3, (1L << 1), key_release, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 4, (1L << 2), mouse_hook, (void *)data);

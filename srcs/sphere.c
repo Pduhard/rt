@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   sphere.c                                         .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aplat <aplat@student.le-101.fr>            +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 16:52:54 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/12 18:20:55 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sphere.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:58:25 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 21:00:31 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -28,8 +27,8 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point,
 {
 	t_2vecf	text_coord;
 
-	text_coord.val[1] = (1 - fmod((atan2(normal_inter.val[0], normal_inter.val[2])
-		/ (2 * M_PI) + 0.5), 1));
+	text_coord.val[1] = (1 - fmod((atan2(normal_inter.val[0],
+		normal_inter.val[2]) / (2 * M_PI) + 0.5), 1));
 	text_coord.val[0] = (normal_inter.val[1] * 0.5 + 0.5);
 	return (text_coord);
 	(void)inter_point;
@@ -58,9 +57,9 @@ void	rotate_sphere(t_obj *sphere, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_sphere	*param;
 	t_cut		*cuts;
+
 	param = (t_sphere *)sphere->obj_param;
 	param->origin = sub_3vecf(param->origin, orig);
-
 	param->origin = mult_3vecf_33matf(param->origin, rot_mat[1]);
 	param->origin = mult_3vecf_33matf(param->origin, rot_mat[0]);
 	param->origin = add_3vecf(param->origin, orig);
@@ -78,7 +77,7 @@ t_3vecf	get_origin_sphere(t_obj *sphere)
 	return (((t_sphere *)sphere->obj_param)->origin);
 }
 
-t_3vecf get_sphere_origin(t_obj *sphere, t_sphere *sphere_param, int sp_id)
+t_3vecf	get_sphere_origin(t_obj *sphere, t_sphere *sphere_param, int sp_id)
 {
 	if (sp_id)
 		return (move_3vecf(sphere_param->origin, sphere->motions, sp_id));
@@ -109,17 +108,17 @@ t_3vecf	get_sphere_quadratic_cst(t_sphere *sphere_param, t_3vecf sphere_origin,
 	cst.val[0] = dot_product_3vecf(l.dir, l.dir);
 	cst.val[1] = 2.f * dot_product_3vecf(dist_vec, l.dir);
 	cst.val[2] = dot_product_3vecf(dist_vec, dist_vec)
-						 - sphere_param->radius * sphere_param->radius;
+		- sphere_param->radius * sphere_param->radius;
 	return (cst);
 }
 
-int	ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id)
+int		ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id)
 {
 	t_2vecf		roots;
 	t_3vecf		cst;
 	t_sphere	*sphere_param;
-	int				check;
-	t_3vecf	sphere_origin;
+	int			check;
+	t_3vecf		sphere_origin;
 
 	check = 0;
 	sphere_param = (t_sphere *)sphere->obj_param;
@@ -131,7 +130,7 @@ int	ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id)
 	return (check);
 }
 
-void  assign_sphere_function(t_obj *sphere)
+void	assign_sphere_function(t_obj *sphere)
 {
 	sphere->obj_type = OBJ_SPHERE;
 	sphere->check_inside = &check_inside_sphere;
@@ -150,7 +149,8 @@ void	generate_new_sphere(t_data *data)
 	t_3vecf		dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(sphere = ft_memalloc(sizeof(t_obj))))
 		return ;

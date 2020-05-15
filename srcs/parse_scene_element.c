@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_scene_element.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:36:05 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:36:48 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		parse_onoff(char **line, int *onoff)
@@ -5,7 +17,6 @@ int		parse_onoff(char **line, int *onoff)
 	char	*s;
 
 	s = *line;
-
 	while (*s != '(' && *s)
 		++s;
 	if (!ft_strncmp_case(s, "(ON)", 4))
@@ -98,7 +109,7 @@ int		pick_options(char **line, t_data *data)
 	return (ret);
 }
 
-int   check_scene_param(t_data *data)
+int		check_scene_param(t_data *data)
 {
 	if (!check_lights_cam(data))
 		return (0);

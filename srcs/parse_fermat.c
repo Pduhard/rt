@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_fermat.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:27:55 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:28:13 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_fermat_element(char **line, int *ret, t_fermat *fermat_param)
+static int	parse_fermat_element(char **line, int *ret, t_fermat *fermat_param)
 {
 	char	stripe;
 
@@ -17,9 +29,9 @@ static int   parse_fermat_element(char **line, int *ret, t_fermat *fermat_param)
 	return (1);
 }
 
-int		parse_fermat(char **line, t_obj *fermat)
+int			parse_fermat(char **line, t_obj *fermat)
 {
-	int		ret;
+	int			ret;
 	t_fermat	*fermat_param;
 
 	if (fermat->obj_param)

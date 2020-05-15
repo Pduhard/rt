@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_sphere.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:37:00 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:37:29 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   check_sphere_param(t_sphere *sphere_param, int ret)
+static int	check_sphere_param(t_sphere *sphere_param, int ret)
 {
 	if (sphere_param->radius <= 0 || is_null(sphere_param->radius))
 		ft_fdprintf(2, "Parse error: Sphere: radius must be greater than 0\n");
@@ -9,7 +21,7 @@ static int   check_sphere_param(t_sphere *sphere_param, int ret)
 	return (0);
 }
 
-static int   parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
+static int	parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
 {
 	char stripe;
 
@@ -28,9 +40,9 @@ static int   parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
 	return (1);
 }
 
-int		parse_sphere(char **line, t_obj *sphere)
+int			parse_sphere(char **line, t_obj *sphere)
 {
-	int		ret;
+	int			ret;
 	t_sphere	*sphere_param;
 
 	if (sphere->obj_param)

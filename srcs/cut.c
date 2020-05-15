@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   cut.c                                            .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/03 23:03:19 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/02/29 01:38:33 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cut.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 17:28:29 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 17:32:09 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -16,10 +15,10 @@
 int			check_cut_classic(t_cut *cut, t_3vecf inter_point)
 {
 	t_cut_classic	*param;
-	t_3vecf				io;
+	t_3vecf			io;
 
 	if (cut->cut_type != CUT_STATIC && cut->cut_type != CUT_REAL)
-	 	return (0);
+		return (0);
 	param = (t_cut_classic *)cut->cut_param;
 	io = sub_3vecf(param->origin, inter_point);
 	if (dot_product_3vecf(io, param->normal) > 0)
@@ -37,15 +36,17 @@ int		check_cut_uv(t_cut *cut, t_3vecf inter_point, t_cut_fparam cp)
 		return (0);
 	uv = (t_cut_uv *)cut->cut_param;
 	normal_inter = cp.closest_obj->get_normal_inter(inter_point, cp.closest_obj,
-								 cp.sp_id);
+								cp.sp_id);
 	coord2d = cp.closest_obj->get_text_coordinate(inter_point, normal_inter,
 						cp.closest_obj);
 	coord2d.val[0] *= cp.closest_obj->text.scale.val[0];
 	coord2d.val[1] *= cp.closest_obj->text.scale.val[1];
 	coord2d.val[0] += cp.closest_obj->text.offset.val[0];
 	coord2d.val[1] += cp.closest_obj->text.offset.val[1];
-	if (coord2d.val[0] > uv->u_range.val[1] || coord2d.val[0] < uv->u_range.val[0]
-		|| coord2d.val[1] > uv->v_range.val[1] || coord2d.val[1] < uv->v_range.val[0])
+	if (coord2d.val[0] > uv->u_range.val[1]
+		|| coord2d.val[0] < uv->u_range.val[0]
+		|| coord2d.val[1] > uv->v_range.val[1]
+		|| coord2d.val[1] < uv->v_range.val[0])
 		return (1);
 	return (0);
 }
@@ -57,13 +58,16 @@ int		check_cut_texture(t_cut *cut, t_3vecf inter_point, t_cut_fparam cp)
 
 	if (cut->cut_type != CUT_TEXTURE)
 		return (0);
-	normal_inter = cp.closest_obj->get_normal_inter(inter_point, cp.closest_obj, cp.sp_id);
-	coord2d = cp.closest_obj->get_text_coordinate(inter_point, normal_inter, cp.closest_obj);
+	normal_inter = cp.closest_obj->get_normal_inter(inter_point,
+		cp.closest_obj, cp.sp_id);
+	coord2d = cp.closest_obj->get_text_coordinate(inter_point,
+		normal_inter, cp.closest_obj);
 	coord2d.val[0] *= cp.closest_obj->text.scale.val[0];
 	coord2d.val[1] *= cp.closest_obj->text.scale.val[1];
 	coord2d.val[0] += cp.closest_obj->text.offset.val[0];
 	coord2d.val[1] += cp.closest_obj->text.offset.val[1];
-	if (coord2d.val[0] > 1 || coord2d.val[0] < 0 || coord2d.val[1] > 1 || coord2d.val[1] < 0)
+	if (coord2d.val[0] > 1 || coord2d.val[0] < 0 || coord2d.val[1] > 1
+		|| coord2d.val[1] < 0)
 		return (1);
 	return (0);
 }
@@ -89,9 +93,9 @@ t_obj	*go_through(t_leq l, t_dist dist, t_cut_fparam cp)
 	return (ray_first_intersect(l, (t_dist){dist.dist, *(dist.dist), dist.max_dist}, cp.objs, cp.sp_id));
 }
 
-t_obj *check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data)
+t_obj	*check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data)
 {
-	t_cut		*cuts;
+	t_cut	*cuts;
 	t_3vecf	inter_point;
 
 	cuts = cp.closest_obj->cuts;

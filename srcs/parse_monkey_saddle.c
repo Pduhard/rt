@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_monkey_saddle.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:31:55 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:32:22 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_monkey_saddle_element(char **line, int *ret,
+static int	parse_monkey_saddle_element(char **line, int *ret,
 	t_monkey_saddle *monkey_saddle_param)
 {
 	char stripe;
@@ -18,16 +30,17 @@ static int   parse_monkey_saddle_element(char **line, int *ret,
 	return (1);
 }
 
-int		parse_monkey_saddle(char **line, t_obj *monkey_saddle)
+int			parse_monkey_saddle(char **line, t_obj *monkey_saddle)
 {
-	int		ret;
+	int				ret;
 	t_monkey_saddle	*monkey_saddle_param;
 
 	if (monkey_saddle->obj_param)
 		return (error(ALREADYOBJ, NULL));
 	if (!(monkey_saddle_param = ft_memalloc(sizeof(t_monkey_saddle))))
 		return (0);
-	if (!parse_monkey_saddle_element(line, &ret, monkey_saddle_param) || ret == 0)
+	if (!parse_monkey_saddle_element(line, &ret, monkey_saddle_param)
+		|| ret == 0)
 		return (syn_error(SERROR, MONKEY, ORIGIN, NULL));
 	monkey_saddle->obj_param = monkey_saddle_param;
 	assign_monkey_saddle_function(monkey_saddle);
