@@ -61,7 +61,7 @@ t_3vecf		motion_trace(t_3vecf orig, t_3vecf dir, t_data *data)
 
 	while (++i < MOTION_SPP)
 	{
-		ray_color = ray_trace(orig, dir, BIAS, MAX_VIEW, data, 6, i);
+		ray_color = ray_trace((t_leq){orig, dir}, BIAS, MAX_VIEW, data, 6, i);
 		vel = i + 1 == MOTION_SPP ? MOTION_FVEL : 1.;
 		color.val[0] += ray_color.val[0] * vel;
 		color.val[1] += ray_color.val[1] * vel;

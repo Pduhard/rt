@@ -31,8 +31,8 @@ int		mouse_hook(int button, int x, int y, void *param)
 		{
 			dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j,
 				data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-			data->selected_obj = ray_first_intersect(data->camera->origin,
-				dir, BIAS, MAX_VIEW, &dist, data->objs, 0, data);
+			data->selected_obj = ray_first_intersect((t_leq){data->camera->origin,
+				dir}, (t_dist){&dist, BIAS, MAX_VIEW}, data->objs, 0);
 		}
 	}
 	return (1);

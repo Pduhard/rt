@@ -593,6 +593,18 @@ typedef struct  s_phtn_prob
 	double				reflect_prob_spe;
 	double				reflect_prob_dif;
 }								t_phtn_prob;
+
+typedef struct  s_compute_light_param
+{
+	t_3vecf 			inter_point;
+	t_3vecf 			normal_inter;
+	t_3vecf 			dir;
+	t_light 			*lights;
+	t_obj					*objs;
+	int						sp_id;
+	t_data				*data;
+	double 				shininess;
+}								t_compute_light_param;
 // typedef struct	s_data_cont
 // {
 // 	t_data		*data_lst;
@@ -748,7 +760,7 @@ void  assign_fermat_function(t_obj *fermat);
 void  assign_moebius_function(t_obj *moebius);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
-t_3vecf	ray_trace(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, t_data *data, int depth, int sp_id);
+t_3vecf	ray_trace(t_leq l, double min_dist, double max_dist, t_data *data, int depth, int sp_id);
 t_3vecf	motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
 
 int		ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id);
@@ -849,7 +861,9 @@ t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t
 
 
 t_obj *check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data);
-t_obj	*ray_first_intersect(t_3vecf orig, t_3vecf dir, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
+// t_obj	*ray_first_intersect(t_leq l, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
+// t_obj	*ray_first_intersect(t_leq l, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
+t_obj	*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs, int sp_id);
 
 void	print_conf(t_data *data);
 void	print_vec2(double vec[2]);

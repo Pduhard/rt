@@ -185,8 +185,8 @@ void  cast_photon(t_leq l, t_phtn_cast p)
 	inside = 0;
 	if (!p.depth || is_null_3vecf(p.pwr))
 		return ;
-	obj = ray_first_intersect(l.orig, l.dir, BIAS, MAX_VIEW,
-		&dist, p.data->objs, 0, p.data);
+	obj = ray_first_intersect(l, (t_dist){&dist, BIAS, MAX_VIEW},
+		p.data->objs, 0);
 	if (!obj)
 		return ;
 	photon.position = add_3vecf(l.orig, product_c3vecf(l.dir, dist));

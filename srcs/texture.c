@@ -73,7 +73,9 @@ double	marble_noise(t_3vecf inter_point, double scale,
 double	compute_marble_factor(t_3vecf inter_point, double scale,
 	const unsigned char permutation[512], const t_3vecf gradient[16])
 {
-	double t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2
+	double t;
+
+ 	t = (0.5 + 0.5 * sin(scale * 2 * M_PI * (inter_point.val[0] + 2
 		* marble_noise(inter_point, scale, permutation, gradient))));
 	return (t * t - .5);
 }

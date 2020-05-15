@@ -23,7 +23,7 @@
 			<radius(4)>
 			<half_width(2)>
 		>
-		<shininess (0)>
+		<shininess (1)>
 	>	
 	<objects
 		<texture
