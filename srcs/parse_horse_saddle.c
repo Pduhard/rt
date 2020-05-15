@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_horse_saddle.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:28:35 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:29:18 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_horse_saddle_element(char **line, int *ret,
+static int	parse_horse_saddle_element(char **line, int *ret,
 	t_horse_saddle *horse_saddle_param)
 {
 	char stripe;
@@ -22,20 +34,24 @@ static int   parse_horse_saddle_element(char **line, int *ret,
 	return (1);
 }
 
-static int   check_horse_saddle_param(t_horse_saddle *horse_saddle_param, int ret)
+static int	check_horse_saddle_param(t_horse_saddle *horse_saddle_param,
+	int ret)
 {
 	if (horse_saddle_param->x_fact <= 0 || is_null(horse_saddle_param->x_fact))
-		ft_fdprintf(2, "Parse error: Horse saddle: x fact must be greater than 0\n");
-	else if (horse_saddle_param->y_fact <= 0 || is_null(horse_saddle_param->y_fact))
-		ft_fdprintf(2, "Parse error: Horse saddle: y fact must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Horse saddle: x fact must be greater than 0\n");
+	else if (horse_saddle_param->y_fact <= 0
+		|| is_null(horse_saddle_param->y_fact))
+		ft_fdprintf(2,
+		"Parse error: Horse saddle: y fact must be greater than 0\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-int		parse_horse_saddle(char **line, t_obj *horse_saddle)
+int			parse_horse_saddle(char **line, t_obj *horse_saddle)
 {
-	int		ret;
+	int				ret;
 	t_horse_saddle	*horse_saddle_param;
 
 	if (horse_saddle->obj_param)

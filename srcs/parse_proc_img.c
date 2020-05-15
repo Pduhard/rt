@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_proc_img.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:35:13 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:35:42 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-SDL_Surface *parse_sdl_image(char *name)
+SDL_Surface	*parse_sdl_image(char *name)
 {
 	SDL_Surface		*row;
 	SDL_Surface		*image;
@@ -19,7 +31,7 @@ SDL_Surface *parse_sdl_image(char *name)
 	return (image);
 }
 
-void	*parse_img(char *name)
+void		*parse_img(char *name)
 {
 	SDL_Surface		*image;
 	t_text_img		*param;
@@ -47,7 +59,7 @@ void	*parse_img(char *name)
 	return ((void *)param);
 }
 
-void	*parse_texture_img(char **line)
+void		*parse_texture_img(char **line)
 {
 	t_text_img		*param;
 	unsigned int	i;
@@ -70,7 +82,7 @@ void	*parse_texture_img(char **line)
 	return ((void *)param);
 }
 
-void	*parse_proc(char **line)
+void		*parse_proc(char **line)
 {
 	int			cmp;
 	int			ret;
@@ -92,7 +104,7 @@ void	*parse_proc(char **line)
 	return ((void *)param);
 }
 
-int		parse_color_transp(char **line, int i, t_4vecf *t)
+int			parse_color_transp(char **line, int i, t_4vecf *t)
 {
 	char	*s;
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_object.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:33:13 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		pick_native_object(char **line, t_obj *obj)
@@ -64,7 +76,7 @@ int		pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-void  clamp_and_set_dflt(t_obj *obj)
+void	clamp_and_set_dflt(t_obj *obj)
 {
 	clamp_val(&obj->reflection, 0, 1);
 	clamp_val(&obj->shininess, 0, 1);

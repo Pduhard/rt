@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cone.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:21:31 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:22:02 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_cone_element(char **line, int *ret, t_cone *cone_param)
+static int	parse_cone_element(char **line, int *ret, t_cone *cone_param)
 {
 	char stripe;
 
@@ -21,18 +33,19 @@ static int   parse_cone_element(char **line, int *ret, t_cone *cone_param)
 	return (1);
 }
 
-static int  check_cone_param(t_cone *cone_param, int ret)
+static int	check_cone_param(t_cone *cone_param, int ret)
 {
 	if (cone_param->radius <= 0. || is_null(cone_param->radius))
 		ft_fdprintf(2, "Parse error: Cone: radius must be greater than 0\n");
 	else if (is_null_3vecf(sub_3vecf(cone_param->center, cone_param->tip)))
-		ft_fdprintf(2, "Parse error: Cone: center and tip are confused (must be different)\n");
+		ft_fdprintf(2,
+		"Parse error: Cone: center and tip are confused(must be different)\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-int		parse_cone(char **line, t_obj *cone)
+int			parse_cone(char **line, t_obj *cone)
 {
 	int		ret;
 	t_cone	*cone_param;

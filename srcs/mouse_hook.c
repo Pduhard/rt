@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mouse_hook.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 05:17:07 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 05:59:05 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/15 19:53:07 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int		mouse_hook(int button, int x, int y, void *param)
 {
 	t_data	*data;
-	int			i;
-	int			j;
+	int		i;
+	int		j;
 	double	dist;
 	t_3vecf	dir;
 
@@ -30,7 +30,8 @@ int		mouse_hook(int button, int x, int y, void *param)
 		else
 		{
 			dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j,
-				data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+				data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+					data->rot_mat[0]);
 			data->selected_obj = ray_first_intersect(data->camera->origin,
 				dir, BIAS, MAX_VIEW, &dist, data->objs, 0, data);
 		}

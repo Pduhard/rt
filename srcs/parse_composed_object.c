@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_composed_object.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 19:56:28 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:18:43 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-void	move_cut_plane(t_cut *cut, t_3vecf dir, double fact)
+void		move_cut_plane(t_cut *cut, t_3vecf dir, double fact)
 {
 	t_plane	*param;
 
@@ -10,7 +22,7 @@ void	move_cut_plane(t_cut *cut, t_3vecf dir, double fact)
 	param->origin.val[2] += dir.val[2] * fact;
 }
 
-void	move_cut_sphere(t_cut *cut, t_3vecf dir, double fact)
+void		move_cut_sphere(t_cut *cut, t_3vecf dir, double fact)
 {
 	t_sphere	*param;
 
@@ -20,7 +32,7 @@ void	move_cut_sphere(t_cut *cut, t_3vecf dir, double fact)
 	param->origin.val[2] += dir.val[2] * fact;
 }
 
-void	move_cut_cube(t_cut *cut, t_3vecf dir, double fact)
+void		move_cut_cube(t_cut *cut, t_3vecf dir, double fact)
 {
 	t_cube	*param;
 
@@ -33,7 +45,7 @@ void	move_cut_cube(t_cut *cut, t_3vecf dir, double fact)
 	param->z_range.val[1] += dir.val[1] * fact;
 }
 
-void	rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2])
+void		rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2])
 {
 	t_plane	*param;
 
@@ -46,7 +58,7 @@ void	rotate_cut_plane(t_cut *cut, t_3vecf orig, t_33matf rot_mat[2])
 	param->origin = add_3vecf(param->origin, orig);
 }
 
-int		parse_composed_model(char **line, t_data *data)
+int			parse_composed_model(char **line, t_data *data)
 {
 	char		stripe;
 	int			ret;
@@ -72,7 +84,7 @@ int		parse_composed_model(char **line, t_data *data)
 	return (ret);
 }
 
-void	*copy_obj_param(void *obj_param, t_obj_type type)
+void		*copy_obj_param(void *obj_param, t_obj_type type)
 {
 	if (type == OBJ_SPHERE)
 		return (ft_memcpy(ft_memalloc(sizeof(t_sphere)),
@@ -93,7 +105,7 @@ void	*copy_obj_param(void *obj_param, t_obj_type type)
 		return (NULL);
 }
 
-t_cut	*copy_cut(t_cut *src)
+t_cut		*copy_cut(t_cut *src)
 {
 	t_cut	*cut;
 
@@ -116,36 +128,31 @@ t_cut	*copy_cut(t_cut *src)
 	return (cut);
 }
 
-t_text copy_text(t_text src)
+t_text		copy_text(t_text src)
 {
-	t_text cpy;
-	t_text_img *p;
+	t_text		cpy;
+	t_text_img	*p;
 
 	cpy = src;
 	if (src.text_type == TEXT_IMAGE)
 	{
 		if (!(cpy.text_param = malloc(sizeof(t_text_img))))
-		{
-			ft_fdprintf(2, "Malloc error: exit\n");
-			exit(0);
-		}
+			ft_mem_error();
 		p = (t_text_img *)src.text_param;
 		((t_text_img *)cpy.text_param)->pixels = ft_memcpy(ft_memalloc(p->width
-			* p->height * sizeof(int)), p->pixels, p->width * p->height * sizeof(int));
+			* p->height * sizeof(int)), p->pixels, p->width *
+				p->height * sizeof(int));
 	}
 	else
 	{
 		if (!(cpy.text_param = malloc(sizeof(t_text_proc))))
-		{
-			ft_fdprintf(2, "Malloc error: exit\n");
-			exit(0);
-		}
+			ft_mem_error();
 		*((t_text_proc *)cpy.text_param) = *((t_text_proc *)src.text_param);
 	}
 	return (cpy);
 }
 
-t_obj	*copy_object(t_obj *src)
+t_obj		*copy_object(t_obj *src)
 {
 	t_obj	*obj;
 	t_cut	*cuts_obj;
@@ -188,7 +195,7 @@ t_composed	*get_composed_object(char *name, t_composed *list)
 	return (composed);
 }
 
-t_obj **init_composed_obj_tab(t_composed *composed)
+t_obj		**init_composed_obj_tab(t_composed *composed)
 {
 	int		i;
 	t_obj	**obj_tab;
@@ -201,9 +208,10 @@ t_obj **init_composed_obj_tab(t_composed *composed)
 	return (obj_tab);
 }
 
-int		parse_composed_info(char **line, t_3vecf *origin, t_2vecf *rotation, int *ret)
+int			parse_composed_info(char **line, t_3vecf *origin,
+	t_2vecf *rotation, int *ret)
 {
-	char			stripe;
+	char	stripe;
 
 	stripe = '\0';
 	while (stripe != '>' && *ret != 0)
@@ -219,12 +227,12 @@ int		parse_composed_info(char **line, t_3vecf *origin, t_2vecf *rotation, int *r
 	return (*ret);
 }
 
-int   fill_obj_tab(t_obj **obj_tab, t_comp_param p, t_composed *composed,
-	t_data *data)
+int			fill_obj_tab(t_obj **obj_tab, t_comp_param p,
+	t_composed *composed, t_data *data)
 {
 	t_33matf	rot_mat[2];
 	t_3vecf		tm;
-	int				i;
+	int			i;
 
 	rot_mat[1] = init_rotation_matrix_y(degree_to_radian(p.rotation.val[1]));
 	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), rot_mat[1]);
@@ -243,7 +251,7 @@ int   fill_obj_tab(t_obj **obj_tab, t_comp_param p, t_composed *composed,
 	return (1);
 }
 
-void  assign_composed_with(t_obj **obj_tab, t_3vecf origin)
+void		assign_composed_with(t_obj **obj_tab, t_3vecf origin)
 {
 	int i;
 
@@ -255,17 +263,18 @@ void  assign_composed_with(t_obj **obj_tab, t_3vecf origin)
 	}
 }
 
-int		is_composed_object(char **line, t_data *data, int *ret)
+int			is_composed_object(char **line, t_data *data, int *ret)
 {
 	t_composed	*composed;
-	t_obj			**obj_tab;
+	t_obj		**obj_tab;
 	t_3vecf		origin;
 	t_2vecf		rotation;
 
 	if (!(composed = get_composed_object(*line, data->composed_objs)) ||
 			!(obj_tab = init_composed_obj_tab(composed)) ||
 			!parse_composed_info(line, &origin, &rotation, ret) ||
-			!fill_obj_tab(obj_tab, (t_comp_param){origin, rotation},composed, data))
+			!fill_obj_tab(obj_tab, (t_comp_param){origin, rotation},
+			composed, data))
 		return (0);
 	assign_composed_with(obj_tab, origin);
 	return (1);

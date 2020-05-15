@@ -30,11 +30,11 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_MED
+# define QUALITY			Q_LOW
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
-# define DFLT_POWER   100
-# define NB_THREADS   8
+# define DFLT_POWER 100
+# define NB_THREADS	 8
 # define MIN_AA 		0.5
 # define NO_AA      1.
 # define MAX_AA 		2.
@@ -48,11 +48,11 @@
 //# define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
 # define NN_CAUSTIC_PHOTON_MAX  20
-# define NN_INDIRECT_PHOTON_MAX 20
+# define NN_INDIRECT_PHOTON_MAX	10
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON   10000
-# define NB_CAUSTIC_PHOTON		100000
+# define NB_INDIRECT_PHOTON		10000
+# define NB_CAUSTIC_PHOTON		50000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
@@ -150,7 +150,7 @@
 # define POINT "\t<point (x, y, z)>\n\t<color (r, g, b)>\n"
 
 /* Error Mess */
-# define ERRORMEM "internal error: too big allocation\n"
+# define ERRORMEM "internal error: too big allocation (try to allocate %zu bytes)\n"
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
 # define ERRORTHREAD "Number Thread : Min 1, Max 16\n"
@@ -182,6 +182,15 @@
 # define BUMPINDE "<BumpMapping\n\t<independent (Type)(BumpFact)>\n"
 # define BUMPOWN "<BumpMapping\n\t<own (BumpFact)>\n"
 # define MOTION "<MotionBlur\n\t<dir (x, y, z)>\n\t<speed (SpeedFact)>\n\t"
+
+/* Infos Mess */
+# define ESC "ESC          ==> Quit Program"
+# define WS "W / S        ==> Forward / Backward"
+# define AD "A / D        ==> Left / Right"
+# define UPDOWN "UP / DOWN    ==> Rotate Verticaly"
+# define LEFTRIGHT "LEFT / RIGHT ==> Rotate Horizontaly"
+# define WASD "W, A, S, D   ==> Translate Object"
+# define LEFTCLICK "LEFT CLICK   ==> Unselect Object"
 
 typedef	enum {
 	OBJ_SPHERE,
@@ -531,6 +540,7 @@ typedef struct	s_data
 	t_3vecf		(*apply_color_filter)(t_3vecf);
 	t_kd_tree	*indirect_map;
 	t_kd_tree	*caustic_map;
+	t_cube		bbox_photon;
 	t_obj			*selected_obj;
 	char		*skybox_name;
 	int			to_next;
@@ -899,6 +909,7 @@ int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 void    ft_throw_error(char *message, ...);
 int     ft_memalloc_error(int ret, size_t size);
+void	ft_mem_error();
 
 int		check_lights_cam(t_data *data);
 int		check_skybox(t_data *data);

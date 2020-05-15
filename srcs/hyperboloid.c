@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hyperboloid.c                                        :+:      :+:    :+:   */
+/*   hyperboloid.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/25 18:28:43 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/28 23:49:41 by pduhard-         ###   ########lyon.fr   */
+/*   Created: 2020/05/15 18:57:38 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 19:03:21 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@ int		check_inside_hyperboloid(t_3vecf point, t_obj *hyperboloid)
 
 	param = (t_hyperboloid *)hyperboloid->obj_param;
 	point = sub_3vecf(point, param->origin);
-	point.val[0] = (point.val[0] * point.val[0]) / (param->x_fact * param->x_fact);
-	point.val[1] = (point.val[1] * point.val[1]) / (param->y_fact * param->y_fact);
-	point.val[2] = (point.val[2] * point.val[2]) / (param->z_fact * param->z_fact);
+	point.val[0] = (point.val[0] * point.val[0])
+		/ (param->x_fact * param->x_fact);
+	point.val[1] = (point.val[1] * point.val[1])
+		/ (param->y_fact * param->y_fact);
+	point.val[2] = (point.val[2] * point.val[2])
+		/ (param->z_fact * param->z_fact);
 	if (point.val[0] - point.val[1] + point.val[2] + param->surface > 0)
 		return (0);
 	return (1);
@@ -58,11 +61,12 @@ t_3vecf	get_origin_hyperboloid(t_obj *hyperboloid) // bye
 	return (((t_hyperboloid *)hyperboloid->obj_param)->origin);
 }
 
-t_3vecf get_hyperboloid_origin(t_obj *hyperboloid,
+t_3vecf	get_hyperboloid_origin(t_obj *hyperboloid,
 	t_hyperboloid *hyperboloid_param, int sp_id)
 {
 	if (sp_id)
-		return (move_3vecf(hyperboloid_param->origin, hyperboloid->motions, sp_id));
+		return
+		(move_3vecf(hyperboloid_param->origin, hyperboloid->motions, sp_id));
 	return (hyperboloid_param->origin);
 }
 
@@ -70,9 +74,9 @@ t_3vecf	get_normal_intersect_hyperboloid(t_3vecf inter_point,
 	t_obj *hyperboloid, int sp_id)
 {
 	t_hyperboloid	*param;
-	t_3vecf		normal_inter;
-	t_3vecf		hyperboloid_origin;
-	t_3vecf		cst;
+	t_3vecf			normal_inter;
+	t_3vecf			hyperboloid_origin;
+	t_3vecf			cst;
 
 	param = (t_hyperboloid *)hyperboloid->obj_param;
 	hyperboloid_origin = get_hyperboloid_origin(hyperboloid, param, sp_id);
@@ -84,7 +88,7 @@ t_3vecf	get_normal_intersect_hyperboloid(t_3vecf inter_point,
 	return (normal_inter);
 }
 
-t_3vecf get_hyperboloid_quadratic_cst(t_hyperboloid *param,
+t_3vecf	get_hyperboloid_quadratic_cst(t_hyperboloid *param,
 	t_3vecf hyperboloid_origin, t_leq l)
 {
 	double		f[3];
@@ -102,21 +106,22 @@ t_3vecf get_hyperboloid_quadratic_cst(t_hyperboloid *param,
 	f[1] = param->y_fact;
 	f[2] = param->z_fact;
 	cst.val[2] = (o[0] * o[0]) / (f[0] * f[0]) - (o[1] * o[1]) / (f[1] * f[1])
-						 + (o[2] * o[2]) / (f[2] * f[2]) + param->surface;//f[2]
+		+ (o[2] * o[2]) / (f[2] * f[2]) + param->surface;
 	cst.val[1] = (2 * o[0] * d[0]) / (f[0] * f[0]) - (2 * o[1] * d[1])
-						 / (f[1] * f[1]) + (2 * o[2] * d[2]) / (f[2] * f[2]);//f[1]
+		/ (f[1] * f[1]) + (2 * o[2] * d[2]) / (f[2] * f[2]);
 	cst.val[0] = (d[0] * d[0]) / (f[0] * f[0]) - (d[1] * d[1]) / (f[1] * f[1])
-						 + (d[2] * d[2]) / (f[2] * f[2]);//f[0]
+		+ (d[2] * d[2]) / (f[2] * f[2]);
 	return (cst);
 }
 
-int	ray_intersect_hyperboloid(t_leq l, t_obj *hyperboloid, t_dist dist, int sp_id)
+int		ray_intersect_hyperboloid(t_leq l, t_obj *hyperboloid,
+	t_dist dist, int sp_id)
 {
 	t_hyperboloid	*param;
-	t_2vecf				roots;
-	int						check;
-	t_3vecf				hyperboloid_origin;
-	t_3vecf		cst;
+	t_2vecf			roots;
+	int				check;
+	t_3vecf			hyperboloid_origin;
+	t_3vecf			cst;
 
 	check = 0;
 	param = (t_hyperboloid *)hyperboloid->obj_param;
@@ -128,7 +133,7 @@ int	ray_intersect_hyperboloid(t_leq l, t_obj *hyperboloid, t_dist dist, int sp_i
 	return (check);
 }
 
-void  assign_hyperboloid_function(t_obj *hyperboloid)
+void	assign_hyperboloid_function(t_obj *hyperboloid)
 {
 	hyperboloid->obj_type = OBJ_HYPERBOLOID;
 	hyperboloid->check_inside = &check_inside_hyperboloid;
@@ -142,12 +147,13 @@ void  assign_hyperboloid_function(t_obj *hyperboloid)
 
 void	generate_new_hyperboloid(t_data *data)
 {
-	t_obj		*hyperboloid;
+	t_obj			*hyperboloid;
 	t_hyperboloid	*param;
-	t_3vecf		dir;
+	t_3vecf			dir;
 
 	dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(0, 0,
-		data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
+		data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+			data->rot_mat[0]);
 	normalize_3vecf(&dir);
 	if (!(hyperboloid = ft_memalloc(sizeof(t_obj))))
 		return ;

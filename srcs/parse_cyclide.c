@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cyclide.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:23:43 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:24:05 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_cyclide_element(char **line, int *ret, t_cyclide *cyclide_param)
+static int	parse_cyclide_element(char **line, int *ret,
+	t_cyclide *cyclide_param)
 {
 	char stripe;
 
@@ -19,9 +32,9 @@ static int   parse_cyclide_element(char **line, int *ret, t_cyclide *cyclide_par
 	return (1);
 }
 
-int		parse_cyclide(char **line, t_obj *cyclide)
+int			parse_cyclide(char **line, t_obj *cyclide)
 {
-	int		ret;
+	int			ret;
 	t_cyclide	*cyclide_param;
 
 	if (cyclide->obj_param)

@@ -1,37 +1,22 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   loop.c                                           .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/30 20:56:52 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 16:42:49 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   loop.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/30 20:56:52 by pduhard-          #+#    #+#             */
+/*   Updated: 2020/05/15 19:35:04 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-// void	translate_and_rotate(t_data *data)
-// {
-// 	t_obj *obj;
-//
-// 	obj = data->objs;
-// 	data->rot_mat[1] = init_rotation_matrix_y(degree_to_radian(3));
-// 	while (obj)
-// 	{
-// 		t_sphere *param = (t_sphere *)obj->obj_param;
-// 		param->origin = mult_3vecf_33matf(param->origin, data->rot_mat[1]);
-// 		obj = obj->next;
-// 	}
-// }
-
-static void init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
+static void		init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
 {
-	int				deg_y;
-	int				deg_x;
-	t_3vecf		tm;
+	int		deg_y;
+	int		deg_x;
+	t_3vecf	tm;
 
 	deg_x = 0;
 	deg_y = 0;
@@ -48,10 +33,10 @@ static void init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
 	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(deg_x));
 }
 
-void manage_obj_rotation(t_data *data, int *ret)
+void			manage_obj_rotation(t_data *data, int *ret)
 {
 	t_33matf	rot_mat[2];
-	int				i;
+	int			i;
 
 	if (data->hooks & ((ARR_LEFT_HOOK | ARR_RIGHT_HOOK
 		| ARR_DOWN_HOOK | ARR_UP_HOOK)))
@@ -73,7 +58,7 @@ void manage_obj_rotation(t_data *data, int *ret)
 			rot_mat);
 }
 
-void manage_cam_rotation(t_data *data, int *ret)
+void			manage_cam_rotation(t_data *data, int *ret)
 {
 	double radian;
 
@@ -97,33 +82,35 @@ void manage_cam_rotation(t_data *data, int *ret)
 	}
 }
 
-void obj_move(t_obj *obj, int way, t_3vecf dir)
+void			obj_move(t_obj *obj, int way, t_3vecf dir)
 {
 	int i;
 
- 	i = -1;
+	i = -1;
 	if (obj->composed_w)
 	{
 		while (obj->composed_w[++i])
 		{
 			obj->composed_w[i]->move(obj->composed_w[i], dir, way);
 			if (way == 1)
-				obj->composed_w[i]->composed_origin = add_3vecf(obj->composed_w[i]->composed_origin, dir);
+				obj->composed_w[i]->composed_origin =
+					add_3vecf(obj->composed_w[i]->composed_origin, dir);
 			else
-				obj->composed_w[i]->composed_origin = sub_3vecf(obj->composed_w[i]->composed_origin, dir);
+				obj->composed_w[i]->composed_origin =
+					sub_3vecf(obj->composed_w[i]->composed_origin, dir);
 		}
 	}
 	else
 		obj->move(obj, dir, way);
 }
 
-void manage_obj_move(t_data *data, int *ret)
+void			manage_obj_move(t_data *data, int *ret)
 {
 	t_3vecf dir;
 
 	if ((data->hooks & (W_HOOK | S_HOOK)) && (*ret = 1))
 	{
-		 dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
+		dir = mult_3vecf_33matf(assign_3vecf(0, 0, 0.2), data->rot_mat[1]);
 		if (data->hooks & W_HOOK)
 			obj_move(data->selected_obj, 1, dir);
 		if (data->hooks & S_HOOK)
@@ -143,7 +130,7 @@ void manage_obj_move(t_data *data, int *ret)
 		obj_move(data->selected_obj, 1, assign_3vecf(0, 0.2, 0));
 }
 
-void manage_cam_move(t_data *data, int *ret)
+void			manage_cam_move(t_data *data, int *ret)
 {
 	t_3vecf dir;
 
@@ -169,11 +156,11 @@ void manage_cam_move(t_data *data, int *ret)
 		data->camera->origin.val[1] += 0.2;
 }
 
-int	loop_manage_cam(t_data *data)
+int				loop_manage_cam(t_data *data)
 {
 	int	ret;
 
- 	ret = 0;
+	ret = 0;
 	if (data->selected_obj)
 	{
 		if (data->selected_obj->rotate)
@@ -188,10 +175,19 @@ int	loop_manage_cam(t_data *data)
 	return (ret);
 }
 
-t_data	*get_curr_scene(t_data **data_addr)
+void			launch_hook(t_data *data)
 {
-	t_data *data;
-	t_mlx		*mlx;
+	mlx_hook(data->mlx->win_ptr, 2, (1L << 0), key_press, (void *)data);
+	mlx_hook(data->mlx->win_ptr, 3, (1L << 1), key_release, (void *)data);
+	mlx_hook(data->mlx->win_ptr, 4, (1L << 2), mouse_hook, (void *)data);
+	mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross,
+		(void *)data);
+}
+
+t_data			*get_curr_scene(t_data **data_addr)
+{
+	t_data	*data;
+	t_mlx	*mlx;
 
 	if ((*data_addr)->to_next && (*data_addr)->next)
 	{
@@ -203,19 +199,18 @@ t_data	*get_curr_scene(t_data **data_addr)
 		mlx = data->mlx;
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 		mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, data->size.val[0], data->size.val[1], data->scene_name);
-		mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, data->size.val[0], data->size.val[1]);
-		mlx->img_str = (int *)mlx_get_data_addr(mlx->img_ptr, &(mlx->bpp), &(mlx->s_l), &(mlx->endian));
-		mlx_hook(data->mlx->win_ptr, 2, 0, key_press, (void *)data);
-		mlx_hook(data->mlx->win_ptr, 3, 0, key_release, (void *)data);
-		mlx_hook(data->mlx->win_ptr, 4, 0, mouse_hook, (void *)data);
-		mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross, (void *)data);
-		return(data);
+		mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, data->size.val[0],
+			data->size.val[1], data->scene_name);
+		mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, data->size.val[0],
+			data->size.val[1]);
+		mlx->img_str = (int *)mlx_get_data_addr(mlx->img_ptr, &(mlx->bpp),
+			&(mlx->s_l), &(mlx->endian));
+		launch_hook(data);
 	}
 	return (*data_addr);
 }
 
-void  check_photon_map(t_data *data)
+void			check_photon_map(t_data *data)
 {
 	if ((((data->caustics_gi && !data->caustic_map)
 		|| (data->indirect_gi && !data->indirect_map)))
@@ -227,7 +222,7 @@ void  check_photon_map(t_data *data)
 	}
 }
 
-int   check_for_scene_change(t_data *data)
+int				check_for_scene_change(t_data *data)
 {
 	int rendering;
 
@@ -243,19 +238,18 @@ int   check_for_scene_change(t_data *data)
 	return (rendering);
 }
 
-int		print_loop_image(void *param)
+int				print_loop_image(void *param)
 {
 	t_data	*data;
-	int			rendering;
+	int		rendering;
 
- 	rendering = 1;
+	rendering = 1;
 	data = get_curr_scene((t_data **)param);
 	check_photon_map(data);
 	if (check_for_scene_change(data) || (WATER_ON))
 //	loop_manage_cam(data);
 //	data->aa_adapt = NO_AA;
-
-		render(data);
+	render(data);
 	data->new_obj = 0;
 	data->first_loop++;
 	if (WATER_ON)

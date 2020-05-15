@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_ellipsoid.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:26:32 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:27:34 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   parse_ellipsoid_element(char **line, int *ret, t_ellipsoid *ellipsoid_param)
+static int	parse_ellipsoid_element(char **line, int *ret,
+	t_ellipsoid *ellipsoid_param)
 {
 	char stripe;
 
@@ -23,22 +36,25 @@ static int   parse_ellipsoid_element(char **line, int *ret, t_ellipsoid *ellipso
 	return (1);
 }
 
-static int   check_ellipsoid_param(t_ellipsoid *ellipsoid_param, int ret)
+static int	check_ellipsoid_param(t_ellipsoid *ellipsoid_param, int ret)
 {
 	if (is_null(ellipsoid_param->x_fact) || ellipsoid_param->x_fact <= 0)
-		ft_fdprintf(2, "Parse error: Ellipsoid: x axis factor must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Ellipsoid: x axis factor must be greater than 0\n");
 	else if (is_null(ellipsoid_param->y_fact) || ellipsoid_param->y_fact <= 0)
-		ft_fdprintf(2, "Parse error: Ellipsoid: y axis factor must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Ellipsoid: y axis factor must be greater than 0\n");
 	else if (is_null(ellipsoid_param->z_fact) || ellipsoid_param->z_fact <= 0)
-		ft_fdprintf(2, "Parse error: Ellipsoid: z axis factor must be greater than 0\n");
+		ft_fdprintf(2,
+		"Parse error: Ellipsoid: z axis factor must be greater than 0\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-int		parse_ellipsoid(char **line, t_obj *ellipsoid)
+int			parse_ellipsoid(char **line, t_obj *ellipsoid)
 {
-	int		ret;
+	int			ret;
 	t_ellipsoid	*ellipsoid_param;
 
 	if (ellipsoid->obj_param)

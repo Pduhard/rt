@@ -1,17 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cylinder.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/15 20:24:19 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/15 20:25:50 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int  check_cylinder_param(t_cylinder *cylinder_param, int ret)
+static int	check_cylinder_param(t_cylinder *cylinder_param, int ret)
 {
 	if (cylinder_param->radius <= 0. || is_null(cylinder_param->radius))
-		ft_fdprintf(2, "Parse error: Cylinder: radius must be greater than 0\n");
-	else if (is_null_3vecf(sub_3vecf(cylinder_param->center, cylinder_param->tip)))
-		ft_fdprintf(2, "Parse error: Cylinder: center and tip are confused (must be different)\n");
+		ft_fdprintf(2,
+		"Parse error: Cylinder: radius must be greater than 0\n");
+	else if (is_null_3vecf(sub_3vecf(cylinder_param->center,
+		cylinder_param->tip)))
+		ft_fdprintf(2,
+		"Parse error: Cylinder: center and tip must be different\n");
 	else if (ret != 0)
 		return (1);
 	return (0);
 }
 
-static int  parse_cylinder_element(char **line, int *ret, t_cylinder *cylinder_param)
+static int	parse_cylinder_element(char **line, int *ret,
+	t_cylinder *cylinder_param)
 {
 	char stripe;
 
@@ -32,7 +48,7 @@ static int  parse_cylinder_element(char **line, int *ret, t_cylinder *cylinder_p
 	return (1);
 }
 
-int		parse_cylinder(char **line, t_obj *cylinder)
+int			parse_cylinder(char **line, t_obj *cylinder)
 {
 	int			ret;
 	t_cylinder	*cylinder_param;

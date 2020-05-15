@@ -6,11 +6,17 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:05:34 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 18:11:30 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/15 20:17:56 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+void	ft_mem_error()
+{
+	ft_fdprintf(2, "Malloc error: exit\n");
+	exit(0);
+}
 
 void	ft_throw_error(char *message, ...)
 {
@@ -33,7 +39,9 @@ int		ft_return_error(int ret, char *message, ...)
 
 int		ft_memalloc_error(int ret, size_t size)
 {
-	dprintf(2, ERRORMEM, size);
+	dprintf(2,
+		"internal error: too big allocation (try to allocate %zu bytes)\n",
+			size);
 	return (ret);
 }
 
