@@ -30,11 +30,11 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_LOW
+# define QUALITY			Q_MED
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
-
-# define NB_THREADS	 8
+# define DFLT_POWER   100
+# define NB_THREADS   8
 # define MIN_AA 		0.5
 # define NO_AA      1.
 # define MAX_AA 		2.
@@ -47,11 +47,11 @@
 //# define GLOBAL_ILLUMINATION	0
 //# define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX  50
-# define NN_INDIRECT_PHOTON_MAX	20
+# define NN_CAUSTIC_PHOTON_MAX  20
+# define NN_INDIRECT_PHOTON_MAX 20
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		10000
+# define NB_INDIRECT_PHOTON   10000
 # define NB_CAUSTIC_PHOTON		100000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
@@ -531,7 +531,6 @@ typedef struct	s_data
 	t_3vecf		(*apply_color_filter)(t_3vecf);
 	t_kd_tree	*indirect_map;
 	t_kd_tree	*caustic_map;
-	t_cube		bbox_photon;
 	t_obj			*selected_obj;
 	char		*skybox_name;
 	int			to_next;
@@ -573,7 +572,28 @@ typedef struct	s_nn_param
 	double				*closest;
 	double				*farest;
 	int						nn_photon;
+	int           actual_nn;
 }								t_nn_param;
+
+typedef struct  s_phtn_cast
+{
+	t_data				*data;
+	int						*ind_i;
+	int						*caus_i;
+	t_photon			**photon_tab;
+	int						depth;
+	unsigned int	rand_iter;
+	t_3vecf				pwr;
+	int						photon_type;
+}								t_phtn_cast;
+
+typedef struct  s_phtn_prob
+{
+	double				absorb_prob;
+	double				refract_prob;
+	double				reflect_prob_spe;
+	double				reflect_prob_dif;
+}								t_phtn_prob;
 // typedef struct	s_data_cont
 // {
 // 	t_data		*data_lst;
@@ -872,6 +892,7 @@ t_3vecf	apply_color_filter_sepia(t_3vecf color);
 void	add_object(t_obj *obj, t_data *data);
 //void	add_component(t_obj *obj, t_composed *composed);
 
+void  cast_photon(t_leq l, t_phtn_cast p);
 int			create_photon_map(t_data *data);
 double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
