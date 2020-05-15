@@ -42,7 +42,7 @@ int		parse_cut_sphere(char **line, t_cut *cut)
 	return (ret);
 }
 
-int		parse_cut_cube(char **line, t_cut *cut)
+/*int		parse_cut_cube(char **line, t_cut *cut)
 {
 	t_cube		*param;
 	char		stripe;
@@ -69,7 +69,7 @@ int		parse_cut_cube(char **line, t_cut *cut)
 	cut->cut_param = param;
 	cut->move = &move_cut_cube;
 	return (ret);
-}
+}*/
 
 int		parse_cut_uv(char **line, t_cut *cut)
 {
@@ -137,8 +137,8 @@ int		pick_type_cutting(char **line, t_cut *cut, int *ret)
 		*ret = parse_cut_texture(line, cut);
 	else if (!(ft_strncmp_case(*line, "sphere", 6)))
 		*ret = parse_cut_sphere(line, cut);
-	else if (!(ft_strncmp_case(*line, "cube", 4)))
-		*ret = parse_cut_cube(line, cut);
+//	else if (!(ft_strncmp_case(*line, "cube", 4)))
+//		*ret = parse_cut_cube(line, cut);
 	else if (!(ft_strncmp_case(*line, "uv", 2)))
 		*ret = parse_cut_uv(line, cut);
 	return (1);

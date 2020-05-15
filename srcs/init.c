@@ -21,15 +21,18 @@ void  write_cmd_strings(void *mp, void *wp)
 	mlx_string_put(mp, wp, 5, 475, 0xFFFFFF, "LEFT CLICK   ==> Unselect Object");
 }
 
-void	open_info(t_data *data)
+int		open_info(t_data *data)
 {
 	if (!data->info)
 	{
 		if (!(data->info = malloc(sizeof(t_mlx))))
-			return ;
+			return (0);
 		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr, 400, 500, "Informations");
 		write_cmd_strings(data->mlx->mlx_ptr, data->info->win_ptr);
 	}
+	else
+		write_cmd_strings(data->mlx->mlx_ptr, data->info->win_ptr);
+	return (0);
 }
 
 static t_mlx	*init_mlx(t_data *data)
