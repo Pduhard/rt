@@ -109,7 +109,7 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 		return (NULL);
 	init_perlin(data);
 	data->water_f = 0.;
-	data->first_loop = 0;
+	data->first_loop = 1;
 	data->rot_mat[0] = init_rotation_matrix_x(
 		degree_to_radian(data->camera->rotation.val[0]));
 	data->rot_mat[1] = init_rotation_matrix_y(

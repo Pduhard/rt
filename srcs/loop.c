@@ -214,7 +214,7 @@ void			check_photon_map(t_data *data)
 {
 	if ((((data->caustics_gi && !data->caustic_map)
 		|| (data->indirect_gi && !data->indirect_map)))
-			&& data->first_loop && !(create_photon_map(data)))
+			&& data->first_loop > 1 && !(create_photon_map(data)))
 	{
 		ft_fdprintf(2, "Internal error: Global Illumination\n");
 		free_all(data);
@@ -228,8 +228,11 @@ int				check_for_scene_change(t_data *data)
 
 	rendering = 1;
 	if (loop_manage_cam(data) || data->new_obj || data->first_loop == 1)
+	{
 		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
+	}
 	else if (data->aa_adapt < NO_AA && QUALITY != Q_VERY_LOW)
+
 		data->aa_adapt = NO_AA;
 	else if (data->aa_adapt < MAX_AA && QUALITY == Q_HIGH)
 		data->aa_adapt = MAX_AA;
@@ -241,15 +244,19 @@ int				check_for_scene_change(t_data *data)
 int				print_loop_image(void *param)
 {
 	t_data	*data;
-	int		rendering;
+	// int		rendering;
 
-	rendering = 1;
+	// rendering = 1;
 	data = get_curr_scene((t_data **)param);
 	check_photon_map(data);
 	if (check_for_scene_change(data) || (WATER_ON))
+	{
+		printf("%f\n", data->aa_adapt);
+		render(data);
+
+	}
 //	loop_manage_cam(data);
 //	data->aa_adapt = NO_AA;
-	render(data);
 	data->new_obj = 0;
 	data->first_loop++;
 	if (WATER_ON)
