@@ -17,6 +17,12 @@ int		is_null(double value)
 	return (value < 0.0001 && value > -0.0001);
 }
 
+int		is_null_3vecf(t_3vecf vec)
+{
+	if (is_null(vec.val[0]) && is_null(vec.val[1]) && is_null(vec.val[2]))
+		return (1);
+	return (0);
+}
 double	degree_to_radian(double degree)
 {
 	return (degree * _M_PI_180);

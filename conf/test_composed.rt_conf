@@ -285,12 +285,12 @@
 	<lights
 		<ambient (0.2, 0.2, 0.2)>
 	>
-	<objects
-		<rct
-			<origin(-2, 1, 5)>
-			<rotation (20, 20)>
-		>
-	>
+//	<objects
+//		<rct
+//			<origin(-2, 1, 5)>
+//			<rotation (20, 20)>
+//		>
+//	>
 	<objects
 		<rct
 			<origin(2, 1, 3)>

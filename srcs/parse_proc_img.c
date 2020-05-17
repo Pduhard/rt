@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-SDL_Surface	*parse_sdl_image(char *name)
+static SDL_Surface	*parse_sdl_image(char *name)
 {
 	SDL_Surface		*row;
 	SDL_Surface		*image;
@@ -87,6 +87,20 @@ void		*parse_texture_img(char **line)
 	return ((void *)param);
 }
 
+static int			parse_color_transp(char **line, int i, t_4vecf *t)
+{
+	char	*s;
+
+	s = *line;
+	while (ft_isspace(s[i]))
+		++i;
+	if (s[i] != '(' || (i = parse_4vecf(s, i, t)) == -1)
+		return (0);
+	if (goto_next_element(line) != '>')
+		return (0);
+	return (1);
+}
+
 void		*parse_proc(char **line)
 {
 	int			cmp;
@@ -113,18 +127,4 @@ void		*parse_proc(char **line)
 		return (NULL);
 	}
 	return ((void *)param);
-}
-
-int			parse_color_transp(char **line, int i, t_4vecf *t)
-{
-	char	*s;
-
-	s = *line;
-	while (ft_isspace(s[i]))
-		++i;
-	if (s[i] != '(' || (i = parse_4vecf(s, i, t)) == -1)
-		return (0);
-	if (goto_next_element(line) != '>')
-		return (0);
-	return (1);
 }

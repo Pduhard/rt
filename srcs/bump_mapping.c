@@ -118,11 +118,3 @@ t_3vecf		get_bump_mapping_wood(t_3vecf inter_point,
 	return (assign_3vecf(normal_inter.val[0] - bump_x,
 		normal_inter.val[1] - bump_y, normal_inter.val[2] - bump_z));
 }
-
-t_3vecf		get_bump_mapping_image(t_3vecf inter_point,
-	t_3vecf normal_inter, t_obj *obj)
-{
-	return (normal_inter);
-	(void)inter_point;
-	(void)obj;
-}

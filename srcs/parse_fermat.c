@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:27:55 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:28:13 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:44:01 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ int			parse_fermat(char **line, t_obj *fermat)
 	if (!(fermat_param = ft_memalloc(sizeof(t_fermat))))
 		return (0);
 	if (!parse_fermat_element(line, &ret, fermat_param) || ret == 0)
+	{
+		free(fermat_param);
 		return (syn_error(SERROR, FERMAT, ORIGIN, NULL));
+	}
 	fermat->obj_param = fermat_param;
 	assign_fermat_function(fermat);
 	return (ret);

@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-int		parse_onoff(char **line, int *onoff)
+static int		parse_onoff(char **line, int *onoff)
 {
 	char	*s;
 
@@ -33,7 +33,7 @@ int		parse_onoff(char **line, int *onoff)
 	return (1);
 }
 
-int		parse_size(char **line, t_data *data)
+static int		parse_size(char **line, t_data *data)
 {
 	int		i;
 	char	*s;
@@ -52,36 +52,7 @@ int		parse_size(char **line, t_data *data)
 	return (1);
 }
 
-int		parse_camera(char **line, t_data *data)
-{
-	char	stripe;
-	int		ret;
-	t_cam	*cam;
-
-	stripe = 0;
-	ret = 1;
-	if (data->camera)
-		return (error(ALREADYCAM, NULL));
-	if (!(cam = ft_memalloc(sizeof(t_cam))))
-		return (0);
-	stripe = goto_next_element(line);
-	while (stripe != '>' && ret != 0)
-	{
-		if (!ft_strncmp_case(*line, "origin", 6))
-			ret = parse_origin(line, &cam->origin, 6);
-		else if (!ft_strncmp_case(*line, "rotation", 8))
-			ret = parse_rotation(line, &cam->rotation, 8);
-		else if (stripe == '<')
-			return (syn_error(SERROR, CAM, ORIGIN, ROTATION));
-		stripe = goto_next_element(line);
-	}
-	data->camera = cam;
-	if (!data->camera || ret == 0)
-		return (syn_error(SERROR, CAM, ORIGIN, ROTATION));
-	return (ret);
-}
-
-int		pick_options(char **line, t_data *data)
+static int		pick_options(char **line, t_data *data)
 {
 	int ret;
 
@@ -109,7 +80,7 @@ int		pick_options(char **line, t_data *data)
 	return (ret);
 }
 
-int		check_scene_param(t_data *data)
+static int		check_scene_param(t_data *data)
 {
 	if (!check_lights_cam(data))
 		return (0);

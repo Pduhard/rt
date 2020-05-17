@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-int		pick_ugp_text(char **line, t_obj *obj)
+static int		pick_ugp_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -38,7 +38,7 @@ int		pick_ugp_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		pick_mwf_text(char **line, t_obj *obj)
+static int		pick_mwf_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -64,7 +64,7 @@ int		pick_mwf_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		pick_att_image_text(char **line, t_obj *obj)
+static int		pick_att_image_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -85,7 +85,7 @@ int		pick_att_image_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		compute_text(char **line, t_obj *obj)
+static int		compute_text(char **line, t_obj *obj)
 {
 	if (obj->text.text_type == TEXT_IMAGE && !(obj->text.text_param))
 	{

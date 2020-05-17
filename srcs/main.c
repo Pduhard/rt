@@ -19,13 +19,13 @@ int		close_cross(t_data *data)
 	return (0);
 }
 
-int		close_info(t_data *data)
+static int		close_info(t_data *data)
 {
 	free_info(data);
 	return (0);
 }
 
-t_data	*init_all_scene(char **argv)
+static t_data	*init_all_scene(char **argv)
 {
 	t_data		*data;
 	t_data		*first;
@@ -49,16 +49,6 @@ t_data	*init_all_scene(char **argv)
 		return (NULL);
 	data_lst->next = first;
 	return (first);
-}
-
-int		is_closest_intersect(t_dist dist, double root)
-{
-	if (root < *(dist.dist) && root > dist.min_dist && root < dist.max_dist)
-	{
-		*(dist.dist) = root;
-		return (1);
-	}
-	return (0);
 }
 
 int		main(int argc, char **argv)

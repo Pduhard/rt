@@ -62,7 +62,7 @@ int		parse_material(char **line, int i, t_obj *obj)
 	return (1);
 }
 
-void	push_front_motion(t_motion **root, t_motion *new)
+static void	push_front_motion(t_motion **root, t_motion *new)
 {
 	t_motion	*motion;
 

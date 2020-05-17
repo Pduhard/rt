@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-int	get_insertion_index(t_photon **tab, int i, int j, int *far)
+static int	get_insertion_index(t_photon **tab, int i, int j, int *far)
 {
 	if (j == i)
 		*far = j;
@@ -26,7 +26,7 @@ int	get_insertion_index(t_photon **tab, int i, int j, int *far)
 	return (j);
 }
 
-double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_point,
+static double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_point,
 	t_add_pht_p param)
 {
 	int		i;
@@ -52,7 +52,7 @@ double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_point,
 			inter_point)));
 }
 
-void	add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
+static void	add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
 {
 	// printf("farest %f dist %f\n", *p.farest, dist);
 	if (dist < *(p.closest))
@@ -62,7 +62,7 @@ void	add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
 				p.inter_point, (t_add_pht_p){dist, p.nn_photon});
 }
 
-void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
+static void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
 {
 	double	dist;
 	t_3vecf	photon_pos;
@@ -88,35 +88,6 @@ void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
 	}
 }
 
-t_3vecf		compute_radiance_estimation(t_photon **nearest_n, t_3vecf inter_point,
-	double farest, int nn_photon)
-{
-	t_3vecf	radiance;
-	int			i;
-	double	k;
-	double	dist;
-	double	cone_f;
-
- 	k = 1.05;
-	i = -1;
-	radiance = assign_3vecf(0, 0, 0);
-	while (++i < nn_photon)
-		if (nearest_n[i])
-		{
-			dist = get_length_3vecf(sub_3vecf(inter_point, nearest_n[i]->position));
-			cone_f = 1 - dist / (k * farest);
-			radiance = add_3vecf(radiance, product_c3vecf(nearest_n[i]->color, cone_f));
-		}
-	radiance.val[0] /= M_PI * farest * farest * (1. - 2. / (3. * k));
-	radiance.val[1] /= M_PI * farest * farest * (1. - 2. / (3. * k));
-	radiance.val[2] /= M_PI * farest * farest * (1. - 2. / (3. * k));
-
-	// clamp_val(&(radiance.val[0]), 0, 1);
-	// clamp_val(&(radiance.val[1]), 0, 1);
-	// clamp_val(&(radiance.val[2]), 0, 1);
-	return (radiance);
-}
-
 t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter,
 	t_kd_tree *photon_map, int nn_photon)
 {
@@ -131,11 +102,9 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter,
 	if (!photon_map || !(nearest_n = malloc(sizeof(t_photon *) * nn_photon)))
 		return (assign_3vecf(0, 0, 0));
 	ft_bzero(nearest_n, sizeof(t_photon *) * nn_photon);
-	// printf("START\n\n");
 	actual_nn = 0;
 	get_nearest_neighbors((t_nn_param){inter_point, normal_inter, nearest_n,
 			&closest, &farest, nn_photon, &actual_nn}, photon_map, 0);
-			// printf("\n\END\n\n");
 	radiance = compute_radiance_estimation(nearest_n, inter_point, farest, nn_photon);
 	free(nearest_n);
 	return (radiance);

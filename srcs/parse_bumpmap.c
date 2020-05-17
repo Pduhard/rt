@@ -1,28 +1,5 @@
 #include "rt.h"
 
-int		parse_bump_mapping(char **line, t_obj *obj)
-{
-	char	stripe;
-	int		ret;
-
-	ret = 1;
-	stripe = 0;
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "own", 3)))
-		{
-			set_bump_own(obj);
-			ret = parse_double(line, 3, &obj->text.bump_fact);
-		}
-		else if (!(ft_strncmp_case(*line, "independent", 11)))
-			ret = parse_bump_inde(line, obj, 11);
-		else if (stripe == '<')
-			return (syn_error(SERROR, BUMPINDE, "\nOr\n", BUMPOWN));
-	}
-	return (ret);
-}
-
 void	set_bump_own(t_obj *obj)
 {
 	if (obj->text.text_type == TEXT_PERLIN)
@@ -45,6 +22,58 @@ void	set_bump_own(t_obj *obj)
 		obj->get_bump_mapping = &get_bump_mapping_wood;
 		obj->text.bump_type = BUMP_WOOD;
 	}
+}
+
+static void	set_bump_inde(char *s, t_obj *obj)
+{
+	if (!(ft_strncmp_case(s, "PERLIN", 6)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_perlin;
+		obj->text.bump_type = BUMP_PERLIN;
+	}
+	else if (!(ft_strncmp_case(s, "MARBLE", 6)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_marble;
+		obj->text.bump_type = BUMP_MARBLE;
+	}
+	else if (!(ft_strncmp_case(s, "WOOD", 4)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_wood;
+		obj->text.bump_type = BUMP_WOOD;
+	}
+	else if (!(ft_strncmp_case(s, "FBM", 3)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_fbm;
+		obj->text.bump_type = BUMP_FBM;
+	}
+	else if (!(ft_strncmp_case(s, "WATER", 5)))
+	{
+		obj->get_bump_mapping = &get_bump_mapping_water;
+		obj->text.bump_type = BUMP_WATER;
+	}
+}
+
+int		parse_bump_mapping(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+
+	ret = 1;
+	stripe = 0;
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp_case(*line, "own", 3)))
+		{
+			set_bump_own(obj);
+			ret = parse_double(line, 3, &obj->text.bump_fact);
+		}
+		else if (!(ft_strncmp_case(*line, "independent", 11)))
+			ret = parse_bump_inde(line, obj, 11);
+		else if (stripe == '<')
+			return (syn_error(SERROR, BUMPINDE, "\nOr\n", BUMPOWN));
+	}
+	return (ret);
 }
 
 int		parse_bump_inde(char **line, t_obj *obj, int index)
@@ -72,33 +101,4 @@ int		parse_bump_inde(char **line, t_obj *obj, int index)
 		++i;
 	*line += i;
 	return (parse_double(line, 0, &obj->text.bump_fact));
-}
-
-void	set_bump_inde(char *s, t_obj *obj)
-{
-	if (!(ft_strncmp_case(s, "PERLIN", 6)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_perlin;
-		obj->text.bump_type = BUMP_PERLIN;
-	}
-	else if (!(ft_strncmp_case(s, "MARBLE", 6)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_marble;
-		obj->text.bump_type = BUMP_MARBLE;
-	}
-	else if (!(ft_strncmp_case(s, "WOOD", 4)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_wood;
-		obj->text.bump_type = BUMP_WOOD;
-	}
-	else if (!(ft_strncmp_case(s, "FBM", 3)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_fbm;
-		obj->text.bump_type = BUMP_FBM;
-	}
-	else if (!(ft_strncmp_case(s, "WATER", 5)))
-	{
-		obj->get_bump_mapping = &get_bump_mapping_water;
-		obj->text.bump_type = BUMP_WATER;
-	}
 }

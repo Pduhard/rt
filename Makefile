@@ -35,20 +35,45 @@ endif
 
 SRC			=	main.c					\
 				init.c					\
+				open_info.c			\
+				shape_utils.c		\
 				matrix.c				\
 				vector.c				\
+				vector2d.c				\
+				vector_op.c				\
 				render.c				\
+				render_init.c				\
+				render_stereo.c				\
+				render_classic.c				\
+				render_utils.c				\
+				render_light.c				\
+				render_light_utils.c				\
+				render_shadow.c				\
+				ray_first_intersect.c	\
+				ray_trace.c	\
+				ray_trace_init.c	\
+				ray_trace_utils.c	\
+				fresnel.c	\
+				glare.c		\
 				cut.c					\
+				cut_move.c		\
 				cone.c				\
-				angles_utils.c			\
+				get_cone_param.c		\
+				cone_utils.c				\
+				math_utils.c			\
 				conf.c					\
 				parse.c					\
 				parse_scene_element.c	\
+				parse_camera.c				\
 				parse_object.c			\
+				parse_object_utils.c			\
 				parse_lights.c			\
 				parse_composed_object.c	\
+				parse_composed_model.c	\
+				copy_object.c				\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
+				parse_cutting_type.c			\
 				parse_texture.c			\
 				parse_proc_img.c		\
 				parse_other_element.c	\
@@ -56,32 +81,75 @@ SRC			=	main.c					\
 				add_object.c			\
 				error.c					\
 				texture.c				\
+				get_uni_color.c	\
+				get_grid_color.c	\
+				get_perlin_color.c	\
+				get_wood_color.c	\
+				get_marble_color.c	\
+				get_fbm_color.c	\
+				get_image_color.c	\
 				bump_mapping.c			\
 				perlin.c				\
 				perlin_utils.c	\
 				init_perlin.c		\
 				fbm.c					\
 				sphere.c				\
+				get_sphere_param.c	\
+				sphere_utils.c		\
 				plane.c					\
+				get_plane_param.c	\
+				plane_utils.c		\
 				triangle.c				\
+				triangle_utils.c				\
+				get_triangle_param.c				\
 				moebius.c				\
+				moebius_utils.c	\
+				get_moebius_param.c	\
 				loop.c					\
+				loop_obj.c			\
+				loop_cam.c			\
 				key_hook.c				\
 				mouse_hook.c			\
+				rot_mov_hook.c		\
+				other_hook.c			\
+				print_screen.c		\
 				cylinder.c				\
+				cylinder_utils.c	\
+				get_cylinder_param.c	\
 				ellipsoid.c				\
+				ellipsoid_utils.c	\
+				get_ellipsoid_param.c \
 				hyperboloid.c			\
+				hyperboloid_utils.c	\
+				get_hyperboloid_param.c	\
 				horse_saddle.c			\
+				get_horse_saddle_param.c	\
+				horse_saddle_utils.c	\
 				monkey_saddle.c			\
+				monkey_saddle_utils.c	\
+				get_monkey_saddle_param.c	\
 				cyclide.c				\
+				cyclide_utils.c	\
+				get_cyclide_param.c	\
 				fermat.c				\
-				polynomial.c			\
+				fermat_utils.c	\
+				get_fermat_param.c	\
+				cubic_poly.c				\
+				quadratic_poly.c		\
 				motion.c				\
 				color_filter.c			\
 				photon_map.c			\
+				scatter_photon.c	\
+				build_photon_map.c	\
+				cast_photon.c			\
+				cast_photon_effect.c			\
+				cast_photon_utils.c			\
 				global_illumination.c	\
+				radiance.c					\
 				random.c				\
 				free.c					\
+				free_object.c	\
+				free_data.c		\
 				parse_cylinder.c	\
 				parse_cone.c			\
 				parse_sphere.c		\
@@ -95,6 +163,7 @@ SRC			=	main.c					\
 				parse_hyperboloid.c	\
 				parse_moebius.c			\
 				skybox.c						\
+				goto_next.c					\
 				# $(addprefix $(SRC_SHAPES_PATH), $(SHAPES))
 				# shapes/cone.c		\
 

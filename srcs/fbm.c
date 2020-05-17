@@ -60,5 +60,4 @@ double	compute_3dfbm_factor(t_3vecf point, double scale)
 		iter++;
 	}
 	return (fact);
-	(void)scale;
 }

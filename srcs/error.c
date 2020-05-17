@@ -18,25 +18,6 @@ void	ft_mem_error()
 	exit(0);
 }
 
-void	ft_throw_error(char *message, ...)
-{
-	va_list	ap;
-
-	va_start(ap, message);
-	vdprintf(2, message, ap);
-	va_end(ap);
-}
-
-int		ft_return_error(int ret, char *message, ...)
-{
-	va_list	ap;
-
-	va_start(ap, message);
-	vdprintf(2, message, ap);
-	va_end(ap);
-	return (ret);
-}
-
 int		ft_memalloc_error(int ret, size_t size)
 {
 	dprintf(2,

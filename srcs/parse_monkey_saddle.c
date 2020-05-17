@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:31:55 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:32:22 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:48:08 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ int			parse_monkey_saddle(char **line, t_obj *monkey_saddle)
 		return (0);
 	if (!parse_monkey_saddle_element(line, &ret, monkey_saddle_param)
 		|| ret == 0)
+	{
+		free(monkey_saddle_param);
 		return (syn_error(SERROR, MONKEY, ORIGIN, NULL));
+	}
 	monkey_saddle->obj_param = monkey_saddle_param;
 	assign_monkey_saddle_function(monkey_saddle);
 	return (ret);

@@ -98,6 +98,7 @@
 			>
 			<offset(0, 0)>
 			<scale(1, 4)>
+			
 		>
 		<sphere
 			<origin(-5, -1, 10)>
@@ -141,7 +142,7 @@
 			<xaxis (0.5, 0, -0.5)>
 		>
 		<cutting<texture>>
-	>	
+	>
 	<objects
 		<texture
 			<IMAGE(img/fire_2.png)

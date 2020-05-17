@@ -84,15 +84,6 @@ int		check_cut_sphere(t_cut *cut, t_3vecf inter_point)
 	return (0);
 }
 
-t_obj	*go_through(t_leq l, t_dist dist, t_cut_fparam cp)
-{
-	if (cp.negative)
-		return (NULL);
-	// printf("la ?\n");
-	dist.min_dist = *(dist.dist);
-	return (ray_first_intersect(l, (t_dist){dist.dist, *(dist.dist), dist.max_dist}, cp.objs, cp.sp_id));
-}
-
 t_obj	*check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data)
 {
 	t_cut	*cuts;
@@ -106,7 +97,13 @@ t_obj	*check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data)
 		 || check_cut_uv(cuts, inter_point, cp)
 		 || check_cut_texture(cuts, inter_point, cp)
 		 || check_cut_sphere(cuts, inter_point))
-					return (go_through(l, dist, cp));
+		 {
+				if (cp.negative)
+		 			return (NULL);
+		 		dist.min_dist = *(dist.dist);
+		 		return (ray_first_intersect(l, (t_dist){dist.dist, *(dist.dist),
+		 			dist.max_dist}, cp.objs, cp.sp_id));
+		 }
 		cuts = cuts->next;
 	}
 	return (cp.closest_obj);

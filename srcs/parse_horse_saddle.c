@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:28:35 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:29:18 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:45:46 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ int			parse_horse_saddle(char **line, t_obj *horse_saddle)
 		return (0);
 	if (!parse_horse_saddle_element(line, &ret, horse_saddle_param) ||
 			!check_horse_saddle_param(horse_saddle_param, ret))
+	{
+		free(horse_saddle_param);
 		return (syn_error(SERROR, HORSE, HORSEF, NULL));
+	}
 	horse_saddle->obj_param = horse_saddle_param;
 	assign_horse_saddle_function(horse_saddle);
 	return (ret);

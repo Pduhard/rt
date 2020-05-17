@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/16 21:32:07 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 19:04:03 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-int		pick_native_object(char **line, t_obj *obj)
+static int		pick_native_object(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -30,7 +30,7 @@ int		pick_native_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		pick_eq_object(char **line, t_obj *obj, t_composed *from)
+static int		pick_eq_object(char **line, t_obj *obj, t_composed *from)
 {
 	int	ret;
 
@@ -52,7 +52,7 @@ int		pick_eq_object(char **line, t_obj *obj, t_composed *from)
 	return (ret);
 }
 
-int		pick_attribute_object(char **line, t_obj *obj)
+static int		pick_attribute_object(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -74,24 +74,6 @@ int		pick_attribute_object(char **line, t_obj *obj)
 	else if (**line != '<' && **line != '>')
 		return (error(UNKNOWOBJECT, NULL));
 	return (ret);
-}
-
-void	clamp_and_set_dflt(t_obj *obj)
-{
-	clamp_val(&obj->reflection, 0, 1);
-	clamp_val(&obj->shininess, 0, 1);
-	clamp_val(&obj->refraction, 0, 3);
-	clamp_val(&obj->refraction, 0, 2.42);
-	if (obj->text.scale.val[0] == 0 && obj->text.scale.val[1] == 0)
-		obj->text.scale = (t_2vecf){{0, 0}};
-	if (obj->shininess > 0)
-		obj->shininess = exp(11 - 10 * obj->shininess);
-}
-
-int		error_parse_object(t_obj *obj)
-{
-	free_object(obj);
-	return (0);
 }
 
 int		parse_objects(char **line, t_data *data, t_composed *from)

@@ -28,25 +28,6 @@ t_3vecf		mult_3vecf_33matf(t_3vecf vect, t_33matf mat)
 	return (mult);
 }
 
-t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b)
-{
-	t_33matf	mult;
-	int			i;
-	int			j;
-
-	i = 0;
-	while (++i < 3)
-	{
-		j = 0;
-		while (++j < 3)
-			mult.val[i][j] = a.val[i][0] * b.val[0][i]\
-				+ a.val[i][1] * b.val[1][i]\
-					+ a.val[i][2] * b.val[2][i];
-		i++;
-	}
-	return (mult);
-}
-
 t_33matf	init_rotation_matrix_x(double theta)
 {
 	t_33matf	mat;
