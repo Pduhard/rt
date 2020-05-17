@@ -583,54 +583,75 @@ void  check_subsampling(t_data *data, int i, int j, t_3vecf color)
 	}
 }
 
+t_anti_al	init_anti_al(int aa, int offset, int anti_al_iter)
+{
+	t_anti_al	a;
+
+	a.offset = offset;
+	if (anti_al_iter < 1)
+	{
+		a.aa = 1;
+		a.anti_al_iter = 1;
+	}
+	else
+	{
+		a.aa = aa;
+		a.anti_al_iter = anti_al_iter;
+	}
+	return (a);
+}
+
+t_3vecf init_ray_dir(int i, int j, t_anti_al a, t_data *data)
+{
+	t_3vecf dir;
+	t_3vecf view;
+
+	i = i * a.aa + a.offset / a.aa;
+	j = j * a.aa + a.offset % a.aa;
+	view = window_to_view(i, j, (int)data->size.val[0] * a.aa,
+		(int)data->size.val[1] * a.aa);
+	dir = mult_3vecf_33matf(mult_3vecf_33matf(view, data->rot_mat[1]),
+		data->rot_mat[0]);
+	normalize_3vecf(&dir);
+	return (dir);
+}
+
+t_3vecf get_stereo_clr(t_3vecf origs[2], t_leq l, t_data *data)
+{
+	t_3vecf		colors[2];
+
+	if (!data->motion_blur)
+	{
+		colors[0] = ray_trace((t_leq){origs[0], l.dir}, data, RAY_DEPTH, 0);
+		colors[1] = ray_trace((t_leq){origs[1], l.dir}, data, RAY_DEPTH, 0);
+	}
+	else
+	{
+		colors[0] = motion_trace(origs[0], l.dir, data);
+		colors[1] = motion_trace(origs[1], l.dir, data);
+	}
+	return (assign_3vecf(colors[1].val[0], colors[0].val[1], colors[0].val[2]));
+}
+
 void  compute_stereoscopy(t_data *data, t_leq l, int i, int j)
 {
 	t_3vecf		origs[2];
-	t_3vecf		colors[2];
 	t_3vecf		diff;
 	t_3vecf		color;
-	int				anti_all_iter;
-	int				offset;
-	int				aa;
+	t_anti_al	a;
 
-	aa = data->aa_adapt;
-	offset = 0;
-	anti_all_iter = data->aa_adapt * data->aa_adapt;
-	if (anti_all_iter < 1)
-	{
-		aa = 1;
-		anti_all_iter = 1;
-	}
+	a = init_anti_al(data->aa_adapt, 0, data->aa_adapt * data->aa_adapt);
 	diff = mult_3vecf_33matf(assign_3vecf(0.1, 0, 0), data->rot_mat[1]);
 	origs[0] = add_3vecf(l.orig, diff);
 	origs[1] = add_3vecf(l.orig, neg_3vecf(diff));
 	color = assign_3vecf(0, 0, 0);
-	while (offset < anti_all_iter)
+	while (a.offset < a.anti_al_iter)
 	{
-		l.dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(
-			i * aa + offset / aa, j * aa + offset % aa, (int)data->size.val[0] * aa,
-			(int)data->size.val[1] * aa), data->rot_mat[1]), data->rot_mat[0]);
-		normalize_3vecf(&l.dir);
-		// l.dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j,
-		// 	data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-		// normalize_3vecf(&(l.dir));
-		if (!data->motion_blur)
-		{
-			colors[0] = ray_trace((t_leq){origs[0], l.dir}, data, RAY_DEPTH, 0);
-			colors[1] = ray_trace((t_leq){origs[1], l.dir}, data, RAY_DEPTH, 0);
-		}
-		else
-		{
-			colors[0] = motion_trace(origs[0], l.dir, data);
-			colors[1] = motion_trace(origs[1], l.dir, data);
-		}
-		color = add_3vecf(color,
-			assign_3vecf(colors[1].val[0], colors[0].val[1], colors[0].val[2]));
-		offset++;
+		l.dir = init_ray_dir(i, j, a, data);
+		color = add_3vecf(color, get_stereo_clr(origs, l, data));
+		a.offset++;
 	}
-	color.val[0] /= (double)anti_all_iter;
-	color.val[1] /= (double)anti_all_iter;
-	color.val[2] /= (double)anti_all_iter;
+	color = product_c3vecf(color, 1. / a.anti_al_iter);
 	ray_put_pixel(i, j, data->mlx->img_str, color, data);
 	check_subsampling(data, i, j, color);
 }
@@ -638,49 +659,29 @@ void  compute_stereoscopy(t_data *data, t_leq l, int i, int j)
 void  compute_classic(t_data *data, t_leq l, int i, int j)
 {
 	t_3vecf	clr;
-	int			anti_all_iter;
-	int			offset;
-	int			aa;
+	t_anti_al a;
 	t_3vecf color;
 
-	aa = data->aa_adapt;
-	offset = 0;
-	anti_all_iter = data->aa_adapt * data->aa_adapt;
-	if (anti_all_iter < 1)
-	{
-		aa = 1;
-		anti_all_iter = 1;
-	}
+	a = init_anti_al(data->aa_adapt, 0, data->aa_adapt * data->aa_adapt);
 	color = assign_3vecf(0, 0, 0);
-	while (offset < anti_all_iter)
+	while (a.offset < a.anti_al_iter)
 	{
-		l.dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i * aa + offset / aa, j * aa + offset % aa, (int)data->size.val[0] * aa, (int)data->size.val[1] * aa), data->rot_mat[1]), data->rot_mat[0]);
-		normalize_3vecf(&l.dir);
-		if (!data->motion_blur)
-			clr = ray_trace(l, data, RAY_DEPTH, 0);
-		else
-			clr = motion_trace(l.orig, l.dir, data);
-		color.val[0] += clr.val[0];
-		color.val[1] += clr.val[1];
-		color.val[2] += clr.val[2];
-		offset++;
+		l.dir = init_ray_dir(i, j, a, data);
+		clr = !data->motion_blur ? ray_trace(l, data, RAY_DEPTH, 0)
+														 : motion_trace(l.orig, l.dir, data);
+		color = add_3vecf(color, clr);
+		a.offset++;
 	}
-//	printf("wefwef\n");
-	color.val[0] /= (double)anti_all_iter;
-	color.val[1] /= (double)anti_all_iter;
-	color.val[2] /= (double)anti_all_iter;
-//	printf("wefwef\n");
+	color = product_c3vecf(color, 1. / a.anti_al_iter);
 	ray_put_pixel(i, j, data->mlx->img_str, color, data);
-	if (data->aa_adapt < 1)
-	{
-		if ((i + 1) * 2 != data->size.val[0])
-			ray_put_pixel(i + 1, j, data->mlx->img_str, color, data);
-		if ((j + 1) * 2 != data->size.val[1])
-			ray_put_pixel(i, j + 1, data->mlx->img_str, color, data);
-		if ((j + 1) * 2 != data->size.val[1] && (i + 1) * 2 != data->size.val[0])
-			ray_put_pixel(i + 1, j + 1, data->mlx->img_str, color, data);
-	}
+	check_subsampling(data, i, j, color);
+}
 
+int   get_aa_step(double aa_adapt)
+{
+	if (aa_adapt == MIN_AA)
+		return (2);
+	return (1);
 }
 
 void	*render_thread(void *param)
@@ -704,46 +705,38 @@ void	*render_thread(void *param)
 				compute_stereoscopy(data, l, i, j);
 			else
 				compute_classic(data, l, i, j);
-
-
-			if (data->aa_adapt == MIN_AA)
-				j += 2;
-			else
-				++j;
+				j += get_aa_step(data->aa_adapt);
 		}
-		if (data->aa_adapt == MIN_AA)
-			i += 2;
-		else
-			++i;
+		i += get_aa_step(data->aa_adapt);
 	}
 	pthread_exit(NULL);
 	return (NULL);
 }
 
+void  init_frames_rot_mat(t_data *data)
+{
+	t_3vecf tm;
+	double  rd;
+
+	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
+	rd =degree_to_radian(data->camera->rotation.val[0]);
+	data->rot_mat[0] = init_rotation_matrix_vec(tm, rd);
+}
+
 void	render(t_data *data)
 {
-//	t_3vecf	dir_t;
-//	t_33matf	rot_mat[3];
 	int		ret;
 	int		i;
 	t_thread	threads_param[NB_THREADS];
 	pthread_t	threads[NB_THREADS];
 
 	init_threads(threads_param, data);
-//	i = -WIN_WIDTH / 2;
-//	l.orig = data->camera->origin;
-	//l.dir = mult_3vecf_33matf(window_to_view(0, 0), data->rot_mat[1]);
-	//printf("%f %f %f\n", l.dir.val[0], l.dir.val[1], l.dir.val[2]);
-	t_3vecf tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-	data->rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(data->camera->rotation.val[0]));
-	//data->rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[0]) * tm.val[2]);
-	//rot_mat[1] = init_rotation_matrix_y(degree_to_radian(data->camera->rotation.val[1]));
-	//rot_mat[2] = init_rotation_matrix_z(degree_to_radian(data->camera->rotation.val[2]));
-
+	init_frames_rot_mat(data);
 	i = 0;
 	while (i < NB_THREADS)
 	{
-		ret = pthread_create(&(threads[i]), NULL, render_thread, (void *)&(threads_param[i]));
+		ret = pthread_create(&(threads[i]), NULL, render_thread,
+			(void *)&(threads_param[i]));
 		if (ret)
 			exit(EXIT_FAILURE);
 		++i;
@@ -751,6 +744,4 @@ void	render(t_data *data)
 	i = 0;
 	while (i < NB_THREADS)
 		pthread_join(threads[i++], NULL);
-	//exit(0);
-		//printf("end");
 }
