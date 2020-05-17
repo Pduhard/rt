@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:30:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:30:45 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:26:30 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,16 @@ int			parse_lights(char **line, t_data *data)
 			light->light_type = LIGHT_AMBIENT;
 			ret = parse_origin(line, &light->color, 7);
 			if (**line == '<')
+			{
+				free(light);
 				return (syn_error(SERROR, LIGHT, AMBIENT, NULL));
+			}
 		}
 		else if (**line != '>' && !(ret = pick_spot(line, light)))
+		{
+			free(light);
 			return (0);
+		}
 	}
 	if (ret == 1)
 		goto_next_element(line);
