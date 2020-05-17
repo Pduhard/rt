@@ -134,14 +134,14 @@ void  cast_photon_refractive_mat(t_leq l, t_phtn_cast p, t_obj *obj, t_photon ph
 		normal_inter = neg_3vecf(normal_inter);
 	if (obj->get_bump_mapping)
 		normal_inter = obj->get_bump_mapping(photon.position, normal_inter, obj);
-	fr_r = compute_fresnel_ratio(l.dir, normal_inter, obj->refraction, 0);
+	fr_r = compute_fresnel_ratio(l.dir, normal_inter, obj->refraction);
 	prob = get_prob((1 - fr_r) * (1 - clr.val[3]), (1 - fr_r) * clr.val[3], fr_r);
 	if (rr_f < prob.absorb_prob)
 		return (absorb_photon(l, p, photon));
 	p.pwr = add_color_bleed(p.pwr, clr);
 	if (rr_f < prob.refract_prob + prob.absorb_prob)
 		return (refract_photon((t_leq){photon.position,
-			refract_ray(l.dir, normal_inter, obj->refraction, 0)}, p));
+			refract_ray(l.dir, normal_inter, obj->refraction)}, p));
 	else if (rr_f < prob.refract_prob + prob.absorb_prob + prob.reflect_prob_spe)
 		return (reflect_photon_spec((t_leq){photon.position,
 			reflect_ray(neg_3vecf(l.dir), normal_inter)}, p, p.photon_type));

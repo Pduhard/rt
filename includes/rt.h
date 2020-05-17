@@ -30,11 +30,11 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_LOW
+# define QUALITY			Q_VERY_LOW
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
 # define DFLT_POWER 100
-# define NB_THREADS	 8
+# define NB_THREADS		8
 # define MIN_AA 		0.5
 # define NO_AA      1.
 # define MAX_AA 		2.
@@ -47,12 +47,12 @@
 //# define GLOBAL_ILLUMINATION	0
 //# define GL_RADIUS				0.2
 //# define NB_PHOTON				100000
-# define NN_CAUSTIC_PHOTON_MAX  20
+# define NN_CAUSTIC_PHOTON_MAX  10
 # define NN_INDIRECT_PHOTON_MAX	10
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
 # define NB_INDIRECT_PHOTON		10000
-# define NB_CAUSTIC_PHOTON		50000
+# define NB_CAUSTIC_PHOTON		10000
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
@@ -621,6 +621,45 @@ typedef struct  s_compute_light_param
 // 	t_data		*data_lst;
 // }				t_data_cont;
 
+typedef struct s_inter
+{
+	t_3vecf inter_point;
+	t_3vecf normal_inter;
+}							 t_inter;
+
+typedef struct s_rt_param
+{
+		double     min_dist;
+		double     max_dist;
+		int        depth;
+		int        sp_id;
+}							 t_rt_param;
+
+typedef struct s_ilc_p
+{
+		t_3vecf 		*lighted_color;
+		t_4vecf			obj_color;
+		t_data			*data;
+		int					sp_id;
+}								t_ilc_p;
+
+typedef struct  s_rayt_param
+{
+		t_3vecf *lighted_color;
+		t_3vecf inv_dir;
+		t_4vecf	obj_color;
+		t_data *data;
+		int depth;
+		int sp_id;
+}								t_rayt_param;
+
+typedef struct  s_clre_param
+{
+		double      closest_dist;
+		t_leq				l;
+		int         depth;
+}								t_clre_param;
+
 void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis); // in cone.c for instance
 
 int	is_closest_intersect(t_dist dist, double root); // in main.c for instance
@@ -701,9 +740,9 @@ double	compute_marble_factor(t_3vecf inter_point, double scale, const unsigned c
 
 t_3vecf	compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter, t_kd_tree *photon_map, int nn_photon);
 
-t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
+t_3vecf	refract_ray(t_3vecf dir, t_3vecf normal_inter, double refraction_index);
 t_3vecf	reflect_ray(t_3vecf dir, t_3vecf normal_inter);
-double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index, int inside);
+double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index);
 
 double	linear_interpolate(double a, double b, double val);
 
@@ -771,7 +810,7 @@ void  assign_fermat_function(t_obj *fermat);
 void  assign_moebius_function(t_obj *moebius);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
-t_3vecf	ray_trace(t_leq l, double min_dist, double max_dist, t_data *data, int depth, int sp_id);
+t_3vecf	ray_trace(t_leq l, t_data *data, int depth, int sp_id);
 t_3vecf	motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
 
 int		ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id);
