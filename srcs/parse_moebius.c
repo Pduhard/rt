@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:31:04 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:31:38 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:56:04 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,10 @@ int			parse_moebius(char **line, t_obj *moebius)
 		return (0);
 	if (!parse_moebius_element(line, &ret, moebius_param) ||
 		!check_moebius_param(moebius_param, ret))
+	{
+		free(moebius_param);
 		return (syn_error(SERROR, MOEBIUS, RADIUS, HALFWIDTH));
+	}
 	moebius->obj_param = moebius_param;
 	assign_moebius_function(moebius);
 	return (ret);

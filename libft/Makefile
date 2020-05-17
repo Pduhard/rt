@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+         #
+#    By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 02:23:54 by pduhard-          #+#    #+#              #
-#    Updated: 2020/03/04 07:10:23 by aplat            ###   ########lyon.fr    #
+#    Updated: 2020/05/16 20:14:29 by aplat            ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 CC			= clang
 NAME		= libft.a
 
-FLAGS		= -fPIC -Wall -Werror -Wextra -O3 
+FLAGS		= -fPIC -Wall -Werror -Wextra -g -O3 
 INCLUDES	= -I ./
 
 SRCDIR		= ./

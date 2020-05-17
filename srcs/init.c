@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:07:54 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 19:14:49 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:38:35 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int				open_info(t_data *data)
 	}
 	else
 		write_cmd_strings(data->mlx->mlx_ptr, data->info->win_ptr);
-	return (0);
+	return (1);
 }
 
 static t_mlx	*init_mlx(t_data *data)
@@ -55,7 +55,11 @@ static t_mlx	*init_mlx(t_data *data)
 		return (NULL);
 	mlx->mlx_ptr = mlx_init();
 	data->mlx = mlx;
-	open_info(data);
+	if (!open_info(data))
+	{
+		free(mlx);
+		return (NULL);
+	}
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr,
 			data->size.val[0], data->size.val[1], data->scene_name);
 	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr,
@@ -89,10 +93,7 @@ int				check_file_setup(t_data *data)
 int				check_mlx(t_mlx *mlx, t_data *data)
 {
 	if (!mlx && !(data->mlx = init_mlx(data)))
-	{
-		free(data);
 		return (0);
-	}
 	else if (mlx)
 		data->mlx = mlx;
 	return (1);
@@ -106,7 +107,11 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 		return (NULL);
 	if (!check_macro() || !parse_rt_conf(file_name, data)
 		|| !check_file_setup(data) || !check_mlx(mlx, data))
+	{
+		printf("data next %p\n", data->next);
+		free_all(data);
 		return (NULL);
+	}
 	init_perlin(data);
 	data->water_f = 0.;
 	data->first_loop = 1;

@@ -67,6 +67,7 @@ int		parse_bump_inde(char **line, t_obj *obj, int index)
 		return (0);
 	s = ft_strsub(tmp, start, i - start);
 	set_bump_inde(s, obj);
+	free(s);
 	while (tmp[i] && tmp[i] != '(')
 		++i;
 	*line += i;

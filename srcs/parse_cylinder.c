@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:24:19 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:25:50 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:51:31 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ int			parse_cylinder(char **line, t_obj *cylinder)
 		return (ft_memalloc_error(0, sizeof(t_cylinder)));
 	if (!parse_cylinder_element(line, &ret, cylinder_param) ||
 			!check_cylinder_param(cylinder_param, ret))
+	{
+		free(cylinder_param);
 		return (syn_error(SERROR, CYLINDER, TIP, RADIUS));
+	}
 	cylinder->obj_param = cylinder_param;
 	assign_cylinder_function(cylinder);
 	return (ret);

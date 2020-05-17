@@ -4,13 +4,19 @@ void	check_line(char **line)
 {
 	int		i;
 	char	*s;
+	char	*tmp;
 
 	i = 0;
 	s = *line;
 	while (s[i])
 	{
 		if (!(ft_strncmp(&s[i], "//", 2)))
-			*line = ft_strsub(*line, 0, i);
+		{
+			tmp = ft_strsub(*line, 0, i);
+			free(*line);
+			*line = tmp;
+			return ;
+		}
 		i++;
 	}
 }
@@ -31,13 +37,17 @@ int		parse_rt_conf(char *file_name, t_data *data)
 		check_line(&line);
 		result = ft_strfjoin(result, line);
 	}
-	if (ret == -1 || !result || !brackets_rt(result))
+	if (ret == -1 || !result || !brackets_rt(result) || !parse(result, data))
 	{
-		free(result);
+		ft_strdel(&result);
 		return (error(ERRORFILE, NULL));
 	}
-	if (!parse(&result, data))
-		return (error(ERRORFILE, NULL));
+//	if (!parse(&result, data))
+//	{
+//		ft_strdel(&result);
+//		return (error(ERRORFILE, NULL));
+//	}
+	ft_strdel(&result);
 	return (1);
 }
 
@@ -67,11 +77,11 @@ int		brackets_rt(char *line)
 	return (1);
 }
 
-int		parse(char **line, t_data *data)
+int		parse(char *line, t_data *data)
 {
-	goto_next_element(line);
-	if (!(ft_strncmp_case(*line, "scene", 5)))
-		return (parse_scene(line, data));
+	goto_next_element(&line);
+	if (!(ft_strncmp_case(line, "scene", 5)))
+		return (parse_scene(&line, data));
 	else
 		return (error(ERRORSCENE, NULL));
 	return (0);

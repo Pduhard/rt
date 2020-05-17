@@ -120,13 +120,7 @@
             <origin (-4, 0, 0.5)>
             <normal (0, 0, -1)>
         >
-        <cutting
-            <cube
-                <x_range (-3, 1)>
-                <y_range (-3, 1)>
-                <z_range (-3, 1)>
-            >
-        >
+
     >
 	<objects
         <texture

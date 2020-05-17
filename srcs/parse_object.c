@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:33:13 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:32:07 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,12 @@ void	clamp_and_set_dflt(t_obj *obj)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 }
 
+int		error_parse_object(t_obj *obj)
+{
+	free_object(obj);
+	return (0);
+}
+
 int		parse_objects(char **line, t_data *data, t_composed *from)
 {
 	char	stripe;
@@ -104,13 +110,13 @@ int		parse_objects(char **line, t_data *data, t_composed *from)
 	{
 		stripe = goto_next_element(line);
 		if (**line != '>' && !(ret = pick_native_object(line, obj)))
-			return (0);
+			return (error_parse_object(obj));
 		else if (**line != '>' && !(ret = pick_eq_object(line, obj, from)))
-			return (0);
+			return (error_parse_object(obj));
 		else if (is_composed_object(line, data, &ret))
 			composed = 1;
 		else if (**line != '>' && !(ret = pick_attribute_object(line, obj)))
-			return (0);
+			return (error_parse_object(obj));
 	}
 	clamp_and_set_dflt(obj);
 	push_object(obj, composed, data, from);

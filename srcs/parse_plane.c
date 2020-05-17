@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:33:53 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:48:05 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:58:36 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int			parse_plane(char **line, t_obj *plane)
 		return (0);
 	if (!parse_plane_element(line, &ret, plane_param) ||
 			!check_plane_param(plane_param, ret))
+	{
+		free(plane_param);
 		return (syn_error(SERROR, PLANE, NORMAL, XAXIS));
+	}
 	if (!is_null_3vecf(plane_param->x2d_axis))
 		normalize_3vecf(&plane_param->x2d_axis);
 	plane->obj_param = plane_param;

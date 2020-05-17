@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:37:00 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:37:29 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 22:06:50 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ int			parse_sphere(char **line, t_obj *sphere)
 		return (0);
 	if (!parse_sphere_element(line, &ret, sphere_param) ||
 			!check_sphere_param(sphere_param, ret))
+	{
+		free(sphere_param);
 		return (syn_error(SERROR, SPHERE, RADIUS, NULL));
+	}
 	sphere->obj_param = sphere_param;
 	assign_sphere_function(sphere);
 	return (ret);

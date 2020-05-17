@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:21:31 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:22:02 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:50:16 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ int			parse_cone(char **line, t_obj *cone)
 		return (0);
 	if (!parse_cone_element(line, &ret, cone_param) ||
 			!check_cone_param(cone_param, ret))
+	{
+		free(cone_param);
 		return (syn_error(SERROR, CONE, TIP, RADIUS));
+	}
 	cone->obj_param = cone_param;
 	assign_cone_function(cone);
 	return (ret);

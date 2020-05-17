@@ -769,7 +769,7 @@ int		brackets_rt(char *line);
 int		parse_scene(char **line, t_data *data);
 int		parse_composed_model(char **line, t_data *data);
 int		is_composed_object(char **line, t_data *data, int *ret);
-int		parse(char **line, t_data *data);
+int		parse(char *line, t_data *data);
 char	goto_next_element(char **line);
 int		parse_name(char **line, char **name, int i);
 int		parse_objects(char **line, t_data *data, t_composed *from);
@@ -979,4 +979,6 @@ void	update_loading_screen_gi(int pc, t_text_img *img, t_data *data);
 
 void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from);
 void  free_info(t_data *data);
+
+void	free_object(t_obj *obj);
 #endif
