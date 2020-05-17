@@ -30,7 +30,7 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_VERY_LOW
+# define QUALITY			Q_HIGH
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
 # define DFLT_POWER 100
@@ -659,6 +659,13 @@ typedef struct  s_clre_param
 		t_leq				l;
 		int         depth;
 }								t_clre_param;
+
+typedef struct  s_anti_al
+{
+		int         anti_al_iter;
+		int         offset;
+		int         aa;
+}								t_anti_al;
 
 void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis); // in cone.c for instance
 

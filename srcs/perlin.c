@@ -13,9 +13,10 @@
 #include "rt.h"
 
 static t_3vecf	rand_g(const unsigned char permutation[512],
-	const t_3vecf gradient[16], int x, int y, int z)
+	const t_3vecf gradient[16], t_3vecf i)
 {
-	return (gradient[permutation[z + permutation[y + permutation[x]]] & 15]);
+	return (gradient[permutation[(int)i.val[2]
+		+ permutation[(int)i.val[1] + permutation[(int)i.val[0]]]] & 15]);
 }
 
 static double	lin_i(double a, double b, double val)
@@ -38,20 +39,20 @@ double			compute_3dperlin_factor(t_3vecf inter_point, double scale,
 
 	handle_perlin_inter_point(&i, &f, inter_point, scale);
 	set_quintic_factors(q, f);
-	d[0] = dp(rand_g(p, g, i.val[0], i.val[1], i.val[2]), f);
-	d[1] = dp(rand_g(p, g, i.val[0], i.val[1], i.val[2] + 1),
+	d[0] = dp(rand_g(p, g, assign_3vecf(i.val[0], i.val[1], i.val[2])), f);
+	d[1] = dp(rand_g(p, g, assign_3vecf(i.val[0], i.val[1], i.val[2] + 1)),
 						assign_3vecf(f.val[0], f.val[1], f.val[2] - 1.0));
-	d[2] = dp(rand_g(p, g, i.val[0], i.val[1] + 1, i.val[2]),
+	d[2] = dp(rand_g(p, g, assign_3vecf(i.val[0], i.val[1] + 1, i.val[2])),
 						assign_3vecf(f.val[0], f.val[1] - 1.0, f.val[2]));
-	d[3] = dp(rand_g(p, g, i.val[0], i.val[1] + 1, i.val[2] + 1),
+	d[3] = dp(rand_g(p, g, assign_3vecf(i.val[0], i.val[1] + 1, i.val[2] + 1)),
 						assign_3vecf(f.val[0], f.val[1] - 1.0, f.val[2] - 1.0));
-	d[4] = dp(rand_g(p, g, i.val[0] + 1, i.val[1], i.val[2]),
+	d[4] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1], i.val[2])),
 						assign_3vecf(f.val[0] - 1.0, f.val[1], f.val[2]));
-	d[5] = dp(rand_g(p, g, i.val[0] + 1, i.val[1], i.val[2] + 1),
+	d[5] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1], i.val[2] + 1)),
 						assign_3vecf(f.val[0] - 1.0, f.val[1], f.val[2] - 1.0));
-	d[6] = dp(rand_g(p, g, i.val[0] + 1, i.val[1] + 1, i.val[2]),
+	d[6] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1] + 1, i.val[2])),
 						assign_3vecf(f.val[0] - 1.0, f.val[1] - 1.0, f.val[2]));
-	d[7] = dp(rand_g(p, g, i.val[0] + 1, i.val[1] + 1, i.val[2] + 1),
+	d[7] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1] + 1, i.val[2] + 1)),
 						assign_3vecf(f.val[0] - 1.0, f.val[1] - 1.0,
 							f.val[2] - 1.0));
 	return (lin_i(lin_i(lin_i(d[0], d[4], q[2]), lin_i(d[2], d[6], q[2]), q[1]),
