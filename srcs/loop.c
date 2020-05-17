@@ -237,7 +237,7 @@ int				check_for_scene_change(t_data *data)
 	else if (data->aa_adapt < MAX_AA && QUALITY == Q_HIGH)
 		data->aa_adapt = MAX_AA;
 	else
-		rendering = 0;
+		rendering = data->first_loop == 2 && QUALITY == Q_VERY_LOW ? 1 : 0;
 	return (rendering);
 }
 

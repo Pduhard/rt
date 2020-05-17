@@ -291,7 +291,7 @@ t_kd_tree	*build_tree(t_photon *phtn_tab, int lw, int hi, int ax)
 
 	if (!(tree = ft_memalloc(sizeof(t_kd_tree))) ||
 			!(tree->photon = ft_memalloc(sizeof(t_photon))))
-		return (NULL);
+				return (NULL);
 	if (lw == hi)
 		return (alloc_photon(tree, phtn_tab[lw]));
 	else if (hi - lw == 1)
@@ -323,6 +323,8 @@ int		create_photon_map(t_data *data)
 			!(photon_tab[0] = malloc(sizeof(t_photon) * NB_CAUSTIC_PHOTON)) ||
 			!(photon_tab[1] = malloc(sizeof(t_photon) * NB_INDIRECT_PHOTON)))
 		return (0);
+
+	printf("photon_map in\n");
 	scatter_photon(photon_tab, data);
 	if (photon_tab[0])
 		data->caustic_map = build_tree(photon_tab[0], 0, NB_CAUSTIC_PHOTON - 1, 0);
