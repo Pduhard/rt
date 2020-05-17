@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 20:56:52 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/15 19:35:04 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 18:37:49 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,7 @@ int				check_for_scene_change(t_data *data)
 	else if (data->aa_adapt < MAX_AA && QUALITY == Q_HIGH)
 		data->aa_adapt = MAX_AA;
 	else
-		rendering = 0;
+		rendering = data->first_loop == 2 && QUALITY == Q_VERY_LOW ? 1 : 0;
 	return (rendering);
 }
 

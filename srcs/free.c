@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:20:53 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/16 21:41:02 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 18:51:04 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,11 +167,13 @@ void	free_lights(t_light *lights)
 
 void	free_photon_map(t_kd_tree *map)
 {
+	printf("photon map \n");
 	if (!map)
 		return ;
 	free(map->photon);
 	free_photon_map(map->left);
 	free_photon_map(map->right);
+	free(map);
 }
 
 void	free_data(t_data *data)

@@ -30,7 +30,7 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_HIGH
+# define QUALITY			Q_VERY_LOW
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
 # define DFLT_POWER 100
@@ -51,8 +51,8 @@
 # define NN_INDIRECT_PHOTON_MAX	10
 # define SPEC_PROB				0.35
 # define DIFF_PROB				0.65
-# define NB_INDIRECT_PHOTON		10000
-# define NB_CAUSTIC_PHOTON		10000
+# define NB_INDIRECT_PHOTON		100
+# define NB_CAUSTIC_PHOTON		100
 # define MAX_CAUSTIC_RADIUS		0.3
 # define MAX_INDIRECT_RADIUS	0.5
 # define PHOTON_DEPTH			10
