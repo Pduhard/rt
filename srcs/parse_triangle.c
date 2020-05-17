@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:38:40 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:48:44 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:50:29 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int			parse_triangle(char **line, t_obj *triangle)
 		return (0);
 	if (!parse_triangle_element(line, &ret, triangle_param) ||
 			!check_triangle_param(triangle_param, ret))
+	{
+		free(triangle_param);
 		return (syn_error(SERROR, TRIANGLE, TRIBC, NULL));
+	}
 	triangle_param->origin = product_c3vecf(add_3vecf(triangle_param->a,
 		add_3vecf(triangle_param->b, triangle_param->c)), 1. / 3.);
 	triangle->obj_param = triangle_param;

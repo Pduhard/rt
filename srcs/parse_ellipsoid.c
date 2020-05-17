@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:26:32 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:27:34 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:42:47 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ int			parse_ellipsoid(char **line, t_obj *ellipsoid)
 		return (0);
 	if (!parse_ellipsoid_element(line, &ret, ellipsoid_param) ||
 			!check_ellipsoid_param(ellipsoid_param, ret))
+	{
+		free(ellipsoid_param);
 		return (syn_error(SERROR, ELLIPSE, AXIS, NULL));
+	}
 	ellipsoid->obj_param = ellipsoid_param;
 	assign_ellipsoid_function(ellipsoid);
 	return (ret);

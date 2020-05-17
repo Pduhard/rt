@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:29:40 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:30:20 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:46:51 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ int			parse_hyperboloid(char **line, t_obj *hyperboloid)
 		return (0);
 	if (!parse_hyperboloid_element(line, &ret, hyperboloid_param) ||
 			!check_hyperboloid_param(hyperboloid_param, ret))
+	{
+		free(hyperboloid_param);
 		return (syn_error(SERROR, HYPERBOL, AXIS, SURFACE));
+	}
 	if (!hyperboloid_param->surface)
 		hyperboloid_param->surface = -1;
 	else

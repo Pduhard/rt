@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:23:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:24:05 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 17:41:40 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ int			parse_cyclide(char **line, t_obj *cyclide)
 	if (!(cyclide_param = ft_memalloc(sizeof(t_cyclide))))
 		return (0);
 	if (!parse_cyclide_element(line, &ret, cyclide_param) || ret == 0)
+	{
+		free(cyclide_param);
 		return (syn_error(SERROR, CYCLIDE, ORIGIN, PARAM));
+	}
 	cyclide->obj_param = cyclide_param;
 	assign_cyclide_function(cyclide);
 	return (ret);
