@@ -60,7 +60,7 @@ int		brackets_rt(char *line)
 	cmp = 0;
 	while (line[i] != '<' && line[i] != '\0')
 		i++;
-	if (line[i] == '\0' && i == 0)
+	if (line[i] == '\0')
 		return (error(ERROREMPTY, NULL));
 	cmp++;
 	i++;

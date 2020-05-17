@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:20:53 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/17 18:51:04 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 19:16:01 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,22 @@ void	free_all_objects(t_obj *objs)
 
 void	free_composed_objects(t_composed *composed)
 {
-	int i;
+	int 		i;
+	t_composed	*next;
 
 	while (composed)
 	{
 		ft_strdel(&composed->name);
 		i = 0;
 		if (composed->components)
+		{
 			while (composed->components[i])
 				free_object(composed->components[i++]);
-		composed = composed->next;
+			free(composed->components);
+		}
+		next = composed->next;
+		free(composed);
+		composed = next;
 	}
 }
 

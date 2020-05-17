@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 20:56:52 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/17 18:37:49 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/17 19:38:15 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ t_data			*get_curr_scene(t_data **data_addr)
 		data = (*data_addr)->next;
 		data->hooks = (*data_addr)->hooks;
 		*data_addr = data;
+		data->new_obj  =  1;
 		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
 		mlx = data->mlx;
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
