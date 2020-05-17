@@ -18,8 +18,8 @@ EXT_LIB		=	./external_libs
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
-	INSTALLSDL := $(shell  sudo apt-get install libsdl2-dev)\
-					$(shell  sudo apt-get install libsdl2-image-dev)\
+	INSTALLSDL := $(shell  sudo apt-get -y install libsdl2-dev)\
+					$(shell  sudo apt-get -y install libsdl2-image-dev)\
 	FLAGS		+=	-fPIC
 	FRAMEWORK	=	-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image
 	CC		=	clang
