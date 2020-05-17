@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:35:13 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:35:42 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:47:21 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,14 @@ void		*parse_img(char *name)
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
 	if (!(image = parse_sdl_image(name)))
+	{
+		free(param);
 		return (NULL);
+	}
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
 	{
+		free(param);
 		SDL_FreeSurface(image);
 		return (NULL);
 	}
@@ -79,6 +83,7 @@ void		*parse_texture_img(char **line)
 	goto_next_element(line);
 	if (!(param = parse_img(image_name)))
 		ft_strdel(&image_name);
+	ft_strdel(&image_name);
 	return ((void *)param);
 }
 
@@ -95,12 +100,18 @@ void		*parse_proc(char **line)
 	while (goto_next_element(line) != '>' && ++cmp < 3 && ret != 0)
 	{
 		if (ft_strncmp_case(*line, "color", 5))
+		{
+			free(param);
 			return (NULL);
+		}
 		else if (!(ft_strncmp_case(*line, "color", 5)))
 			ret = parse_color_transp(line, 5, &param->color[cmp]);
 	}
 	if (cmp == 3 || cmp == -1 || ret == 0)
+	{
+		free(param);
 		return (NULL);
+	}
 	return ((void *)param);
 }
 

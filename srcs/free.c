@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:20:53 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 18:23:49 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/16 21:41:02 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ void	free_motions(t_motion *motions)
 
 void	free_object(t_obj *obj)
 {
+	printf("Avant\n");
 	free(obj->obj_param);
+	printf("test\n");
 	free_cuts(obj->cuts);
 	free_motions(obj->motions);
 	if (obj->text.text_type == TEXT_IMAGE)
@@ -97,9 +99,10 @@ void	unchain_data_list(t_data *data)
 	t_data *start;
 
 	start = data;
-	while (data->next != start)
+	while (data && data->next != start)
 		data = data->next;
-	data->next = NULL;
+	if (data)
+		data->next = NULL;
 }
 
 void	free_all_objects(t_obj *objs)
@@ -134,14 +137,17 @@ void	free_composed_objects(t_composed *composed)
 	{
 		ft_strdel(&composed->name);
 		i = 0;
-		while (composed->components[i])
-			free_object(composed->components[i++]);
+		if (composed->components)
+			while (composed->components[i])
+				free_object(composed->components[i++]);
 		composed = composed->next;
 	}
 }
 
 void	free_mlx(t_mlx *mlx)
 {
+	if (!mlx)
+		return ;
 	mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 	free(mlx);
@@ -170,6 +176,7 @@ void	free_photon_map(t_kd_tree *map)
 
 void	free_data(t_data *data)
 {
+	printf("free data\n");
 	free_composed_objects(data->composed_objs);
 	free(data->camera);
 	free_all_objects(data->objs);
@@ -179,6 +186,7 @@ void	free_data(t_data *data)
 	ft_strdel(&data->skybox_name);
 	free_photon_map(data->indirect_map);
 	free_photon_map(data->caustic_map);
+	free(data);
 }
 
 void	free_info(t_data *data)
@@ -190,7 +198,7 @@ void	free_info(t_data *data)
 	first = data;
 	check = 0;
 	info = data->info;
-	while (data != first || !check)
+	while (data && (data != first || !check))
 	{
 		check = 1;
 		data->info = NULL;
@@ -199,7 +207,8 @@ void	free_info(t_data *data)
 	// free()
 	// mlx_destroy_window(data->mlx->mlx_ptr, data->info->win_ptr);
 	// mlx_destroy_window(data->mlx->mlx_ptr, data->info->win_ptr);
-	free(info);
+	if (info)
+		free(info);
 	// mlx_destroy_image(data->mlx->mlx_ptr, data->info->img_ptr);
 	// free(data->info);
 }
@@ -209,14 +218,20 @@ void	free_all(t_data *data)
 	t_data	*next;
 	t_mlx	*mlx;
 
+	if (!data)
+		return ;
 	mlx = data->mlx;
 	free_info(data);
+	printf("free all\n");
 	free_mlx(mlx);
+	printf("free all 2\n");
 	unchain_data_list(data);
+	printf("free all 3\n");
 	while (data)
 	{
+		printf("%p\n", data);
 		next = data->next;
 		free_data(data);
-		data = data->next;
+		data = next;
 	}
 }

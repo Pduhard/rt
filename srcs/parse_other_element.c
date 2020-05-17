@@ -97,7 +97,10 @@ int		parse_motion(char **line, t_obj *obj)
 		else if (!(ft_strncmp_case(*line, "spf", 3)))
 			ret = parse_int(line, 3, &motion->spf);
 		else if (stripe == '<')
+		{
+			free(motion);
 			return (syn_error(SERROR, MOTION, "<spf (Value)>\n", NULL));
+		}
 	}
 	clamp_val((double *)&motion->spf, 0, 32);
 	push_front_motion(&obj->motions, motion);
