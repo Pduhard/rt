@@ -174,7 +174,7 @@ BIN			=	$(SRC:.c=.o)
 LIB_FLAG			=	-lft
 LIB					=	libft.a
 MLX_FLAG			=	-lmlx
-MLX					=	libmlx_Linux.a
+MLX					=	libmlx.a
 #MLX					=	libmlx.dylib //new lib in beta
 
 SRCS		=	$(addprefix $(SRC_PATH), $(SRC))
