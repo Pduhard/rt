@@ -3,7 +3,7 @@
 
 NAME		=	rt
 
-FLAGS		=	-Wall -Wextra -Werror -O3 -march=native -flto -ffast-math
+FLAGS		=	-Wall -Wextra -Werror -g -O3 -march=native -flto -ffast-math
 
 LIB_FLAGS	=	-L$(LIB_PATH) $(LIB_FLAG)
 
@@ -166,8 +166,6 @@ SRC			=	main.c					\
 				parse_moebius.c			\
 				skybox.c						\
 				goto_next.c					\
-				# $(addprefix $(SRC_SHAPES_PATH), $(SHAPES))
-				# shapes/cone.c		\
 
 BIN			=	$(SRC:.c=.o)
 
