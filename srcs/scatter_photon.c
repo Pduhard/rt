@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scatter_photon.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:46:33 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:47:12 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int			check_light_type(t_light *light)
+static int		check_light_type(t_light *light)
 {
 	while (light)
 	{
@@ -11,7 +23,8 @@ static int			check_light_type(t_light *light)
 	return (0);
 }
 
-static int     check_end_of_scattering(int ind_i, int caus_i, t_photon **photon_tab)
+static int		check_end_of_scattering(int ind_i, int caus_i,
+	t_photon **photon_tab)
 {
 	if ((ind_i == NB_INDIRECT_PHOTON && !caus_i)
 		|| (caus_i == NB_CAUSTIC_PHOTON && ind_i == NB_INDIRECT_PHOTON))
@@ -26,7 +39,7 @@ static int     check_end_of_scattering(int ind_i, int caus_i, t_photon **photon_
 	return (0);
 }
 
-static t_3vecf get_photon_power(t_light *light)
+static t_3vecf	get_photon_power(t_light *light)
 {
 	return (assign_3vecf(
 		light->color.val[0] * DFLT_POWER,
@@ -34,9 +47,9 @@ static t_3vecf get_photon_power(t_light *light)
 		light->color.val[2] * DFLT_POWER));
 }
 
-void		scatter_photon(t_photon **photon_tab, t_data *data)
+void			scatter_photon(t_photon **photon_tab, t_data *data)
 {
-	t_light	*light;
+	t_light		*light;
 	int			ind_i;
 	int			caus_i;
 	t_leq		l;

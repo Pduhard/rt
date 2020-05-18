@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:11:38 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:11:57 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		check_inside_plane(t_3vecf inter_point, t_obj *plane)
@@ -13,7 +25,6 @@ int		check_inside_plane(t_3vecf inter_point, t_obj *plane)
 		return (1);
 	return (0);
 }
-
 
 void	move_plane(t_obj *plane, t_3vecf dir, double fact)
 {

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:30:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/17 17:26:30 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:01:07 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int			check_lights_cam(t_data *data)
 	return (1);
 }
 
-static int			pick_spot(char **line, t_light *light)
+static int	pick_spot(char **line, t_light *light)
 {
 	int		ret;
 
@@ -66,7 +66,7 @@ static int			pick_spot(char **line, t_light *light)
 	return (ret);
 }
 
-static void		push_lights(t_data *data, t_light *light)
+static void	push_lights(t_data *data, t_light *light)
 {
 	if (data->lights)
 		light->next = data->lights;

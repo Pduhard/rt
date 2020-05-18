@@ -1,8 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fresnel.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:22:20 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:22:45 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-/* fresnel_ratio:	SCHLICK approximation	3 times faster*/
+/*
+**fresnel_ratio:	SCHLICK approximation	3 times faster
+*/
 
-double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter, double refraction_index)
+double	compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter,
+	double refraction_index)
 {
 	double	r0;
 	t_3vecf	inv_dir;

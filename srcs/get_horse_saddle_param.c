@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_horse_saddle_param.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:33:16 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:33:17 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_2vecf	get_text_coordinate_horse_saddle(t_3vecf inter_point,
@@ -9,7 +21,7 @@ t_2vecf	get_text_coordinate_horse_saddle(t_3vecf inter_point,
 	(void)normal_inter;
 }
 
-t_3vecf	get_origin_horse_saddle(t_obj *horse_saddle) // atej
+t_3vecf	get_origin_horse_saddle(t_obj *horse_saddle)
 {
 	return (((t_horse_saddle *)horse_saddle->obj_param)->origin);
 }

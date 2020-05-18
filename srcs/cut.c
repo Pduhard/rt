@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 17:28:29 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 17:32:09 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 01:12:11 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-int			check_cut_classic(t_cut *cut, t_3vecf inter_point)
+int		check_cut_classic(t_cut *cut, t_3vecf inter_point)
 {
 	t_cut_classic	*param;
 	t_3vecf			io;
@@ -94,16 +94,16 @@ t_obj	*check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data)
 	while (cuts)
 	{
 		if (check_cut_classic(cuts, inter_point)
-		 || check_cut_uv(cuts, inter_point, cp)
-		 || check_cut_texture(cuts, inter_point, cp)
-		 || check_cut_sphere(cuts, inter_point))
-		 {
-				if (cp.negative)
-		 			return (NULL);
-		 		dist.min_dist = *(dist.dist);
-		 		return (ray_first_intersect(l, (t_dist){dist.dist, *(dist.dist),
-		 			dist.max_dist}, cp.objs, cp.sp_id));
-		 }
+		|| check_cut_uv(cuts, inter_point, cp)
+		|| check_cut_texture(cuts, inter_point, cp)
+		|| check_cut_sphere(cuts, inter_point))
+		{
+			if (cp.negative)
+				return (NULL);
+			dist.min_dist = *(dist.dist);
+			return (ray_first_intersect(l, (t_dist){dist.dist, *(dist.dist),
+				dist.max_dist}, cp.objs, cp.sp_id));
+		}
 		cuts = cuts->next;
 	}
 	return (cp.closest_obj);

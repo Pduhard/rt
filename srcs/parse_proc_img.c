@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:35:13 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/16 21:47:21 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:05:51 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static SDL_Surface	*parse_sdl_image(char *name)
 	return (image);
 }
 
-void		*parse_img(char *name)
+void				*parse_img(char *name)
 {
 	SDL_Surface		*image;
 	t_text_img		*param;
@@ -63,7 +63,7 @@ void		*parse_img(char *name)
 	return ((void *)param);
 }
 
-void		*parse_texture_img(char **line)
+void				*parse_texture_img(char **line)
 {
 	t_text_img		*param;
 	unsigned int	i;
@@ -101,7 +101,7 @@ static int			parse_color_transp(char **line, int i, t_4vecf *t)
 	return (1);
 }
 
-void		*parse_proc(char **line)
+void				*parse_proc(char **line)
 {
 	int			cmp;
 	int			ret;

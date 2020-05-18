@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 17:09:55 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 17:10:00 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:53:05 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ t_3vecf	assign_3vecf(double x, double y, double z)
 	vec.val[2] = z;
 	return (vec);
 }
-
 
 t_3vecf	product_c3vecf(t_3vecf a, double c)
 {

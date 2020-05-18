@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:44:31 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:45:52 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:09:20 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ double			compute_3dperlin_factor(t_3vecf inter_point, double scale,
 						assign_3vecf(f.val[0] - 1.0, f.val[1], f.val[2] - 1.0));
 	d[6] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1] + 1, i.val[2])),
 						assign_3vecf(f.val[0] - 1.0, f.val[1] - 1.0, f.val[2]));
-	d[7] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1] + 1, i.val[2] + 1)),
-						assign_3vecf(f.val[0] - 1.0, f.val[1] - 1.0,
-							f.val[2] - 1.0));
+	d[7] = dp(rand_g(p, g, assign_3vecf(i.val[0] + 1, i.val[1] + 1,
+						i.val[2] + 1)), assign_3vecf(f.val[0] - 1.0, f.val[1]
+							- 1.0, f.val[2] - 1.0));
 	return (lin_i(lin_i(lin_i(d[0], d[4], q[2]), lin_i(d[2], d[6], q[2]), q[1]),
 		lin_i(lin_i(d[1], d[5], q[2]), lin_i(d[3], d[7], q[2]), q[1]), q[0]));
 }

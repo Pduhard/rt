@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:49:12 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:49:28 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static void	check_line(char **line)
@@ -21,7 +33,7 @@ static void	check_line(char **line)
 	}
 }
 
-static int		brackets_rt(char *line)
+static int	brackets_rt(char *line)
 {
 	int	i;
 	int	cmp;
@@ -47,7 +59,7 @@ static int		brackets_rt(char *line)
 	return (1);
 }
 
-static int		parse(char *line, t_data *data)
+static int	parse(char *line, t_data *data)
 {
 	goto_next_element(&line);
 	if (!(ft_strncmp_case(line, "scene", 5)))
@@ -57,7 +69,7 @@ static int		parse(char *line, t_data *data)
 	return (0);
 }
 
-int		parse_rt_conf(char *file_name, t_data *data)
+int			parse_rt_conf(char *file_name, t_data *data)
 {
 	int		fd;
 	char	*line;

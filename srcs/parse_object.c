@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/17 19:04:03 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:02:28 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static int		pick_native_object(char **line, t_obj *obj)
+static int	pick_native_object(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -30,7 +30,7 @@ static int		pick_native_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-static int		pick_eq_object(char **line, t_obj *obj, t_composed *from)
+static int	pick_eq_object(char **line, t_obj *obj, t_composed *from)
 {
 	int	ret;
 
@@ -52,7 +52,7 @@ static int		pick_eq_object(char **line, t_obj *obj, t_composed *from)
 	return (ret);
 }
 
-static int		pick_attribute_object(char **line, t_obj *obj)
+static int	pick_attribute_object(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -76,7 +76,7 @@ static int		pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		parse_objects(char **line, t_data *data, t_composed *from)
+int			parse_objects(char **line, t_data *data, t_composed *from)
 {
 	char	stripe;
 	int		ret;

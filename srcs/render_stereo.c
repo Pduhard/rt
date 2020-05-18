@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_stereo.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:42:23 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:42:40 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static t_3vecf get_stereo_clr(t_3vecf origs[2], t_leq l, t_data *data)
+static t_3vecf	get_stereo_clr(t_3vecf origs[2], t_leq l, t_data *data)
 {
 	t_3vecf		colors[2];
 
@@ -17,7 +29,7 @@ static t_3vecf get_stereo_clr(t_3vecf origs[2], t_leq l, t_data *data)
 	return (assign_3vecf(colors[1].val[0], colors[0].val[1], colors[0].val[2]));
 }
 
-void  compute_stereoscopy(t_data *data, t_leq l, int i, int j)
+void			compute_stereoscopy(t_data *data, t_leq l, int i, int j)
 {
 	t_3vecf		origs[2];
 	t_3vecf		diff;

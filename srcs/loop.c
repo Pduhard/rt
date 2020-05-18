@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 20:56:52 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/17 19:38:15 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 02:11:39 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static int				loop_manage(t_data *data)
+static int		loop_manage(t_data *data)
 {
 	int	ret;
 
@@ -31,7 +31,7 @@ static int				loop_manage(t_data *data)
 	return (ret);
 }
 
-static void			launch_hook(t_data *data)
+static void		launch_hook(t_data *data)
 {
 	mlx_hook(data->mlx->win_ptr, 2, (1L << 0), key_press, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 3, (1L << 1), key_release, (void *)data);
@@ -40,7 +40,7 @@ static void			launch_hook(t_data *data)
 		(void *)data);
 }
 
-static t_data			*get_curr_scene(t_data **data_addr)
+static t_data	*get_curr_scene(t_data **data_addr)
 {
 	t_data	*data;
 	t_mlx	*mlx;
@@ -51,7 +51,7 @@ static t_data			*get_curr_scene(t_data **data_addr)
 		data = (*data_addr)->next;
 		data->hooks = (*data_addr)->hooks;
 		*data_addr = data;
-		data->new_obj  =  1;
+		data->new_obj = 1;
 		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
 		mlx = data->mlx;
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
@@ -67,7 +67,7 @@ static t_data			*get_curr_scene(t_data **data_addr)
 	return (*data_addr);
 }
 
-static int				check_for_scene_change(t_data *data)
+static int		check_for_scene_change(t_data *data)
 {
 	int rendering;
 
@@ -77,7 +77,6 @@ static int				check_for_scene_change(t_data *data)
 		data->aa_adapt = (QUALITY & (Q_VERY_LOW | Q_LOW)) ? MIN_AA : NO_AA;
 	}
 	else if (data->aa_adapt < NO_AA && QUALITY != Q_VERY_LOW)
-
 		data->aa_adapt = NO_AA;
 	else if (data->aa_adapt < MAX_AA && QUALITY == Q_HIGH)
 		data->aa_adapt = MAX_AA;
@@ -89,7 +88,7 @@ static int				check_for_scene_change(t_data *data)
 int				print_loop_image(void *param)
 {
 	t_data	*data;
-	// int		rendering;
+	// int	rendering;
 
 	// rendering = 1;
 	data = get_curr_scene((t_data **)param);
@@ -98,7 +97,6 @@ int				print_loop_image(void *param)
 	{
 		printf("%f\n", data->aa_adapt);
 		render(data);
-
 	}
 //	loop_manage(data);
 //	data->aa_adapt = NO_AA;

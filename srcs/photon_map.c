@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   photon_map.c                                     .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: pduhard- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/02/11 10:49:10 by pduhard-     #+#   ##    ##    #+#       */
-/*   Updated: 2020/03/05 10:54:39 by pduhard-         ###   ########lyon.fr   */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   photon_map.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:10:00 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:10:41 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -23,20 +22,20 @@ int		create_photon_map(t_data *data)
 			!(photon_tab[0] = malloc(sizeof(t_photon) * NB_CAUSTIC_PHOTON)) ||
 			!(photon_tab[1] = malloc(sizeof(t_photon) * NB_INDIRECT_PHOTON)))
 		return (0);
-
 	printf("photon_map in\n");
 	scatter_photon(photon_tab, data);
 	if (photon_tab[0])
-		data->caustic_map = build_tree(photon_tab[0], 0, NB_CAUSTIC_PHOTON - 1, 0);
-	data->indirect_map = build_tree(photon_tab[1], 0, NB_INDIRECT_PHOTON - 1, 0);
+		data->caustic_map = build_tree(photon_tab[0], 0,
+			NB_CAUSTIC_PHOTON - 1, 0);
+	data->indirect_map = build_tree(photon_tab[1], 0,
+		NB_INDIRECT_PHOTON - 1, 0);
 	free(photon_tab[0]);
 	free(photon_tab[1]);
 	free(photon_tab);
 	return (data->caustic_map || data->indirect_map ? 1 : 0);
 }
 
-
-void			check_photon_map(t_data *data)
+void	check_photon_map(t_data *data)
 {
 	if ((((data->caustics_gi && !data->caustic_map)
 		|| (data->indirect_gi && !data->indirect_map)))

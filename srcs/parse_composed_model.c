@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_composed_model.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:50:06 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:50:12 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-int			parse_composed_model(char **line, t_data *data)
+int	parse_composed_model(char **line, t_data *data)
 {
 	char		stripe;
 	int			ret;

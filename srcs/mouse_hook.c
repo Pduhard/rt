@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 05:17:07 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/15 19:53:07 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 04:47:09 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,11 @@ int		mouse_hook(int button, int x, int y, void *param)
 		else
 		{
 			dir = mult_3vecf_33matf(mult_3vecf_33matf(window_to_view(i, j,
-				data->size.val[0], data->size.val[1]), data->rot_mat[1]), data->rot_mat[0]);
-			data->selected_obj = ray_first_intersect((t_leq){data->camera->origin,
-				dir}, (t_dist){&dist, BIAS, MAX_VIEW}, data->objs, 0);
+				data->size.val[0], data->size.val[1]), data->rot_mat[1]),
+					data->rot_mat[0]);
+			data->selected_obj = ray_first_intersect(
+				(t_leq){data->camera->origin,
+					dir}, (t_dist){&dist, BIAS, MAX_VIEW}, data->objs, 0);
 		}
 	}
 	return (1);

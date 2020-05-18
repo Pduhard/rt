@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cutting_type.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:57:07 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:59:03 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int		parse_cut_texture(char **line, t_cut *cut)
+static int	parse_cut_texture(char **line, t_cut *cut)
 {
 	char	stripe;
 
@@ -14,7 +26,7 @@ static int		parse_cut_texture(char **line, t_cut *cut)
 	return (1);
 }
 
-static int		parse_cut_sphere(char **line, t_cut *cut)
+static int	parse_cut_sphere(char **line, t_cut *cut)
 {
 	t_sphere	*param;
 	char		stripe;
@@ -45,7 +57,7 @@ static int		parse_cut_sphere(char **line, t_cut *cut)
 	return (ret);
 }
 
-static int		parse_cut_uv(char **line, t_cut *cut)
+static int	parse_cut_uv(char **line, t_cut *cut)
 {
 	t_cut_uv	*param;
 	char		stripe;
@@ -72,7 +84,8 @@ static int		parse_cut_uv(char **line, t_cut *cut)
 	return (ret);
 }
 
-static int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type)
+static int	parse_cut_static_real(char **line, t_cut *cut,
+	t_cut_type cut_type)
 {
 	char			stripe;
 	int				ret;
@@ -101,7 +114,7 @@ static int		parse_cut_static_real(char **line, t_cut *cut, t_cut_type cut_type)
 	return (ret ? ret : syn_error(SERROR, SYNCUT, STATICCUT, ""));
 }
 
-int		pick_type_cutting(char **line, t_cut *cut, int *ret)
+int			pick_type_cutting(char **line, t_cut *cut, int *ret)
 {
 	if (!(ft_strncmp_case(*line, "static", 6)))
 		*ret = parse_cut_static_real(line, cut, CUT_REAL);

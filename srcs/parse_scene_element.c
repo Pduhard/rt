@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:36:05 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:36:48 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:07:09 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static int		parse_onoff(char **line, int *onoff)
+static int	parse_onoff(char **line, int *onoff)
 {
 	char	*s;
 
@@ -33,7 +33,7 @@ static int		parse_onoff(char **line, int *onoff)
 	return (1);
 }
 
-static int		parse_size(char **line, t_data *data)
+static int	parse_size(char **line, t_data *data)
 {
 	int		i;
 	char	*s;
@@ -52,7 +52,7 @@ static int		parse_size(char **line, t_data *data)
 	return (1);
 }
 
-static int		pick_options(char **line, t_data *data)
+static int	pick_options(char **line, t_data *data)
 {
 	int ret;
 
@@ -80,7 +80,7 @@ static int		pick_options(char **line, t_data *data)
 	return (ret);
 }
 
-static int		check_scene_param(t_data *data)
+static int	check_scene_param(t_data *data)
 {
 	if (!check_lights_cam(data))
 		return (0);
@@ -92,7 +92,7 @@ static int		check_scene_param(t_data *data)
 	return (1);
 }
 
-int		parse_scene(char **line, t_data *data)
+int			parse_scene(char **line, t_data *data)
 {
 	char	stripe;
 	int		ret;

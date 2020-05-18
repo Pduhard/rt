@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_object.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:21:22 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:21:55 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static int	rechain_list(t_obj **list, t_obj *obj)
@@ -44,11 +56,9 @@ static void	free_motions(t_motion *motions)
 	}
 }
 
-void	free_object(t_obj *obj)
+void		free_object(t_obj *obj)
 {
-	printf("Avant\n");
 	free(obj->obj_param);
-	printf("test\n");
 	free_cuts(obj->cuts);
 	free_motions(obj->motions);
 	if (obj->text.text_type == TEXT_IMAGE)
@@ -58,14 +68,14 @@ void	free_object(t_obj *obj)
 	free(obj);
 }
 
-void	delete_object(t_data *data, t_obj *obj)
+void		delete_object(t_data *data, t_obj *obj)
 {
 	int		i;
 
 	i = 0;
 	if (!rechain_list(&data->objs, obj)
 		&& !rechain_list(&data->negative_objs, obj))
-		return ; //never happend
+		return ;
 	if (obj->composed_w)
 	{
 		while (obj->composed_w[i])

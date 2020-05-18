@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   copy_object.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:09:31 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:09:58 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static void		*copy_obj_param(void *obj_param, t_obj_type type)
@@ -21,7 +33,7 @@ static void		*copy_obj_param(void *obj_param, t_obj_type type)
 		return (NULL);
 }
 
-static t_cut		*copy_cut(t_cut *src)
+static t_cut	*copy_cut(t_cut *src)
 {
 	t_cut	*cut;
 
@@ -44,7 +56,7 @@ static t_cut		*copy_cut(t_cut *src)
 	return (cut);
 }
 
-static t_text		copy_text(t_text src)
+static t_text	copy_text(t_text src)
 {
 	t_text		cpy;
 	t_text_img	*p;
@@ -68,7 +80,7 @@ static t_text		copy_text(t_text src)
 	return (cpy);
 }
 
-t_obj		*copy_object(t_obj *src)
+t_obj			*copy_object(t_obj *src)
 {
 	t_obj	*obj;
 	t_cut	*cuts_obj;

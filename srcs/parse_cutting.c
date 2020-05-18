@@ -6,13 +6,20 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:22:28 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/16 21:42:24 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 04:56:41 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-int		parse_cutting(char **line, t_obj *obj)
+static void	free_cut(t_cut *cut)
+{
+	if (cut->cut_param)
+		free(cut->cut_param);
+	free(cut);
+}
+
+int			parse_cutting(char **line, t_obj *obj)
 {
 	char	stripe;
 	int		ret;
@@ -29,9 +36,7 @@ int		parse_cutting(char **line, t_obj *obj)
 			return (0);
 		else if (**line != '<' && **line != '>')
 		{
-			if (cut->cut_param)
-				free(cut->cut_param);
-			free(cut);
+			free_cut(cut);
 			return (error(UNKNOWCUT, NULL));
 		}
 	}

@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_light.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:32:21 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:37:09 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static void    get_light_dir(t_3vecf *light_dir, double *light_len, t_light *lights, t_3vecf inter_point)
+static void		get_light_dir(t_3vecf *light_dir, double *light_len,
+	t_light *lights, t_3vecf inter_point)
 {
 	if (lights->light_type == LIGHT_POINT)
 	{
@@ -10,14 +23,12 @@ static void    get_light_dir(t_3vecf *light_dir, double *light_len, t_light *lig
 	else if (lights->light_type == LIGHT_DIRECTIONAL)
 	{
 		*light_dir = neg_3vecf(lights->param);
-		// assign_3vecf(-lights->param.val[0], -lights->param.val[1], -lights->param.val[2]);
 		*light_len = MAX_VIEW;
 	}
-	normalize_3vecf(light_dir);// same
+	normalize_3vecf(light_dir);
 }
 
-
-static t_3vecf    add_diffuse(t_compute_light_param p,
+static t_3vecf	add_diffuse(t_compute_light_param p,
 	t_3vecf transp_fact, t_3vecf light_dir)
 {
 	double	dp_n_ldir;
@@ -26,22 +37,25 @@ static t_3vecf    add_diffuse(t_compute_light_param p,
 	dp_n_ldir = dot_product_3vecf(p.normal_inter, light_dir);
 	if (dp_n_ldir > 0)
 	{
-		diffuse.val[0] = p.lights->color.val[0] * transp_fact.val[0] * dp_n_ldir;
-		diffuse.val[1] = p.lights->color.val[1] * transp_fact.val[1] * dp_n_ldir;
-		diffuse.val[2] = p.lights->color.val[2] * transp_fact.val[2] * dp_n_ldir;
+		diffuse.val[0] = p.lights->color.val[0] * transp_fact.val[0]
+							* dp_n_ldir;
+		diffuse.val[1] = p.lights->color.val[1] * transp_fact.val[1]
+							* dp_n_ldir;
+		diffuse.val[2] = p.lights->color.val[2] * transp_fact.val[2]
+							* dp_n_ldir;
 	}
 	else
 		return (assign_3vecf(0, 0, 0));
 	return (diffuse);
 }
 
-static t_3vecf add_specular(t_compute_light_param p, t_3vecf transp_fact,
+static t_3vecf	add_specular(t_compute_light_param p, t_3vecf transp_fact,
 	t_3vecf light_dir, t_3vecf inv_dir)
 {
-	t_3vecf spec_vec;
-	t_3vecf specular;
+	t_3vecf	spec_vec;
+	t_3vecf	specular;
 	double	ref_dot_idir;
-	double  spec_fact;
+	double	spec_fact;
 
 	if (p.shininess)
 	{
@@ -51,16 +65,19 @@ static t_3vecf add_specular(t_compute_light_param p, t_3vecf transp_fact,
 		{
 			spec_fact = powf(ref_dot_idir / (get_length_3vecf(spec_vec)
 				* get_length_3vecf(inv_dir)), p.shininess);
-			specular.val[0] = p.lights->color.val[0] * transp_fact.val[0] * spec_fact;
-			specular.val[1] = p.lights->color.val[1] * transp_fact.val[1] * spec_fact;
-			specular.val[2] = p.lights->color.val[2] * transp_fact.val[2] * spec_fact;
+			specular.val[0] = p.lights->color.val[0] * transp_fact.val[0]
+								* spec_fact;
+			specular.val[1] = p.lights->color.val[1] * transp_fact.val[1]
+								* spec_fact;
+			specular.val[2] = p.lights->color.val[2] * transp_fact.val[2]
+								* spec_fact;
 			return (specular);
 		}
 	}
 	return (assign_3vecf(0, 0, 0));
 }
 
-static t_3vecf add_light_effect(t_compute_light_param p, t_3vecf light_fact)
+static t_3vecf	add_light_effect(t_compute_light_param p, t_3vecf light_fact)
 {
 	if (p.data->caustics_gi)
 		light_fact = add_3vecf(light_fact,
@@ -79,13 +96,13 @@ static t_3vecf add_light_effect(t_compute_light_param p, t_3vecf light_fact)
 	return (light_fact);
 }
 
-t_3vecf	compute_lights(t_compute_light_param p)
+t_3vecf			compute_lights(t_compute_light_param p)
 {
 	t_3vecf	light_fact;
 	t_3vecf	transp_fact;
-	double	light_len;
+	double	l_len;
 	t_3vecf	light_dir;
-	t_obj		*shadow_obj;
+	t_obj	*shadow_obj;
 
 	light_fact = assign_3vecf(0, 0, 0);
 	while (p.lights)
@@ -94,8 +111,8 @@ t_3vecf	compute_lights(t_compute_light_param p)
 			light_fact = add_3vecf(light_fact, p.lights->color);
 		else
 		{
-			get_light_dir(&light_dir, &light_len, p.lights, p.inter_point);
-			shadow_obj = check_for_shadow(&transp_fact, light_dir, light_len, &p);
+			get_light_dir(&light_dir, &l_len, p.lights, p.inter_point);
+			shadow_obj = check_for_shadow(&transp_fact, light_dir, l_len, &p);
 			clamp_transparency(&transp_fact);
 			if (!shadow_obj && (transp_fact.val[0] ||
 				transp_fact.val[1] || transp_fact.val[2]))

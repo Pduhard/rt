@@ -6,13 +6,14 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 21:11:13 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 21:15:36 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:49:37 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static void	get_triangle_corner(t_3vecf corner[3], t_obj *triangle, int sp_id)
+static void		get_triangle_corner(t_3vecf corner[3], t_obj *triangle,
+	int sp_id)
 {
 	t_triangle *param;
 
@@ -35,7 +36,8 @@ static double	get_inverse_delta(t_3vecf a_vec, t_3vecf dir_ac)
 	return (1. / delta);
 }
 
-static int		check_triangle_dist(double u, double v, t_dist dist, double root)
+static int		check_triangle_dist(double u, double v, t_dist dist,
+	double root)
 {
 	if (v < 0 || u + v > 1)
 		return (0);
@@ -47,7 +49,8 @@ static int		check_triangle_dist(double u, double v, t_dist dist, double root)
 	return (0);
 }
 
-int		ray_intersect_triangle(t_leq l, t_obj *triangle, t_dist dist, int sp_id)
+int				ray_intersect_triangle(t_leq l, t_obj *triangle,
+	t_dist dist, int sp_id)
 {
 	t_3vecf	a_vec[2];
 	t_3vecf corner[3];

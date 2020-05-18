@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_bumpmap.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:48:30 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:48:46 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-void	set_bump_own(t_obj *obj)
+void		set_bump_own(t_obj *obj)
 {
 	if (obj->text.text_type == TEXT_PERLIN)
 	{
@@ -53,7 +65,7 @@ static void	set_bump_inde(char *s, t_obj *obj)
 	}
 }
 
-int		parse_bump_mapping(char **line, t_obj *obj)
+int			parse_bump_mapping(char **line, t_obj *obj)
 {
 	char	stripe;
 	int		ret;
@@ -76,7 +88,7 @@ int		parse_bump_mapping(char **line, t_obj *obj)
 	return (ret);
 }
 
-int		parse_bump_inde(char **line, t_obj *obj, int index)
+int			parse_bump_inde(char **line, t_obj *obj, int index)
 {
 	int		i;
 	int		start;

@@ -1,5 +1,16 @@
-#include "rt.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_hyperboloid_param.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:33:35 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:33:43 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "rt.h"
 
 t_2vecf	get_text_coordinate_hyperboloid(t_3vecf inter_point,
 	t_3vecf normal_inter, t_obj *hyperboloid)
@@ -10,7 +21,7 @@ t_2vecf	get_text_coordinate_hyperboloid(t_3vecf inter_point,
 	(void)normal_inter;
 }
 
-t_3vecf	get_origin_hyperboloid(t_obj *hyperboloid) // bye
+t_3vecf	get_origin_hyperboloid(t_obj *hyperboloid)
 {
 	return (((t_hyperboloid *)hyperboloid->obj_param)->origin);
 }

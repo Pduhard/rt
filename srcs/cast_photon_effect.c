@@ -1,16 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cast_photon_effect.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:00:17 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:01:00 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-t_3vecf add_color_bleed(t_3vecf pwr, t_4vecf obj_color)
+t_3vecf	add_color_bleed(t_3vecf pwr, t_4vecf obj_color)
 {
-	// return (pwr);
-
-		pwr.val[0] *= obj_color.val[0];
-		pwr.val[1] *= obj_color.val[1];
-		pwr.val[2] *= obj_color.val[2];
-		return (pwr);
+	pwr.val[0] *= obj_color.val[0];
+	pwr.val[1] *= obj_color.val[1];
+	pwr.val[2] *= obj_color.val[2];
+	return (pwr);
 }
 
-void  refract_photon(t_leq l, t_phtn_cast p)
+void	refract_photon(t_leq l, t_phtn_cast p)
 {
 	normalize_3vecf(&l.dir);
 	p.depth--;
@@ -19,7 +29,7 @@ void  refract_photon(t_leq l, t_phtn_cast p)
 	return ;
 }
 
-void  reflect_photon_spec(t_leq l, t_phtn_cast p, int photon_type)
+void	reflect_photon_spec(t_leq l, t_phtn_cast p, int photon_type)
 {
 	normalize_3vecf(&l.dir);
 	p.depth--;
@@ -29,7 +39,7 @@ void  reflect_photon_spec(t_leq l, t_phtn_cast p, int photon_type)
 	return ;
 }
 
-void  reflect_photon_diff(t_leq l, t_phtn_cast p,
+void	reflect_photon_diff(t_leq l, t_phtn_cast p,
 	t_photon photon, t_3vecf normal_inter)
 {
 	l.dir = get_random_dir(p.rand_iter);

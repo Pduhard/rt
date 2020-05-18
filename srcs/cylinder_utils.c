@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:14:37 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:14:50 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 void	move_cylinder(t_obj *cylinder, t_3vecf dir, double fact)
@@ -70,7 +82,6 @@ void	assign_cylinder_function(t_obj *cylinder)
 	cylinder->move = &move_cylinder;
 	cylinder->rotate = &rotate_cylinder;
 	cylinder->get_text_coordinate = &get_text_coordinate_cylinder;
-	// cylinder->get_text_color = &get_uni_color;
 }
 
 void	generate_new_cylinder(t_data *data)

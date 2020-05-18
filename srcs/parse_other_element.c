@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_other_element.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:03:07 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:03:40 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-int		parse_name(char **line, char **name, int i)
+int			parse_name(char **line, char **name, int i)
 {
 	int		start;
 	char	*s;
@@ -26,7 +38,7 @@ int		parse_name(char **line, char **name, int i)
 	return (1);
 }
 
-int		parse_color_filter(char **line, t_data *data)
+int			parse_color_filter(char **line, t_data *data)
 {
 	char	*s;
 
@@ -41,7 +53,7 @@ int		parse_color_filter(char **line, t_data *data)
 	return (1);
 }
 
-int		parse_material(char **line, int i, t_obj *obj)
+int			parse_material(char **line, int i, t_obj *obj)
 {
 	char	*s;
 
@@ -77,7 +89,7 @@ static void	push_front_motion(t_motion **root, t_motion *new)
 	}
 }
 
-int		parse_motion(char **line, t_obj *obj)
+int			parse_motion(char **line, t_obj *obj)
 {
 	char		stripe;
 	int			ret;

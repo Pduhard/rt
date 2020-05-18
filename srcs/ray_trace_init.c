@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_trace_init.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:21:30 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:22:04 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static int		is_on_cell_boundary(t_3vecf origin, t_inter i,
@@ -28,7 +40,7 @@ static t_3vecf	mult_clr_light(t_4vecf obj_color, t_3vecf light_fact)
 	return (lighted_color);
 }
 
-int	init_lighted_color(t_obj *closest_obj, t_inter i,
+int				init_lighted_color(t_obj *closest_obj, t_inter i,
 	t_leq l, t_ilc_p p)
 {
 	t_3vecf light_fact;
@@ -52,8 +64,8 @@ int	init_lighted_color(t_obj *closest_obj, t_inter i,
 	return (1);
 }
 
-
-t_inter init_inter(t_leq l, double closest_dist, t_obj *closest_obj, int sp_id)
+t_inter			init_inter(t_leq l, double closest_dist, t_obj *closest_obj,
+	int sp_id)
 {
 	t_inter i;
 

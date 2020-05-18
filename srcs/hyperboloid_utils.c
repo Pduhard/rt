@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hyperboloid_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 02:08:02 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 02:08:39 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		check_inside_hyperboloid(t_3vecf point, t_obj *hyperboloid)
@@ -16,7 +28,6 @@ int		check_inside_hyperboloid(t_3vecf point, t_obj *hyperboloid)
 		return (0);
 	return (1);
 }
-
 
 void	move_hyperboloid(t_obj *hyperboloid, t_3vecf dir, double fact)
 {

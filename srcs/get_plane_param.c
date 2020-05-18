@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_plane_param.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:53:12 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:53:39 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		init_plane_2daxis(t_plane *param, t_3vecf nrml,
@@ -52,7 +64,7 @@ t_2vecf	get_text_coordinate_plane(t_3vecf inter_point,
 	return (text_coord);
 }
 
-t_3vecf	get_origin_plane(t_obj *plane) // a tej
+t_3vecf	get_origin_plane(t_obj *plane)
 {
 	return (((t_plane *)plane->obj_param)->origin);
 }

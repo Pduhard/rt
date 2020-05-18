@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_marble_color.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:35:04 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:37:22 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static double	marble_noise(t_3vecf inter_point, double scale,
@@ -15,7 +27,7 @@ static double	marble_noise(t_3vecf inter_point, double scale,
 	return (t);
 }
 
-double	compute_marble_factor(t_3vecf inter_point, double scale,
+double			compute_marble_factor(t_3vecf inter_point, double scale,
 	const unsigned char permutation[512], const t_3vecf gradient[16])
 {
 	double t;
@@ -25,7 +37,8 @@ double	compute_marble_factor(t_3vecf inter_point, double scale,
 	return (t * t - .5);
 }
 
-t_4vecf	get_marble_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
+t_4vecf			get_marble_color(t_3vecf inter_point, t_3vecf normal_inter,
+	t_obj *obj)
 {
 	double		marble_f;
 	t_4vecf		color;

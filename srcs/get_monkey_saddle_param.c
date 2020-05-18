@@ -1,5 +1,16 @@
-#include "rt.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_monkey_saddle_param.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:51:20 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:51:37 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "rt.h"
 
 t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point,
 	t_3vecf normal_inter, t_obj *monkey_saddle)

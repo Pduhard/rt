@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monkey_saddle_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:45:51 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:46:09 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle)
@@ -24,7 +36,6 @@ void	move_monkey_saddle(t_obj *monkey_saddle, t_3vecf dir, double fact)
 		cuts = cuts->next;
 	}
 }
-
 
 void	assign_monkey_saddle_function(t_obj *monkey_saddle)
 {

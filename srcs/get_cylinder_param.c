@@ -1,5 +1,16 @@
-#include "rt.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_cylinder_param.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:23:49 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:24:05 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "rt.h"
 
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter,
 	t_obj *cylinder)
@@ -20,7 +31,7 @@ t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter,
 	(void)normal_inter;
 }
 
-t_3vecf	get_origin_cylinder(t_obj *cylinder) // a degager
+t_3vecf	get_origin_cylinder(t_obj *cylinder)
 {
 	return (((t_cylinder *)cylinder->obj_param)->center);
 }

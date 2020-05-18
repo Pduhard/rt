@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:05:34 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:17:56 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 01:16:01 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void	ft_mem_error()
+void	ft_mem_error(void)
 {
 	ft_fdprintf(2, "Malloc error: exit\n");
 	exit(0);

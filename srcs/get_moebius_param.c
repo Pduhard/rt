@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_moebius_param.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:50:00 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:50:54 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point,
@@ -23,7 +35,6 @@ t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point,
 	return (text_coord);
 	(void)normal_inter;
 }
-
 
 t_3vecf	get_origin_moebius(t_obj *moebius)
 {

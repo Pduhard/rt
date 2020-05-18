@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_data.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:19:18 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:20:56 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static void	free_all_objects(t_obj *objs)
@@ -26,7 +38,7 @@ static void	free_all_objects(t_obj *objs)
 
 static void	free_composed_objects(t_composed *composed)
 {
-	int 		i;
+	int			i;
 	t_composed	*next;
 
 	while (composed)
@@ -59,7 +71,6 @@ static void	free_lights(t_light *lights)
 
 static void	free_photon_map(t_kd_tree *map)
 {
-	printf("photon map \n");
 	if (!map)
 		return ;
 	free(map->photon);
@@ -67,9 +78,9 @@ static void	free_photon_map(t_kd_tree *map)
 	free_photon_map(map->right);
 	free(map);
 }
-void	free_data(t_data *data)
+
+void		free_data(t_data *data)
 {
-	printf("free data\n");
 	free_composed_objects(data->composed_objs);
 	free(data->camera);
 	free_all_objects(data->objs);

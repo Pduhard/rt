@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   other_hook.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 04:47:48 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 04:48:09 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int		check_gen_key_press2(int keycode, t_data *data)
+static int	check_gen_key_press2(int keycode, t_data *data)
 {
 	if (keycode == ALPHA_ZERO_KEY)
 		generate_new_cyclide(data);
@@ -13,7 +25,7 @@ static int		check_gen_key_press2(int keycode, t_data *data)
 	return (1);
 }
 
-int		check_gen_key_press(int keycode, t_data *data)
+int			check_gen_key_press(int keycode, t_data *data)
 {
 	if (keycode == ALPHA_ONE_KEY)
 		generate_new_sphere(data);
@@ -38,7 +50,7 @@ int		check_gen_key_press(int keycode, t_data *data)
 	return (1);
 }
 
-int		check_delete_key_press(int keycode, t_data *data)
+int			check_delete_key_press(int keycode, t_data *data)
 {
 	if ((keycode == SUPPR_KEY || keycode == DELETE_KEY)
 		&& data->selected_obj
@@ -52,7 +64,7 @@ int		check_delete_key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int		check_switch_key_press(int keycode, t_data *data)
+int			check_switch_key_press(int keycode, t_data *data)
 {
 	if (keycode == TAB_KEY)
 	{
@@ -62,7 +74,7 @@ int		check_switch_key_press(int keycode, t_data *data)
 	return (0);
 }
 
-int		check_esc_key_press(int keycode, t_data *data)
+int			check_esc_key_press(int keycode, t_data *data)
 {
 	if (keycode == ESC_KEY)
 	{

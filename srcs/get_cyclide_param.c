@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_cyclide_param.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:23:17 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:23:25 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter,
@@ -9,7 +21,7 @@ t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter,
 	(void)cyclide;
 }
 
-t_3vecf	get_origin_cyclide(t_obj *cyclide) // a degager
+t_3vecf	get_origin_cyclide(t_obj *cyclide)
 {
 	return (((t_cyclide *)cyclide->obj_param)->origin);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   moebius_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 02:40:53 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 02:41:15 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		check_inside_moebius(t_3vecf point, t_obj *moebius)
@@ -42,7 +54,6 @@ void	move_moebius(t_obj *moebius, t_3vecf dir, double fact)
 		cuts = cuts->next;
 	}
 }
-
 
 void	assign_moebius_function(t_obj *moebius)
 {

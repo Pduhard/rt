@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   glare.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:55:43 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 02:04:02 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static t_3vecf   add_glare_effect(t_leq l, t_3vecf light_pos, double light_dist)
+static t_3vecf	add_glare_effect(t_leq l, t_3vecf light_pos, double light_dist)
 {
-	double fact;
+	double	fact;
 	t_3vecf	light_npoint;
 	double	lndist;
 
@@ -15,7 +27,7 @@ static t_3vecf   add_glare_effect(t_leq l, t_3vecf light_pos, double light_dist)
 	return (assign_3vecf(fact, fact, fact));
 }
 
-t_3vecf		compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point)
+t_3vecf			compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point)
 {
 	t_3vecf	glare;
 	t_3vecf	light_dir;
@@ -35,19 +47,20 @@ t_3vecf		compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point)
 			light_dist = get_length_3vecf(light_dir);
 			normalize_3vecf(&light_dir);
 			light_pos = lights->param;
-
 			if (light_dist < obj_dist)
-				glare = add_3vecf(glare, add_glare_effect(l, light_pos, light_dist));
+				glare = add_3vecf(glare, add_glare_effect(l,
+					light_pos, light_dist));
 		}
 		lights = lights->next;
 	}
 	return (glare);
 }
 
-t_3vecf add_color_effect(t_data *data, t_clre_param p,
+t_3vecf			add_color_effect(t_data *data, t_clre_param p,
 	t_3vecf lighted_color, t_inter i)
 {
 	double	fog_fact;
+	t_3vecf tmp;
 
 	if (data->fog.val[0] || data->fog.val[1])
 	{
@@ -58,12 +71,15 @@ t_3vecf add_color_effect(t_data *data, t_clre_param p,
 				/ (data->fog.val[1] - data->fog.val[0]);
 		else
 			fog_fact = 0;
-		lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0] * fog_fact;
-		lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1] * fog_fact;
-		lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2] * fog_fact;
+		lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0]
+			* fog_fact;
+		lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1]
+			* fog_fact;
+		lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2]
+			* fog_fact;
 	}
+	tmp = compute_glare(p.l, data->lights, &(i.inter_point));
 	if (p.depth == RAY_DEPTH)
-		return (add_3vecf(lighted_color,
-			compute_glare(p.l, data->lights, &(i.inter_point))));
+		return (add_3vecf(lighted_color, tmp));
 	return (lighted_color);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_screen.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:12:11 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:12:21 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static char	*get_image_file_name(char *scene_name)
@@ -29,7 +41,7 @@ static char	*get_image_file_name(char *scene_name)
 	return (image_name);
 }
 
-int		check_pscreen_key_press(int keycode, t_data *data)
+int			check_pscreen_key_press(int keycode, t_data *data)
 {
 	SDL_Surface	*img_save;
 	char		*image_file_name;

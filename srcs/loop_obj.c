@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   loop_obj.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 02:12:23 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 02:12:42 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static void		init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
+static void	init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
 {
 	int		deg_y;
 	int		deg_x;
@@ -21,7 +33,7 @@ static void		init_obj_rot_mat(t_data *data, t_33matf rot_mat[2])
 	rot_mat[0] = init_rotation_matrix_vec(tm, degree_to_radian(deg_x));
 }
 
-static void			obj_move(t_obj *obj, int way, t_3vecf dir)
+static void	obj_move(t_obj *obj, int way, t_3vecf dir)
 {
 	int i;
 
@@ -43,7 +55,7 @@ static void			obj_move(t_obj *obj, int way, t_3vecf dir)
 		obj->move(obj, dir, way);
 }
 
-void			manage_obj_move(t_data *data, int *ret)
+void		manage_obj_move(t_data *data, int *ret)
 {
 	t_3vecf dir;
 
@@ -69,7 +81,7 @@ void			manage_obj_move(t_data *data, int *ret)
 		obj_move(data->selected_obj, 1, assign_3vecf(0, 0.2, 0));
 }
 
-void			manage_obj_rotation(t_data *data, int *ret)
+void		manage_obj_rotation(t_data *data, int *ret)
 {
 	t_33matf	rot_mat[2];
 	int			i;

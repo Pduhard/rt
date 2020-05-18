@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_sphere_param.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:54:11 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:54:21 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point,
@@ -12,7 +24,6 @@ t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point,
 	(void)inter_point;
 	(void)sphere;
 }
-
 
 t_3vecf	get_origin_sphere(t_obj *sphere)
 {

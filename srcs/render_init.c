@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_init.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:20:54 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:32:06 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-t_3vecf init_ray_dir(int i, int j, t_anti_al a, t_data *data)
+t_3vecf		init_ray_dir(int i, int j, t_anti_al a, t_data *data)
 {
 	t_3vecf dir;
 	t_3vecf view;
@@ -33,26 +45,27 @@ t_anti_al	init_anti_al(int aa, int offset, int anti_al_iter)
 	return (a);
 }
 
-void	init_threads(t_thread threads[NB_THREADS], t_data *data)
+void		init_threads(t_thread threads[NB_THREADS], t_data *data)
 {
-	int		index = -1;
+	int		index;
 
+	index = -1;
 	while (++index < NB_THREADS)
 	{
 		threads[index].start = (int)-data->size.val[0] / 2
-												 + (int)data->size.val[0] * index / NB_THREADS;
+							+ (int)data->size.val[0] * index / NB_THREADS;
 		threads[index].end = (int)-data->size.val[0] / 2
-											 + (int)data->size.val[0] * (index + 1) / NB_THREADS;
+							+ (int)data->size.val[0] * (index + 1) / NB_THREADS;
 		threads[index].data = data;
 	}
 }
 
-void  init_frames_rot_mat(t_data *data)
+void		init_frames_rot_mat(t_data *data)
 {
 	t_3vecf tm;
-	double  rd;
+	double	rd;
 
 	tm = mult_3vecf_33matf(assign_3vecf(1, 0, 0), data->rot_mat[1]);
-	rd =degree_to_radian(data->camera->rotation.val[0]);
+	rd = degree_to_radian(data->camera->rotation.val[0]);
 	data->rot_mat[0] = init_rotation_matrix_vec(tm, rd);
 }

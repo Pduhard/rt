@@ -6,12 +6,11 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:52:38 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:54:29 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:11:25 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-
 
 int		ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id)
 {

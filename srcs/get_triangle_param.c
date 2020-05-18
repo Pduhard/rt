@@ -1,5 +1,16 @@
-#include "rt.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_triangle_param.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:54:38 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:54:49 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "rt.h"
 
 t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point,
 	t_3vecf normal_inter, t_obj *triangle)
@@ -14,7 +25,7 @@ t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point,
 	(void)normal_inter;
 }
 
-t_3vecf	get_origin_triangle(t_obj *triangle) // a tej
+t_3vecf	get_origin_triangle(t_obj *triangle)
 {
 	return (((t_triangle *)triangle->obj_param)->origin);
 }

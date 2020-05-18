@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_trace_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:22:26 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:28:37 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_dist	new_tdist(double *cdist)
@@ -22,15 +34,14 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter,
 {
 	t_3vecf	ref;
 	double	cosi;
-	double	etai;
-	double	etat;
 	double	eta;
 	double	k;
+	t_2vecf	etat;
 
 	cosi = dot_product_3vecf(neg_3vecf(ray), normal_inter);
-	etai = 1.;
-	etat = refraction_index;
-	eta = etai / etat;
+	etat.val[0] = 1.;
+	etat.val[1] = refraction_index;
+	eta = etat.val[0] / etat.val[1];
 	k = 1 - eta * eta * (1 - cosi * cosi);
 	k = eta * cosi - sqrt(k);
 	ref.val[0] = eta * ray.val[0] + k * normal_inter.val[0];
@@ -39,7 +50,7 @@ t_3vecf	refract_ray(t_3vecf ray, t_3vecf normal_inter,
 	return (ref);
 }
 
-t_3vecf get_refl_color(t_rayt_param p, t_inter i)
+t_3vecf	get_refl_color(t_rayt_param p, t_inter i)
 {
 	t_3vecf refl_ray;
 
@@ -49,7 +60,7 @@ t_3vecf get_refl_color(t_rayt_param p, t_inter i)
 		p.data, p.depth - 1, p.sp_id));
 }
 
-t_3vecf get_refr_color(t_rayt_param p, t_inter i, t_leq l, t_obj *obj)
+t_3vecf	get_refr_color(t_rayt_param p, t_inter i, t_leq l, t_obj *obj)
 {
 	t_3vecf refr_ray;
 

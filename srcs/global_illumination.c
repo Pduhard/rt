@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:24:59 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 18:31:57 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 02:06:44 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static int	get_insertion_index(t_photon **tab, int i, int j, int *far)
+static int		get_insertion_index(t_photon **tab, int i, int j, int *far)
 {
 	if (j == i)
 		*far = j;
@@ -26,8 +26,8 @@ static int	get_insertion_index(t_photon **tab, int i, int j, int *far)
 	return (j);
 }
 
-static double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_point,
-	t_add_pht_p param)
+static double	add_photon_to_nn(t_photon **tab, t_photon *photon,
+	t_3vecf inter_point, t_add_pht_p param)
 {
 	int		i;
 	int		j;
@@ -52,17 +52,18 @@ static double	add_photon_to_nn(t_photon **tab, t_photon *photon, t_3vecf inter_p
 			inter_point)));
 }
 
-static void	add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
+static void		add_if_closer(double dist, t_nn_param p, t_kd_tree *kd_tree)
 {
-	// printf("farest %f dist %f\n", *p.farest, dist);
 	if (dist < *(p.closest))
 		*(p.closest) = dist;
-	if (dist < *(p.farest) || (*(p.actual_nn) < p.nn_photon && (++(*p.actual_nn))))
+	if (dist < *(p.farest) || (*(p.actual_nn) < p.nn_photon
+		&& (++(*p.actual_nn))))
 		*(p.farest) = add_photon_to_nn(p.tab, kd_tree->photon,
 				p.inter_point, (t_add_pht_p){dist, p.nn_photon});
 }
 
-static void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
+static void		get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree,
+	int axis)
 {
 	double	dist;
 	t_3vecf	photon_pos;
@@ -88,16 +89,16 @@ static void	get_nearest_neighbors(t_nn_param p, t_kd_tree *kd_tree, int axis)
 	}
 }
 
-t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter,
-	t_kd_tree *photon_map, int nn_photon)
+t_3vecf			compute_global_illumination(t_3vecf inter_point,
+	t_3vecf normal_inter, t_kd_tree *photon_map, int nn_photon)
 {
 	t_photon	**nearest_n;
 	double		closest;
 	double		farest;
 	t_3vecf		radiance;
-	int				actual_nn;
+	int			actual_nn;
 
- 	farest = MAX_VIEW;
+	farest = MAX_VIEW;
 	closest = MAX_VIEW;
 	if (!photon_map || !(nearest_n = malloc(sizeof(t_photon *) * nn_photon)))
 		return (assign_3vecf(0, 0, 0));
@@ -105,7 +106,8 @@ t_3vecf		compute_global_illumination(t_3vecf inter_point, t_3vecf normal_inter,
 	actual_nn = 0;
 	get_nearest_neighbors((t_nn_param){inter_point, normal_inter, nearest_n,
 			&closest, &farest, nn_photon, &actual_nn}, photon_map, 0);
-	radiance = compute_radiance_estimation(nearest_n, inter_point, farest, nn_photon);
+	radiance = compute_radiance_estimation(nearest_n, inter_point,
+		farest, nn_photon);
 	free(nearest_n);
 	return (radiance);
 }

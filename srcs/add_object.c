@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 17:12:06 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/17 19:09:37 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 00:58:06 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	add_component(t_obj *obj, t_composed *composed)
 	composed->components = obj_tab;
 }
 
-void	add_object(t_obj *obj, t_data *data)
+void		add_object(t_obj *obj, t_data *data)
 {
 	if (obj->material_type == MAT_DIFFUSE)
 	{
@@ -56,7 +56,8 @@ void	add_object(t_obj *obj, t_data *data)
 	}
 }
 
-void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from)
+void		push_object(t_obj *obj, int composed, t_data *data,
+	t_composed *from)
 {
 	if (!composed)
 	{

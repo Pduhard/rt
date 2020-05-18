@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   triangle_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:50:04 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:52:09 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 int		check_inside_triangle(t_3vecf point, t_obj *triangle)
@@ -52,7 +64,6 @@ void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 		cuts = cuts->next;
 	}
 }
-
 
 void	assign_triangle_function(t_obj *triangle)
 {

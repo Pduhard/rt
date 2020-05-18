@@ -6,13 +6,13 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:37:39 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 20:38:01 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 05:07:50 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static int		pick_ugp_text(char **line, t_obj *obj)
+static int	pick_ugp_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -38,7 +38,7 @@ static int		pick_ugp_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-static int		pick_mwf_text(char **line, t_obj *obj)
+static int	pick_mwf_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -64,7 +64,7 @@ static int		pick_mwf_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-static int		pick_att_image_text(char **line, t_obj *obj)
+static int	pick_att_image_text(char **line, t_obj *obj)
 {
 	int	ret;
 
@@ -85,7 +85,7 @@ static int		pick_att_image_text(char **line, t_obj *obj)
 	return (ret);
 }
 
-static int		compute_text(char **line, t_obj *obj)
+static int	compute_text(char **line, t_obj *obj)
 {
 	if (obj->text.text_type == TEXT_IMAGE && !(obj->text.text_param))
 	{
@@ -100,7 +100,7 @@ static int		compute_text(char **line, t_obj *obj)
 	return (1);
 }
 
-int		parse_texture2(char **line, t_obj *obj)
+int			parse_texture2(char **line, t_obj *obj)
 {
 	char	stripe;
 	int		ret;

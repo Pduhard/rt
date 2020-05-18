@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_fermat_param.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 01:25:59 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 01:31:18 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter,
@@ -9,8 +21,7 @@ t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter,
 	(void)fermat;
 }
 
-
-t_3vecf	get_origin_fermat(t_obj *fermat) // a degager
+t_3vecf	get_origin_fermat(t_obj *fermat)
 {
 	return (((t_fermat *)fermat->obj_param)->origin);
 }
@@ -32,7 +43,6 @@ t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat,
 
 	param = (t_fermat *)fermat->obj_param;
 	fermat_origin = get_fermat_origin(fermat, param, sp_id);
-	// sp_id ? move_3vecf(param->origin, fermat->motions, sp_id) : param->origin;
 	cst.val[0] = inter_point.val[0] - fermat_origin.val[0];
 	cst.val[1] = inter_point.val[1] - fermat_origin.val[1];
 	cst.val[2] = inter_point.val[2] - fermat_origin.val[2];

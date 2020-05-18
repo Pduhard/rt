@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   build_photon_map.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 00:58:29 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 00:59:44 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static void		photon_swap(t_photon *p1, t_photon *p2)
+static void			photon_swap(t_photon *p1, t_photon *p2)
 {
 	t_photon	tmp;
 
@@ -9,9 +21,10 @@ static void		photon_swap(t_photon *p1, t_photon *p2)
 	*p1 = tmp;
 }
 
-static void		quick_sort_photon(t_photon *photon_tab, int lw, int hi, int ax)
+static void			quick_sort_photon(t_photon *photon_tab, int lw, int hi,
+	int ax)
 {
-	double	pivot;
+	double		pivot;
 	int			i;
 	int			j;
 
@@ -31,7 +44,7 @@ static void		quick_sort_photon(t_photon *photon_tab, int lw, int hi, int ax)
 	quick_sort_photon(photon_tab, i + 1, hi, ax);
 }
 
-static t_kd_tree		*alloc_photon(t_kd_tree *kd_tree, t_photon photon)
+static t_kd_tree	*alloc_photon(t_kd_tree *kd_tree, t_photon photon)
 {
 	kd_tree->photon->position = photon.position;
 	kd_tree->photon->direction = photon.direction;
@@ -39,13 +52,13 @@ static t_kd_tree		*alloc_photon(t_kd_tree *kd_tree, t_photon photon)
 	return (kd_tree);
 }
 
-t_kd_tree	*build_tree(t_photon *phtn_tab, int lw, int hi, int ax)
+t_kd_tree			*build_tree(t_photon *phtn_tab, int lw, int hi, int ax)
 {
 	t_kd_tree	*tree;
 
 	if (!(tree = ft_memalloc(sizeof(t_kd_tree))) ||
 			!(tree->photon = ft_memalloc(sizeof(t_photon))))
-				return (NULL);
+		return (NULL);
 	if (lw == hi)
 		return (alloc_photon(tree, phtn_tab[lw]));
 	else if (hi - lw == 1)
@@ -63,6 +76,7 @@ t_kd_tree	*build_tree(t_photon *phtn_tab, int lw, int hi, int ax)
 	}
 	quick_sort_photon(phtn_tab, lw, hi, ax);
 	tree->left = build_tree(phtn_tab, lw, (hi - lw) / 2 + lw - 1, (ax + 1) % 3);
-	tree->right = build_tree(phtn_tab, (hi - lw) / 2 + lw + 1, hi, (ax + 1) % 3);
+	tree->right = build_tree(phtn_tab, (hi - lw) / 2 + lw + 1, hi,
+		(ax + 1) % 3);
 	return (alloc_photon(tree, phtn_tab[(hi - lw) / 2 + lw]));
 }

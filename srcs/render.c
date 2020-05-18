@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:28:57 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:29:49 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int   get_aa_step(double aa_adapt)
+static int	get_aa_step(double aa_adapt)
 {
 	if (aa_adapt == MIN_AA)
 		return (2);
 	return (1);
 }
 
-void	*render_thread(void *param)
+void		*render_thread(void *param)
 {
-	t_leq 		l;
-	int				i;
-	int				j;
+	t_leq		l;
+	int			i;
+	int			j;
 	t_data		*data;
 	t_thread	*thread;
 
@@ -28,7 +40,7 @@ void	*render_thread(void *param)
 				compute_stereoscopy(data, l, i, j);
 			else
 				compute_classic(data, l, i, j);
-				j += get_aa_step(data->aa_adapt);
+			j += get_aa_step(data->aa_adapt);
 		}
 		i += get_aa_step(data->aa_adapt);
 	}
@@ -36,10 +48,10 @@ void	*render_thread(void *param)
 	return (NULL);
 }
 
-void	render(t_data *data)
+void		render(t_data *data)
 {
-	int		ret;
-	int		i;
+	int			ret;
+	int			i;
 	t_thread	threads_param[NB_THREADS];
 	pthread_t	threads[NB_THREADS];
 

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_first_intersect.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/18 05:14:25 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/18 05:17:23 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
-static int		check_inside_negative(t_leq l, t_dist dist,
-  t_data *data, int sp_id)
+static int	check_inside_negative(t_leq l, t_dist dist,
+	t_data *data, int sp_id)
 {
 	t_obj	*negative_objs;
 	t_3vecf	inter_point;
@@ -21,11 +33,12 @@ static int		check_inside_negative(t_leq l, t_dist dist,
 	return (0);
 }
 
-t_obj	*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs, int sp_id)
+t_obj		*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs,
+	int sp_id)
 {
 	t_obj	*closest_obj;
 	t_obj	*objs_save;
-	t_data *data;
+	t_data	*data;
 
 	data = objs ? objs->data : NULL;
 	objs_save = objs;
@@ -40,9 +53,10 @@ t_obj	*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs, int sp_id)
 	if (closest_obj && data->negative_objs
 		&& check_inside_negative(l, dist, data, sp_id))
 		return (ray_first_intersect(l,
-			(t_dist){dist.dist, *(dist.dist), dist.max_dist}, objs_save, sp_id));
+			(t_dist){dist.dist, *(dist.dist), dist.max_dist},
+				objs_save, sp_id));
 	if (closest_obj && closest_obj->cuts)
-		return (check_cuts(l, dist,
-			(t_cut_fparam){closest_obj, objs_save, sp_id, 0}, data));
+		return (check_cuts(l, dist, (t_cut_fparam){closest_obj,
+			objs_save, sp_id, 0}, data));
 	return (closest_obj);
 }
