@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:20:53 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 02:34:32 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 16:04:41 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void		free_all(t_data *data)
 		return ;
 	mlx = data->mlx;
 	free_info(data);
+	free_mlx(mlx);
 	unchain_data_list(data);
 	while (data)
 	{
@@ -69,5 +70,4 @@ void		free_all(t_data *data)
 		free_data(data);
 		data = next;
 	}
-	free_mlx(mlx);
 }

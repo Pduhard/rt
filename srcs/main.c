@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:38:40 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 02:39:30 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/18 16:09:57 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ int				main(int argc, char **argv)
 	mlx_hook(data->mlx->win_ptr, 2, (1L << 0), key_press, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 3, (1L << 1), key_release, (void *)data);
 	mlx_hook(data->mlx->win_ptr, 4, (1L << 2), mouse_hook, (void *)data);
-	mlx_hook(data->mlx->win_ptr, 17, 1L << 17, close_cross, (void *)data);
+	mlx_hook(data->mlx->win_ptr, 17, (1L << 17), close_cross, (void *)data);
 	mlx_expose_hook(data->info->win_ptr, open_info, (void *)data);
 	if (data->info)
-		mlx_hook(data->info->win_ptr, 17, 1L << 17, close_info, (void *)data);
+		mlx_hook(data->info->win_ptr, 17, (1L << 17), close_info, (void *)data);
 	mlx_loop_hook(data->mlx->mlx_ptr, &print_loop_image, (void *)&data);
 	mlx_loop(data->mlx->mlx_ptr);
 	return (0);
