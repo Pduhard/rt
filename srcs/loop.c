@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 20:56:52 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/18 16:10:11 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 18:36:09 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,23 +88,15 @@ static int		check_for_scene_change(t_data *data)
 int				print_loop_image(void *param)
 {
 	t_data	*data;
-	// int	rendering;
 
-	// rendering = 1;
 	data = get_curr_scene((t_data **)param);
 	check_photon_map(data);
 	if (check_for_scene_change(data) || (WATER_ON))
-	{
-		printf("%f\n", data->aa_adapt);
 		render(data);
-	}
-//	loop_manage(data);
-//	data->aa_adapt = NO_AA;
 	data->new_obj = 0;
 	data->first_loop++;
 	if (WATER_ON)
 		data->water_f += 0.02;
-	// printf("%f\n", data->f);
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
 	return (1);

@@ -6,24 +6,26 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:35:13 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:05:51 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:05:37 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static SDL_Surface	*parse_sdl_image(char *name)
+static SDL_Surface	*parse_sdl_image(char *name, t_text_img *param)
 {
 	SDL_Surface		*row;
 	SDL_Surface		*image;
 
 	if (!(row = IMG_Load(name)))
 	{
-		printf("SDL IMG load error: %s\n", SDL_GetError());
+		ft_fdprintf(2, "SDL IMG load error: %s\n", SDL_GetError());
+		free(param);
 		return (NULL);
 	}
 	if (!(image = SDL_ConvertSurfaceFormat(row, SDL_PIXELFORMAT_RGBA8888, 0)))
 	{
+		free(param);
 		SDL_FreeSurface(row);
 		return (NULL);
 	}
@@ -40,11 +42,8 @@ void				*parse_img(char *name)
 
 	if (!(param = malloc(sizeof(t_text_img))))
 		return (NULL);
-	if (!(image = parse_sdl_image(name)))
-	{
-		free(param);
+	if (!(image = parse_sdl_image(name, param)))
 		return (NULL);
-	}
 	pixels_nb = image->w * image->h;
 	if (!(param->pixels = malloc(sizeof(unsigned int) * pixels_nb)))
 	{

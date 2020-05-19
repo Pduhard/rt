@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:03:07 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:03:40 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:00:42 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	push_front_motion(t_motion **root, t_motion *new)
 {
 	t_motion	*motion;
 
+	clamp_val((double *)&new->spf, 0, 32);
 	if (!*root)
 		*root = new;
 	else
@@ -114,7 +115,6 @@ int			parse_motion(char **line, t_obj *obj)
 			return (syn_error(SERROR, MOTION, "<spf (Value)>\n", NULL));
 		}
 	}
-	clamp_val((double *)&motion->spf, 0, 32);
 	push_front_motion(&obj->motions, motion);
 	return (ret);
 }

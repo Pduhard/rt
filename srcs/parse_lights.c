@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:30:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:01:07 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 18:57:44 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,35 +75,44 @@ static void	push_lights(t_data *data, t_light *light)
 	data->lights = light;
 }
 
-int			parse_lights(char **line, t_data *data)
+static int	parse_lights_element(int *ret, char **line, t_light *light)
 {
-	char	stripe;
-	int		ret;
-	t_light	*light;
+	char stripe;
 
 	stripe = 0;
-	ret = 2;
-	if (!(light = malloc(sizeof(t_light))))
-		return (0);
-	while (stripe != '>' && ret != 0 && ret != 1)
+	*ret = 2;
+	while (stripe != '>' && *ret != 0 && *ret != 1)
 	{
 		stripe = goto_next_element(line);
 		if (!(ft_strncmp_case(*line, "ambient", 7)))
 		{
 			light->light_type = LIGHT_AMBIENT;
-			ret = parse_origin(line, &light->color, 7);
+			*ret = parse_origin(line, &light->color, 7);
 			if (**line == '<')
 			{
 				free(light);
 				return (syn_error(SERROR, LIGHT, AMBIENT, NULL));
 			}
 		}
-		else if (**line != '>' && !(ret = pick_spot(line, light)))
+		else if (**line != '>' && !(*ret = pick_spot(line, light)))
 		{
 			free(light);
 			return (0);
 		}
 	}
+	return (1);
+}
+
+int			parse_lights(char **line, t_data *data)
+{
+	int		ret;
+	t_light	*light;
+
+	ret = 2;
+	if (!(light = malloc(sizeof(t_light))))
+		return (0);
+	if (!parse_lights_element(&ret, line, light))
+		return (0);
 	if (ret == 1)
 		goto_next_element(line);
 	push_lights(data, light);

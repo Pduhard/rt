@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:14:25 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:17:23 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:08:28 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,13 @@ t_obj		*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs,
 	}
 	if (closest_obj && data->negative_objs
 		&& check_inside_negative(l, dist, data, sp_id))
+	{
 		return (ray_first_intersect(l,
 			(t_dist){dist.dist, *(dist.dist), dist.max_dist},
 				objs_save, sp_id));
+	}
 	if (closest_obj && closest_obj->cuts)
 		return (check_cuts(l, dist, (t_cut_fparam){closest_obj,
 			objs_save, sp_id, 0}, data));
-	return (closest_obj);
+		return (closest_obj);
 }

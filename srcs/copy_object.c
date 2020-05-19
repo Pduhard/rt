@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:09:31 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 01:09:58 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 20:41:07 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,6 @@ static t_cut	*copy_cut(t_cut *src)
 	if (src->cut_type == CUT_STATIC || src->cut_type == CUT_REAL)
 		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_classic)),
 			src->cut_param, sizeof(t_cut_classic));
-	else if (src->cut_type == CUT_CUBE)
-		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cube)),
-			src->cut_param, sizeof(t_cube));
 	else if (src->cut_type == CUT_SPHERE)
 		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_sphere)),
 			src->cut_param, sizeof(t_sphere));

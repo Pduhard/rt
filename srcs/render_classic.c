@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:30:06 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:30:39 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:21:27 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ void	compute_classic(t_data *data, t_leq l, int i, int j)
 		a.offset++;
 	}
 	color = product_c3vecf(color, 1. / a.anti_al_iter);
-	ray_put_pixel(i, j, data->mlx->img_str, color, data);
+	ray_put_pixel((t_pixel){i, j}, data->mlx->img_str, color, data);
 	check_subsampling(data, i, j, color);
 }

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 21:00:57 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 21:10:13 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:27:55 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ double	linear_interpolate(double a, double b, double val)
 	return (a + (b - a) * val);
 }
 
-t_4vecf	(*assign_text_color_function(t_text_type type))(t_3vecf,
-	t_3vecf, struct s_obj *)
+t_4vecf	(*assign_text_color_function(t_text_type type))(t_3vecf a,
+	t_3vecf b, struct s_obj *c)
 {
 	if (type == TEXT_PERLIN)
 		return (&get_perlin_color);

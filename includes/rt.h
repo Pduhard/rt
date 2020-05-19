@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rt.h                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/19 19:34:58 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/19 20:40:02 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RT_H
 
 # define RT_H
-
 
 # include "../libft/libft.h"
 # include "./key_linux.h"
@@ -34,7 +45,7 @@
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
 # define WATER_ON     0
 # define DFLT_POWER 100
-# define NB_THREADS		8
+# define NB_THREADS		1
 # define MIN_AA 		0.5
 # define NO_AA      1.
 # define MAX_AA 		2.
@@ -86,20 +97,20 @@
 # define BIAS				0.01
 
 /* HOOKS MACRO */
-# define A_HOOK					0b1
-# define D_HOOK					0b10
-# define W_HOOK					0b100
-# define S_HOOK					0b1000
-# define F_HOOK					0b10000
-# define G_HOOK					0b100000
+# define A_HOOK			0b1
+# define D_HOOK			0b10
+# define W_HOOK			0b100
+# define S_HOOK			0b1000
+# define F_HOOK			0b10000
+# define G_HOOK			0b100000
 
 # define ARR_LEFT_HOOK	0b1000000
 # define ARR_RIGHT_HOOK 0b10000000
 # define ARR_DOWN_HOOK	0b100000000
-# define ARR_UP_HOOK		0b1000000000
+# define ARR_UP_HOOK	0b1000000000
 
-# define SPACE_HOOK			0b10000000000
-# define SHIFT_HOOK			0b100000000000
+# define SPACE_HOOK		0b10000000000
+# define SHIFT_HOOK		0b100000000000
 
 /* Conf Mess */
 
@@ -193,58 +204,57 @@
 # define LEFTCLICK "LEFT CLICK   ==> Unselect Object"
 
 typedef	enum {
-	OBJ_SPHERE,
-	OBJ_PLANE,
-	OBJ_CONE,
-	OBJ_CYLINDER,
-	OBJ_TRIANGLE,
-	OBJ_ELLIPSOID,
-	OBJ_HYPERBOLOID,
-	OBJ_HORSE_SADDLE,
-	OBJ_MONKEY_SADDLE,
-	OBJ_CYCLIDE,
-	OBJ_FERMAT,
-	OBJ_MOEBIUS,
-	OBJ_SKYBOX
-}	t_obj_type;
+		OBJ_SPHERE,
+		OBJ_PLANE,
+		OBJ_CONE,
+		OBJ_CYLINDER,
+		OBJ_TRIANGLE,
+		OBJ_ELLIPSOID,
+		OBJ_HYPERBOLOID,
+		OBJ_HORSE_SADDLE,
+		OBJ_MONKEY_SADDLE,
+		OBJ_CYCLIDE,
+		OBJ_FERMAT,
+		OBJ_MOEBIUS,
+		OBJ_SKYBOX
+}		t_obj_type;
 
 typedef	enum {
-	MAT_DIFFUSE,
-	MAT_NEGATIVE
-}	t_mat_type;
+		MAT_DIFFUSE,
+		MAT_NEGATIVE
+}		t_mat_type;
 
 typedef	enum {
-	LIGHT_POINT,
-	LIGHT_AMBIENT,
-	LIGHT_DIRECTIONAL
-}	t_light_type;
+		LIGHT_POINT,
+		LIGHT_AMBIENT,
+		LIGHT_DIRECTIONAL
+}		t_light_type;
 
 typedef	enum {
-	TEXT_PERLIN,
-	TEXT_MARBLE,
-	TEXT_WOOD,
-	TEXT_FBM,
-	TEXT_UNI,
-	TEXT_GRID,
-	TEXT_IMAGE
-}	t_text_type;
+		TEXT_PERLIN,
+		TEXT_MARBLE,
+		TEXT_WOOD,
+		TEXT_FBM,
+		TEXT_UNI,
+		TEXT_GRID,
+		TEXT_IMAGE
+}		t_text_type;
 
 typedef enum {
-	BUMP_PERLIN,
-	BUMP_MARBLE,
-	BUMP_WOOD,
-	BUMP_FBM,
-	BUMP_WATER
-}	t_bump_type;
+		BUMP_PERLIN,
+		BUMP_MARBLE,
+		BUMP_WOOD,
+		BUMP_FBM,
+		BUMP_WATER
+}		t_bump_type;
 
 typedef enum {
-	CUT_STATIC,
-	CUT_REAL,
-	CUT_CUBE,
-	CUT_SPHERE,
-	CUT_TEXTURE,
-	CUT_UV
-}	t_cut_type;
+		CUT_STATIC,
+		CUT_REAL,
+		CUT_SPHERE,
+		CUT_TEXTURE,
+		CUT_UV
+}		t_cut_type;
 
 typedef struct	s_mlx
 {
@@ -256,6 +266,12 @@ typedef struct	s_mlx
 	int			s_l;
 	int			endian;
 }				t_mlx;
+
+typedef	struct	s_pixel
+{
+	int			i;
+	int			j;
+}				t_pixel;
 
 typedef struct	s_44matf
 {
@@ -435,16 +451,16 @@ typedef struct	s_composed	t_composed;
 
 typedef struct	s_leq
 {
-	t_3vecf				orig;
-	t_3vecf				dir;
-}								t_leq;
+	t_3vecf		orig;
+	t_3vecf		dir;
+}				t_leq;
 
 typedef struct	s_dist
 {
-		double			*dist;
-		double			min_dist;
-		double			max_dist;
-}								t_dist;
+		double	*dist;
+		double	min_dist;
+		double	max_dist;
+}				t_dist;
 
 typedef struct	s_obj
 {
@@ -456,7 +472,7 @@ typedef struct	s_obj
 	int				(*ray_intersect)(t_leq, struct s_obj *, t_dist, int);
 	int				(*check_inside)(t_3vecf, struct s_obj *);
 	t_3vecf			(*get_origin)(struct s_obj *);
-	t_3vecf			(*get_normal_inter)(t_3vecf, struct s_obj *i, int);
+	t_3vecf			(*get_normal_inter)(t_3vecf, struct s_obj *, int);
 	t_4vecf			(*get_text_color)(t_3vecf, t_3vecf, struct s_obj *);
 	t_2vecf			(*get_text_coordinate)(t_3vecf, t_3vecf, struct s_obj *);
 	t_3vecf			(*get_bump_mapping)(t_3vecf, t_3vecf, struct s_obj *);
@@ -474,16 +490,14 @@ typedef struct	s_obj
 
 typedef struct  s_comp_param
 {
-		t_3vecf 		origin;
-		t_2vecf 		rotation;
-}								t_comp_param;
+	t_3vecf 	origin;
+	t_2vecf 	rotation;
+}				t_comp_param;
 
 typedef struct	s_composed
 {
 	char		*name;
 	t_obj		**components;
-//	t_3vecf		origin;
-//	t_2vecf		rotation;
 	struct s_composed	*next;
 }				t_composed;
 
@@ -512,13 +526,12 @@ typedef	struct	s_kd_tree
 {
 	struct s_kd_tree	*left;
 	struct s_kd_tree	*right;
-	t_photon		*photon;
+	t_photon			*photon;
 }				t_kd_tree;
 
 typedef struct	s_data
 {
 	t_mlx		*mlx;
-//	t_mlx		*loading_mlx;
 	t_mlx		*info;
 	t_cam		*camera;
 	t_obj		*objs;
@@ -541,15 +554,15 @@ typedef struct	s_data
 	t_kd_tree	*indirect_map;
 	t_kd_tree	*caustic_map;
 	t_cube		bbox_photon;
-	t_obj			*selected_obj;
+	t_obj		*selected_obj;
 	char		*skybox_name;
 	int			to_next;
 	int			new_obj;
-	int     first_loop;
+	int     	first_loop;
 	unsigned char     permutation[512];
-	t_3vecf gradient[16];
-	double  water_f;
-	int     water;
+	t_3vecf 	gradient[16];
+	double  	water_f;
+	int     	water;
 	struct s_data	*next;
 }				t_data;
 
@@ -562,118 +575,114 @@ typedef struct	s_thread
 
 typedef struct	s_cut_fparam
 {
-	t_obj					*closest_obj;
-	t_obj					*objs;
-	int						sp_id;
-	int						negative;
-}								t_cut_fparam;
+	t_obj		*closest_obj;
+	t_obj		*objs;
+	int			sp_id;
+	int			negative;
+}				t_cut_fparam;
 
 typedef struct	s_add_pht_p
 {
-	double				dist;
-	int						nn_photon;
-}								t_add_pht_p;
+	double		dist;
+	int			nn_photon;
+}				t_add_pht_p;
 
 typedef struct	s_nn_param
 {
-	t_3vecf 			inter_point;
-	t_3vecf				normal_inter;
-	t_photon			**tab;
-	double				*closest;
-	double				*farest;
-	int						nn_photon;
-	int           *actual_nn;
-}								t_nn_param;
+	t_3vecf 	inter_point;
+	t_3vecf		normal_inter;
+	t_photon	**tab;
+	double		*closest;
+	double		*farest;
+	int			nn_photon;
+	int			*actual_nn;
+}				t_nn_param;
 
 typedef struct  s_phtn_cast
 {
-	t_data				*data;
-	int						*ind_i;
-	int						*caus_i;
-	t_photon			**photon_tab;
-	int						depth;
+	t_data			*data;
+	int				*ind_i;
+	int				*caus_i;
+	t_photon		**photon_tab;
+	int				depth;
 	unsigned int	rand_iter;
-	t_3vecf				pwr;
-	int						photon_type;
-}								t_phtn_cast;
+	t_3vecf			pwr;
+	int				photon_type;
+}				t_phtn_cast;
 
 typedef struct  s_phtn_prob
 {
-	double				absorb_prob;
-	double				refract_prob;
-	double				reflect_prob_spe;
-	double				reflect_prob_dif;
-}								t_phtn_prob;
+	double		absorb_prob;
+	double		refract_prob;
+	double		reflect_prob_spe;
+	double		reflect_prob_dif;
+}				t_phtn_prob;
 
 typedef struct  s_compute_light_param
 {
-	t_3vecf 			inter_point;
-	t_3vecf 			normal_inter;
-	t_3vecf 			dir;
-	t_light 			*lights;
-	t_obj					*objs;
-	int						sp_id;
-	t_data				*data;
-	double 				shininess;
-}								t_compute_light_param;
-// typedef struct	s_data_cont
-// {
-// 	t_data		*data_lst;
-// }				t_data_cont;
+	t_3vecf 	inter_point;
+	t_3vecf 	normal_inter;
+	t_3vecf 	dir;
+	t_light 	*lights;
+	t_obj		*objs;
+	int			sp_id;
+	t_data		*data;
+	double 		shininess;
+}				t_compute_light_param;
 
-typedef struct s_inter
+typedef struct	s_inter
 {
-	t_3vecf inter_point;
-	t_3vecf normal_inter;
-}							 t_inter;
+	t_3vecf 	inter_point;
+	t_3vecf 	normal_inter;
+}				t_inter;
 
-typedef struct s_rt_param
+typedef struct	s_rt_param
 {
-		double     min_dist;
-		double     max_dist;
-		int        depth;
-		int        sp_id;
-}							 t_rt_param;
+		double	min_dist;
+		double	max_dist;
+		int		depth;
+		int		sp_id;
+}				t_rt_param;
 
-typedef struct s_ilc_p
+typedef struct	s_ilc_p
 {
-		t_3vecf 		*lighted_color;
-		t_4vecf			obj_color;
-		t_data			*data;
-		int					sp_id;
-}								t_ilc_p;
+		t_3vecf *lighted_color;
+		t_4vecf	obj_color;
+		t_data	*data;
+		int		sp_id;
+}				t_ilc_p;
 
 typedef struct  s_rayt_param
 {
 		t_3vecf *lighted_color;
 		t_3vecf inv_dir;
 		t_4vecf	obj_color;
-		t_data *data;
-		int depth;
-		int sp_id;
-}								t_rayt_param;
+		t_data	*data;
+		int		depth;
+		int		sp_id;
+}				t_rayt_param;
 
 typedef struct  s_clre_param
 {
-		double      closest_dist;
-		t_leq				l;
-		int         depth;
-}								t_clre_param;
+		double	closest_dist;
+		t_leq	l;
+		int     depth;
+}				t_clre_param;
 
 typedef struct  s_anti_al
 {
-		int         anti_al_iter;
-		int         offset;
-		int         aa;
-}								t_anti_al;
+		int     anti_al_iter;
+		int     offset;
+		int     aa;
+}				t_anti_al;
 
-t_obj		*copy_object(t_obj *src);
-void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis); // in cone.c for instance
+t_obj	*copy_object(t_obj *src);
+void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis);
 void	clamp_and_set_dflt(t_obj *obj);
 int		error_parse_object(t_obj *obj);
 
 
-int	is_closest_intersect(t_dist dist, double root); // in main.c for instance
+int		is_closest_intersect(t_dist dist, double root);
 
 void	generate_new_sphere(t_data *data);
 void	generate_new_plane(t_data *data);
@@ -691,16 +700,14 @@ t_text	generate_random_texture(t_obj *obj);
 t_4vecf	generate_random_color(unsigned int x, double transp_f);
 int		generate_random_enum(int e_max);
 void	delete_object(t_data *data, t_obj *obj);
-void  free_all(t_data *data);
+void  	free_all(t_data *data);
 int		close_cross(t_data *data);
 t_data	*init_data(char *file_name, t_mlx *mlx);
 void    init_perlin(t_data *data);
-// void	init_camera_to_world_matrix(double mat[4][4]);
-// void	init_light_to_world_matrix(double mat[4][4]);
 t_33matf	init_rotation_matrix_x(double theta);
 t_33matf	init_rotation_matrix_y(double theta);
 t_33matf	init_rotation_matrix_z(double theta);
-t_33matf	init_rotation_matrix_vec(t_3vecf, double);
+t_33matf	init_rotation_matrix_vec(t_3vecf a, double b);
 
 t_3vecf	window_to_view(double x, double y, double win_w, double win_h);
 
@@ -713,13 +720,13 @@ t_3vecf init_ray_dir(int i, int j, t_anti_al a, t_data *data);
 void  compute_stereoscopy(t_data *data, t_leq l, int i, int j);
 void  compute_classic(t_data *data, t_leq l, int i, int j);
 
-void  check_subsampling(t_data *data, int i, int j, t_3vecf color);
-void	ray_put_pixel(int i, int j, int *img, t_3vecf color, t_data *data);
+void  	check_subsampling(t_data *data, int i, int j, t_3vecf color);
+void	ray_put_pixel(t_pixel cmp, int *img, t_3vecf color, t_data *data);
 int		clip_color(double color);
 
 t_3vecf get_refl_color(t_rayt_param p, t_inter i);
 t_3vecf get_refr_color(t_rayt_param p, t_inter i, t_leq l, t_obj *obj);
-t_3vecf		compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point);
+t_3vecf	compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point);
 t_3vecf add_color_effect(t_data *data, t_clre_param p,
 	t_3vecf lighted_color, t_inter i);
 t_inter init_inter(t_leq l, double closest_dist, t_obj *closest_obj, int sp_id);
@@ -742,11 +749,6 @@ int		parse_double(char **line, int i, double *val);
 int		parse_2vecf(char *line, int i, t_2vecf *vec);
 int		parse_int(char **line, int i, int *val);
 
-//int		parse_sphere(char *line, t_data *data);
-//int		parse_plane(char *line, t_data *data);
-//int		parse_cone(char *line, t_data *data);
-//int		parse_cylinder(char *line, t_data *data);
-
 t_3vecf	assign_3vecf(double x, double y, double z);
 t_2vecf	assign_2vecf(double x, double y);
 void	normalize_3vecf(t_3vecf *vec);
@@ -762,17 +764,15 @@ int		is_null_3vecf(t_3vecf vec);
 t_3vecf neg_3vecf(t_3vecf vec);
 
 t_3vecf	mult_3vecf_33matf(t_3vecf vect, t_33matf mat);
-// t_33matf	mult_33matf_33matf(t_33matf a, t_33matf b);
-void	mult_vec_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
-void	mult_dir_matrix(t_3vecf, t_44matf mat, t_3vecf *dst);
-t_44matf	build_translation_matrix(t_3vecf, t_3vecf, t_3vecf, t_3vecf);
+void	mult_vec_matrix(t_3vecf a, t_44matf mat, t_3vecf *dst);
+void	mult_dir_matrix(t_3vecf a, t_44matf mat, t_3vecf *dst);
+t_44matf	build_translation_matrix(t_3vecf a, t_3vecf b, t_3vecf c, t_3vecf d);
 
-t_3vecf	move_3vecf(t_3vecf, t_motion *, int);
+t_3vecf	move_3vecf(t_3vecf a, t_motion *b, int c);
 
 void    handle_perlin_inter_point(t_3vecf *int_part,
   t_3vecf *floating_part, t_3vecf inter_point, double scale);
 void set_quintic_factors(double q[3], t_3vecf f);
-// double	compute_2dperlin_factor(t_2vecf inter_point, double scale);
 double	compute_3dperlin_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16]);
 double	compute_3dfbm_factor(t_3vecf inter_point, double scale);
 double	compute_wood_factor(t_3vecf inter_point, double scale, const unsigned char permutation[512], const t_3vecf gradient[16]);
@@ -806,38 +806,29 @@ int		check_esc_key_press(int keycode, t_data *data);
 int		check_mov_key_press(int keycode, t_data *data);
 int		check_rot_key_press(int keycode, t_data *data);
 
-
-
-
-//int		moov_hook(int x, int y, void *param);
 int		mouse_hook(int button, int x, int y, void *param);
 int		print_loop_image(void *param);
-void			manage_obj_move(t_data *data, int *ret);
-void			manage_obj_rotation(t_data *data, int *ret);
-void			manage_cam_rotation(t_data *data, int *ret);
-void			manage_cam_move(t_data *data, int *ret);
+void	manage_obj_move(t_data *data, int *ret);
+void	manage_obj_rotation(t_data *data, int *ret);
+void	manage_cam_rotation(t_data *data, int *ret);
+void	manage_cam_move(t_data *data, int *ret);
 
-
-// int		brackets_rt(char *line);
 int		parse_scene(char **line, t_data *data);
 int		parse_composed_model(char **line, t_data *data);
 int		is_composed_object(char **line, t_data *data, int *ret);
-// int		parse(char *line, t_data *data);
 char	goto_next_element(char **line);
 int		parse_name(char **line, char **name, int i);
 int		parse_objects(char **line, t_data *data, t_composed *from);
 int		parse_lights(char **line, t_data *data);
 int		parse_camera(char **line, t_data *data);
 
-// int		parse_color_transp(char **line, int i, t_4vecf *t);
-void	*parse_proc(char **line/*, t_text *text*/);
+void	*parse_proc(char **line);
 void	*parse_img(char *name);
 void	*parse_texture_img(char **line);
-int		parse_texture2(char **line, t_obj *obj/*, t_data *data*/);
-int		parse_bump_mapping(char **line, t_obj *obj);//t_text *text);
-void	set_bump_own(t_obj *obj);//t_text *text);
-int		parse_bump_inde(char **line, t_obj *obj, /*t_text *text, */int	index);
-// void	set_bump_inde(char *s, t_obj *obj);//t_text *text);
+int		parse_texture2(char **line, t_obj *obj);
+int		parse_bump_mapping(char **line, t_obj *obj);
+void	set_bump_own(t_obj *obj);
+int		parse_bump_inde(char **line, t_obj *obj, int index);
 int		parse_motion(char **line, t_obj *obj);
 
 int		parse_rotation(char **line, t_2vecf *t, int i);
@@ -846,7 +837,6 @@ int		parse_origin(char **line, t_3vecf *t, int i);
 int		parse_cone(char **line, t_obj *cone);
 int		parse_cylinder(char **line, t_obj *cylinder);
 int		parse_plane(char **line, t_obj *plane);
-//int		parse_rect(char **line, t_obj *rect);
 int		parse_triangle(char **line, t_obj *triangle);
 int		parse_sphere(char **line, t_obj *sphere);
 int		parse_ellipsoid(char **line, t_obj *ellipsoid);
@@ -857,19 +847,18 @@ int		parse_cyclide(char **line, t_obj *cyclide);
 int		parse_fermat(char **line, t_obj *fermat);
 int		parse_moebius(char **line, t_obj *moebius);
 
-void  assign_cone_function(t_obj *cone);
-void  assign_cylinder_function(t_obj *cylinder);
-void  assign_plane_function(t_obj *plane);
-//void  assign_rect_function(t_obj *rect);
-void  assign_triangle_function(t_obj *triangle);
-void  assign_sphere_function(t_obj *sphere);
-void  assign_ellipsoid_function(t_obj *ellipsoid);
-void  assign_hyperboloid_function(t_obj *hyperboloid);
-void  assign_horse_saddle_function(t_obj *horse_saddle);
-void  assign_monkey_saddle_function(t_obj *monkey_saddle);
-void  assign_cyclide_function(t_obj *cyclide);
-void  assign_fermat_function(t_obj *fermat);
-void  assign_moebius_function(t_obj *moebius);
+void  	assign_cone_function(t_obj *cone);
+void  	assign_cylinder_function(t_obj *cylinder);
+void  	assign_plane_function(t_obj *plane);
+void  	assign_triangle_function(t_obj *triangle);
+void  	assign_sphere_function(t_obj *sphere);
+void  	assign_ellipsoid_function(t_obj *ellipsoid);
+void  	assign_hyperboloid_function(t_obj *hyperboloid);
+void  	assign_horse_saddle_function(t_obj *horse_saddle);
+void  	assign_monkey_saddle_function(t_obj *monkey_saddle);
+void  	assign_cyclide_function(t_obj *cyclide);
+void  	assign_fermat_function(t_obj *fermat);
+void  	assign_moebius_function(t_obj *moebius);
 
 int		parse_ambient(char **line, t_light *light, t_data *data);
 t_3vecf	ray_trace(t_leq l, t_data *data, int depth, int sp_id);
@@ -881,16 +870,9 @@ int		ray_intersect_cone(t_leq l, t_obj *cone, t_dist dist, int sp_id);
 int		check_inside_cone(t_3vecf point, t_obj *cone);
 t_3vecf	get_normal_intersect_cone(t_3vecf inter_point, t_obj *cone, int sp_id);
 t_3vecf	get_origin_cone(t_obj *cone);
-void	move_cone(t_obj *cone, t_3vecf, double);
-void	rotate_cone(t_obj *cone, t_3vecf, t_33matf *);
+void	move_cone(t_obj *cone, t_3vecf a, double b);
+void	rotate_cone(t_obj *cone, t_3vecf b, t_33matf *c);
 t_2vecf	get_text_coordinate_cone(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cone);
-
-// int		ray_intersect_rect(t_leq l, t_obj *rect, t_dist dist, int sp_id);
-// int		check_inside_rect(t_3vecf point, t_obj *rect);
-// t_3vecf	get_normal_intersect_rect(t_3vecf inter_point, t_obj *rect, int sp_id);
-// t_3vecf	get_origin_rect(t_obj *rect);
-// void	move_rect(t_obj *rect, t_3vecf, double);
-// t_2vecf	get_text_coordinate_rect(t_3vecf inter_point, t_3vecf normal_inter, t_obj *rect);
 
 t_3vecf	get_cylinder_origin(t_obj *cylinder, t_cylinder *cylinder_param,
 	int sp_id);
@@ -898,70 +880,69 @@ t_3vecf	get_cylinder_origin(t_obj *cylinder, t_cylinder *cylinder_param,
 int 	ray_intersect_cylinder(t_leq l, t_obj *cylinder, t_dist dist, int sp_id);
 int		check_inside_cylinder(t_3vecf point, t_obj *cylinder);
 t_3vecf	get_normal_intersect_cylinder(t_3vecf inter_point, t_obj *cylinderi, int sp_id);
-t_3vecf	get_origin_cylinder(t_obj *);
-void	move_cylinder(t_obj *, t_3vecf, double);
-void	rotate_cylinder(t_obj *cone, t_3vecf, t_33matf *);
+t_3vecf	get_origin_cylinder(t_obj *a);
+void	move_cylinder(t_obj *a, t_3vecf b, double c);
+void	rotate_cylinder(t_obj *cone, t_3vecf b, t_33matf *c);
 t_2vecf	get_text_coordinate_cylinder(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cylinder);
 
 t_3vecf	get_sphere_origin(t_obj *sphere, t_sphere *sphere_param, int sp_id);
 int		ray_intersect_sphere(t_leq l, t_obj *sphere, t_dist dist, int sp_id);
 int		check_inside_sphere(t_3vecf point, t_obj *sphere);
-t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int);
-t_3vecf	get_origin_sphere(t_obj *);
-void	move_sphere(t_obj *, t_3vecf, double);
-void	rotate_sphere(t_obj *cone, t_3vecf, t_33matf *);
+t_3vecf	get_normal_intersect_sphere(t_3vecf inter_point, t_obj *sphere, int a);
+t_3vecf	get_origin_sphere(t_obj *a);
+void	move_sphere(t_obj *a, t_3vecf b, double c);
+void	rotate_sphere(t_obj *cone, t_3vecf b, t_33matf *c);
 t_2vecf	get_text_coordinate_sphere(t_3vecf inter_point, t_3vecf normal_inter, t_obj *sphere);
 
 t_3vecf	get_fermat_origin(t_obj *fermat, t_fermat *param, int sp_id);
 int		ray_intersect_fermat(t_leq l, t_obj *fermat, t_dist dist, int sp_id);
 int		check_inside_fermat(t_3vecf point, t_obj *fermat);
-t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int);
-t_3vecf	get_origin_fermat(t_obj *);
-void	move_fermat(t_obj *, t_3vecf, double);
+t_3vecf	get_normal_intersect_fermat(t_3vecf inter_point, t_obj *fermat, int a);
+t_3vecf	get_origin_fermat(t_obj *a);
+void	move_fermat(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_fermat(t_3vecf inter_point, t_3vecf normal_inter, t_obj *fermat);
 
 int		ray_intersect_triangle(t_leq l, t_obj *triangle, t_dist dist, int sp_id);
-int		check_inside_triangle(t_3vecf point, t_obj *triangle);
-t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int);
-t_3vecf	get_origin_triangle(t_obj *);
-void	move_triangle(t_obj *, t_3vecf, double);
-void	rotate_triangle(t_obj *cone, t_3vecf, t_33matf *);
+t_3vecf	get_normal_intersect_triangle(t_3vecf inter_point, t_obj *triangle, int a);
+t_3vecf	get_origin_triangle(t_obj *a);
+void	move_triangle(t_obj *a, t_3vecf b, double c);
+void	rotate_triangle(t_obj *cone, t_3vecf b, t_33matf *c);
 t_2vecf	get_text_coordinate_triangle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *triangle);
 
 t_3vecf	get_ellipsoid_origin(t_obj *ellipsoid, t_ellipsoid *ellipsoid_param,
 	int sp_id);
 int		ray_intersect_ellipsoid(t_leq l, t_obj *ellipsoid, t_dist dist, int sp_id);
 int		check_inside_ellipsoid(t_3vecf point, t_obj *ellipsoid);
-t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, int);
-t_3vecf	get_origin_ellipsoid(t_obj *);
-void	move_ellipsoid(t_obj *, t_3vecf, double);
+t_3vecf	get_normal_intersect_ellipsoid(t_3vecf inter_point, t_obj *ellipsoid, int a);
+t_3vecf	get_origin_ellipsoid(t_obj *a);
+void	move_ellipsoid(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_ellipsoid(t_3vecf inter_point, t_3vecf normal_inter, t_obj *ellipsoid);
 
 t_3vecf	get_hyperboloid_origin(t_obj *hyperboloid,
 	t_hyperboloid *hyperboloid_param, int sp_id);
 int		ray_intersect_hyperboloid(t_leq l, t_obj *hyperboloid, t_dist dist, int sp_id);
 int		check_inside_hyperboloid(t_3vecf point, t_obj *hyperboloid);
-t_3vecf	get_normal_intersect_hyperboloid(t_3vecf inter_point, t_obj *hyperboloid, int);
-t_3vecf	get_origin_hyperboloid(t_obj *);
-void	move_hyperboloid(t_obj *, t_3vecf, double);
+t_3vecf	get_normal_intersect_hyperboloid(t_3vecf inter_point, t_obj *hyperboloid, int a);
+t_3vecf	get_origin_hyperboloid(t_obj *a);
+void	move_hyperboloid(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_hyperboloid(t_3vecf inter_point, t_3vecf normal_inter, t_obj *hyperboloid);
 
 t_3vecf	get_horse_saddle_origin(t_obj *horse_saddle, t_horse_saddle *param,
 	int sp_id);
 int		ray_intersect_horse_saddle(t_leq l, t_obj *horse_saddle, t_dist dist, int sp_id);
 int		check_inside_horse_saddle(t_3vecf point, t_obj *horse_saddle);
-t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_saddle, int);
-t_3vecf	get_origin_horse_saddle(t_obj *);
-void	move_horse_saddle(t_obj *, t_3vecf, double);
+t_3vecf	get_normal_intersect_horse_saddle(t_3vecf inter_point, t_obj *horse_saddle, int a);
+t_3vecf	get_origin_horse_saddle(t_obj *a);
+void	move_horse_saddle(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_horse_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *horse_saddle);
 
 t_3vecf	get_monkey_saddle_origin(t_obj *monkey_saddle, t_monkey_saddle *param,
 	int sp_id);
 int		ray_intersect_monkey_saddle(t_leq l, t_obj *monkey_saddle, t_dist dist, int sp_id);
 int		check_inside_monkey_saddle(t_3vecf point, t_obj *monkey_saddle);
-t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_saddle, int);
-t_3vecf	get_origin_monkey_saddle(t_obj *);
-void	move_monkey_saddle(t_obj *, t_3vecf, double);
+t_3vecf	get_normal_intersect_monkey_saddle(t_3vecf inter_point, t_obj *monkey_saddle, int a);
+t_3vecf	get_origin_monkey_saddle(t_obj *a);
+void	move_monkey_saddle(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_monkey_saddle(t_3vecf inter_point, t_3vecf normal_inter, t_obj *monkey_saddle);
 
 t_3vecf	get_cyclide_origin(t_obj *cyclide, t_cyclide *param, int sp_id);
@@ -969,30 +950,28 @@ int		ray_intersect_cyclide(t_leq l, t_obj *cyclide, t_dist dist, int sp_id);
 int		check_inside_cyclide(t_3vecf point, t_obj *cyclide);
 t_3vecf	get_normal_intersect_cyclide(t_3vecf inter_point, t_obj *cyclide, int sp_id);
 t_3vecf	get_origin_cyclide(t_obj *cyclide);
-void	move_cyclide(t_obj *cyclide, t_3vecf, double);
+void	move_cyclide(t_obj *cyclide, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_cyclide(t_3vecf inter_point, t_3vecf normal_inter, t_obj *cyclide);
 
 t_3vecf	get_plane_origin(t_obj *plane, t_plane *plane_param, int sp_id);
 int		ray_intersect_plane(t_leq l, t_obj *plane, t_dist dist, int sp_id);
 int		check_inside_plane(t_3vecf point, t_obj *plane);
 t_3vecf	get_normal_intersect_plane(t_3vecf inter_point, t_obj *plane, int sp_id);
-t_3vecf	get_origin_plane(t_obj *);
-void	move_plane(t_obj *, t_3vecf, double);
-void	rotate_plane(t_obj *cone, t_3vecf, t_33matf *);
+t_3vecf	get_origin_plane(t_obj *a);
+void	move_plane(t_obj *a, t_3vecf b, double c);
+void	rotate_plane(t_obj *cone, t_3vecf a, t_33matf *b);
 t_2vecf	get_text_coordinate_plane(t_3vecf inter_point, t_3vecf normal_inter, t_obj *plane);
 
 t_3vecf	get_moebius_origin(t_obj *moebius, t_moebius *param, int sp_id);
 int		ray_intersect_moebius(t_leq l, t_obj *moebius, t_dist dist, int sp_id);
 int		check_inside_moebius(t_3vecf point, t_obj *moebius);
 t_3vecf	get_normal_intersect_moebius(t_3vecf inter_point, t_obj *moebius, int sp_id);
-t_3vecf	get_origin_moebius(t_obj *);
-void	move_moebius(t_obj *, t_3vecf, double);
+t_3vecf	get_origin_moebius(t_obj *a);
+void	move_moebius(t_obj *a, t_3vecf b, double c);
 t_2vecf	get_text_coordinate_moebius(t_3vecf inter_point, t_3vecf normal_inter, t_obj *moebius);
 
 
 t_obj *check_cuts(t_leq l, t_dist dist, t_cut_fparam cp, t_data *data);
-// t_obj	*ray_first_intersect(t_leq l, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
-// t_obj	*ray_first_intersect(t_leq l, double min_dist, double max_dist, double *closest_dist, t_obj *objs, int sp_id, t_data *data);
 t_obj	*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs, int sp_id);
 
 void	print_conf(t_data *data);
@@ -1034,10 +1013,8 @@ int		clamp_val(double *val, double min, double max);
 t_3vecf	apply_color_filter_sepia(t_3vecf color);
 
 void	add_object(t_obj *obj, t_data *data);
-//void	add_component(t_obj *obj, t_composed *composed);
 
-void  cast_photon(t_leq l, t_phtn_cast p);
-// int			create_photon_map(t_data *data);
+void  cast_photon(t_leq l, t_phtn_cast p);;
 void			check_photon_map(t_data *data);
 void  cast_photon(t_leq l, t_phtn_cast p);
 t_3vecf add_color_bleed(t_3vecf pwr, t_4vecf obj_color);
@@ -1058,7 +1035,7 @@ double		get_random_number(unsigned int x);
 int     syn_error(char *s1, char *s2, char*s3, char *s4);
 int     error(char *s1, char *s2);
 int     ft_memalloc_error(int ret, size_t size);
-void	ft_mem_error();
+void	ft_mem_error(void);
 
 int		check_lights_cam(t_data *data);
 int		check_skybox(t_data *data);
@@ -1070,4 +1047,6 @@ void	push_object(t_obj *obj, int composed, t_data *data, t_composed *from);
 void  free_info(t_data *data);
 void	free_data(t_data *data);
 void	free_object(t_obj *obj);
+
+int			parse_sphere_element(char **line, int *ret, t_sphere *sphere_param);
 #endif

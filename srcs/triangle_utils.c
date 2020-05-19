@@ -6,18 +6,11 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:50:04 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:52:09 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 19:31:40 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-
-int		check_inside_triangle(t_3vecf point, t_obj *triangle)
-{
-	return (0);
-	(void)point;
-	(void)triangle;
-}
 
 void	move_triangle(t_obj *triangle, t_3vecf dir, double fact)
 {
@@ -68,7 +61,7 @@ void	rotate_triangle(t_obj *triangle, t_3vecf orig, t_33matf rot_mat[2])
 void	assign_triangle_function(t_obj *triangle)
 {
 	triangle->obj_type = OBJ_TRIANGLE;
-	triangle->check_inside = &check_inside_triangle;
+	triangle->check_inside = &check_inside_fermat;
 	triangle->ray_intersect = &ray_intersect_triangle;
 	triangle->get_normal_inter = &get_normal_intersect_triangle;
 	triangle->get_origin = &get_origin_triangle;

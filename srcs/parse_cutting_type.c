@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 04:57:07 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 04:59:03 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 18:45:16 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,10 @@ static int	parse_cut_sphere(char **line, t_cut *cut)
 		return (error(ALREADYCUT, NULL));
 	if (!(param = ft_memalloc(sizeof(t_sphere))))
 		return (0);
-	while (stripe != '>' && ret != 0)
+	if (!parse_sphere_element(line, &ret, param))
 	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "origin", 6)))
-			ret = parse_origin(line, &param->origin, 6);
-		else if (!(ft_strncmp_case(*line, "radius", 6)))
-			ret = parse_double(line, 6, &param->radius);
-		else if (stripe == '<' || ret == 0)
-		{
-			free(param);
-			return (syn_error(SERROR, SYNCUT, SPHERECUT, ""));
-		}
+		free(param);
+		return (syn_error(SERROR, SYNCUT, SPHERECUT, ""));
 	}
 	cut->cut_param = param;
 	cut->move = &move_cut_sphere;
