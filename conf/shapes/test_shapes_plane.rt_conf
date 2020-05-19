@@ -1,0 +1,174 @@
+<scene
+	<name(Bump mapping)	>
+	<size(800, 600)>
+	<Indirect_GI(Off)>
+	<Caustics_GI(off)>
+	<Cel_Shading (0)>
+	<camera
+		<origin (0, 0, -2)>
+		<rotation (0, 0)>
+	>
+	<Stereoscopy (off)>
+	<objects
+		<texture
+			<UNI
+				<color(0.92, 0.08, 0.23, 0.5)(0)>
+			>
+			<scale(0.28545, 0.1818)>
+		>
+		<plane
+			<origin(-6, -0.5, 2.5)>
+			<normal(1, 0, 0)>
+			<xaxis(0, 0, 1)>
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0, 0, 0.82, 0.5)(0)>
+			>
+			<scale(0.28545, 0.1818)>
+
+		>
+		<plane
+			<origin(6, -0.5, 2.5)>
+			<normal(-1, 0, 0)>
+			<xaxis(0, 0, -1)>
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.7, 0.5, 0.6, 0.5)(0)>
+			>
+			<scale(0.28545, 0.2)>
+
+		>
+		<plane
+			<origin(0, -0.5, 9)>
+			<normal(0, 0, -1)>
+			<xaxis(1, 0, 0)>
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.2, 0.8, 0.6, 0.5)(0)>
+			>
+			<scale(0.2, 0.1818)>
+
+		>
+		<plane
+			<origin(0, -6, 2.5)>
+			<normal(0, 1, 0)>
+			<xaxis(0, 0, 1)>
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.8, 0.3, 0.1, 0.5)(0)>
+			>
+			<scale(0.2, 0.1818)>
+
+		>
+		<plane
+			<origin(0, 4, 2.5)>
+			<normal(0, -1, 0)>
+			<xaxis(0, 0, -1)>
+
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+		        <v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.7, 0.7, 0.7, 0.5)(0)>
+			>
+			<scale(0.28545, 0.2)>
+
+		>
+		<plane
+			<origin(0, -0.5, -4)>
+			<normal(0, 0, -1)>
+			<xaxis(1, 0, 0)>
+		>
+		<cutting
+			<uv
+				<u_range (-0.5, 0.5)>
+						<v_range (-0.5, 0.5)>
+			>
+		>
+		<reflection (0.5)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.7,0.7,0.7, 0)(0)>
+			>
+			<scale(0.28545, 0.2)>
+
+		>
+		<sphere
+			<origin(0, -0, -0)>
+			<radius (20) >
+		>
+	>
+	<objects
+		<texture
+			<PERLIN
+				<color(0.7, 0.545, 0.8, 1)(0)>
+			>
+			<offset(0, 0)>
+			<scale(0.5, 0.5)>
+			<BumpMapping<own(0.03)>>
+		>
+		<sphere
+			<origin(0, -2.6, 4.5)>
+			<radius(1)>
+		>
+	>
+	<lights
+		<point (0, -2.6, 4.5)>
+		<color (0.8, 0.8, 0.8)>
+	>
+	<lights
+		<ambient (0.2, 0.2, 0.2)>
+	>
+>
