@@ -39,19 +39,6 @@ static void		compute_reflection_and_refraction(t_leq l, t_inter i,
 									+ refl_color.val[2] * fresnel_ratio;
 }
 
-static void		compute_reflection_only(t_inter i, t_obj *obj, t_rayt_param p)
-{
-	t_3vecf refl_color;
-
-	refl_color = get_refl_color(p, i);
-	p.lighted_color->val[0] = p.lighted_color->val[0] * (1 - obj->reflection)
-									+ refl_color.val[0] * obj->reflection;
-	p.lighted_color->val[1] = p.lighted_color->val[1] * (1 - obj->reflection)
-									+ refl_color.val[1] * obj->reflection;
-	p.lighted_color->val[2] = p.lighted_color->val[2] * (1 - obj->reflection)
-									+ refl_color.val[2] * obj->reflection;
-}
-
 static void		compute_transparency(t_inter i, t_leq l, t_rayt_param p)
 {
 	t_3vecf	refr_color;
@@ -64,6 +51,19 @@ static void		compute_transparency(t_inter i, t_leq l, t_rayt_param p)
 									+ refr_color.val[1] * p.obj_color.val[3];
 	p.lighted_color->val[2] = p.lighted_color->val[2] * (1 - p.obj_color.val[3])
 									+ refr_color.val[2] * p.obj_color.val[3];
+}
+
+static void		compute_reflection_only(t_inter i, t_obj *obj, t_rayt_param p)
+{
+	t_3vecf refl_color;
+
+	refl_color = get_refl_color(p, i);
+	p.lighted_color->val[0] = p.lighted_color->val[0] * (1 - obj->reflection)
+									+ refl_color.val[0] * obj->reflection;
+	p.lighted_color->val[1] = p.lighted_color->val[1] * (1 - obj->reflection)
+									+ refl_color.val[1] * obj->reflection;
+	p.lighted_color->val[2] = p.lighted_color->val[2] * (1 - obj->reflection)
+									+ refl_color.val[2] * obj->reflection;
 }
 
 static t_4vecf	get_obj_color(t_inter *i, t_obj *closest_obj, t_leq l)

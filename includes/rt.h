@@ -41,9 +41,9 @@
 # define Q_MED    		4 // no aa
 # define Q_HIGH 			8 // no aa when move then aa x4
 
-# define QUALITY			Q_VERY_LOW
+# define QUALITY			Q_LOW
 # define TRANSP_F     0 // transp (color.val[3]) *= TRANSP_F
-# define WATER_ON     0
+# define WATER_ON     1
 # define DFLT_POWER 100
 # define NB_THREADS		1
 # define MIN_AA 		0.5
