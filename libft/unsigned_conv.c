@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unsigned_conv.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:26:04 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:26:05 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:46:00 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	make_unsigned_conv(char **conv, t_conv *data, va_list ap)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*conv = ull_conv(va_arg(ap, unsigned long long), data);
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*conv = ull_conv(va_arg(ap, uintmax_t), data);
+			*conv = ull_conv(va_arg(ap, t_uintmax), data);
 		else if (ft_strcmp(data->mod, "z") == 0)
 			*conv = ull_conv(va_arg(ap, size_t), data);
 	}

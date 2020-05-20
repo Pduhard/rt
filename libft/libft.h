@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aplat <aplat@student.le-101.fr>            +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:23:49 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/03/04 07:10:54 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:51:23 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 # include "ft_printf.h"
 # define BUFF_SIZE 42
 
-#if defined(__linux)
-	typedef __intmax_t intmax_t;
-	typedef __uintmax_t uintmax_t;
-#endif	
+# if defined(__linux)
+
+typedef	__intmax_t	t_intmax;
+typedef	__uintmax_t	t_uintmax;
+# endif
+
 typedef struct		s_list
 {
 	void			*content;
@@ -96,7 +98,7 @@ int					ft_ltoa(long n, char **array);
 int					ft_lltoa(long long n, char **array);
 int					ft_ldtoa(long double n, char **array, int prec);
 void				round_float(char **nb, int prec);
-int					ft_imttoa(intmax_t n, char **array);
+int					ft_imttoa(t_intmax n, char **array);
 int					ft_ulltoa(unsigned long long n, char **array);
 void				ft_putendl(char const *s);
 void				ft_putnbr(int n);

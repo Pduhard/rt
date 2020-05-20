@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hex_conv.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:23:26 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:23:26 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:47:10 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	make_hex_conv(char **str, t_conv *dt, va_list ap)
 		else if (ft_strcmp(dt->mod, "ll") == 0)
 			*str = ull_x_conv(va_arg(ap, unsigned long long), &z, dt);
 		else if (ft_strcmp(dt->mod, "j") == 0)
-			*str = ull_x_conv(va_arg(ap, uintmax_t), &z, dt);
+			*str = ull_x_conv(va_arg(ap, t_uintmax), &z, dt);
 		else if (ft_strcmp(dt->mod, "z") == 0)
 			*str = ull_x_conv(va_arg(ap, size_t), &z, dt);
 	}

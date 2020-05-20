@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scientist_conv.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:25:32 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:25:32 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:34:18 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		display_sci(char **converted, t_conv *data)
 {
 	char	*sci;
 	int		point;
-	
+
 	if (!(sci = (char *)malloc(2 + data->prec + 2 + 1)))
 		return (-1);
 	point = ft_strichr(*converted, '.');

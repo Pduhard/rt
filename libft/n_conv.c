@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   n_conv.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:24:41 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:24:41 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:48:31 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	get_n_value(int sum, t_conv *data)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*(data->n_conv) = (long long)sum;
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*(data->n_conv) = (intmax_t)sum;
+			*(data->n_conv) = (t_intmax)sum;
 		else if (ft_strcmp(data->mod, "z") == 0)
 			*(data->n_conv) = sum;
 	}

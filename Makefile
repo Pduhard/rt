@@ -172,7 +172,8 @@ BIN			=	$(SRC:.c=.o)
 LIB_FLAG			=	-lft
 LIB					=	libft.a
 MLX_FLAG			=	-lmlx
-MLX					=	libmlx.a
+MLX					=	libmlx.a		\
+						libmlx_Linux.a\
 #MLX					=	libmlx.dylib //new lib in beta
 
 SRCS		=	$(addprefix $(SRC_PATH), $(SRC))
@@ -235,6 +236,5 @@ fclean: clean
 	@rm -rf $(MLXS)
 	@echo "\n${R}[REMOVING "$(NAME)"]\n"
 	@rm -f $(NAME)
-	@rm ${MLX_PATH}libmlx_Linux.a
 
 re: fclean all

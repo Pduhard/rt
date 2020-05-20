@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signed_conv.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pduhard- <pduhard-@student.le-101.fr>      +#+  +:+       +#+        */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:25:36 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/02/27 02:25:37 by pduhard-         ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 10:45:33 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	make_signed_conv(char **converted, t_conv *data, va_list ap)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*converted = long_long_conv(va_arg(ap, long long), &neg, data);
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*converted = long_long_conv(va_arg(ap, intmax_t), &neg, data);
+			*converted = long_long_conv(va_arg(ap, t_intmax), &neg, data);
 	}
 	else if (data->type == 'D')
 		*converted = long_long_conv(va_arg(ap, long long), &neg, data);
