@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 19:34:58 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/19 20:40:02 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 22:14:11 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@
 # define SPACE_HOOK		0b10000000000
 # define SHIFT_HOOK		0b100000000000
 
+//# include "./norme.h"
+
 /* Conf Mess */
 
 # define CAM "<camera\n"
@@ -203,7 +205,9 @@
 # define WASD "W, A, S, D   ==> Translate Object"
 # define LEFTCLICK "LEFT CLICK   ==> Unselect Object"
 
-typedef	enum {
+# include "./norme.h"
+
+/*typedef	enum {
 		OBJ_SPHERE,
 		OBJ_PLANE,
 		OBJ_CONE,
@@ -674,7 +678,7 @@ typedef struct  s_anti_al
 		int     anti_al_iter;
 		int     offset;
 		int     aa;
-}				t_anti_al;
+}				t_anti_al;*/
 
 t_obj	*copy_object(t_obj *src);
 void	get_uv_axis(t_3vecf axis[3], t_3vecf first_axis);
@@ -1014,7 +1018,7 @@ t_3vecf	apply_color_filter_sepia(t_3vecf color);
 
 void	add_object(t_obj *obj, t_data *data);
 
-void  cast_photon(t_leq l, t_phtn_cast p);;
+void  cast_photon(t_leq l, t_phtn_cast p);
 void			check_photon_map(t_data *data);
 void  cast_photon(t_leq l, t_phtn_cast p);
 t_3vecf add_color_bleed(t_3vecf pwr, t_4vecf obj_color);

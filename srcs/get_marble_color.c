@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:35:04 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 01:37:22 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 21:28:20 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_4vecf			get_marble_color(t_3vecf inter_point, t_3vecf normal_inter,
 
 	text = (t_text_proc *)obj->text.text_param;
 	marble_f = compute_marble_factor(inter_point, obj->text.scale.val[0],
-		obj->data->permutation, obj->data->gradient);
+		((t_data *)obj->data)->permutation, ((t_data *)obj->data)->gradient);
 	color.val[0] = linear_interpolate(text->color[0].val[0],
 		text->color[1].val[0], marble_f);
 	color.val[1] = linear_interpolate(text->color[0].val[1],

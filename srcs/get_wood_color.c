@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:55:24 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 01:55:25 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/19 21:27:59 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_4vecf	get_wood_color(t_3vecf inter_point, t_3vecf normal_inter, t_obj *obj)
 
 	text = (t_text_proc *)obj->text.text_param;
 	wood_f = compute_wood_factor(inter_point, obj->text.scale.val[0],
-		obj->data->permutation, obj->data->gradient);
+		((t_data *)obj->data)->permutation, ((t_data *)obj->data)->gradient);
 	color.val[0] = linear_interpolate(text->color[0].val[0],
 		text->color[1].val[0], wood_f);
 	color.val[1] = linear_interpolate(text->color[0].val[1],
