@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 17:26:51 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 17:28:02 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 09:08:34 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		parse_int(char **line, int i, int *val)
 		return (0);
 	if (goto_next_element(line) != '>')
 	{
-		printf("Error parse_int\n");
+		ft_fdprintf(2, "Error parse_int\n");
 		return (0);
 	}
 	return (1);

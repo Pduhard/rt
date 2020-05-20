@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 18:05:34 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 01:16:01 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 09:05:58 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_mem_error(void)
 
 int		ft_memalloc_error(int ret, size_t size)
 {
-	dprintf(2,
+	ft_fdprintf(2,
 		"internal error: too big allocation (try to allocate %zu bytes)\n",
 			size);
 	return (ret);
@@ -28,7 +28,7 @@ int		ft_memalloc_error(int ret, size_t size)
 
 int		ft_usage_error(int ret, char *usage)
 {
-	dprintf(2, "Usage: %s\n", usage);
+	ft_fdprintf(2, "Usage: %s\n", usage);
 	return (ret);
 }
 

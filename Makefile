@@ -235,5 +235,6 @@ fclean: clean
 	@rm -rf $(MLXS)
 	@echo "\n${R}[REMOVING "$(NAME)"]\n"
 	@rm -f $(NAME)
+	@rm ${MLX_PATH}libmlx_Linux.a
 
 re: fclean all

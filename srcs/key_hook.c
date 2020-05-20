@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:17:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/15 19:21:34 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 09:06:13 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int		key_press(int keycode, void *param)
 	t_data *data;
 
 	data = (t_data *)param;
-	printf("button %d\n", keycode);
 	if (check_mov_key_press(keycode, data) ||
 			check_rot_key_press(keycode, data) ||
 			check_gen_key_press(keycode, data) ||

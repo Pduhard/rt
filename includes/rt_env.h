@@ -1,29 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rt_env.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/20 07:43:03 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/20 09:01:34 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RT_ENV_H
 # define RT_ENV_H
 
+/*
+**    Anti Aliasing relative macro
+*/
 
-/*  Anti Aliasing relative macro  */
+# define Q_VERY_LOW	1
+# define Q_LOW		2
+# define Q_MED    	4
+# define Q_HIGH 	8
 
-# define Q_VERY_LOW		1
-# define Q_LOW				2
-# define Q_MED    		4
-# define Q_HIGH 			8
+# define MIN_AA 	0.5
+# define NO_AA      1.
+# define MAX_AA 	2.
 
-# define MIN_AA 		  0.5
-# define NO_AA        1.
-# define MAX_AA 		  2.
+/*
+**    Global Illumination relative macro
+*/
 
-/* Global Illumination relative macro */
+# define SPEC_PROB	0.35
+# define DIFF_PROB	0.65
 
-# define SPEC_PROB				0.35
-# define DIFF_PROB				0.65
+/*
+**    Math relative macro
+*/
 
-/* Math relative macro  */
+# define _M_PI_180  0.01745329251
+# define _SQRT_2    1.41421356237
 
-# define _M_PI_180 0.01745329251
-# define _SQRT_2 1.41421356237
-
-/* Cel shading relative macro */
+/*
+**    Cel shading relative macro
+*/
 
 # define CEL_BOUND_1	0.05
 # define CEL_BOUND_2	0.15
@@ -33,24 +52,28 @@
 
 # define CEL_BOUNDARY	0.04
 
-/* Key Hooks relative macro */
+/*
+**    Key Hooks relative macro
+*/
 
-# define A_HOOK					0b1
-# define D_HOOK					0b10
-# define W_HOOK					0b100
-# define S_HOOK					0b1000
-# define F_HOOK					0b10000
-# define G_HOOK					0b100000
+# define A_HOOK			1
+# define D_HOOK			2
+# define W_HOOK			4
+# define S_HOOK			8
+# define F_HOOK			16
+# define G_HOOK			32
 
-# define ARR_LEFT_HOOK	0b1000000
-# define ARR_RIGHT_HOOK 0b10000000
-# define ARR_DOWN_HOOK	0b100000000
-# define ARR_UP_HOOK		0b1000000000
+# define ARR_LEFT_HOOK	64
+# define ARR_RIGHT_HOOK 128
+# define ARR_DOWN_HOOK	256
+# define ARR_UP_HOOK	512
 
-# define SPACE_HOOK			0b10000000000
-# define SHIFT_HOOK			0b100000000000
+# define SPACE_HOOK		1024
+# define SHIFT_HOOK		2048
 
-/* Conf Mess */
+/*
+**    Conf Mess
+*/
 
 # define CAM "<camera\n"
 # define CYLINDER "<cylinder\n\t<origin (x, y, z)>\n"
@@ -98,8 +121,11 @@
 # define DIRECTIONAL "\t<directional (x, y, z)>\n\t<color (r, g, b)>\n"
 # define POINT "\t<point (x, y, z)>\n\t<color (r, g, b)>\n"
 
-/* Error Mess */
-# define ERRORMEM "internal error: too big allocation (try to allocate %zu bytes)\n"
+/*
+**     Error Mess
+*/
+
+# define ERRORMEM "internal error: too big allocation (allocate %zu bytes)\n"
 # define ERRORSIZE "WIN_Size : Min 400/400, Max 2560/1420\n"
 # define ERRORARG  "Usage: ./rtv1 NameFile.rt_conf\n"
 # define ERRORTHREAD "Number Thread : Min 1, Max 16\n"
@@ -132,7 +158,10 @@
 # define BUMPOWN "<BumpMapping\n\t<own (BumpFact)>\n"
 # define MOTION "<MotionBlur\n\t<dir (x, y, z)>\n\t<speed (SpeedFact)>\n\t"
 
-/* Infos Mess */
+/*
+**     Infos Mess
+*/
+
 # define ESC "ESC          ==> Quit Program"
 # define WS "W / S        ==> Forward / Backward"
 # define AD "A / D        ==> Left / Right"

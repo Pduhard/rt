@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:10:00 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:10:41 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 09:06:33 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int		create_photon_map(t_data *data)
 			!(photon_tab[0] = malloc(sizeof(t_photon) * NB_CAUSTIC_PHOTON)) ||
 			!(photon_tab[1] = malloc(sizeof(t_photon) * NB_INDIRECT_PHOTON)))
 		return (0);
-	printf("photon_map in\n");
 	scatter_photon(photon_tab, data);
 	if (photon_tab[0])
 		data->caustic_map = build_tree(photon_tab[0], 0,

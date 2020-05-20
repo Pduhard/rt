@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:07:54 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 16:03:24 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 09:05:56 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 	if (!check_macro() || !parse_rt_conf(file_name, data)
 		|| !check_file_setup(data) || !check_mlx(mlx, data))
 	{
-		printf("data next %p\n", data->next);
 		free_all(data);
 		return (NULL);
 	}
