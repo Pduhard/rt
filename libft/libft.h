@@ -21,8 +21,8 @@
 
 # if defined(__linux)
 
-typedef	__intmax_t	t_intmax;
-typedef	__uintmax_t	t_uintmax;
+typedef	__intmax_t	long long;
+typedef	__uintmax_t	unsigned long long;
 # endif
 
 typedef struct		s_list
@@ -98,7 +98,7 @@ int					ft_ltoa(long n, char **array);
 int					ft_lltoa(long long n, char **array);
 int					ft_ldtoa(long double n, char **array, int prec);
 void				round_float(char **nb, int prec);
-int					ft_imttoa(t_intmax n, char **array);
+int					ft_imttoa(long long n, char **array);
 int					ft_ulltoa(unsigned long long n, char **array);
 void				ft_putendl(char const *s);
 void				ft_putnbr(int n);

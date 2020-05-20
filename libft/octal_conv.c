@@ -56,7 +56,7 @@ void	make_octal_conv(char **str, t_conv *data, va_list ap)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*str = ull_o_conv(va_arg(ap, unsigned long long), data);
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*str = ull_o_conv(va_arg(ap, t_uintmax), data);
+			*str = ull_o_conv(va_arg(ap, unsigned long long), data);
 		else if (ft_strcmp(data->mod, "z") == 0)
 			*str = ull_o_conv(va_arg(ap, size_t), data);
 	}

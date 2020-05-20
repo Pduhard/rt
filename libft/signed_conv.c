@@ -58,7 +58,7 @@ void	make_signed_conv(char **converted, t_conv *data, va_list ap)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*converted = long_long_conv(va_arg(ap, long long), &neg, data);
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*converted = long_long_conv(va_arg(ap, t_intmax), &neg, data);
+			*converted = long_long_conv(va_arg(ap, long long), &neg, data);
 	}
 	else if (data->type == 'D')
 		*converted = long_long_conv(va_arg(ap, long long), &neg, data);

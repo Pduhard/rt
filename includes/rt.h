@@ -39,7 +39,7 @@
 # define TRANSP_F     0
 # define WATER_ON     1
 # define DFLT_POWER 100
-# define NB_THREADS		1
+# define NB_THREADS		8
 # define MAX_VIEW 1000000
 
 # define NN_CAUSTIC_PHOTON_MAX  20

@@ -108,7 +108,7 @@ void	make_hex_conv(char **str, t_conv *dt, va_list ap)
 		else if (ft_strcmp(dt->mod, "ll") == 0)
 			*str = ull_x_conv(va_arg(ap, unsigned long long), &z, dt);
 		else if (ft_strcmp(dt->mod, "j") == 0)
-			*str = ull_x_conv(va_arg(ap, t_uintmax), &z, dt);
+			*str = ull_x_conv(va_arg(ap, unsigned long long), &z, dt);
 		else if (ft_strcmp(dt->mod, "z") == 0)
 			*str = ull_x_conv(va_arg(ap, size_t), &z, dt);
 	}

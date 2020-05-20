@@ -32,7 +32,7 @@ void	get_n_value(int sum, t_conv *data)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*(data->n_conv) = (long long)sum;
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*(data->n_conv) = (t_intmax)sum;
+			*(data->n_conv) = (long long)sum;
 		else if (ft_strcmp(data->mod, "z") == 0)
 			*(data->n_conv) = sum;
 	}

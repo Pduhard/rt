@@ -23,11 +23,14 @@ ifeq ($(UNAME_S), Linux)
 	FLAGS		+=	-fPIC
 	FRAMEWORK	=	-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image
 	CC		=	clang
+	MLX					=	libmlx.a		\
+							libmlx_Linux.a
 	MLX_PATH	=	$(EXT_LIB)/minilibx/
 	MLX_FLAGS	=	-L$(MLX_PATH) -lX11 -lXext -lm -lbsd $(MLX_FLAG)
 else
 	CC		=	gcc
 	FRAMEWORK	=	-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
+	MLX					=	libmlx.a
 	MLX_PATH	=	$(EXT_LIB)/minilibx_macos/
 	MLX_FLAGS	=	-L$(MLX_PATH) $(MLX_FLAG)
 endif
@@ -172,8 +175,6 @@ BIN			=	$(SRC:.c=.o)
 LIB_FLAG			=	-lft
 LIB					=	libft.a
 MLX_FLAG			=	-lmlx
-MLX					=	libmlx.a		\
-						libmlx_Linux.a\
 #MLX					=	libmlx.dylib //new lib in beta
 
 SRCS		=	$(addprefix $(SRC_PATH), $(SRC))

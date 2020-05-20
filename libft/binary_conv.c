@@ -53,7 +53,7 @@ void	make_binary_conv(char **str, t_conv *data, va_list ap)
 		else if (ft_strcmp(data->mod, "ll") == 0)
 			*str = b_conv(va_arg(ap, unsigned long long), data, 64);
 		else if (ft_strcmp(data->mod, "j") == 0)
-			*str = b_conv(va_arg(ap, t_uintmax), data, 64);
+			*str = b_conv(va_arg(ap, unsigned long long), data, 64);
 		else if (ft_strcmp(data->mod, "z") == 0)
 			*str = b_conv(va_arg(ap, size_t), data, 64);
 	}
