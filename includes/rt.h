@@ -67,7 +67,7 @@
 # define MOTION_SPP			32
 
 # define ROUGHCAST_LIMIT	12
-# define BIAS				0.01
+# define BIAS				0.0001
 
 # include "./norme.h"
 

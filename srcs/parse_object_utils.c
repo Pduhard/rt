@@ -19,7 +19,7 @@ void	clamp_and_set_dflt(t_obj *obj)
 	clamp_val(&obj->refraction, 0, 3);
 	clamp_val(&obj->refraction, 0, 2.42);
 	if (obj->text.scale.val[0] == 0 && obj->text.scale.val[1] == 0)
-		obj->text.scale = (t_2vecf){{0, 0}};
+		obj->text.scale = (t_2vecf){{1, 1}};
 	if (obj->shininess > 0)
 		obj->shininess = exp(11 - 10 * obj->shininess);
 }

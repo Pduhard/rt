@@ -115,37 +115,31 @@
 				<color(1, 1, 1, 0)(0)>
 			>
 		>
-		<cone
-			<origin(-2, 1.3, 5)>
-			<tip(-2, -1.3, 5)>
-			<radius(1.2)>
+		<monkey_saddle
+			<origin(-1.5, 1.3, 5)>
+		>
+		<reflection(0.8)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.3, 0.8, 0.6, 0.3)(0)>
+			>
+		>
+		<monkey_saddle
+			<origin(1.5, 0, 4)>
 		>
 	>
 	<objects
 		<texture
 			<UNI
-				<color(0.9, 0.7, 0.7, 0.3)(0)>
+				<color(0.9, 0.9, 0.9, 0.9)(0)>
 			>
-			<scale(1, 1)>
 		>
-		<cone
-			<origin(2, 1.49, 1)>
-			<tip(2, -2, 3)>
-			<radius(0.7)>
+		<monkey_saddle
+			<origin(2, 1.49, 2)>
 		>
-	>
-	<objects
-		<texture
-			<UNI
-				<color(0.4, 0.2, 0.8, 0.3)(0)>
-			>
-			<scale(1, 1)>
-		>
-		<cone
-			<origin(3, -1, 5)>
-			<tip(0, 2, 1)>
-			<radius(0.9)>
-		>
+		<refraction (1.3)>
 	>
 	<lights
 		<point (0, -2.6, 4.5)>
