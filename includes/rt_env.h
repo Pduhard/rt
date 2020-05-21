@@ -14,17 +14,20 @@
 # define RT_ENV_H
 
 /*
+**      Non Alterable macro
+**
+**
 **    Anti Aliasing relative macro
 */
 
-# define Q_VERY_LOW	1
-# define Q_LOW		2
-# define Q_MED    	4
-# define Q_HIGH 	8
+# define Q_VERY_LOW   1
+# define Q_LOW        2
+# define Q_MED        4
+# define Q_HIGH       8
 
-# define MIN_AA 	0.5
-# define NO_AA      1.
-# define MAX_AA 	2.
+# define MIN_AA       0.5
+# define NO_AA        1.
+# define MAX_AA       2.
 
 /*
 **    Global Illumination relative macro

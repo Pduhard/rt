@@ -51,11 +51,21 @@ static t_data	*init_all_scene(char **argv)
 	return (first);
 }
 
+int				check_macro(void)
+{
+	if (NB_THREADS < 1 || NB_THREADS > 16)
+	{
+		error(ERRORTHREAD, NULL);
+		return (0);
+	}
+	return (1);
+}
+
 int				main(int argc, char **argv)
 {
 	t_data		*data;
 
-	if (argc < 2)
+	if (argc < 2 || !check_macro())
 		return (error(ERRORARG, NULL));
 	else if (!(data = init_all_scene(argv)))
 		return (error(ERRORARG, NULL));

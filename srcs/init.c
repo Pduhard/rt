@@ -34,16 +34,6 @@ static t_mlx	*init_mlx(t_data *data)
 	return (mlx);
 }
 
-int				check_macro(void)
-{
-	if (NB_THREADS < 1 || NB_THREADS > 16)
-	{
-		error(ERRORTHREAD, NULL);
-		return (0);
-	}
-	return (1);
-}
-
 int				check_file_setup(t_data *data)
 {
 	if (data->size.val[0] < 400 || data->size.val[0] > 2560
@@ -70,7 +60,7 @@ t_data			*init_data(char *file_name, t_mlx *mlx)
 
 	if (!(data = (t_data *)ft_memalloc(sizeof(t_data))))
 		return (NULL);
-	if (!check_macro() || !parse_rt_conf(file_name, data)
+	if (!parse_rt_conf(file_name, data)
 		|| !check_file_setup(data) || !check_mlx(mlx, data))
 	{
 		free_all(data);
