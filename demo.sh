@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 demos=(
   'shapes'
+  'feature'
 )
 
 to_exec=()
 
 shapes_demo_dir="conf/shapes/"
+feature_demo_dir="conf/feature/"
 
 for arg in $*
 do
@@ -34,6 +36,10 @@ do
   if [ $exec == "shapes" ]
   then
     ./rt $shapes_demo_dir/*
+  fi
+  if [ $exec == "feature" ]
+  then
+    ./rt $feature_demo_dir/*
   fi
   # echo "$exec"
 done

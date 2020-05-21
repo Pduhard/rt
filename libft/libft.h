@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 02:23:49 by pduhard-          #+#    #+#             */
-/*   Updated: 2020/05/20 10:51:23 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/20 17:12:26 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@
 # include <stdlib.h>
 # include "ft_printf.h"
 # define BUFF_SIZE 42
-
-# if defined(__linux)
-
-typedef	__intmax_t	long long;
-typedef	__uintmax_t	unsigned long long;
-# endif
 
 typedef struct		s_list
 {
