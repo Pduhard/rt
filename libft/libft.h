@@ -19,12 +19,6 @@
 # include "ft_printf.h"
 # define BUFF_SIZE 42
 
-# if defined(__linux)
-
-typedef	__intmax_t	long long;
-typedef	__uintmax_t	unsigned long long;
-# endif
-
 typedef struct		s_list
 {
 	void			*content;
