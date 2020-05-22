@@ -1,0 +1,18 @@
+<scene
+	<name(Bump mapping)	>
+	<size(800, 600)>
+	<Indirect_GI(Off)>
+	<Caustics_GI(off)>
+	<Cel_Shading (0)>
+	<camera
+		<origin (0, 0, -6)>
+		<rotation (0, 0)>
+	>
+	<Stereoscopy (off)>
+	<objects
+		<texture
+			<UNI
+			>
+		>
+	>
+>

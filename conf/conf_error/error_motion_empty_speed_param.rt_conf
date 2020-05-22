@@ -1,0 +1,74 @@
+<scene
+    <    name  (test)     >
+    <size (600, 600)>
+	<MotionBlur	(ON)>
+    <camera//dfdsfdsfd
+        <origin (1, 0, -5)   >
+        <rotation (0, 0)  >
+    >
+	<objects
+        <texture
+            <UNI
+                <color (0.5, 1, 0.5, 0)>
+                <color (1, 1, 1, 1)>
+            >
+            <offset (0, 0)>
+            <scale (0, 0)>
+        >
+        <sphere
+            <origin (5, 0, 0)>
+            <radius (1)>
+        >
+		<MotionBlur
+            <dir (1.5, -0.5, 0)>
+            <speed ()>
+            <spf (32)>
+        >
+		<reflection(0)>
+    >
+    <objects
+        <texture
+            <UNI
+                <color (1, 0, 1, 0)>
+                <color (1, 1, 1, 1)>
+
+            >
+            <offset (0, 0)>
+            <scale (0, 0)>
+        >
+        <sphere
+            <origin (0, 0.5, 0)>
+            <radius (1)>
+        >
+//        <cutting
+  //          <static
+    //            <origin (0, 0, 0)>
+      //          <normal (0, 1, 0)>
+        //    >
+       // >
+        <cutting
+            <static
+                <origin (0, 0, 0)>
+                <normal (1, 0, 0)>
+            >
+        >
+        <MotionBlur
+            <dir (2, 0, 0)>
+            <speed (6)>
+            <spf (16)>
+        >
+		<MotionBlur
+            <dir (-1, 1, 0)>
+            <speed (6)>
+            <spf (16)>
+        >
+		<reflection(0)>
+    >
+    <lights
+        <directional (0, 0, 1)>
+        <color (0.7, 0.7, 0.7)>
+    >
+    <lights
+        <ambient (0.3, 0.3, 0.3)>
+    >
+>

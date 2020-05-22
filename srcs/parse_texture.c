@@ -120,7 +120,7 @@ int			parse_texture2(char **line, t_obj *obj)
 			return (0);
 		compute_text(line, obj);
 	}
-	if (ret == 0 || !obj->get_text_color)
+	if (ret == 0) // ADD TEXTURE CHECK
 		return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
 	return (ret);
 }
