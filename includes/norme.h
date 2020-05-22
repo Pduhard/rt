@@ -922,5 +922,9 @@ void			free_object(t_obj *obj);
 
 int				parse_sphere_element(char **line, int *ret,
 				t_sphere *sphere_param);
+int	check_sphere_param(t_sphere *sphere_param, int ret);
+int	parse_cut_uv(char **line, t_cut *cut);
+int	parse_cut_static_real(char **line, t_cut *cut,
+	t_cut_type cut_type);
 
 #endif

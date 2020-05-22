@@ -43,7 +43,7 @@ static int	parse_plane_element(char **line, int *ret, t_plane *plane_param)
 		else if (stripe == '<')
 			return (0);
 	}
-	return (1);
+	return (*ret);
 }
 
 int			parse_plane(char **line, t_obj *plane)

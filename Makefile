@@ -79,6 +79,8 @@ SRC			=	main.c					\
 				parse_bumpmap.c			\
 				parse_cutting.c			\
 				parse_cutting_type.c			\
+				parse_cut_uv.c	\
+				parse_cut_static_real.c \
 				parse_texture.c			\
 				parse_proc_img.c		\
 				parse_other_element.c	\

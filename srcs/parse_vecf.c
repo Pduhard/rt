@@ -24,12 +24,12 @@ int		parse_3vecf(char *line, int i, t_3vecf *vec)
 		vec->val[cpt++] = ft_atold(&(line[i]));
 		while (line[i] && line[i] != ')' && line[i] != ',' && line[i] != '>')
 			++i;
-		if (line[i] == ')')
-			return (i);
 		if (!line[i] || line[i] == '>')
 			return (-1);
 		++i;
 	}
+	if (line[i - 1] != ')' || cpt != 3)
+		return (-1);
 	return (i);
 }
 
@@ -43,13 +43,14 @@ int		parse_2vecf(char *line, int i, t_2vecf *vec)
 	while (cpt < 2)
 	{
 		vec->val[cpt++] = ft_atold(&(line[i]));
-		while (line[i] && ((line[i] != ',' && cpt < 2)
-			|| (line[i] != ')' && cpt == 2 && line[i] != '>')))
+		while (line[i] && line[i] != ')' && line[i] != ',' && line[i] != '>')
 			++i;
 		if (!line[i] || line[i] == '>')
 			return (-1);
 		++i;
 	}
+	if (line[i - 1] != ')' || cpt != 2)
+		return (-1);
 	return (i);
 }
 
@@ -66,13 +67,11 @@ int		parse_4vecf(char *line, int i, t_4vecf *vec)
 		vec->val[cpt++] = ft_atold(&(line[i]));
 		while (line[i] && line[i] != ')' && line[i] != ',' && line[i] != '>')
 			++i;
-		if (!line[i])
+		if (!line[i] || line[i] == '>')
 			return (-1);
 		++i;
 	}
-	while (line[i] && line[i] != ')')
-		++i;
-	if (line[i] != ')')
+	if (line[i - 1] != ')' || cpt != 4)
 		return (-1);
 	return (i);
 }

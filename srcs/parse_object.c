@@ -76,6 +76,36 @@ static int	pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
+int     check_object(t_obj *obj, int composed,
+	t_data *data, t_composed *from)
+{
+	if (!obj->obj_param)
+	{
+		ft_fdprintf(2, "Need to specify object shapes: %s\n",
+		"possible value: sphere cone cylinder plane triangle ellipsoid hyperboloid horse_saddle monkey_saddle cyclide fermat or moebius");
+		return (0);
+	}
+	if (!obj->text.text_param)
+	{
+		ft_fdprintf(2, "Need to specify texture type: %s\n",
+		"possible value: perlin marble wood fbm uni grid or imagem");
+		return (0);
+	}
+	if (obj->text.scale.val[0] && !obj->text.scale.val[1])
+	{
+		ft_fdprintf(2, "Texture scale x must not be null\n");
+		return (0);
+	}
+	if (!obj->text.scale.val[0] && obj->text.scale.val[1])
+	{
+		ft_fdprintf(2, "Texture scale y must not be null\n");
+		return (0);
+	}
+	clamp_and_set_dflt(obj);
+	push_object(obj, composed, data, from);
+	return (1);
+}
+
 int			parse_objects(char **line, t_data *data, t_composed *from)
 {
 	char	stripe;
@@ -100,7 +130,7 @@ int			parse_objects(char **line, t_data *data, t_composed *from)
 		else if (**line != '>' && !(ret = pick_attribute_object(line, obj)))
 			return (error_parse_object(obj));
 	}
-	clamp_and_set_dflt(obj);
-	push_object(obj, composed, data, from);
+	if (!check_object(obj, composed, data, from))
+		return (0);
 	return (ret);
 }

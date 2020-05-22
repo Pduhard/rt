@@ -19,27 +19,44 @@ static void	free_cut(t_cut *cut)
 	free(cut);
 }
 
-int			parse_cutting(char **line, t_obj *obj)
+static int     parse_cutting_elements(char **line, t_cut *cut, int *ret)
 {
 	char	stripe;
+
+	stripe = 0;
+	while (stripe != '>' && *ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (**line != '>' && !pick_type_cutting(line, cut, ret))
+			return (0);
+		else if (**line != '<' && **line != '>')
+			return (0);
+	}
+	return (*ret);
+}
+
+static int check_cuttings(t_cut *cut)
+{
+	if (!cut->cut_param && cut->cut_type != CUT_TEXTURE)
+		return (0);
+	return (1);
+}
+
+int			parse_cutting(char **line, t_obj *obj)
+{
 	int		ret;
 	t_cut	*cut;
 
-	stripe = 0;
 	ret = 1;
 	if (!(cut = ft_memalloc(sizeof(t_cut))))
 		return (0);
-	while (stripe != '>' && ret != 0)
+	if (!parse_cutting_elements(line, cut, &ret) ||
+			!check_cuttings(cut))
 	{
-		stripe = goto_next_element(line);
-		if (**line != '>' && !pick_type_cutting(line, cut, &ret))
-			return (0);
-		else if (**line != '<' && **line != '>')
-		{
-			free_cut(cut);
-			return (error(UNKNOWCUT, NULL));
-		}
+		free_cut(cut);
+		return (error(UNKNOWCUT, NULL));
 	}
+
 	if (obj->cuts)
 		cut->next = obj->cuts;
 	else

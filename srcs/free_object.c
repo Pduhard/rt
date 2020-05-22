@@ -58,14 +58,18 @@ static void	free_motions(t_motion *motions)
 
 void		free_object(t_obj *obj)
 {
-	free(obj->obj_param);
+	if (obj->obj_param)
+		free(obj->obj_param);
 	free_cuts(obj->cuts);
 	free_motions(obj->motions);
-	if (obj->text.text_type == TEXT_IMAGE)
-		free(((t_text_img *)(obj->text.text_param))->pixels);
 	if (obj->text.text_param)
+	{
+		if (obj->text.text_type == TEXT_IMAGE)
+			free(((t_text_img *)(obj->text.text_param))->pixels);
 		free(obj->text.text_param);
+	}
 	free(obj);
+
 }
 
 void		delete_object(t_data *data, t_obj *obj)

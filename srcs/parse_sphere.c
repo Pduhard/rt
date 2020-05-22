@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static int	check_sphere_param(t_sphere *sphere_param, int ret)
+int	check_sphere_param(t_sphere *sphere_param, int ret)
 {
 	if (sphere_param->radius <= 0 || is_null(sphere_param->radius))
 		ft_fdprintf(2, "Parse error: Sphere: radius must be greater than 0\n");
