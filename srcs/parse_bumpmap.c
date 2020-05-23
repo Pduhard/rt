@@ -65,29 +65,6 @@ static void	set_bump_inde(char *s, t_obj *obj)
 	}
 }
 
-int			parse_bump_mapping(char **line, t_obj *obj)
-{
-	char	stripe;
-	int		ret;
-
-	ret = 1;
-	stripe = 0;
-	while (stripe != '>' && ret != 0)
-	{
-		stripe = goto_next_element(line);
-		if (!(ft_strncmp_case(*line, "own", 3)))
-		{
-			set_bump_own(obj);
-			ret = parse_double(line, 3, &obj->text.bump_fact);
-		}
-		else if (!(ft_strncmp_case(*line, "independent", 11)))
-			ret = parse_bump_inde(line, obj, 11);
-		else if (stripe == '<')
-			return (syn_error(SERROR, BUMPINDE, "\nOr\n", BUMPOWN));
-	}
-	return (ret);
-}
-
 int			parse_bump_inde(char **line, t_obj *obj, int index)
 {
 	int		i;
@@ -113,4 +90,29 @@ int			parse_bump_inde(char **line, t_obj *obj, int index)
 		++i;
 	*line += i;
 	return (parse_double(line, 0, &obj->text.bump_fact));
+}
+
+int			parse_bump_mapping(char **line, t_obj *obj)
+{
+	char	stripe;
+	int		ret;
+
+	ret = 1;
+	stripe = 0;
+	while (stripe != '>' && ret != 0)
+	{
+		stripe = goto_next_element(line);
+		if (!(ft_strncmp_case(*line, "own", 3)))
+		{
+			set_bump_own(obj);
+			ret = parse_double(line, 3, &obj->text.bump_fact);
+		}
+		else if (!(ft_strncmp_case(*line, "independent", 11)))
+			ret = parse_bump_inde(line, obj, 11);
+		else if (stripe == '<')
+			return (syn_error(SERROR, BUMPINDE, "\nOr\n", BUMPOWN));
+	}
+	if (!obj->get_bump_mapping || !obj->text.bump_fact)
+		return (syn_error(SERROR, BUMPINDE, "\nOr\n", BUMPOWN));
+	return (ret);
 }

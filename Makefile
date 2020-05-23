@@ -85,6 +85,7 @@ SRC			=	main.c					\
 				parse_proc_img.c		\
 				parse_other_element.c	\
 				parse_vecf.c			\
+				parse_motion.c		\
 				add_object.c			\
 				error.c					\
 				texture.c				\
