@@ -68,7 +68,10 @@ static int	pick_attribute_object(char **line, t_obj *obj)
 	else if (!ft_strncmp_case(*line, "refraction", 10))
 		ret = parse_double(line, 10, &obj->refraction);
 	else if (!ft_strncmp_case(*line, "shininess", 9))
+	{
 		ret = parse_double(line, 9, &obj->shininess);
+		set_shininess(&obj->shininess);
+	}
 	else if (!ft_strncmp_case(*line, "material", 8))
 		ret = parse_material(line, 8, obj);
 	else if (**line != '<' && **line != '>')
@@ -82,27 +85,23 @@ int     check_object(t_obj *obj, int composed,
 	if (!composed)
 	{
 		if (!obj->obj_param)
-		{
-			ft_fdprintf(2, "Need to specify object shapes: %s\n",
-			"possible value: sphere cone cylinder plane triangle ellipsoid hyperboloid horse_saddle monkey_saddle cyclide fermat or moebius");
-			return (0);
-		}
-		if (!obj->text.text_param)
-		{
+			ft_fdprintf(2, "Need to specify object shapes: %s %s\n",
+			"possible value: sphere cone cylinder cyclide triangle ellipsoid",
+			"hyperboloid horse_saddle monkey_saddle plane fermat or moebius");
+		else if (!obj->text.text_param)
 			ft_fdprintf(2, "Need to specify texture type: %s\n",
 			"possible value: perlin marble wood fbm uni grid or imagem");
-			return (0);
-		}
-		if (obj->text.scale.val[0] && !obj->text.scale.val[1])
-		{
+		else if (obj->text.scale.val[0] && !obj->text.scale.val[1])
 			ft_fdprintf(2, "Texture scale x must not be null\n");
-			return (0);
-		}
-		if (!obj->text.scale.val[0] && obj->text.scale.val[1])
-		{
+		else if (!obj->text.scale.val[0] && obj->text.scale.val[1])
 			ft_fdprintf(2, "Texture scale y must not be null\n");
-			return (0);
+		else
+		{
+			clamp_and_set_dflt(obj);
+			push_object(obj, composed, data, from);
+			return (1);
 		}
+		return (0);
 	}
 	clamp_and_set_dflt(obj);
 	push_object(obj, composed, data, from);
