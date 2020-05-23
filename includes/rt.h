@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 19:34:58 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 19:26:17 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:43:00 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@
 # define DEFAULT_SHININESS 0
 
 /*
-**    DEFAULT_SHININESS is the shininess factor used when shininess is not set. 
+**    DEFAULT_SHININESS is the shininess factor used when shininess is not set.
 */
 
 /*

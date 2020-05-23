@@ -6,13 +6,12 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 21:37:20 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:42:45 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NORME_H
-# define NORME_H
-
+#ifndef PROTO_H
+# define PROTO_H
 
 /*
 **	Parsing functions
@@ -143,14 +142,12 @@ double			compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter,
 t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id);
 t_3vecf			motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
 
-
 /*
 **	Shape relative functions
 */
 
 int				is_closest_intersect(t_dist dist, double root);
 void			get_uv_axis(t_3vecf axis[3], t_3vecf first_axis);
-
 
 /*
 **	Sphere relative functions
@@ -370,7 +367,6 @@ void			move_fermat(t_obj *a, t_3vecf b, double c);
 t_2vecf			get_text_coordinate_fermat(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *fermat);
 
-
 /*
 **	Global illumination functions
 */
@@ -482,12 +478,11 @@ t_3vecf			get_bump_mapping_marble(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *obj);
 t_3vecf			get_bump_mapping_wood(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *obj);
-void					set_shininess(double *shininess);
+void			set_shininess(double *shininess);
 
 /*
 **	Hook functions
 */
-
 
 int				key_press(int keycode, void *param);
 int				key_release(int keycode, void *param);
