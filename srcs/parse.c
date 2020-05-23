@@ -78,7 +78,7 @@ int			parse_rt_conf(char *file_name, t_data *data)
 
 	line = NULL;
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-		return (error(ERRORARG, NULL));
+		return (0);
 	result = NULL;
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{

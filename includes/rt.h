@@ -66,6 +66,12 @@
 **    (principaly used for moving water texture)
 */
 
+# define DEFAULT_SHININESS 0
+
+/*
+**    DEFAULT_SHININESS is the shininess factor used when shininess is not set. 
+*/
+
 /*
 **    Alterable macro for global illumination
 */
@@ -163,6 +169,8 @@
 # include <time.h>
 # include <stdio.h>
 # include "rt_env.h"
-# include "./norme.h"
+# include "enum.h"
+# include "struct.h"
+# include "proto.h"
 
 #endif
