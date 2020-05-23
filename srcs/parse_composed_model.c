@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 04:50:06 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 04:50:12 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:18:55 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ static int	parse_composed_model_element(char **line, t_composed *composed,
 			*ret = parse_name(line, &composed->name, 4);
 	}
 	return (*ret);
+}
+
+void		free_composed_components(t_obj **obj_tab)
+{
+	int		i;
+
+	if (obj_tab)
+	{
+		i = 0;
+		while (obj_tab[i])
+			free_object(obj_tab[i++]);
+		free(obj_tab);
+	}
 }
 
 static int	check_composed_model(t_composed *composed)
@@ -72,15 +85,6 @@ int	parse_composed_model(char **line, t_data *data)
 			free(composed);
 			return (0);
 	}
-	// while (stripe != '>' && ret != 0)
-	// {
-	// 	stripe = goto_next_element(line);
-	// 	if (!(ft_strncmp_case(*line, "objects", 7)))
-	// 		ret = parse_objects(line, data, composed);
-	// 	else if (!(ft_strncmp_case(*line, "name", 4)))
-	// 		ret = parse_name(line, &composed->name, 4);
-	// }
-
 	if (data->composed_objs)
 		composed->next = data->composed_objs;
 	else

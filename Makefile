@@ -25,7 +25,7 @@ ifeq ($(UNAME_S), Linux)
 	CC		=	clang
 	MLX					=	libmlx.a		\
 							libmlx_Linux.a
-	MLX_PATH	=	$(EXT_LIB)/minilibx/
+	MLX_PATH	=	$(EXT_LIB)/libxlinux/
 	MLX_FLAGS	=	-L$(MLX_PATH) -lX11 -lXext -lm -lbsd $(MLX_FLAG)
 else
 	CC		=	gcc
