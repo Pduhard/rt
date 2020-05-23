@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 19:56:28 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 04:51:08 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:21:08 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,17 @@ int					is_composed_object(char **line, t_data *data, int *ret)
 	t_2vecf		rotation;
 	int			i;
 
+	obj_tab = NULL;
+	i = 0;
 	if (!(composed = get_composed_object(*line, data->composed_objs)) ||
 			!(obj_tab = init_composed_obj_tab(composed)) ||
 			!parse_composed_info(line, &origin, &rotation, ret) ||
 			!fill_obj_tab(obj_tab, (t_comp_param){origin, rotation},
 			composed, data))
+	{
+		free_composed_components(obj_tab);
 		return (0);
-	i = 0;
+	}
 	while (obj_tab[i])
 	{
 		obj_tab[i]->composed_origin = origin;

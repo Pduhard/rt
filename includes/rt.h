@@ -6,12 +6,12 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 19:34:58 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/20 08:54:08 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:26:17 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RT_H
-# define  RT_H
+# define RT_H
 
 /*
 **    Alterable macro
@@ -66,7 +66,6 @@
 **    (principaly used for moving water texture)
 */
 
-
 /*
 **    Alterable macro for global illumination
 */
@@ -78,10 +77,8 @@
 **    intensity. (For global illumination)
 */
 
-
 # define NB_INDIRECT_PHOTON		  100000
 # define NB_CAUSTIC_PHOTON		  100000
-
 
 /*
 **    NB_INDIRECT_PHOTON and NB_CAUSTIC_PHOTON
@@ -144,7 +141,6 @@
 
 /*
 **    MOTION_SPP determine the maximum amount of sample for motion blur effect
-**
 */
 
 # include "../libft/libft.h"

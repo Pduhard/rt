@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:02:28 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 18:50:46 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,6 @@ int			parse_objects(char **line, t_data *data, t_composed *from)
 			return (error_parse_object(obj));
 	}
 	if (!check_object(obj, composed, data, from))
-		return (0);
+		return (error_parse_object(obj));
 	return (ret);
 }
