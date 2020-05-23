@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 04:50:06 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 19:18:55 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:43:35 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	check_composed_model(t_composed *composed)
 	return (1);
 }
 
-int	parse_composed_model(char **line, t_data *data)
+int			parse_composed_model(char **line, t_data *data)
 {
 	char		stripe;
 	int			ret;
@@ -82,8 +82,8 @@ int	parse_composed_model(char **line, t_data *data)
 	if (!parse_composed_model_element(line, composed, data, &ret) ||
 			!check_composed_model(composed))
 	{
-			free(composed);
-			return (0);
+		free(composed);
+		return (0);
 	}
 	if (data->composed_objs)
 		composed->next = data->composed_objs;

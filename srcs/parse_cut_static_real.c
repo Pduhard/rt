@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cut_static_real.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/23 19:36:02 by aplat             #+#    #+#             */
+/*   Updated: 2020/05/23 19:44:10 by aplat            ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
 
 static int	parse_cut_static_real_element(char **line, t_cut *cut,
@@ -20,14 +32,14 @@ static int	parse_cut_static_real_element(char **line, t_cut *cut,
 	return (*ret);
 }
 
-static int  check_cut_static_real_param(t_cut_classic *param)
+static int	check_cut_static_real_param(t_cut_classic *param)
 {
-		if (is_null(get_length_3vecf(param->normal)))
-			return (0);
-		return (1);
+	if (is_null(get_length_3vecf(param->normal)))
+		return (0);
+	return (1);
 }
 
-int	parse_cut_static_real(char **line, t_cut *cut,
+int			parse_cut_static_real(char **line, t_cut *cut,
 	t_cut_type cut_type)
 {
 	char			stripe;

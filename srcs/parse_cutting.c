@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:22:28 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 04:56:41 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:36:58 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	free_cut(t_cut *cut)
 	free(cut);
 }
 
-static int     parse_cutting_elements(char **line, t_cut *cut, int *ret)
+static int	parse_cutting_elements(char **line, t_cut *cut, int *ret)
 {
 	char	stripe;
 
@@ -35,7 +35,7 @@ static int     parse_cutting_elements(char **line, t_cut *cut, int *ret)
 	return (*ret);
 }
 
-static int check_cuttings(t_cut *cut)
+static int	check_cuttings(t_cut *cut)
 {
 	if (!cut->cut_param && cut->cut_type != CUT_TEXTURE)
 		return (0);
@@ -56,7 +56,6 @@ int			parse_cutting(char **line, t_obj *obj)
 		free_cut(cut);
 		return (error(UNKNOWCUT, NULL));
 	}
-
 	if (obj->cuts)
 		cut->next = obj->cuts;
 	else

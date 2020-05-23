@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 19:19:40 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:29:58 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -927,5 +927,6 @@ int				parse_cut_uv(char **line, t_cut *cut);
 int				parse_cut_static_real(char **line, t_cut *cut,
 				t_cut_type cut_type);
 void			free_composed_components(t_obj **obj_tab);
+int				error_check_object(t_obj *obj);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 18:50:46 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:30:36 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,23 +76,13 @@ static int	pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-int     check_object(t_obj *obj, int composed,
+int			check_object(t_obj *obj, int composed,
 	t_data *data, t_composed *from)
 {
 	if (!composed)
 	{
-		if (!obj->obj_param)
-		{
-			ft_fdprintf(2, "Need to specify object shapes: %s\n",
-			"possible value: sphere cone cylinder plane triangle ellipsoid hyperboloid horse_saddle monkey_saddle cyclide fermat or moebius");
+		if (!error_check_object(obj))
 			return (0);
-		}
-		if (!obj->text.text_param)
-		{
-			ft_fdprintf(2, "Need to specify texture type: %s\n",
-			"possible value: perlin marble wood fbm uni grid or imagem");
-			return (0);
-		}
 		if (obj->text.scale.val[0] && !obj->text.scale.val[1])
 		{
 			ft_fdprintf(2, "Texture scale x must not be null\n");
