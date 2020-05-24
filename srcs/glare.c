@@ -56,30 +56,39 @@ t_3vecf			compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point)
 	return (glare);
 }
 
-t_3vecf			add_color_effect(t_data *data, t_clre_param p,
-	t_3vecf lighted_color, t_inter i)
+void 				compute_fog(t_data *data, double closest_dist,
+	t_3vecf *lighted_color)
 {
 	double	fog_fact;
-	t_3vecf tmp;
-
+	
 	if (data->fog.val[0] || data->fog.val[1])
 	{
-		if (p.closest_dist < data->fog.val[0])
+		if (closest_dist < data->fog.val[0])
 			fog_fact = 1;
-		else if (p.closest_dist < data->fog.val[1])
-			fog_fact = (data->fog.val[1] - p.closest_dist)
+		else if (closest_dist < data->fog.val[1])
+			fog_fact = (data->fog.val[1] - closest_dist)
 				/ (data->fog.val[1] - data->fog.val[0]);
 		else
 			fog_fact = 0;
-		lighted_color.val[0] = 1 * (1 - fog_fact) + lighted_color.val[0]
+		lighted_color->val[0] = 1 * (1 - fog_fact) + lighted_color->val[0]
 			* fog_fact;
-		lighted_color.val[1] = 1 * (1 - fog_fact) + lighted_color.val[1]
+		lighted_color->val[1] = 1 * (1 - fog_fact) + lighted_color->val[1]
 			* fog_fact;
-		lighted_color.val[2] = 1 * (1 - fog_fact) + lighted_color.val[2]
+		lighted_color->val[2] = 1 * (1 - fog_fact) + lighted_color->val[2]
 			* fog_fact;
 	}
-	tmp = compute_glare(p.l, data->lights, &(i.inter_point));
+}
+
+t_3vecf			add_color_effect(t_data *data, t_clre_param p,
+	t_3vecf lighted_color, t_inter i)
+{
+	t_3vecf tmp;
+
+	compute_fog(data, p.closest_dist, &lighted_color);
 	if (p.depth == RAY_DEPTH)
+	{
+		tmp = compute_glare(p.l, data->lights, &(i.inter_point));
 		return (add_3vecf(lighted_color, tmp));
+	}
 	return (lighted_color);
 }

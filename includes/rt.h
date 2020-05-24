@@ -34,7 +34,7 @@
 **    Q_HIGH      full sampling when move then full super sampling
 */
 
-# define RAY_DEPTH			6
+# define RAY_DEPTH    3
 
 /*
 **    RAY_DEPTH is the maximum number of recursively cast rays
@@ -66,10 +66,10 @@
 **    (principaly used for moving water texture)
 */
 
-# define DEFAULT_SHININESS 0
+# define DEFAULT_SHININESS  0
 
 /*
-**    DEFAULT_SHININESS is the shininess factor used when shininess is not set. 
+**    DEFAULT_SHININESS is the shininess factor used when shininess is not set.
 */
 
 /*

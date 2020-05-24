@@ -13,7 +13,6 @@
 #ifndef NORME_H
 # define NORME_H
 
-
 /*
 **	Parsing functions
 */
@@ -142,7 +141,8 @@ double			compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter,
 				double refraction_index);
 t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id);
 t_3vecf			motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
-
+void 				compute_fog(t_data *data, double closest_dist,
+	t_3vecf *lighted_color);
 
 /*
 **	Shape relative functions

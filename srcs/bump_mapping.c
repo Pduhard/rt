@@ -44,7 +44,7 @@ t_3vecf		get_bump_mapping_perlin(t_3vecf inter_point,
 t_3vecf		get_bump_mapping_water(t_3vecf inter_point,
 	t_3vecf normal_inter, t_obj *obj)
 {
-	inter_point = add_c3vecf(inter_point, ((t_data *)obj->data)->water_f);
+	inter_point.val[1] += ((t_data *)obj->data)->water_f;
 	return (get_bump_mapping_perlin(inter_point, normal_inter, obj));
 }
 

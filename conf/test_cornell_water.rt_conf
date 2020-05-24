@@ -1,0 +1,78 @@
+<scene
+	<name(Bump mapping)	>
+	<size(800, 600)>
+	<camera
+		<origin (0, -1, -10)>
+		<rotation (-10, 0)>
+	>
+	<Indirect_GI(Off)>
+	<Caustics_GI(off)>
+	<cel_shading(off)>
+	<fog (20, 100)>
+	<objects
+		<texture
+			<MARBLE
+				<color(0.82, 0.82, 0.82, 0)(0)>
+				<color(0.7, 0.4, 0.4, 0)(0)>
+			>
+			<BumpMapping<independent(WOOD)(0.03)>>
+			<scale(0.2, 0.2)>
+		>
+		<plane
+			<origin(-4.5, 0, 0)>
+			<normal(1, 0, 0)>
+		>
+	>
+	<objects
+		<texture
+			<MARBLE
+				<color(0.82, 0.82, 0.82, 0)(0)>
+				<color(0.4, 0.4, 0.7, 0)(0)>
+			>
+			<BumpMapping<independent(MARBLE)(0.03)>>
+			<scale(0.2, 0.2)>
+		>
+		<plane
+			<origin(4.5, 0, 0)>
+			<normal(-1, 0, 0)>
+		>
+	>
+
+	<objects
+		<texture
+			<UNI
+				<color(0.03, 0.156, 0.149, 0)(0)>
+			>
+		>
+		<plane
+			<origin(0, 3, 0)>
+			<normal(0, -1, 0)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.4, 0.65, 0.75, 0.6)(0)>
+			>
+			<BumpMapping
+				<independent (WATER) (0.03)>
+			>
+			<offset(0, 0)>
+			<scale(2, 2)>
+		>
+		<plane
+			<origin(0, 1, 0)>
+			<normal(0, 1, 0)>
+		>
+		<refraction (1.1)>
+		<reflection (0.3)>
+		<shininess(0.7)>
+	>
+	<lights
+		<directional (0, 2, 1)>
+		<color (0.8, 0.8, 0.8)>
+	>
+	<lights
+		<ambient (0.2, 0.2, 0.2)>
+	>
+>

@@ -89,7 +89,11 @@ t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id)
 	t_4vecf		o_clr;
 
 	if (!(cobj = ray_first_intersect(l, new_tdist(&cdist), data->objs, sp_id)))
-		return (compute_glare(l, data->lights, NULL));
+	{
+		clr = assign_3vecf(0, 0, 0);
+		compute_fog(data, MAX_VIEW, &clr);
+		return (add_3vecf(clr, compute_glare(l, data->lights, NULL)));
+	}
 	i = init_inter(l, cdist, cobj, sp_id);
 	o_clr = get_obj_color(&i, cobj, l);
 	if (init_lighted_color(cobj, i, l, (t_ilc_p){&clr, o_clr, data, sp_id}))

@@ -112,6 +112,7 @@
 		>
 		<refraction (1.1)>
 		<reflection (0.3)>
+		<shininess(0.5)>
 	>
 	<lights
 		<point (0, -2.6, 4.5)>

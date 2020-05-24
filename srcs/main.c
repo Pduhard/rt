@@ -51,6 +51,18 @@ static t_data	*init_all_scene(char **argv)
 	return (first);
 }
 
+int       check_quality(void)
+{
+	if (QUALITY != Q_VERY_LOW && QUALITY != Q_LOW &&
+			QUALITY != Q_MED && QUALITY != Q_HIGH)
+	{
+		ft_fdprintf(2, "Macro error QUALITY: possible value:\n\t");
+		ft_fdprintf(2, "Q_VERY_LOW\n\tQ_LOW\n\tQ_MED\n\tQ_HIGH\n");
+		return (0);
+	}
+	return (1);
+}
+
 int				check_macro(void)
 {
 	if (NB_THREADS < 1 || NB_THREADS > 16)
@@ -58,6 +70,29 @@ int				check_macro(void)
 		error(ERRORTHREAD, NULL);
 		return (0);
 	}
+	if (!check_quality())
+		return (0);
+	if (RAY_DEPTH < 1)
+	{
+		ft_fdprintf(2, "Macro error RAY_DEPTH: must be greater than 0\n");
+		return (0);
+	}
+	if (BIAS < 0.000001 || BIAS > 1)
+	{
+		ft_fdprintf(2, "Macro error BIAS: must be greater than 0.000001 and lower than 1\n");
+		return (0);
+	}
+	if (MAX_VIEW < 100 || MAX_VIEW > FLT_MAX)
+	{
+		ft_fdprintf(2, "Macro error MAX_VIEW: must be greater than 100 and lower than FLT_MAX\n");
+		return (0);
+	}
+	if (TRANSP_F < 0 || TRANSP_F > 1)
+	{
+		ft_fdprintf(2, "Macro error TRANSP_F: must be greater than 0 and lower than 1\n");
+		return (0);
+	}
+	// if (DEFAULT_SHININESS < 0 || DEFAULT_SHININESS > )
 	return (1);
 }
 
