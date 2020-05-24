@@ -8,33 +8,31 @@
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>
 	<cel_shading(off)>
-	<fog (20, 100)>
+	<fog (5, 50)>
 	<objects
 		<texture
-			<MARBLE
+			<UNI
 				<color(0.82, 0.82, 0.82, 0)(0)>
-				<color(0.7, 0.4, 0.4, 0)(0)>
 			>
-			<BumpMapping<independent(WOOD)(0.03)>>
+		//	<BumpMapping<independent(WOOD)(0.03)>>
 			<scale(0.2, 0.2)>
 		>
 		<plane
-			<origin(-4.5, 0, 0)>
-			<normal(1, 0, 0)>
+			<origin(-10.5, 0, 0)>
+			<normal(1, -0.2, 0)>
 		>
 	>
 	<objects
 		<texture
-			<MARBLE
+			<UNI
 				<color(0.82, 0.82, 0.82, 0)(0)>
-				<color(0.4, 0.4, 0.7, 0)(0)>
 			>
-			<BumpMapping<independent(MARBLE)(0.03)>>
+	//		<BumpMapping<independent(MARBLE)(0.03)>>
 			<scale(0.2, 0.2)>
 		>
 		<plane
-			<origin(4.5, 0, 0)>
-			<normal(-1, 0, 0)>
+			<origin(10.5, 0, 0)>
+			<normal(-1, -0.2, 0)>
 		>
 	>
 
@@ -69,7 +67,7 @@
 		<shininess(0.7)>
 	>
 	<lights
-		<directional (0, 2, 1)>
+		<directional (0.1, 1, -2)>
 		<color (0.8, 0.8, 0.8)>
 	>
 	<lights

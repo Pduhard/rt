@@ -96,7 +96,7 @@ int				print_loop_image(void *param)
 	data->new_obj = 0;
 	data->first_loop++;
 	if (WATER_ON)
-		data->water_f += 0.02;
+		data->water_f += 0.05;
 	mlx_put_image_to_window(data->mlx->mlx_ptr,
 		data->mlx->win_ptr, data->mlx->img_ptr, 0, 0);
 	return (1);

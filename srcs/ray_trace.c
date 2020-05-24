@@ -80,6 +80,16 @@ static t_4vecf	get_obj_color(t_inter *i, t_obj *closest_obj, t_leq l)
 		closest_obj));
 }
 
+static void compute_recurs_ray(t_leq l, t_inter i, t_obj *cobj, t_rayt_param p)
+{
+	if (cobj->refraction)
+		compute_reflection_and_refraction(l, i, cobj, p);
+	else if (cobj->reflection)
+		compute_reflection_only(i, cobj, p);
+	else if (p.obj_color.val[3] > 0)
+		compute_transparency(i, l, p);
+}
+
 t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id)
 {
 	double		cdist;
@@ -100,15 +110,8 @@ t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id)
 	{
 		if (!depth)
 			return (clr);
-		if (cobj->refraction)
-			compute_reflection_and_refraction(l, i, cobj, (t_rayt_param){
-				&clr, neg_3vecf(l.dir), o_clr, data, depth, sp_id});
-		else if (cobj->reflection)
-			compute_reflection_only(i, cobj, (t_rayt_param){&clr,
-				neg_3vecf(l.dir), o_clr, data, depth, sp_id});
-		else if (o_clr.val[3] > 0)
-			compute_transparency(i, l, (t_rayt_param){&clr,
-				neg_3vecf(l.dir), o_clr, data, depth, sp_id});
+		compute_recurs_ray(l, i, cobj, (t_rayt_param){&clr,
+			neg_3vecf(l.dir), o_clr, data, depth, sp_id});
 	}
 	return (add_color_effect(data, (t_clre_param){cdist, l, depth}, clr, i));
 }
