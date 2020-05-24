@@ -38,7 +38,7 @@ static void		cast_photon_refractive_mat(t_leq l, t_phtn_cast p, t_obj *obj,
 
 	rr_f = get_random_number(p.rand_iter * 0xfab1dede << (p.rand_iter & 7));
 	normal_inter = init_refractive_normal_inter(&clr, obj, photon, l);
-	fr_r = compute_fresnel_ratio(l.dir, normal_inter, obj->refraction);
+	fr_r = compute_fresnel_ratio(l.dir, normal_inter, obj->refraction ? obj->refraction : 1);
 	prob = get_prob((1 - fr_r) * (1 - clr.val[3]), (1 - fr_r) * clr.val[3],
 		fr_r);
 	if (rr_f < prob.absorb_prob)
@@ -46,7 +46,7 @@ static void		cast_photon_refractive_mat(t_leq l, t_phtn_cast p, t_obj *obj,
 	p.pwr = add_color_bleed(p.pwr, clr);
 	if (rr_f < prob.refract_prob + prob.absorb_prob)
 		return (refract_photon((t_leq){photon.position,
-			refract_ray(l.dir, normal_inter, obj->refraction)}, p));
+			refract_ray(l.dir, normal_inter, obj->refraction ? obj->refraction : 1)}, p));
 	else if (rr_f < prob.refract_prob + prob.absorb_prob
 		+ prob.reflect_prob_spe)
 	{
@@ -66,6 +66,8 @@ static void		cast_photon_diffuse_mat(t_leq l, t_phtn_cast p,
 
 	rr_f = get_random_number(p.rand_iter * 0xfab1dede << (p.rand_iter & 7));
 	normal_inter = init_refractive_normal_inter(&obj_color, obj, photon, l);
+	if (obj_color.val[3])
+		return (cast_photon_refractive_mat(l, p, obj, photon));
 	prob = get_prob(obj->reflection ? 1 - obj->reflection : 0.4,
 		0., obj->reflection ? obj->reflection : 0.6);
 	if (rr_f < prob.absorb_prob)

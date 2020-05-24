@@ -56,6 +56,14 @@
 # define CEL_BOUNDARY	0.04
 
 /*
+**    FBM texture relative
+*/
+
+# define FBM_LACUNARITY		2.
+# define FBM_GAIN			    0.5
+# define FBM_ITER         2
+# define FBM_AMPLITUDE    0.5
+/*
 **    Key Hooks relative macro
 */
 

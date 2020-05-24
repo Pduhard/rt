@@ -92,7 +92,61 @@ int				check_macro(void)
 		ft_fdprintf(2, "Macro error TRANSP_F: must be greater than 0 and lower than 1\n");
 		return (0);
 	}
-	// if (DEFAULT_SHININESS < 0 || DEFAULT_SHININESS > )
+	if (DEFAULT_SHININESS < 0)
+	{
+		ft_fdprintf(2, "Macro error DEFAULT_SHININESS: must be greater than 0\n");
+		return (0);
+	}
+	if (DFLT_POWER < 0)
+	{
+		ft_fdprintf(2, "Macro error DEFAULT_POWER: must be greater than 0\n");
+		return (0);
+	}
+	if (NN_CAUSTIC_PHOTON_MAX < 1)
+	{
+		ft_fdprintf(2, "Macro error NN_CAUSTIC_PHOTON_MAX: must be greater than 0\n");
+		return (0);
+	}
+	if (NN_INDIRECT_PHOTON_MAX < 1)
+	{
+		ft_fdprintf(2, "Macro error NN_INDIRECT_PHOTON_MAX: must be greater than 0\n");
+		return (0);
+	}
+	if (NB_INDIRECT_PHOTON < NN_INDIRECT_PHOTON_MAX)
+	{
+		ft_fdprintf(2, "Macro error NB_INDIRECT_PHOTON: must be greater than NN_INDIRECT_PHOTON_MAX\n");
+		return (0);
+	}
+	if (NB_CAUSTIC_PHOTON < NN_CAUSTIC_PHOTON_MAX)
+	{
+		ft_fdprintf(2, "Macro error NB_CAUSTIC_PHOTON: must be greater than NN_CAUSTIC_PHOTON_MAX\n");
+		return (0);
+	}
+	if (PHOTON_DEPTH < 1)
+	{
+		ft_fdprintf(2, "Macro error PHOTON_DEPTH: must be greater than 0\n");
+		return (0);
+	}
+	if (ROUGHCAST_LIMIT < 1)
+	{
+		ft_fdprintf(2, "Macro error ROUGHCAST_LIMIT: must be greater than 0\n");
+		return (0);
+	}
+	if (is_null(MOTION_STEP))
+	{
+		ft_fdprintf(2, "Macro error MOTION_STEP: can't be null\n");
+		return (0);
+	}
+	if (MOTION_FVEL < 1)
+	{
+		ft_fdprintf(2, "Macro error MOTION_FVEL: must be greater than 0\n");
+		return (0);
+	}
+	if (MOTION_SPP < 1)
+	{
+		ft_fdprintf(2, "Macro error MOTION_SPP: must be greater than 0\n");
+		return (0);
+	}
 	return (1);
 }
 

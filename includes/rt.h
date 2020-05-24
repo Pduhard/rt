@@ -34,7 +34,7 @@
 **    Q_HIGH      full sampling when move then full super sampling
 */
 
-# define RAY_DEPTH    3
+# define RAY_DEPTH   6
 
 /*
 **    RAY_DEPTH is the maximum number of recursively cast rays
@@ -76,15 +76,15 @@
 **    Alterable macro for global illumination
 */
 
-# define DFLT_POWER   100
+# define DFLT_POWER  200
 
 /*
 **    DFLT_POWER is used to determine light
 **    intensity. (For global illumination)
 */
 
-# define NB_INDIRECT_PHOTON		  100000
-# define NB_CAUSTIC_PHOTON		  100000
+# define NB_INDIRECT_PHOTON		  10000
+# define NB_CAUSTIC_PHOTON		  10000
 
 /*
 **    NB_INDIRECT_PHOTON and NB_CAUSTIC_PHOTON
@@ -111,17 +111,6 @@
 
 /*
 **    PERLIN_TRANSP_ADD modify a parlin textured object's transparency
-*/
-
-# define FBM_LACUNARITY		2.
-# define FBM_GAIN			    0.5
-# define FBM_ITER         2
-# define FBM_AMPLITUDE    0.5
-
-/*
-**    FBM_LACUNARITY, FBM_GAIN, FBM_ITER and FBM_AMPLITUDE
-**    are used to compute fractal brownian motion
-**    factor
 */
 
 # define ROUGHCAST_LIMIT	12

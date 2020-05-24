@@ -5,8 +5,8 @@
 		<origin (0, -1, -10)>
 		<rotation (-10, 0)>
 	>
-	<Indirect_GI(Off)>
-	<Caustics_GI(off)>
+	<Indirect_GI(On)>
+	<Caustics_GI(on)>
 	<cel_shading(off)>
 	<fog (100, 200)>
 	<objects
