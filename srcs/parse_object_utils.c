@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:02:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:02:43 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:39:36 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		error_parse_object(t_obj *obj)
 	return (0);
 }
 
-void   set_shininess(double *shininess)
+void	set_shininess(double *shininess)
 {
 	if (*shininess < 0)
 		*shininess *= -1;

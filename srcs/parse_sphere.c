@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:37:00 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/19 18:44:15 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:40:00 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_sphere_param(t_sphere *sphere_param, int ret)
 	return (0);
 }
 
-int			parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
+int	parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
 {
 	char stripe;
 
@@ -40,7 +40,7 @@ int			parse_sphere_element(char **line, int *ret, t_sphere *sphere_param)
 	return (1);
 }
 
-int			parse_sphere(char **line, t_obj *sphere)
+int	parse_sphere(char **line, t_obj *sphere)
 {
 	int			ret;
 	t_sphere	*sphere_param;

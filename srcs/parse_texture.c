@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:37:39 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:07:50 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 19:38:55 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ static int	pick_att_image_text(char **line, t_obj *obj)
 	{
 		obj->get_text_color = &get_image_color;
 		obj->text.text_type = TEXT_IMAGE;
-		// ret = obj->text.text_param ? 0 : 1;
 		return (compute_text(line, obj));
 	}
 	else if (!(ft_strncmp_case(*line, "offset", 6)))
@@ -114,7 +113,7 @@ int			parse_texture2(char **line, t_obj *obj)
 		else if (**line != '>' && !(ret = pick_att_image_text(line, obj)))
 			return (0);
 	}
-	if (ret == 0 || !obj->text.text_param || !obj->get_text_color) // ADD TEXTURE CHECK
+	if (ret == 0 || !obj->text.text_param || !obj->get_text_color)
 		return (syn_error(SERROR, TEXT, TEXTPROC, OFFSCALE));
 	return (ret);
 }

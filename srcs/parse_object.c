@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 20:32:45 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 18:50:46 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:36:53 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static int	pick_attribute_object(char **line, t_obj *obj)
 	return (ret);
 }
 
-int     check_object(t_obj *obj, int composed,
+int			check_object(t_obj *obj, int composed,
 	t_data *data, t_composed *from)
 {
 	if (!composed)

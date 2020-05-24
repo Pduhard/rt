@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   norme.h                                            :+:      :+:    :+:   */
+/*   proto.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 19:19:40 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/23 21:42:45 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NORME_H
-# define NORME_H
+#ifndef PROTO_H
+# define PROTO_H
 
 /*
 **	Parsing functions
@@ -150,7 +150,6 @@ void 				compute_fog(t_data *data, double closest_dist,
 
 int				is_closest_intersect(t_dist dist, double root);
 void			get_uv_axis(t_3vecf axis[3], t_3vecf first_axis);
-
 
 /*
 **	Sphere relative functions
@@ -370,7 +369,6 @@ void			move_fermat(t_obj *a, t_3vecf b, double c);
 t_2vecf			get_text_coordinate_fermat(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *fermat);
 
-
 /*
 **	Global illumination functions
 */
@@ -482,12 +480,11 @@ t_3vecf			get_bump_mapping_marble(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *obj);
 t_3vecf			get_bump_mapping_wood(t_3vecf inter_point,
 				t_3vecf normal_inter, t_obj *obj);
-void					set_shininess(double *shininess);
+void			set_shininess(double *shininess);
 
 /*
 **	Hook functions
 */
-
 
 int				key_press(int keycode, void *param);
 int				key_release(int keycode, void *param);
@@ -530,6 +527,19 @@ void			move_cut_plane(t_cut *cut, t_3vecf dir, double fact);
 void			move_cut_sphere(t_cut *cut, t_3vecf dir, double fact);
 void			move_cut_cube(t_cut *cut, t_3vecf dir, double fact);
 
+void			push_object(t_obj *obj, int composed, t_data *data,
+				t_composed *from);
+void			free_info(t_data *data);
+void			free_data(t_data *data);
+void			free_object(t_obj *obj);
+
+int				parse_sphere_element(char **line, int *ret,
+				t_sphere *sphere_param);
+int				check_sphere_param(t_sphere *sphere_param, int ret);
+int				parse_cut_uv(char **line, t_cut *cut);
+int				parse_cut_static_real(char **line, t_cut *cut,
+				t_cut_type cut_type);
+void			free_composed_components(t_obj **obj_tab);
 void			rotate_cut_plane(t_cut *cut, t_3vecf orig,
 				t_33matf rot_mat[2]);
 
