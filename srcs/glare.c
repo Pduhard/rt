@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:55:43 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 02:04:02 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/25 13:08:02 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ t_3vecf			compute_glare(t_leq l, t_light *lights, t_3vecf *inter_point)
 	return (glare);
 }
 
-void 				compute_fog(t_data *data, double closest_dist,
+void			compute_fog(t_data *data, double closest_dist,
 	t_3vecf *lighted_color)
 {
 	double	fog_fact;
-	
+
 	if (data->fog.val[0] || data->fog.val[1])
 	{
 		if (closest_dist < data->fog.val[0])

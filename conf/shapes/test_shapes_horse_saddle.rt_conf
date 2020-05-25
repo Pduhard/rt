@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Horse Saddle)	>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>

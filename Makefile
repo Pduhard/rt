@@ -184,6 +184,7 @@ SRC			=	main.c									\
 				parse_moebius.c						\
 				skybox.c									\
 				goto_next.c								\
+				macro.c								\
 
 BIN				=	$(SRC:.c=.o)
 
