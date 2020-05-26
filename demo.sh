@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 demos=(
   'shapes'
-  'feature'
+  'lights'
+  'textures'
+  'cutting'
+  'others'
 )
 
 to_exec=()
 
 shapes_demo_dir="conf/shapes/"
-feature_demo_dir="conf/feature/"
+lights_demo_dir="conf/lights/"
+textures_demo_dir="conf/textures/"
+cutting_demo_dir="conf/cutting/"
+others_demo_dir="conf/others/"
 
 for arg in $*
 do
@@ -37,9 +43,21 @@ do
   then
     ./rt $shapes_demo_dir/*
   fi
-  if [ $exec == "feature" ]
+  if [ $exec == "lights" ]
   then
-    ./rt $feature_demo_dir/*
+    ./rt $lights_demo_dir/*
+  fi
+  if [ $exec == "textures" ]
+  then
+    ./rt $textures_demo_dir/*
+  fi
+  if [ $exec == "cutting" ]
+  then
+    ./rt $cutting_demo_dir/*
+  fi
+  if [ $exec == "others" ]
+  then
+    ./rt $others_demo_dir/*
   fi
   # echo "$exec"
 done

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:17:51 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:20:37 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/25 14:30:37 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,8 @@ static void		compute_reflection_only(t_inter i, t_obj *obj, t_rayt_param p)
 									+ refl_color.val[2] * obj->reflection;
 }
 
-static t_4vecf	get_obj_color(t_inter *i, t_obj *closest_obj, t_leq l)
-{
-	t_3vecf		tex_normal_inter;
-
-	tex_normal_inter = i->normal_inter;
-	if (dot_product_3vecf(i->normal_inter, l.dir) > 0)
-		i->normal_inter = neg_3vecf(i->normal_inter);
-	if (closest_obj->get_bump_mapping)
-		i->normal_inter = closest_obj->get_bump_mapping(i->inter_point,
-			i->normal_inter, closest_obj);
-	return (closest_obj->get_text_color(i->inter_point, tex_normal_inter,
-		closest_obj));
-}
-
-static void compute_recurs_ray(t_leq l, t_inter i, t_obj *cobj, t_rayt_param p)
+static void		compute_recurs_ray(t_leq l, t_inter i, t_obj *cobj,
+				t_rayt_param p)
 {
 	if (cobj->refraction)
 		compute_reflection_and_refraction(l, i, cobj, p);

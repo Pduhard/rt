@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 21:42:45 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/25 14:32:40 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int				return_update(char *error, int ret, int skip);
 int				clamp_val(double *val, double min, double max);
 int				check_lights_cam(t_data *data);
 int				check_skybox(t_data *data);
+int				check_macro(void);
+int				check_quality(void);
 
 /*
 **	Vector functions
@@ -141,8 +143,9 @@ double			compute_fresnel_ratio(t_3vecf dir, t_3vecf normal_inter,
 				double refraction_index);
 t_3vecf			ray_trace(t_leq l, t_data *data, int depth, int sp_id);
 t_3vecf			motion_trace(t_3vecf orig, t_3vecf dir, t_data *data);
-void 				compute_fog(t_data *data, double closest_dist,
-	t_3vecf *lighted_color);
+void			compute_fog(t_data *data, double closest_dist,
+				t_3vecf *lighted_color);
+t_4vecf			get_obj_color(t_inter *i, t_obj *closest_obj, t_leq l);
 
 /*
 **	Shape relative functions

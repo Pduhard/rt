@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Cylinder)	>
 	<size(800, 600)>
 	<Indirect_GI(off)>
 	<Caustics_GI(off)>
