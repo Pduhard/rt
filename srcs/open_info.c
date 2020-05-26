@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 04:47:29 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 04:47:31 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/26 17:13:11 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ void			write_cmd_strings(void *mp, void *wp)
 	mlx_string_put(mp, wp, 5, 200, 0xFFFFFF, LEFTRIGHT);
 	mlx_string_put(mp, wp, 5, 225, 0xFFFFFF, "SPACE        ==> Up");
 	mlx_string_put(mp, wp, 5, 250, 0xFFFFFF, "SHIFT        ==> Down");
-	mlx_string_put(mp, wp, 5, 275, 0xFFFFFF, "LEFT CLICK   ==> Select Object");
-	mlx_string_put(mp, wp, 10, 325, 0xFFFFFF, "Mode Move_Object :");
-	mlx_string_put(mp, wp, 5, 375, 0xFFFFFF, WASD);
-	mlx_string_put(mp, wp, 5, 400, 0xFFFFFF, "ARROWS       ==> Rotate Object");
-	mlx_string_put(mp, wp, 5, 425, 0xFFFFFF, "SPACE        ==> Up Object");
-	mlx_string_put(mp, wp, 5, 450, 0xFFFFFF, "SHIFT        ==> Down Object");
-	mlx_string_put(mp, wp, 5, 475, 0xFFFFFF, LEFTCLICK);
+	mlx_string_put(mp, wp, 5, 275, 0xFFFFFF, "P            ==> Save Screen");
+	mlx_string_put(mp, wp, 5, 300, 0xFFFFFF, "[&..+]       ==> Genere Object");
+	mlx_string_put(mp, wp, 5, 325, 0xFFFFFF, "LEFT CLICK   ==> Select Object");
+	mlx_string_put(mp, wp, 10, 365, 0xFFFFFF, "Mode Move_Object :");
+	mlx_string_put(mp, wp, 5, 405, 0xFFFFFF, WASD);
+	mlx_string_put(mp, wp, 5, 430, 0xFFFFFF, "ARROWS       ==> Rotate Object");
+	mlx_string_put(mp, wp, 5, 455, 0xFFFFFF, "SPACE        ==> Up Object");
+	mlx_string_put(mp, wp, 5, 480, 0xFFFFFF, "SHIFT        ==> Down Object");
+	mlx_string_put(mp, wp, 5, 505, 0xFFFFFF, LEFTCLICK);
 }
 
 int				open_info(t_data *data)
@@ -39,7 +41,7 @@ int				open_info(t_data *data)
 		if (!(data->info = malloc(sizeof(t_mlx))))
 			return (0);
 		data->info->win_ptr = mlx_new_window(data->mlx->mlx_ptr,
-			400, 500, "Informations");
+			400, 530, "Informations");
 		write_cmd_strings(data->mlx->mlx_ptr, data->info->win_ptr);
 	}
 	else
