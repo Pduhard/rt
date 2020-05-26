@@ -1,7 +1,0 @@
-name(salut)     => (   name   ) == "   name    "
-
-camera (x,y,z)(x,y,z)	=> #(origin)(rotation)
-
-sphere(x, y, z)(r)(r, g, b)		=> #(origin)(radius)(color)
-
-light(x, y, z)(r, g, b)(r, g, b)	=>(origin)(intensity)(color)

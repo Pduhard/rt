@@ -1,5 +1,0 @@
-name (ff)
-camera(0, -1, 2)(0, 0, 0)
-plane(0, 0, -4)(0, 0, 1)(IMAGE(img/earth_day.jpg))(0)(0.6)
-plane(0, 0, 3)(0, -1, 0)(UNI(1, 1, 1)(0.7, 0, 0.6)(0, 1, 0))(0)(0)
-light(directional)(0, 0.5, 1)(1, 1, 1)(1, 1, 1)
