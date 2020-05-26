@@ -53,10 +53,12 @@ static void		compute_transparency(t_inter i, t_leq l, t_rayt_param p)
 									+ refr_color.val[2] * p.obj_color.val[3];
 }
 
-static void		compute_reflection_only(t_inter i, t_obj *obj, t_rayt_param p)
+static void		compute_reflection_only(t_inter i, t_leq l, t_obj *obj, t_rayt_param p)
 {
 	t_3vecf refl_color;
 
+	if (p.obj_color.val[3] > 0)
+		compute_transparency(i, l, p);
 	refl_color = get_refl_color(p, i);
 	p.lighted_color->val[0] = p.lighted_color->val[0] * (1 - obj->reflection)
 									+ refl_color.val[0] * obj->reflection;
@@ -72,7 +74,7 @@ static void		compute_recurs_ray(t_leq l, t_inter i, t_obj *cobj,
 	if (cobj->refraction)
 		compute_reflection_and_refraction(l, i, cobj, p);
 	else if (cobj->reflection)
-		compute_reflection_only(i, cobj, p);
+		compute_reflection_only(i, l, cobj, p);
 	else if (p.obj_color.val[3] > 0)
 		compute_transparency(i, l, p);
 }

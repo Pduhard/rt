@@ -1,20 +1,21 @@
 <scene
-	<name(Cutting UV)>
+	<name(Sphere)	>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>
 	<Cel_Shading (0)>
 	<camera
-		<origin (0, -2, -6)>
+		<origin (0, 0, -8)>
 		<rotation (0, 0)>
 	>
 	<Stereoscopy (off)>
 	<objects
 		<texture
-			<UNI
+			<GRID
 				<color(0.92, 0.08, 0.23, 0)(0)>
+				<color(0.72, 0.08, 0.13, 0)(0)>
 			>
-			<scale(0.28545, 0.1818)>
+			<scale(4, 8)>
 		>
 		<plane
 			<origin(-5, -0.5, 2.5)>
@@ -23,15 +24,16 @@
 		>
 		<cutting
 			<uv
-				<u_range (-0.5, 0.5)>
-		        <v_range (-0.5, 0.5)>
+				<u_range (-8, 8)>
+		        <v_range (-32, 32)>
 			>
 		>
+		<reflection(0.6)>
 	>
 	<objects
 		<texture
 			<UNI
-				<color(0, 0, 0.82, 0)(0)>
+				<color(0.7,0.7,0.7, 0)(0)>
 			>
 			<scale(0.28545, 0.1818)>
 
@@ -90,10 +92,12 @@
 	>
 	<objects
 		<texture
-			<UNI
-				<color(0.7, 0.7, 0.7, 0)(0)>
+			<GRID
+				<color(0.1, 0.5, 0.8, 0.)(0)>
+				<color(0.1, 0.4, 01, 1)(0)>
 			>
-			<scale(0.2, 0.1818)>
+			<scale(2.5, 2.5)>
+	//		<scale(0.2, 0.1818)>
 
 		>
 		<plane
@@ -104,52 +108,60 @@
 		>
 		<cutting
 			<uv
-				<u_range (-0.5, 0.5)>
-		        <v_range (-0.5, 0.5)>
+				<u_range (-10, 10)>
+		        <v_range (-10, 10)>
 			>
 		>
+		<reflection(0.5)>
 	>
-    <objects
+	<objects
 		<texture
-			<UNI
-				<color(0.5, 0.75, 0.85)(0)>
+			<GRID
+				<color(1, 0.3, 0., 0)(0)>
+				<color(1, 0.3, 0., 1)(0)>
 			>
-			<BumpMapping
-				<independent (MARBLE)(0.03)>
-			>
-			<offset(0, 0)>
-			<scale(0.1, 2)>
+			<scale (6, 6)>
 		>
-		<plane
-			<origin(0, 3, 3)>
-			<normal(0, -1, 0)>
+		<sphere
+			<origin(-1.5, 1.3, 5)>
+			<radius(1.5)>
 		>
+		//<reflection (1)>
 	>
-    <objects
+
+	<objects
 		<texture
-			<IMAGE(img/vitral.png)>
-			<offset(0, 0)>
-			<scale(0.5, 0.5)>
-		>
-		<plane
-			<origin (1, -1, 5)>
-			<normal (-0.5, 0, -0.5)>
-			<xaxis (0.5, 0, -0.5)>
-		>
-		<cutting
-			<uv
-				<u_range (-0.5, 0.5)>
-		        <v_range (-0.5, 0.5)>
+			<GRID
+				<color(0.4, 0.3, 0.2, 0.)(0)>
+				<color(0.3, 0.2, 0.1, 0)(0)>
 			>
+			<scale(8, 8)>
+			//<BumpMapping<independent(GRID)(0)>>
 		>
+		<sphere
+			<origin(4, 3, 8)>
+			<radius(3)>
+		>
+	//	<reflection(0.3)>
 	>
-    <lights
+	<objects
+	<texture
+		<GRID
+			<color (1, 1, 0, 0.9)(0)>
+			<color (1, 1, 1)(0)>
+			<color (0.8, 0.6, 0.8)(0)>
+		>
+		<offset(0, 0)>
+		<scale(4, 4)>
+	>
+	<sphere
+		<origin(3, -2, 5)>
+		<radius(1)>
+	>
+>
+	<lights
 		<point (0, -2.6, 4.5)>
-		<color (0.8, 0.8, 0.8)>
-	>
-    <lights
-		<point (0, 2.6, 4.5)>
-		<color (0.8, 0.8, 0.8)>
+		<color (1., 1., 1.)>
 	>
 	<lights
 		<ambient (0.2, 0.2, 0.2)>

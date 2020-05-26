@@ -121,30 +121,26 @@
 			<scale(0.1, 2)>
 		>
 		<plane
-			<origin(0, 3, 3)>
+			<origin(0, 3, 4)>
 			<normal(0, -1, 0)>
 		>
 	>
-    <objects
+  <objects
 		<texture
 			<IMAGE(img/vitral.png)>
-			<offset(0, 0)>
+			<offset(0.5, 0.5)>
 			<scale(0.5, 0.5)>
 		>
 		<plane
-			<origin (1, -1, 5)>
-			<normal (-0.5, 0, -0.5)>
-			<xaxis (0.5, 0, -0.5)>
+			<origin (0, 0, 1)>
+			<normal (0, 0, -1)>
+			<xaxis (1, 0, 0)>
 		>
 		<cutting<texture>>
 	>
     <lights
-		<point (0, -2.6, 4.5)>
-		<color (0.8, 0.8, 0.8)>
-	>
-    <lights
-		<point (0, 2.6, 4.5)>
-		<color (0.8, 0.8, 0.8)>
+		<point (0, 0, -3.3)>
+		<color (1, 1, 1)>
 	>
 	<lights
 		<ambient (0.2, 0.2, 0.2)>
