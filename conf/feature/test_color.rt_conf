@@ -133,7 +133,7 @@
 			<offset(0, 0)>
 			<scale(0.1, 2)>
 			<BumpMapping
-				<independent (SINUS)(0.03)>
+				<independent (PERLIN)(0.03)>
 			>
 		>
 		<sphere
