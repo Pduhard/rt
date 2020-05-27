@@ -95,7 +95,7 @@
 				<color(0.5, 0.75, 0.85, 0.7)(0)>
 			>
 			<BumpMapping
-				<independent (WATER) (0.06)>
+				<independent (PERLIN) (0.06)>
 			>
 			<offset(0, 0)>
 			<scale(2, 2)>

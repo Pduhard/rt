@@ -128,22 +128,22 @@
     <objects
 		<texture
 			<PERLIN
-				<color(1, 1, 1, 0.5)(0)>
+				<color(1, 1, 0.2, 0.5)(0)>
 			>
 			<offset(0, 0)>
-			<scale(10, 2)>
+			<scale(2, 2)>
 			<BumpMapping
 				<independent (PERLIN)(0.02)>
 			>
 		>
 		<sphere
-			<origin(0, 0, 6)>
+			<origin(0, 0, 4)>
 			<radius(1)>
 		>
         <cutting
             <static
-                <origin (0, 0, 0)>
-                <normal (1, 0, 0)>
+                <origin (0, 0, 4)>
+                <normal (1, 1, 0)>
             >
         >
 	>
@@ -151,10 +151,7 @@
 		<point (0, -2.6, 4.5)>
 		<color (0.8, 0.8, 0.8)>
 	>
-    <lights
-		<point (0, 2.6, 4.5)>
-		<color (0.8, 0.8, 0.8)>
-	>
+
 	<lights
 		<ambient (0.2, 0.2, 0.2)>
 	>

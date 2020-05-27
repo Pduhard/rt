@@ -329,6 +329,7 @@ typedef struct	s_data
 	t_3vecf			gradient[16];
 	double			water_f;
 	int				water;
+  int       nb_gen_obj;
 	struct s_data	*next;
 }				t_data;
 
