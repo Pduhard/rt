@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:46:33 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 05:47:12 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:05:55 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ void			scatter_photon(t_photon **photon_tab, t_data *data)
 			l = light->light_type == LIGHT_POINT ?
 			(t_leq){light->param, get_random_dir(rand_iter)} :
 			(t_leq){get_random_dir(rand_iter), light->param};
-			// if (!(caus_i % 1000))
-			// printf("cast rand %u indirect %d caus %d\n", rand_iter, ind_i, caus_i);
 			cast_photon(l, (t_phtn_cast){data, &ind_i, &caus_i, photon_tab,
 				PHOTON_DEPTH, rand_iter++, get_photon_power(light), 0});
 		}

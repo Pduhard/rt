@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:09:31 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/19 20:41:07 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:14:50 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,6 @@ static void		*copy_obj_param(void *obj_param, t_obj_type type)
 		return (NULL);
 }
 
-static t_cut	*copy_cut(t_cut *src)
-{
-	t_cut	*cut;
-
-	cut = ft_memcpy(ft_memalloc(sizeof(t_cut)), src, sizeof(t_cut));
-	if (src->cut_type == CUT_STATIC || src->cut_type == CUT_REAL)
-		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_classic)),
-			src->cut_param, sizeof(t_cut_classic));
-	else if (src->cut_type == CUT_SPHERE)
-		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_sphere)),
-			src->cut_param, sizeof(t_sphere));
-	else if (src->cut_type == CUT_TEXTURE)
-		cut->cut_param = NULL;
-	else if (src->cut_type == CUT_UV)
-		cut->cut_param = ft_memcpy(ft_memalloc(sizeof(t_cut_uv)),
-			src->cut_param, sizeof(t_cut_uv));
-	cut->next = NULL;
-	return (cut);
-}
-
 static t_text	copy_text(t_text src)
 {
 	t_text		cpy;
@@ -77,7 +57,7 @@ static t_text	copy_text(t_text src)
 	return (cpy);
 }
 
-int copy_cuts(t_obj *obj, t_cut *cuts)
+static int		copy_cuts(t_obj *obj, t_cut *cuts)
 {
 	t_cut	*cuts_obj;
 
@@ -101,11 +81,11 @@ int copy_cuts(t_obj *obj, t_cut *cuts)
 	return (1);
 }
 
-int       copy_motions(t_obj *obj, t_motion *motions)
+static int		copy_motions(t_obj *obj, t_motion *motions)
 {
 	t_motion	*new_motion;
-	obj->motions = NULL;
 
+	obj->motions = NULL;
 	while (motions)
 	{
 		if (!obj->motions)

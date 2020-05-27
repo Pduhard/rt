@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:00:17 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 01:01:00 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:06:39 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	reflect_photon_diff(t_leq l, t_phtn_cast p,
 
 	check = 0;
 	l.dir = get_random_dir(p.rand_iter);
-	//printf("in diff %u -- %u\n",  p.rand);
 	while (dot_product_3vecf(l.dir, normal_inter) < 0 && (++check) < 150)
 	{
 		l.dir = get_random_dir(p.rand_iter);
@@ -52,7 +51,6 @@ void	reflect_photon_diff(t_leq l, t_phtn_cast p,
 		p.rand_iter ^= p.rand_iter << 7;
 		p.rand_iter ^= p.rand_iter >> 8;
 	}
-	//printf("out diff %u\n", p.rand_iter);
 	p.depth--;
 	p.rand_iter++;
 	p.photon_type = 1;

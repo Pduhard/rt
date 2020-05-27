@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 05:17:51 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/25 14:30:37 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:06:14 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static void		compute_transparency(t_inter i, t_leq l, t_rayt_param p)
 									+ refr_color.val[2] * p.obj_color.val[3];
 }
 
-static void		compute_reflection_only(t_inter i, t_leq l, t_obj *obj, t_rayt_param p)
+static void		compute_reflection_only(t_inter i, t_leq l, t_obj *obj,
+	t_rayt_param p)
 {
 	t_3vecf refl_color;
 

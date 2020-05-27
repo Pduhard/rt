@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/23 21:43:07 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 21:43:17 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:09:13 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,7 +329,7 @@ typedef struct	s_data
 	t_3vecf			gradient[16];
 	double			water_f;
 	int				water;
-  int       nb_gen_obj;
+	int				nb_gen_obj;
 	struct s_data	*next;
 }				t_data;
 

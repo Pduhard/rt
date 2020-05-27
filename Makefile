@@ -185,6 +185,7 @@ SRC			=	main.c									\
 				skybox.c									\
 				goto_next.c								\
 				macro.c								\
+				copy_object_utils.c						\
 
 BIN				=	$(SRC:.c=.o)
 

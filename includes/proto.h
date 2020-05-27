@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/25 14:32:40 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:16:25 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -532,9 +532,6 @@ void			move_cut_cube(t_cut *cut, t_3vecf dir, double fact);
 
 void			push_object(t_obj *obj, int composed, t_data *data,
 				t_composed *from);
-void			free_info(t_data *data);
-void			free_data(t_data *data);
-void			free_object(t_obj *obj);
 
 int				parse_sphere_element(char **line, int *ret,
 				t_sphere *sphere_param);
@@ -545,5 +542,6 @@ int				parse_cut_static_real(char **line, t_cut *cut,
 void			free_composed_components(t_obj **obj_tab);
 void			rotate_cut_plane(t_cut *cut, t_3vecf orig,
 				t_33matf rot_mat[2]);
+t_cut			*copy_cut(t_cut *src);
 
 #endif
