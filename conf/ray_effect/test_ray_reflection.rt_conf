@@ -1,5 +1,5 @@
 <scene
-	<name(Plane)	>
+	<name(Reflection)	>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>

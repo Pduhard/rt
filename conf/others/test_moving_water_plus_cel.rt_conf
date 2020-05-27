@@ -1,5 +1,5 @@
 <scene
-	<name(Moving WATER and FOG)	>
+	<name(Moving WATER and FOG with Cel Shading)	>
 	<size(800, 600)>
 	<camera
 		<origin (0, -1, -10)>

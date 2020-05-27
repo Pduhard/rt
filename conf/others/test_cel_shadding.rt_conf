@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Cel Shading)	>
 	<size(600, 600)>
 
 	<Cel_shading(on)>

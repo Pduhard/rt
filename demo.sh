@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-rt_path="valgrind --leak-check=full --show-leak-kinds=all ./rt"
+rt_path="./rt"
 
 demos=(
   'shape'
@@ -83,7 +83,7 @@ do
     echo "Running Negative demo"
     $rt_path $negative_demo_dir/*
   fi
-  if [ $exec == "ray effect" ] || [ $exec == "all" ]
+  if [ $exec == "ray_effect" ] || [ $exec == "all" ]
   then
     echo "Running Ray effect demo"
     $rt_path $ray_effect_demo_dir/*

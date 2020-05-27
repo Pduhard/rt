@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Stereoscopy)	>
 	<size(600, 600)>
 	<stereoscopy(on)>
 	<camera
