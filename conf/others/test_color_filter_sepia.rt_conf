@@ -1,7 +1,7 @@
 <scene
 	<name(Bump mapping)	>
 	<size(600, 600)>
-	<stereoscopy(on)>
+	<ColorFilter(SEPIA)>
 	<camera
 		<origin (0, -8, -9)>
 		<rotation (-40, 0)>

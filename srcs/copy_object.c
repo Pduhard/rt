@@ -77,30 +77,66 @@ static t_text	copy_text(t_text src)
 	return (cpy);
 }
 
-t_obj			*copy_object(t_obj *src)
+int copy_cuts(t_obj *obj, t_cut *cuts)
 {
-	t_obj	*obj;
 	t_cut	*cuts_obj;
-	t_cut	*cuts;
 
-	if (!(obj = ft_memalloc(sizeof(t_obj))))
-		return (NULL);
-	*obj = *src;
-	cuts = src->cuts;
 	obj->cuts = NULL;
 	while (cuts)
 	{
-		if (!obj->cuts && !(obj->cuts = copy_cut(cuts)))
-			return (NULL);
+		if (!obj->cuts)
+		{
+			if (!(obj->cuts = copy_cut(cuts)))
+				return (0);
+		}
 		else
 		{
 			if (!(cuts_obj = copy_cut(cuts)))
-				return (NULL);
+				return (0);
 			cuts_obj->next = obj->cuts;
 			obj->cuts = cuts_obj;
 		}
 		cuts = cuts->next;
 	}
+	return (1);
+}
+
+int       copy_motions(t_obj *obj, t_motion *motions)
+{
+	t_motion	*new_motion;
+	obj->motions = NULL;
+
+	while (motions)
+	{
+		if (!obj->motions)
+		{
+			if (!(obj->motions = ft_memcpy(ft_memalloc(sizeof(t_motion)),
+				motions, sizeof(t_motion))))
+				return (0);
+		}
+		else
+		{
+			if (!(new_motion = ft_memcpy(ft_memalloc(sizeof(t_motion)),
+				motions, sizeof(t_motion))))
+				return (0);
+			new_motion->next = obj->motions;
+			obj->motions = new_motion;
+		}
+		motions = motions->next;
+	}
+	return (1);
+}
+
+t_obj			*copy_object(t_obj *src)
+{
+	t_obj	*obj;
+
+	if (!(obj = ft_memalloc(sizeof(t_obj))))
+		return (NULL);
+	*obj = *src;
+	if (!copy_cuts(obj, src->cuts) ||
+			!copy_motions(obj, src->motions))
+		return (NULL);
 	obj->obj_param = copy_obj_param(src->obj_param, src->obj_type);
 	obj->text = copy_text(src->text);
 	return (obj);
