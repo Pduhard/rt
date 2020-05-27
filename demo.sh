@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-rt_path="valgrind --leak-check=full --show-leak-kinds=all ./rt"
+rt_path="./rt"
 
 demos=(
   'shape'
@@ -51,6 +51,13 @@ do
   done
 done
 
+if [ ${#to_exec[@]} -eq 0 ]
+then
+  echo "Usage: ./demo.sh CATEGORY ..."
+  echo "Possible values: shape light texture cutting negative ray_effect other"
+  exit 1
+fi
+
 for exec in ${to_exec[@]}
 do
   if [ $exec == "shape" ] || [ $exec == "all" ]
@@ -73,20 +80,19 @@ do
     echo "Running Cutting demo"
     $rt_path $cutting_demo_dir/*
   fi
-  if [ $exec == "other" ] || [ $exec == "all" ]
-  then
-    echo "Running Other demo"
-    $rt_path $other_demo_dir/*
-  fi
   if [ $exec == "negative" ] || [ $exec == "all" ]
   then
     echo "Running Negative demo"
     $rt_path $negative_demo_dir/*
   fi
-  if [ $exec == "ray effect" ] || [ $exec == "all" ]
+  if [ $exec == "ray_effect" ] || [ $exec == "all" ]
   then
     echo "Running Ray effect demo"
     $rt_path $ray_effect_demo_dir/*
   fi
-  # echo "$exec"
+  if [ $exec == "other" ] || [ $exec == "all" ]
+  then
+    echo "Running Other demo"
+    $rt_path $other_demo_dir/*
+  fi
 done
