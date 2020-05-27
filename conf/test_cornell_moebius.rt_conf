@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Cornell Box Moebius)	>
 	<size(800, 600)>
 	<camera
 		<origin (-3.5, -1, -1.25)>

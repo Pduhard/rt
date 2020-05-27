@@ -1,5 +1,5 @@
 <scene
-	<name(Test light: point and directional)	>
+	<name(Light Point and Directional)	>
 	<size(600, 600)>
 	<camera
 		<origin (0, -8, -9)>

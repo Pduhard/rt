@@ -1,5 +1,5 @@
 <scene
-	<name(texture transparency)>
+	<name(Texture Image)>
 	<size(600, 600)>
 	<camera
 		<origin (0, -2, 7)>

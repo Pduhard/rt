@@ -1,5 +1,5 @@
 <scene
-	<name(Composed Objects)>
+	<name(Composed Objects with Motion)>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>

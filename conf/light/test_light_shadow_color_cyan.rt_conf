@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Light Shadow Cyan)	>
 	<size(600, 600)>
 	<camera
 		<origin (0, -8, -9)>

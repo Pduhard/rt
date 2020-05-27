@@ -1,5 +1,5 @@
 <scene
-	<name(MotionBlur)>
+	<name(MotionBlur with Cel Shading)>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>

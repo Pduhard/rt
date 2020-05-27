@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Global Illu through water)	>
 	<size(800, 600)>
 	<camera
 		<origin (0, -1, -10)>

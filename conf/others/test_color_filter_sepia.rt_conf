@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Sepia)	>
 	<size(600, 600)>
 	<ColorFilter(SEPIA)>
 	<camera

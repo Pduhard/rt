@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Caustics Metal Ring)	>
 	<size(800, 600)>
 	<caustics_gi(on)>
 	<indirect_gi(off)>

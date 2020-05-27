@@ -1,5 +1,5 @@
 <scene
-	<name(Bump mapping)	>
+	<name(Cornell Global Illu Color Bleed)	>
 	<size(800, 600)>
 	<caustics_gi(on)>
 	<indirect_gi(on)>

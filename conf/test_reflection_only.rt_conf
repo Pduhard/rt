@@ -1,5 +1,5 @@
 <scene
-	<name(Reflection only)	>
+	<name(Reflection Degree)	>
 	<size(600, 600)>
 	<camera
 		<origin (0, -2, 0)>
