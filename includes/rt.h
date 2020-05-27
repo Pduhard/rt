@@ -23,7 +23,7 @@
 **    NB_THREADS determine number of threads
 */
 
-# define QUALITY			Q_VERY_LOW
+# define QUALITY			Q_LOW
 
 /*
 **    QUALITY definition:
@@ -40,7 +40,7 @@
 **    RAY_DEPTH is the maximum number of recursively cast rays
 */
 
-# define BIAS				0.0001
+# define BIAS				0.001
 
 /*
 **    BIAS is one way to avoid self ray intersection
@@ -66,7 +66,7 @@
 **    (principaly used for moving water texture)
 */
 
-# define DEFAULT_SHININESS  0
+# define DEFAULT_SHININESS 100
 
 /*
 **    DEFAULT_SHININESS is the shininess factor used when shininess is not set.
@@ -76,15 +76,15 @@
 **    Alterable macro for global illumination
 */
 
-# define DFLT_POWER  5
+# define DFLT_POWER   100
 
 /*
 **    DFLT_POWER is used to determine light
 **    intensity. (For global illumination)
 */
 
-# define NB_INDIRECT_PHOTON		  20
-# define NB_CAUSTIC_PHOTON		  20
+# define NB_INDIRECT_PHOTON		  10000
+# define NB_CAUSTIC_PHOTON		  10000
 
 /*
 **    NB_INDIRECT_PHOTON and NB_CAUSTIC_PHOTON
@@ -101,7 +101,7 @@
 **    radiance estimation computation.
 */
 
-# define PHOTON_DEPTH           10
+# define PHOTON_DEPTH       6
 
 /*
 **    PHOTON_DEPTH is the maximum number of recursively cast photon rays

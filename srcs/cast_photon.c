@@ -67,8 +67,6 @@ static void		cast_photon_diffuse_mat(t_leq l, t_phtn_cast p,
 
 	rr_f = get_random_number(p.rand_iter * 0xfab1dede << (p.rand_iter & 7));
 	normal_inter = init_refractive_normal_inter(&obj_color, obj, photon, l);
-	if (obj_color.val[3])
-		return (cast_photon_refractive_mat(l, p, obj, photon));
 	prob = get_prob(obj->reflection ? 1 - obj->reflection : 0.4,
 		0., obj->reflection ? obj->reflection : 0.6);
 	if (rr_f < prob.absorb_prob)

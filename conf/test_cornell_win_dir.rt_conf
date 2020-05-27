@@ -27,6 +27,7 @@
 		        <v_range (-0.5, 0.5)>
 			>
 		>
+		<refraction(1)>
 	>
 	<objects
 		<texture
@@ -48,6 +49,7 @@
 		        <v_range (-0.5, 0.5)>
 			>
 		>
+		<refraction(1)>
 	>
 	<objects
 		<texture
