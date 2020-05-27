@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/18 01:21:22 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/23 19:34:29 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:47:23 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	rechain_list(t_obj **list, t_obj *obj)
 	return (1);
 }
 
-static void	free_cuts(t_cut *cuts)
+void		free_cuts(t_cut *cuts)
 {
 	t_cut		*next;
 
@@ -44,7 +44,7 @@ static void	free_cuts(t_cut *cuts)
 	}
 }
 
-static void	free_motions(t_motion *motions)
+void		free_motions(t_motion *motions)
 {
 	t_motion	*next;
 

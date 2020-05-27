@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 19:34:58 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/25 14:36:53 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:24:38 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 **    NB_THREADS determine number of threads
 */
 
-# define QUALITY			Q_LOW
+# define QUALITY			Q_VERY_LOW
 
 /*
 **    QUALITY definition:

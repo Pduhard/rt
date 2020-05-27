@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/15 17:12:06 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/18 00:58:06 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:46:36 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,5 @@ void		push_object(t_obj *obj, int composed, t_data *data,
 			add_component(obj, from);
 	}
 	else
-		free(obj);
+		free_object(obj);
 }

@@ -6,7 +6,7 @@
 /*   By: aplat <aplat@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 20:54:03 by aplat             #+#    #+#             */
-/*   Updated: 2020/05/27 20:16:25 by aplat            ###   ########lyon.fr   */
+/*   Updated: 2020/05/27 20:39:18 by aplat            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,6 +414,8 @@ void			free_info(t_data *data);
 void			free_data(t_data *data);
 void			free_object(t_obj *obj);
 void			free_composed_components(t_obj **obj_tab);
+void			free_cuts(t_cut *cuts);
+void			free_motions(t_motion *motions);
 
 /*
 **	Utils functions
