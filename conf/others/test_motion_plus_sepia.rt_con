@@ -5,6 +5,7 @@
 	<Caustics_GI(off)>
 	<Cel_Shading (off)>
     <MotionBlur	(On)>
+		<ColorFilter(SEPIA)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>

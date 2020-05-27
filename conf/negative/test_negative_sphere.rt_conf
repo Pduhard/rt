@@ -1,10 +1,9 @@
 <scene
-	<name(MotionBlur)>
+	<name(Sphere)	>
 	<size(800, 600)>
 	<Indirect_GI(Off)>
 	<Caustics_GI(off)>
-	<Cel_Shading (off)>
-    <MotionBlur	(On)>
+	<Cel_Shading (0)>
 	<camera
 		<origin (0, 0, -6)>
 		<rotation (0, 0)>
@@ -110,65 +109,57 @@
 			>
 		>
 	>
-    <objects
+	<objects
 		<texture
 			<UNI
-				<color(0.5, 0.75, 0.85)(0)>
+				<color(0.4, 0.2, 0.8, 0)(0)>
 			>
-			<offset(0, 0)>
-			<scale(0.1, 2)>
+			<scale(1, 1)>
 		>
-		<plane
-			<origin(0, 3, 3)>
-			<normal(0, -1, 0)>
+		<material(negative)>
+		<sphere
+			<origin(0, -1, 5.7)>
+			<radius(1.6)>
 		>
 	>
-    <objects
-        <texture
-            <UNI
-                <color (1, 0, 1, 0)>
-
-            >
-            <offset (0, 0)>
-            <scale (0, 0)>
-        >
-        <sphere
-            <origin (-3, -2, 5)>
-            <radius (1)>
-        >
-		<MotionBlur
-            <dir (0, 1, 0)>
-            <speed (9)>
-            <spf (8)>
-        >
-    >
-		<objects
-        <texture
-            <GRID
-                <color (0, 1, 1, 0)>
-								<color (1, 0, 0, 0)>
-
-            >
-            <offset (0, 0)>
-            <scale (4, 8)>
-        >
-        <sphere
-            <origin (0, 1.5, 4)>
-            <radius (1)>
-        >
-		<MotionBlur
-            <dir (1.5, 1, 0)>
-            <speed (9)>
-            <spf (2)>
-        >
-		<MotionBlur
-		            <dir (1.5, -1, 0)>
-		            <speed (6)>
-		            <spf (6)>
-		        >
-		    >
+	<objects
+		<texture
+			<UNI
+				<color(1, 1, 1, 0)(0)>
+			>
+		>
+		<sphere
+			<origin(0, -2.5, 6)>
+			<radius(1)>
+		>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.9, 0.7, 0.7, 0)(0)>
+			>
+			<scale(1, 1)>
+		>
+		<sphere
+			<origin(1.5, 0, 6)>
+			<radius(1)>
+		>
+		//<refraction (1)>
+	>
+	<objects
+		<texture
+			<UNI
+				<color(0.4, 0.2, 0.8, 0)(0)>
+			>
+			<scale(1, 1)>
+		>
+		<sphere
+			<origin(-1.5, 0, 6)>
+			<radius(1)>
+		>
+	>
 	<lights
-		<point (0, -2.6, 4.5)>
+		<point (3, -2.6, 0)>
 		<color (0.8, 0.8, 0.8)>
 	>
 	<lights

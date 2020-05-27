@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 demos=(
-  'shapes'
-  'lights'
-  'textures'
+  'shape'
+  'light'
+  'texture'
   'cutting'
-  'others'
+  'other'
+  'negative'
+  'ray_effect'
+  'all'
 )
 
 to_exec=()
 
-shapes_demo_dir="conf/shapes/"
-lights_demo_dir="conf/lights/"
-textures_demo_dir="conf/textures/"
+shape_demo_dir="conf/shapes/"
+light_demo_dir="conf/light/"
+texture_demo_dir="conf/text/"
 cutting_demo_dir="conf/cutting/"
-others_demo_dir="conf/others/"
+other_demo_dir="conf/others/"
+negative_demo_dir="conf/negative/"
+ray_effect_demo_dir="conf/ray_effect/"
+# all_dir=""
 
 for arg in $*
 do
@@ -31,7 +37,13 @@ do
       done
       if [ $check == "1" ]
       then
-        to_exec=("${to_exec[@]}" "${opt}")
+        if [ $opt == "all" ]
+        then
+          to_exec=("${opt}")
+          break 2
+        else
+          to_exec=("${to_exec[@]}" "${opt}")
+        fi
       fi
     fi
   done
@@ -39,25 +51,40 @@ done
 
 for exec in ${to_exec[@]}
 do
-  if [ $exec == "shapes" ]
+  if [ $exec == "shape" ] || [ $exec == "all" ]
   then
-    ./rt $shapes_demo_dir/*
+    echo "Running Shape demo"
+    ./rt $shape_demo_dir/*
   fi
-  if [ $exec == "lights" ]
+  if [ $exec == "light" ] || [ $exec == "all" ]
   then
-    ./rt $lights_demo_dir/*
+    echo "Running Light demo"
+    ./rt $light_demo_dir/*
   fi
-  if [ $exec == "textures" ]
+  if [ $exec == "texture" ] || [ $exec == "all" ]
   then
-    ./rt $textures_demo_dir/*
+    echo "Running Texture demo"
+    ./rt $texture_demo_dir/*
   fi
-  if [ $exec == "cutting" ]
+  if [ $exec == "cutting" ] || [ $exec == "all" ]
   then
+    echo "Running Cutting demo"
     ./rt $cutting_demo_dir/*
   fi
-  if [ $exec == "others" ]
+  if [ $exec == "other" ] || [ $exec == "all" ]
   then
-    ./rt $others_demo_dir/*
+    echo "Running Other demo"
+    ./rt $other_demo_dir/*
+  fi
+  if [ $exec == "negative" ] || [ $exec == "all" ]
+  then
+    echo "Running Negative demo"
+    ./rt $negative_demo_dir/*
+  fi
+  if [ $exec == "ray effect" ] || [ $exec == "all" ]
+  then
+    echo "Running Ray effect demo"
+    ./rt $ray_effect_demo_dir/*
   fi
   # echo "$exec"
 done

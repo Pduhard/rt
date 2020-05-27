@@ -34,7 +34,7 @@
 **    Q_HIGH      full sampling when move then full super sampling
 */
 
-# define RAY_DEPTH   6
+# define RAY_DEPTH    6
 
 /*
 **    RAY_DEPTH is the maximum number of recursively cast rays
@@ -76,15 +76,15 @@
 **    Alterable macro for global illumination
 */
 
-# define DFLT_POWER  200
+# define DFLT_POWER  5
 
 /*
 **    DFLT_POWER is used to determine light
 **    intensity. (For global illumination)
 */
 
-# define NB_INDIRECT_PHOTON		  10000
-# define NB_CAUSTIC_PHOTON		  10000
+# define NB_INDIRECT_PHOTON		  20
+# define NB_CAUSTIC_PHOTON		  20
 
 /*
 **    NB_INDIRECT_PHOTON and NB_CAUSTIC_PHOTON
@@ -132,7 +132,7 @@
 **   of latest sample of motion blue effect
 */
 
-# define MOTION_SPP			32
+# define MOTION_SPP     8
 
 /*
 **    MOTION_SPP determine the maximum amount of sample for motion blur effect

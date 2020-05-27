@@ -16,7 +16,7 @@ int		create_photon_map(t_data *data)
 {
 	t_photon	**photon_tab;
 
-	printf("Create photon map\n");
+	ft_printf("Create photon map\n");
 	if (!data->objs)
 		return (0);
 	if (!(photon_tab = malloc(sizeof(t_photon *) * 2)) ||
@@ -32,7 +32,7 @@ int		create_photon_map(t_data *data)
 	free(photon_tab[0]);
 	free(photon_tab[1]);
 	free(photon_tab);
-	printf("end photon map\n");
+	printf("Photon map is created\n");
 	return (data->caustic_map || data->indirect_map ? 1 : 0);
 }
 

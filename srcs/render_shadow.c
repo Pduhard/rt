@@ -14,9 +14,9 @@
 
 static void	update_transparency(t_3vecf *transp_fact, t_4vecf obj_color)
 {
-	transp_fact->val[0] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[0]));
-	transp_fact->val[1] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[1]));
-	transp_fact->val[2] -= ((1 - obj_color.val[3]) * (1.1 - obj_color.val[2]));
+	transp_fact->val[0] -= ((1 - obj_color.val[3]) * (1 - obj_color.val[0]));
+	transp_fact->val[1] -= ((1 - obj_color.val[3]) * (1 - obj_color.val[1]));
+	transp_fact->val[2] -= ((1 - obj_color.val[3]) * (1 - obj_color.val[2]));
 }
 
 t_obj		*check_for_shadow(t_3vecf *transp_fact, t_3vecf light_dir,
