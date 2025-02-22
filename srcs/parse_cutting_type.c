@@ -29,10 +29,8 @@ static int	parse_cut_texture(char **line, t_cut *cut)
 static int	parse_cut_sphere(char **line, t_cut *cut)
 {
 	t_sphere	*param;
-	char		stripe;
 	int			ret;
 
-	stripe = 0;
 	ret = 1;
 	cut->cut_type = CUT_SPHERE;
 	if (cut->cut_param)

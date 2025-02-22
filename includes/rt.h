@@ -140,16 +140,9 @@
 
 # include "../libft/libft.h"
 # include "./key_linux.h"
-# if defined(__linux)
-#  include "../external_libs/minilibx/mlx.h"
-#  include "/usr/include/SDL2/SDL.h"
-#  include "/usr/include/SDL2/SDL_image.h"
-# else
-#  include "../external_libs/minilibx_macos/mlx.h"
-#  include "../external_libs/sdl/SDL.h"
-#  include "../frameworks/SDL2.framework/Headers/SDL.h"
-#  include "../frameworks/SDL2_image.framework/Headers/SDL_image.h"
-# endif
+# include "../external_libs/libxlinux/mlx.h"
+# include "/usr/include/SDL2/SDL.h"
+# include "/usr/include/SDL2/SDL_image.h"
 
 # include <math.h>
 # include <pthread.h>

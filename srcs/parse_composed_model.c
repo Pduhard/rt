@@ -71,11 +71,9 @@ static int	check_composed_model(t_composed *composed)
 
 int			parse_composed_model(char **line, t_data *data)
 {
-	char		stripe;
 	int			ret;
 	t_composed	*composed;
 
-	stripe = 0;
 	ret = 1;
 	if (!(composed = ft_memalloc(sizeof(t_composed))))
 		return (0);

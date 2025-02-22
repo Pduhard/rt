@@ -50,11 +50,9 @@ static int	check_moebius_param(t_moebius *moebius_param, int ret)
 
 int			parse_moebius(char **line, t_obj *moebius)
 {
-	char		stripe;
 	int			ret;
 	t_moebius	*moebius_param;
 
-	stripe = 0;
 	ret = 1;
 	if (moebius->obj_param)
 		return (error(ALREADYOBJ, NULL));

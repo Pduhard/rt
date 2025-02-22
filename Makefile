@@ -20,35 +20,24 @@ INC_PATH	=	./includes/
 LIB_PATH	=	./libft/
 EXT_LIB		=	./external_libs
 
-UNAME_S		:=	$(shell uname -s)
+UNAME_S		:=	$(uname -s)
 
-ifeq ($(UNAME_S), Linux)
-	INSTALLSDL	:=	$(shell  sudo apt-get -y install libsdl2-dev)				\
-									$(shell  sudo apt-get -y install libsdl2-image-dev)	\
+INSTALLSDL	:=	$(sudo apt-get -y install libsdl2-dev)				\
+								$(sudo apt-get -y install libsdl2-image-dev)	\
 
-	FLAGS				+=	-fPIC
+FLAGS				+=	-fPIC
 
-	CC					=		clang
+CC					=		clang
 
-	FRAMEWORK		=		-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image
+FRAMEWORK		=		-lSDL2 -I/usr/include/SDL2 -I/usr/include/SDL -lSDL2_image
 
-	MLX					=		libmlx.a		\
-									libmlx_Linux.a
+MLX					=		libmlx.a		\
+								libmlx_Linux.a
 
-	MLX_PATH		=		$(EXT_LIB)/libxlinux/
+MLX_PATH		=		$(EXT_LIB)/libxlinux/
 
-	MLX_FLAGS		=		-L$(MLX_PATH) -lX11 -lXext -lm -lbsd $(MLX_FLAG)
-else
-	CC					=		gcc
+MLX_FLAGS		=		-L$(MLX_PATH) -lX11 -lXext -lm $(MLX_FLAG) -lbsd 
 
-	FRAMEWORK		=		-framework OpenGL -framework AppKit -I./frameworks/SDL2_image.framework/Headers/ -framework SDL2 -F ./frameworks -framework SDL2_image -rpath ./frameworks
-
-	MLX					=		libmlx.a
-
-	MLX_PATH		=		$(EXT_LIB)/minilibx_macos/
-
-	MLX_FLAGS		=		-L$(MLX_PATH) $(MLX_FLAG)
-endif
 
 SRC			=	main.c									\
 				init.c										\
@@ -235,7 +224,7 @@ $(PNGS):
 $(BIN_PATH)%.o: $(SRC_PATH)%.c $(INCS)
 
 	@mkdir -p $(BIN_PATH) || true
-	@$(CC) $(FLAGS) -I $(INC_PATH) -o $@ -c $< && echo "${G} \c"
+	@$(CC) $(FLAGS) -I $(INC_PATH) -c $< -o $@ && echo "${G} \c"
 
 clean:
 

@@ -86,9 +86,7 @@ void			cast_photon(t_leq l, t_phtn_cast p)
 	t_photon	photon;
 	t_obj		*obj;
 	double		dist;
-	int			inside;
 
-	inside = 0;
 	if (!p.depth || is_null_3vecf(p.pwr))
 		return ;
 	obj = ray_first_intersect(l, (t_dist){&dist, BIAS, MAX_VIEW},

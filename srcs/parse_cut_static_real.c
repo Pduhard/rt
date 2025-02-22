@@ -42,11 +42,9 @@ static int	check_cut_static_real_param(t_cut_classic *param)
 int			parse_cut_static_real(char **line, t_cut *cut,
 	t_cut_type cut_type)
 {
-	char			stripe;
 	int				ret;
 	t_cut_classic	*param;
 
-	stripe = 0;
 	cut->cut_type = cut_type;
 	if (cut->cut_param)
 		return (error(ALREADYCUT, NULL));

@@ -40,11 +40,9 @@ int		check_horse_saddle_bnd(t_leq l, t_3vecf horse_saddle_origin,
 	double root, t_horse_saddle *param)
 {
 	double	x;
-	double	y;
 	double	z;
 
 	x = l.orig.val[0] - horse_saddle_origin.val[0] + l.dir.val[0] * root;
-	y = l.orig.val[1] - horse_saddle_origin.val[1] + l.dir.val[1] * root;
 	z = l.orig.val[2] - horse_saddle_origin.val[2] + l.dir.val[2] * root;
 	if (x > -param->x_fact && x < param->x_fact && z > -param->y_fact
 		&& z < param->y_fact)

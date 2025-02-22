@@ -65,11 +65,9 @@ static int	check_motion(t_motion *motion)
 
 int			parse_motion(char **line, t_obj *obj)
 {
-	char		stripe;
 	int			ret;
 	t_motion	*motion;
 
-	stripe = 0;
 	ret = 1;
 	if (!(motion = ft_memalloc(sizeof(t_motion))))
 		return (0);

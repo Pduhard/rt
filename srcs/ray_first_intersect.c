@@ -26,9 +26,8 @@ static int	check_inside_negative(t_leq l, t_dist dist,
 	while (negative_objs)
 	{
 		if (negative_objs->check_inside(inter_point, negative_objs))
-			return (check_cuts(l, dist,
-				(t_cut_fparam){negative_objs, NULL, sp_id, 1}, data) ? 1 : 0);
-			negative_objs = negative_objs->next;
+			return (check_cuts(l, dist, (t_cut_fparam){negative_objs, NULL, sp_id, 1}, data) ? 1 : 0);
+		negative_objs = negative_objs->next;
 	}
 	return (0);
 }
@@ -60,5 +59,5 @@ t_obj		*ray_first_intersect(t_leq l, t_dist dist, t_obj *objs,
 	if (closest_obj && closest_obj->cuts)
 		return (check_cuts(l, dist, (t_cut_fparam){closest_obj,
 			objs_save, sp_id, 0}, data));
-		return (closest_obj);
+	return (closest_obj);
 }
